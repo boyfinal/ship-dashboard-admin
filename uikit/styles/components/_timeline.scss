@@ -1,0 +1,118 @@
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    z-index: 1;
+    top: 24px;
+    bottom: 45px;
+    left: 50%;
+    width: 2px;
+    background-color: #E1E2E2;
+  }
+}
+
+.timeline-item {
+  display: flex;
+
+}
+
+.timeline-item__left, .timeline-item__right {
+  position: relative;
+  border-radius: 4px;
+  width: 50%;
+}
+
+.timeline-item__left {
+  padding: 16px 28px;
+  text-align: end;
+}
+
+.timeline-item__left > div:first-child {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.timeline-item__left > div:last-child {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.timeline-item__right {
+  padding: 16px 28px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.timeline-item .timeline-item__left:before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 20px;
+  right: -9px;
+  background-color: #F0FFF3;
+  border: 1px solid #C5E6CF;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.timeline-item .timeline-item__left::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  top: 26px;
+  right: -4px;
+  background-color: #48BE78;
+  border: none;
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.first-item .timeline-item__left:before {
+  border: none;
+}
+
+.first-item .timeline-item__left::after {
+  content: ' ';
+  background-image: url("~@/assets/img/check.svg");
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 18px;
+  background-color: transparent;
+  right: -13px;
+  border: none;
+  border-radius: 50%;
+  z-index: 1001;
+}
+
+.timeline__next-page {
+  display: flex;
+  justify-content: center;
+  color: #313232;
+  font-weight: bold;
+  margin-top: 50px;
+}
+
+.timeline__next-page > div {
+  width: 70px;
+  text-align: center;
+  padding: 11px 12px;
+  border: 1px solid #CFD0D0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin: 4px;
+  cursor: pointer;
+}
+
+.disable-next-page {
+  color: #CFD0D0;
+}
