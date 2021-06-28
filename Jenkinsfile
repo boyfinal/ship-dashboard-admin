@@ -18,11 +18,11 @@ node {
         // Prepare stage: clone projects
         stage ('Prepare') {
             // clone lionnix repo
-            dir('shipping-customer') {
+            dir('shipping-admin') {
                 git(
                     credentialsId: 'GitAccessId',
                     branch: "${env.BRANCH_NAME}",
-                    url: 'git@gitlab.com:lionnix/shipping-customer.git'
+                    url: 'git@gitlab.com:lionnix/shipping-admin.git'
                 )
             }
         }
@@ -31,7 +31,7 @@ node {
         image = "${deploySettings.image_name}:${deploySettings.image_tag}"
         stage ('Build') {
             if (deploySettings.branch == 'master' || deploySettings.branch == 'dev') {
-                dir('shipping-customer') {
+                dir('shipping-admin') {
                     withDockerRegistry([
                         credentialsId: 'docker-registry-credentials',
                         url: "${deploySettings.private_registry_address}"]) {
@@ -57,7 +57,7 @@ node {
                 echo "Unable to get deploy tag or this branch is not allowed to deploy. Stop."
             }
 
-            dir('shipping-customer') {
+            dir('shipping-admin') {
                 // use same namespace on staging/dev
                 sh """
                     KUBECONFIG=${deploySettings.kube_config} helm upgrade --install -f ${deploySettings.helm_values_file} ${deploySettings.helm_release} --set image.tag=${deployTag} deploy/helm_chart
@@ -85,8 +85,8 @@ def getDeploySettings() {
     def deploySettings = [:]
 
 
-    dockerImageName = "nexus.lionnix.net/web-ui/shipment-customer"
-    serviceName = "shipment-customer"
+    dockerImageName = "nexus.lionnix.net/web-ui/shipment-admin"
+    serviceName = "shipment-admin"
     namespace = "shipment-web-ui"
 
     // end fill args
