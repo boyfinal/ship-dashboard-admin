@@ -11,7 +11,7 @@
           <div class="mb-16">
             <label class=" color-newtral-10 font-weight-600">Email</label>
             <p-input
-              placeholder="Nhập số điện thoại hoặc email"
+              placeholder="Nhập email của bạn"
               v-model="email"
               @keyup.enter="onSignIn"
               :required="requiredEmail"
