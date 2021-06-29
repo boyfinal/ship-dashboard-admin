@@ -1,17 +1,15 @@
 <template>
   <div class="page vertical-align sign-in">
     <div class="vertical-align-middle">
-      <div class="mb-16">
-        <div class="header-2">
+      <div class="mb-16 header-text">
+        <div class="header-2 text-center">
           Đăng nhập
         </div>
       </div>
       <div>
         <form @submit.prevent="onSignIn">
           <div class="mb-16">
-            <label class=" color-newtral-10 font-weight-600"
-              >Số điện thoại / Email</label
-            >
+            <label class=" color-newtral-10 font-weight-600">Email</label>
             <p-input
               placeholder="Nhập số điện thoại hoặc email"
               v-model="email"
@@ -54,13 +52,6 @@
           </p-button>
         </form>
       </div>
-
-      <p class="new-member">
-        <span>Bạn là thành viên mới?</span>
-        <router-link class=" creatAcount" :to="{ name: 'sign-up' }"
-          >Tạo tài khoản
-        </router-link>
-      </p>
     </div>
   </div>
 </template>
