@@ -9,12 +9,17 @@
       <div>
         <form @submit.prevent="onSignIn">
           <div class="mb-16">
-            <label class=" color-newtral-10 font-weight-600">Email</label>
+            <label class=" color-newtral-10 font-weight-600"
+              >Số điện thoại / Email</label
+            >
             <p-input
-              placeholder="Nhập email của bạn"
+              placeholder="Nhập số điện thoại hoặc email"
               v-model="form.email"
               @keyup.enter="onSignIn"
             />
+            <span class="invalid-error" v-if="!!errors.email">
+              {{ errors.email }}
+            </span>
           </div>
           <div class="mb-16">
             <div class="label">
@@ -27,11 +32,9 @@
               v-model="form.password"
               @keyup.enter="onSignIn"
             />
-          </div>
-          <div class="mb-16" v-if="errors.length">
-            <p class="invalid-error" v-for="(error, i) in errors" :key="i">
-              {{ error }}
-            </p>
+            <span class="invalid-error" v-if="!!errors.password">
+              {{ errors.password }}
+            </span>
           </div>
           <div class="captcha mt-40" v-if="count >= 1">
             <vue-recaptcha
@@ -76,7 +79,10 @@ export default {
         email: '',
         password: '',
       },
-      errors: [],
+      errors: {
+        email: '',
+        password: '',
+      },
       count: 0,
       status: false,
       requiredEmail: false,
@@ -117,9 +123,11 @@ export default {
           this.errors = []
         })
         .catch((err) => {
-          this.$set(this, 'errors', err.errors)
+          err.inner.forEach((x) => {
+            this.errors[x.path] = x.message
+          })
         })
-      return !this.errors.length
+      return !this.errors.email && !this.errors.password
     },
     async onSignIn() {
       if (!(await this.validate())) {
