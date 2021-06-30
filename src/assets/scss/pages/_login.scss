@@ -158,7 +158,8 @@ $bg-end:  #1571b1;
           .vertical-align-middle{
             width: 100%;
             background-image: url("~@/assets/img/base.png");
-            background-position: center;
+            background-position: top center;
+            background-repeat: no-repeat;
             padding: 38px;
             border-radius: 8px;
             background-color: #fff;

@@ -12,9 +12,8 @@
             <label class=" color-newtral-10 font-weight-600">Email</label>
             <p-input
               placeholder="Nhập email của bạn"
-              v-model="email"
+              v-model="form.email"
               @keyup.enter="onSignIn"
-              :required="requiredEmail"
             />
           </div>
           <div class="mb-16">
@@ -25,10 +24,14 @@
               placeholder="Nhập mật khẩu của bạn"
               type="password"
               hiddenPass="on"
-              v-model="password"
-              :required="requiredPassword"
+              v-model="form.password"
               @keyup.enter="onSignIn"
             />
+          </div>
+          <div class="mb-16" v-if="errors.length">
+            <p class="invalid-error" v-for="(error, i) in errors" :key="i">
+              {{ error }}
+            </p>
           </div>
           <div class="captcha mt-40" v-if="count >= 1">
             <vue-recaptcha
@@ -59,23 +62,23 @@
 import { mapActions, mapState } from 'vuex'
 import VueRecaptcha from 'vue-recaptcha'
 import mixinRoute from '@core/mixins/route'
-
+import * as yup from 'yup'
 export default {
   components: { VueRecaptcha },
   mixins: [mixinRoute],
   name: 'SignIn',
   data() {
     return {
-      email: '',
-      password: '',
       isLoading: false,
       result: { success: false, message: '' },
       form: {
         checkCaptcha: false,
+        email: '',
+        password: '',
       },
+      errors: [],
       count: 0,
       status: false,
-      requiredPassword: false,
       requiredEmail: false,
       check: true,
     }
@@ -103,42 +106,33 @@ export default {
       return this.$router.push('/forgot')
     },
 
-    checkRequired() {
-      let result = true
-      if (this.password == '') {
-        this.requiredPassword = true
-        result = false
-      } else {
-        this.requiredPassword = false
-      }
-
-      if (this.email == '') {
-        this.requiredEmail = true
-        result = false
-      } else {
-        this.requiredEmail = false
-      }
-
-      return result
+    async validate() {
+      const formSchema = yup.object().shape({
+        email: yup.string().required('Email không để trống'),
+        password: yup.string().required('Password không để trống'),
+      })
+      await formSchema
+        .validate(this.form, { abortEarly: false })
+        .then(() => {
+          this.errors = []
+        })
+        .catch((err) => {
+          this.$set(this, 'errors', err.errors)
+        })
+      return !this.errors.length
     },
-
-    pushNoti() {
-      this.showNotificationMessage('This is message')
-    },
-
     async onSignIn() {
-      if (!this.checkRequired()) {
+      if (!(await this.validate())) {
         return
       }
-
       const data = {
-        password: this.password,
+        password: this.form.password,
       }
 
-      if (this.email.includes('@')) {
-        data.email = this.email.trim().toLowerCase()
+      if (this.form.email.includes('@')) {
+        data.email = this.form.email.trim().toLowerCase()
       } else {
-        data.phone_number = this.email.trim()
+        data.phone_number = this.form.email.trim()
       }
 
       if (this.count >= 1 && !this.form.checkCaptcha) {
@@ -156,12 +150,6 @@ export default {
       }
 
       if (this.result.success) {
-        if (this.result.user && this.result.user.email) {
-          // eslint-disable-next-line no-undef
-          // $crisp.push(['set', 'user:nickname', [this.result.user.username]])
-          // eslint-disable-next-line no-undef
-          // $crisp.push(['set', 'user:email', this.result.user.email])
-        }
         setTimeout(() => {
           let { path } = this.$route.query
           if (!path) {
