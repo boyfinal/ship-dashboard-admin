@@ -7,7 +7,7 @@ const beforeEach = (router, store) => {
     // Logout
     if (
       to.fullPath.startsWith('/logout') ||
-      (!store.getters['auth/isCutomer'] && AuthService.isAuthenticated())
+      (!store.getters['auth/isAdmin'] && AuthService.isAuthenticated())
     ) {
       AuthService.clear()
       Browser.redirect('/')
