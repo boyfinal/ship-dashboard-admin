@@ -1,5 +1,6 @@
 <template>
   <div class="site-menubar">
+    <div class="site-menubar-header"> </div>
     <div class="site-menubar-body">
       <ul class="site-menu">
         <li
@@ -21,7 +22,7 @@
                 :class="{ 'is-active': menu.isOpen }"
                 class=""
                 v-if="menu.sub"
-                src="@/assets/img/dropdown.svg"
+                src="@/assets/img/up-white.svg"
               />
             </div>
           </router-link>
@@ -36,6 +37,12 @@
               class="site-menu-sub-item"
               v-for="(sub, j) in menu.sub"
               :key="j"
+              :class="{
+                active:
+                  isActive(sub.route) ||
+                  isContainAlias(sub.alias) ||
+                  childrenNameRoute(sub.title),
+              }"
             >
               <router-link :to="sub.route" class="animsition-link">
                 <span
@@ -102,61 +109,96 @@ export default {
       activeItem: '',
       menus: {
         q1: {
-          title: 'Trang chủ',
-          icon: require('@assets/img/HomeInactive.svg'),
-          iconActive: require('@assets/img/Home.svg'),
-          route: '/',
-          class: '',
-        },
-        q2: {
-          title: 'Đơn hàng',
+          title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
-          iconActive: require('@assets/img/Order.svg'),
-          route: { name: 'packages' },
+          iconActive: require('@assets/img/OrderActive.svg'),
+          route: '/',
           class: '',
           isOpen: false,
           sub: [
             {
               route: '/packages',
-              title: 'Quản lý đơn hàng',
+              title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
             },
             {
               route: '/packages/claims',
-              title: 'Đơn khiếu nại',
+              title: 'Hóa đơn',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Lịch sử giao dịch',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Khiếu nại',
               alias: ['/packages/claims', '/packages/claims/:id'],
             },
           ],
         },
+        q2: {
+          title: 'Vận chuyển',
+          icon: require('@assets/img/car.svg'),
+          iconActive: require('@assets/img/carActive.svg'),
+          route: { name: 'deliver' },
+          class: '',
+        },
         q3: {
-          title: 'Hóa đơn',
-          icon: require('@assets/img/BillInactive.svg'),
-          iconActive: require('@assets/img/Bill.svg'),
+          title: 'Kho',
+          icon: require('@assets/img/warehouse.svg'),
+          iconActive: require('@assets/img/warehouseActive.svg'),
           route: '/bill',
           class: '',
-        },
-        q4: {
-          title: 'Ví',
-          icon: require('@assets/img/WalletInactive.svg'),
-          iconActive: require('@assets/img/Wallet.svg'),
-          route: '/wallet',
-          class: '',
+          isOpen: false,
+          sub: [
+            {
+              route: '/packages',
+              title: 'Danh sách kho',
+              alias: ['/packages', '/packages/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Quét nhận hàng',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Quét kiểm hàng',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Kiện hàng',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+            {
+              route: '/packages/claims',
+              title: 'Lô hàng',
+              alias: ['/packages/claims', '/packages/claims/:id'],
+            },
+          ],
         },
         q5: {
-          title: 'Cài đặt tài khoản',
-          icon: require('@assets/img/SettingInactive.svg'),
-          iconActive: require('@assets/img/Setting.svg'),
+          title: 'Quản trị',
+          icon: require('@assets/img/Setting.svg'),
+          iconActive: require('@assets/img/SettingActive.svg'),
           route: { name: 'setting' },
           class: '',
           isOpen: false,
           sub: [
             {
               route: '/setting/account',
-              title: 'Thông tin tài khoản',
+              title: 'Tài khoản',
             },
             {
               route: '',
-              title: 'Danh sách hàng hóa',
+              title: 'Truy cập',
+            },
+            {
+              route: '',
+              title: 'Bảng giá',
             },
           ],
         },

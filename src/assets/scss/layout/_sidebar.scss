@@ -1,22 +1,47 @@
 .site-navbar{
   position: fixed;
   z-index: 99;
+
 }
+.site-menubar-header{
+  height: 56px;
+  padding: 12px;
+  position: relative;
+  &:after{
+    content : "";
+    position: absolute;
+    left    : 0;
+    bottom  : 0;
+    width   : 90%;
+    border-bottom: 1px solid $color-java-blue-10;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+}
+
+.site-menubar-body{
+  margin-top: 32px;
+}
+
 .site-menu{
-  padding:0 5px ;
+  padding:0 0px 0px 6px ;
   &-sub{
-    margin: 30px 0  0 28px;
+    margin: 30px 0  0 11px;
     max-height: 0;
     opacity: 0;
     transition: max-height .3s  ease-out;
+    height: max-content;
+    visibility: hidden;
     &.has-sub{
       opacity: 1;
-      max-height: 100px;
+      max-height:270px;
+      visibility: visible;
     }
     &-item{
-      padding-bottom: 10px;
       position: relative;
-
+      padding-left: 18px;
+      height: 36px;
+      line-height: 33px;
       &:before{
         margin-left: -18px;
         position: absolute;
@@ -26,22 +51,26 @@
         background-color: $color-neutral-3;
       }
       &:hover{
+        background-color:$color-java-blue-6 ;
         span{
-          color: $color-java-blue-5;
+          color: #FFFFFF;
         }
 
       }
+
+      &.active{
+        background-color:$color-java-blue-6 ;
+      }
     }
     span{
-      color: $color-neutral-9;
-      font-size: 13px;
+      color: $color-neutral-6;
+      font-size: 14px;
       transition: .3s;
       font-weight: 500;
-      line-height: 22px;
     }
     &-title{
       &.active{
-        color: $color-java-blue-5;
+        color: #FFFFFF;
       }
     }
 
@@ -58,15 +87,13 @@
   }
 }
 .site-menubar{
-  top: 44px;
-  padding-top: 28px;
   position: fixed;
-  width: 200px ;
-  background: #FFFFFF ;
+  width: 240px ;
+  background: #242729 ;
   transition: width 0.2s;
   height: 100%;
   z-index: 5;
-  box-shadow: 0px 0px 2px rgba(40, 41, 61, 0.04), 0px 4px 8px rgba(96, 97, 112, 0.16);
+  box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16);
 }
 
 .site-menu-item{
@@ -87,7 +114,7 @@
     }
     .site-menu-title {
       transition: .3s;
-      color: $color-neutral-10;
+      color: #FFFFFF;
     }
   }
   .site-menu-icon {
@@ -114,7 +141,7 @@
   font-size: 14px;
   line-height: 160%;
   float: left;
-  color: #686B70;
+  color: $color-neutral-6;
   opacity: 0;
 }
 
@@ -147,7 +174,7 @@
 .site-menubar .site-menu >.site-menu-item.active {
   a {
     .site-menu-title {
-      color: $color-neutral-10;
+      color: #FFFFFF;
       font-weight: bold;
     }
   }
