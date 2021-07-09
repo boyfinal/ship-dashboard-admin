@@ -82,10 +82,7 @@
                       </td>
                       <td width="40">
                         <router-link
-                          v-if="
-                            item.status_rep == claimCustomerReply ||
-                              item.status_rep == claimInit
-                          "
+                          v-if="item.status_rep == claimCustomerReply"
                           class="text-no-underline"
                           :to="{
                             name: 'claim-detail',
@@ -122,7 +119,7 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY, CLAIM_INIT } from '../constants'
+import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -145,7 +142,6 @@ export default {
       isFetching: false,
       claimStatus: CLAIM_STATUS,
       claimCustomerReply: CLAIM_CUSTOMER_REPLY,
-      claimInit: CLAIM_INIT,
     }
   },
   created() {
