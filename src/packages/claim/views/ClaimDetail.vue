@@ -1,173 +1,154 @@
 <template>
   <div class="claim-detail-page pages">
-    <div class="container">
-      <div class="content-page">
-        <div class="page-header">
-          <div class="page-header_back">
-            <router-link :to="{ name: 'list-claim' }" class="text">
-              <img
-                src="@/assets/img/Arrow - Left Square 24px.png"
-                class="page-header_back_icon"
-              />
+    <div class="content-page">
+      <div class="page-header">
+        <div class="page-header_back">
+          <router-link :to="{ name: 'list-claim' }" class="text">
+            <img
+              src="@/assets/img/Arrow - Left Square 24px.png"
+              class="page-header_back_icon"
+            />
 
-              Đơn hàng khiếu nại
-            </router-link>
-          </div>
-          <div class="page-header-group">
-            <div class="page-header_title header-2">
-              <span style="font-weight: bold" v-if="claim.title">{{
-                truncate(claim.title, 50)
-              }}</span>
-              <!-- <span
-                v-if="claim.status == 1"
-                class="edit-ticket"
-                @click="showTicketModal"
-              >
-                <img src="~@/assets/img/edit-2.svg" alt="edit" />
-              </span> -->
-            </div>
-            <div
-              class="page-header-group-actions__right"
-              v-if="claim.status != 2"
+            Đơn hàng khiếu nại
+          </router-link>
+        </div>
+        <div class="page-header-group">
+          <div class="page-header_title header-2">
+            <p-tooltip
+              :label="claim.title"
+              size="large"
+              position="top"
+              type="dark"
+              style="font-weight: bold"
+              v-if="claim.title"
+              :active="claim.title.length > 50"
             >
-              <a href="#" class="btn btn-primary" @click="showModalReply">
-                <span>Trả lời</span>
-              </a>
-              <a
-                href="#"
-                class="btn btn-danger ml-10"
-                @click="actionCancelTicket()"
-              >
-                <span>Đóng</span>
-              </a>
+              {{ truncate(claim.title, 50) }}
+            </p-tooltip>
+          </div>
+          <div
+            class="page-header-group-actions__right"
+            v-if="claim.status != claimStatusProcessed"
+          >
+            <a href="#" class="btn btn-primary" @click="handleCancelTicket()">
+              <span>Đã xử lý</span>
+            </a>
+            <a href="#" class="btn btn-primary" @click="showModalReply">
+              <span>Trả lời</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="page-content_note">
+          <div class="card" :style="styleInfoObject" ref="claimInfo">
+            <div class="note-content">
+              <ul class="list-note">
+                <li class="item-note">
+                  <span class="item-title">Trạng thái:</span>
+                  <span
+                    style="margin-left: 10px"
+                    v-status:status="formatStatus(claim.status)"
+                  ></span>
+                </li>
+                <li class="item-note">
+                  <span class="item-title">Lý do: </span>
+                  {{ formatReason(claim.category) }}
+                </li>
+                <li class="item-note">
+                  <span class="item-title">Mã vận đơn: </span>
+                  <router-link
+                    v-if="claim.package"
+                    :to="{
+                      name: 'package-detail',
+                      params: { id: claim.package.id },
+                    }"
+                  >
+                    {{ claim.package.code }}
+                  </router-link>
+                </li>
+                <li class="item-note">
+                  <span class="item-title">Ngày tạo: </span>
+                  {{ claim.created_at | datetime('dd/MM/yyyy') }} -
+                  {{ claim.created_at | datetime('HH:mm:ss') }}
+                </li>
+                <li class="item-note">
+                  <span class="item-title">Ngày cập nhật gần nhất: </span>
+                  {{ claim.updated_at | datetime('dd/MM/yyyy') }} -
+                  {{ claim.updated_at | datetime('HH:mm:ss') }}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-        <div class="page-content">
-          <div class="page-content_note">
-            <div class="card" :style="styleInfoObject" ref="claimInfo">
-              <div class="note-content">
-                <ul class="list-note">
-                  <li class="item-note">
-                    <span class="item-title">Trạng thái:</span>
-                    <span
-                      style="margin-left: 10px"
-                      v-status:status="formatStatus(claim.status)"
-                    ></span>
-                  </li>
-                  <li class="item-note">
-                    <span class="item-title">Lý do: </span>
-                    {{ formatReason(claim.category) }}
-                  </li>
-                  <li class="item-note">
-                    <span class="item-title">Mã vận đơn: </span>
-                    <router-link
-                      v-if="claim.package"
-                      :to="{
-                        name: 'package-detail',
-                        params: { id: claim.package.id },
-                      }"
-                    >
-                      {{ claim.package.code }}
-                    </router-link>
-                  </li>
-                  <li class="item-note">
-                    <span class="item-title">Ngày tạo: </span>
-                    {{ claim.created_at | datetime('dd/MM/yyyy HH:mm:ss') }}
-                  </li>
-                  <li class="item-note">
-                    <span class="item-title">Ngày cập nhật gần nhất: </span>
-                    {{ claim.updated_at | datetime('dd/MM/yyyy HH:mm:ss') }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="menu_content">
-            <div class="page-content_drag claim-messages" ref="messages">
+        <div class="menu_content">
+          <div class="page-content_drag claim-messages" ref="messages">
+            <div
+              class="user-content card main-claim"
+              :style="styleObject"
+              ref="mainClaim"
+            >
               <div
-                class="user-content card main-claim"
-                :style="styleObject"
-                ref="mainClaim"
+                class="user-title d-flex justify-content-between align-items-center"
               >
-                <div
-                  class="user-title d-flex justify-content-between align-items-center"
-                >
-                  <div class="info-user">
-                    <img
-                      src="~@/assets/img/avatar.png"
-                      alt="avatar"
-                      class="avatar-user"
-                    />
-                    <span v-if="claim.user" class="user-name">{{
-                      claim.user.full_name || claim.user.email
-                    }}</span>
-                  </div>
-                  <div class="user-time">
-                    {{ claim.created_at | datetime('dd/MM/yyyy HH:mm:ss') }}
-                  </div>
+                <div class="info-user">
+                  <img
+                    src="~@/assets/img/avatar.png"
+                    alt="avatar"
+                    class="avatar-user"
+                  />
+                  <span v-if="claim.user" class="user-name">{{
+                    claim.user.full_name || claim.user.email
+                  }}</span>
                 </div>
-                <div class="user-text">
-                  {{ claim.content }}
+                <div class="user-time">
+                  {{ claim.created_at | datetime('dd/MM/yyyy HH:mm:ss') }}
                 </div>
-                <div class="gallery ticket-attach-files" v-if="hasFiles">
-                  <div class="list-item">
+              </div>
+              <div class="user-text">
+                {{ claim.content }}
+              </div>
+              <div class="gallery ticket-attach-files" v-if="hasFiles">
+                <div class="list-item">
+                  <div
+                    class="item"
+                    v-for="(file, i) in claim.attachment"
+                    :key="i"
+                  >
                     <div
-                      class="item"
-                      v-for="(file, i) in claim.attachment"
-                      :key="i"
+                      class="gallery-item"
+                      :class="{ 'ticket-file': isImage(file) }"
                     >
-                      <div
-                        class="gallery-item"
-                        :class="{ 'ticket-file': isImage(file) }"
-                      >
-                        <file :src="file" />
-                      </div>
+                      <file :src="file" />
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <Message v-for="(mes, i) in messages" :key="i" :current="mes" />
-              <div
-                class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
-              >
-                <p-pagination
-                  :total="count"
-                  :perPage.sync="filter.limit"
-                  :current.sync="filter.page"
-                  size="sm"
-                ></p-pagination>
-              </div>
+            <Message v-for="(mes, i) in messages" :key="i" :current="mes" />
+            <div
+              class="d-flex justify-content-between align-items-center mb-16"
+              v-if="count > 0"
+            >
+              <p-pagination
+                :total="count"
+                :perPage.sync="filter.limit"
+                :current.sync="filter.page"
+                size="sm"
+              ></p-pagination>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <modal-edit-ticket
-      @success="toggleShowTicket"
-      :visible.sync="isTicketOpen"
-      v-if="isTicketOpen"
-    >
-    </modal-edit-ticket> -->
+
     <modal-reply
       :claim="claim"
       :visible.sync="isVisibleModalReply"
       v-if="isVisibleModalReply"
       @success="replySuccess"
     ></modal-reply>
-
-    <modal-confirm
-      :visible.sync="isVisibleCancelClaim"
-      v-if="isVisibleCancelClaim"
-      :actionConfirm="actions.cancel.button"
-      :description="actions.cancel.Description"
-      :title="actions.cancel.title"
-      :type="actions.cancel.type"
-      @action="handleCancelTicket()"
-    >
-    </modal-confirm>
   </div>
 </template>
 
@@ -187,8 +168,11 @@ import {
   GET_FILE_TICKET,
 } from '../store'
 import { FETCH_TICKET } from '@/packages/claim/store'
-import { CLAIM_STATUS } from '../constants'
-import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import {
+  CLAIM_STATUS,
+  CLAIM_STATUS_PENDING,
+  CLAIM_STATUS_PROCESSED,
+} from '../constants'
 import { truncate } from '@core/utils/string'
 
 export default {
@@ -198,7 +182,6 @@ export default {
     File,
     ModalReply,
     Message,
-    ModalConfirm,
   },
   props: {
     visible: {
@@ -208,17 +191,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-    description: {
-      type: String,
-      default: '',
-    },
-    actionConfirm: {
-      type: String,
-    },
-    type: {
-      type: String,
-      default: 'primary',
     },
   },
   data() {
@@ -248,14 +220,8 @@ export default {
       styleObject: {},
       styleInfoObject: {},
       claimStatus: CLAIM_STATUS,
-      actions: {
-        cancel: {
-          title: 'Đóng khiếu nại',
-          button: 'Xác nhận',
-          Description: `Bạn có chắc chắn đóng khiếu nại này ?`,
-          type: 'danger',
-        },
-      },
+      claimStatusPending: CLAIM_STATUS_PENDING,
+      claimStatusProcessed: CLAIM_STATUS_PROCESSED,
     }
   },
   computed: {
@@ -472,12 +438,7 @@ export default {
       this.init()
     },
 
-    actionCancelTicket() {
-      this.isVisibleCancelClaim = true
-    },
-
     async handleCancelTicket() {
-      this.isVisibleCancelClaim = false
       let payload = {
         id: this.claim.id,
       }
