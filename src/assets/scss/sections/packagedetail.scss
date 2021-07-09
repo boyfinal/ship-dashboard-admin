@@ -1,6 +1,12 @@
 .package-detail {
   .page-header {
-    margin-bottom: 12px;
+    margin-top: 12px;
+    &__barcode{
+      img{
+        margin: 0 0 5px 8px;
+        cursor: pointer;
+      }
+    }
   }
 
   .page-header_back {

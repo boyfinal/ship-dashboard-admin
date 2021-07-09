@@ -6,6 +6,17 @@ export const PackageStatusShipping = 5
 export const PackageStatusShipSuccess = 6
 export const PackageStatusReturn = 7
 export const PackageStatusCancel = 8
+
+export const WarehouseStatusPickUp = 1
+export const WarehouseStatusCheck = 2
+export const WarehouseStatusLabeled = 3
+export const WarehouseStatusContainerClosed = 4
+export const WarehouseStatusShipmentClosed = 5
+export const WarehouseStatusExport = 6
+export const WarehouseStatusAwaitingPayment = 7
+export const WarehouseStatusReturn = 8
+export const WarehouseStatusCancel = 9
+
 export const PACKAGE_STATUS_TAB = [
   {
     value: '',
@@ -101,4 +112,43 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusInit]: 'Đơn hàng được tạo mới',
   [PackageStatusWattingTransport]: 'Đơn hàng đang chờ lấy',
   [PackageStatusCancel]: 'Đơn hàng đã bị hủy',
+}
+
+export const MAP_NAME_STATUS_WAREHOUSE = {
+  [WarehouseStatusPickUp]: {
+    value: 'Đã lấy',
+    class: 'badge-primary',
+  },
+  [WarehouseStatusCheck]: {
+    value: 'Kiểm hàng',
+    class: 'badge-success',
+  },
+  [WarehouseStatusLabeled]: {
+    value: 'Đã dán nhãn',
+    class: 'badge-success',
+  },
+  [WarehouseStatusContainerClosed]: {
+    value: 'Đóng kiện',
+    class: 'badge-success',
+  },
+  [WarehouseStatusShipmentClosed]: {
+    value: 'Đóng lô',
+    class: 'badge-success',
+  },
+  [WarehouseStatusExport]: {
+    value: 'Xuất kho',
+    class: 'badge-success',
+  },
+  [WarehouseStatusAwaitingPayment]: {
+    value: 'Chờ trả tiền',
+    class: 'badge-success',
+  },
+  [WarehouseStatusReturn]: {
+    value: 'Chờ trả tiền',
+    class: 'badge-success',
+  },
+  [WarehouseStatusCancel]: {
+    value: 'Đã hủy',
+    class: 'badge-success',
+  },
 }
