@@ -195,7 +195,6 @@ export default {
   },
   data() {
     return {
-      isVisibleCancelClaim: false,
       content: '',
       reply: '',
       reason: null,
@@ -319,17 +318,6 @@ export default {
       }
     },
 
-    adjustIconsInTextarea() {
-      this.requiredContent = false
-    },
-
-    showTicketModal() {
-      this.isTicketOpen = !this.isTicketOpen
-    },
-    toggleShowTicket() {
-      this.isTicketOpen = !this.isTicketOpen
-      this.init()
-    },
     hasFiles() {
       return this.claim.attachment && this.claims.attachment.length
     },
@@ -452,7 +440,7 @@ export default {
       }
       this.$toast.open({
         type: 'success',
-        message: ' Thành công',
+        message: 'Thành công',
       })
       this.files = []
       this.init()
