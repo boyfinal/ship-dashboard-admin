@@ -11,11 +11,13 @@
       </div>
       <div class="navbar__header-user d-flex">
         <div class="navbar__header-name">{{ user.full_name }}</div>
-        <img
-          class="navbar__header-icon"
-          src="@/assets/img/logout.svg"
-          alt="icon"
-        />
+        <router-link to="/logout">
+          <img
+            class="navbar__header-icon"
+            src="@/assets/img/logout.svg"
+            alt="icon"
+          />
+        </router-link>
       </div>
     </div>
   </nav>
