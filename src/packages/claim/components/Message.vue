@@ -32,7 +32,7 @@
 </template>
 <script>
 import File from './File'
-import AuthService from '@core/services/auth'
+import { ROLE_ADMIN } from '@core/constants'
 
 export default {
   name: 'TicketMessage',
@@ -51,25 +51,14 @@ export default {
       return this.files.length
     },
     displayName() {
-      if (this.current.user_id == this.authId) {
-        return this.current.full_name || 'Me'
-      }
-
-      if (this.user_role == 'support') {
-        return this.current.user_name || 'Support'
-      }
-
-      return this.current.user_name || 'Undefined'
+      return this.current.full_name || 'Undefined'
     },
     roleName() {
-      if (this.current.user_role == 'support') {
+      if (this.current.role === ROLE_ADMIN) {
         return 'CSKH'
       }
 
       return ''
-    },
-    authId() {
-      return AuthService.getId()
     },
   },
   methods: {
