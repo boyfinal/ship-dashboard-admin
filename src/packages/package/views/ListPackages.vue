@@ -7,7 +7,7 @@
             <div class="row">
               <div class="col-9">
                 <p-input
-                  placeholder="Tìm theo mã đơn hàng hoặc mã vận đơn..."
+                  placeholder="Tìm kiếm ..."
                   suffixIcon="search"
                   type="search"
                   v-model="keywordSearch"
@@ -85,10 +85,12 @@
                       <td>
                         <p-tooltip
                           :label="item.detail"
+                          size="large"
                           position="top"
                           type="dark"
+                          :active="item.detail.length > 15"
                         >
-                          <div class="detail_product">{{ item.detail }}</div>
+                          {{ truncate(item.detail, 15) }}
                         </p-tooltip>
                       </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
@@ -124,6 +126,7 @@
 <script>
 import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions } from 'vuex'
+import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_STATUS_TAB,
@@ -209,6 +212,7 @@ export default {
       PROCESS_PACKAGE,
       CANCEL_PACKAGES,
     ]),
+    truncate,
     async init() {
       this.isFetching = true
       this.action.selected = []
