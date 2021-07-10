@@ -127,14 +127,14 @@ export default {
               alias: ['/packages/claims', '/packages/claims/:id'],
             },
             {
-              route: '/packages/claims',
+              route: '/transactions',
               title: 'Lịch sử giao dịch',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/transactions', '/transactions/:id'],
             },
             {
-              route: '/packages/claims',
+              route: '/claims',
               title: 'Khiếu nại',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/claims', '/claims/:id'],
             },
           ],
         },

@@ -1,346 +1,326 @@
 .claim-detail-page {
-  .table {
-    margin: 0;
-    th {
-      height: 66px;
-      &:first-child {
-        padding-left: 8px;
-      }
-    }
-    td {
-      height: 84px !important;
-      &:first-child {
-        padding-left: 8px;
-        .design-image {
-          width: 60px;
-          height: 60px;
-          position: relative;
-          border-radius: 4px;
-          object-fit: cover;
+    .table {
+        margin: 0;
+        th {
+            height: 66px;
+            &:first-child {
+                padding-left: 8px;
+            }
         }
-      }
-      &:last-child {
-        text-align: center;
-        .icon-download {
-          margin-right: 10px;
+        td {
+            height: 84px !important;
+            &:first-child {
+                padding-left: 8px;
+                .design-image {
+                    width: 60px;
+                    height: 60px;
+                    position: relative;
+                    border-radius: 4px;
+                    object-fit: cover;
+                }
+            }
+            &:last-child {
+                text-align: center;
+                .icon-download {
+                    margin-right: 10px;
+                }
+            }
         }
-      }
     }
-  }
 }
 
 .claim-detail-page {
-  .page-header-group {
-    margin-bottom: 20px;
-  }
-  .content-page {
-    .page-header {
-      .page-header_back {
-        .text {
-          color: #626363;
-        }
-        .page-header_back_icon {
-          margin-bottom: 2px;
-        }
-      }
-
-      .page-header_title {
-        margin-top: 11px;
-        margin-bottom: 0;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 28px;
-        /* identical to box height, or 140% */
-
-
-        /* Neutral / Neutral 10 */
-
-        color: #111212;
-        .edit-ticket {
-          position: relative;
-          left: 16px;
-          bottom: 2px;
-          cursor: pointer;
-        }
-      }
+    .page-header-group {
+        margin-bottom: 20px;
     }
-    .page-content {
-      display: flex;
-      margin: 0 32px 18px 32px;
-
-      .card {
-        box-shadow: 0px 4px 32px -14px rgba(0, 0, 0, 0.12);
-        border-radius: 8px;
-        margin-bottom: 30px;
-        padding: 12px 24px 5px 24px;
-      }
-      .menu_content {
-        flex: 1;
-        width: 60%;
-        .page-content_drag {
-          .user-content {
-            &.card {
-              padding: 24px;
-              margin-bottom: 12px;
+    .content-page {
+        padding-top: 24px;
+        .page-header {
+            .page-header_back {
+                .text {
+                    color: #626363;
+                }
+                .page-header_back_icon {
+                    margin-bottom: 2px;
+                }
             }
-            .user-title {
-              padding-bottom: 20px;
-              border-bottom: 1px solid #dfe3e8;
-              .info-user {
-                .user-name {
-                  color: #37393e;
-                  font-weight: 700;
-                  line-height: 24px;
-                  margin-left: 8px;
-                }
-
-                .role-user {
-                  background-color: #def6f3;
-                  color: #1dc9b7;
-                  font-size: 12px;
-                  border-radius: 50px;
-                  padding: 2px 8px;
-                  font-weight: 500;
-                  margin-left: 8px;
-                }
-              }
-              
-              .user-time {
+            .page-header_title {
+                margin-top: 11px;
+                margin-bottom: 0;
                 font-style: normal;
-                font-weight: normal;
-                font-size: 14px;
-                line-height: 22px;
-                /* identical to box height, or 157% */
-
-
-                /* Neutral / Neutral 7 */
-
-                color: #626363;
-
-              }
-            }
-            .user-text {
-              margin-top: 24px;
-              color: #37393e;
-            }
-            .ticket-attach-files {
-              margin-top: 16px;
-              .list-item {
-                display: flex;
-                .item {
-                  margin-right: 16px;
-                  .gallery-item {
+                font-weight: bold;
+                font-size: 20px;
+                line-height: 28px;
+                color: #111212;
+                .edit-ticket {
                     position: relative;
-                    img {
-                      width: 84px !important;
-                      height: 84px !important;
-                      object-fit: cover;
-                    }
-                    .icon {
-                      color: #fff;
-                      position: absolute;
-                      top: 50%;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      font-size: 25px;
-                      cursor: pointer;
-                      display: none;
-                    }
-                    &:before {
-                      content: '';
-                      position: absolute;
-                      background-color: rgba(0, 0, 0, 0.2);
-                      width: 100%;
-                      height: 100%;
-                      opacity: 0;
-                    }
-                    &:hover::before {
-                      opacity: 1;
-                      transition: 0.4s;
-                    }
-                    &:hover .icon {
-                      display: block;
-                      transition: 0.4s;
-                    }
-                  }
+                    left: 16px;
+                    bottom: 2px;
+                    cursor: pointer;
                 }
-              }
             }
-          }
         }
-      }
-    }
-    .page-content_note {
-      width: 340px;
-      height: 100%;
-      margin-right: 24px;
-      .note-content {
-        .list-note {
-          .item-note {
-            line-height: 24px;
-            margin-bottom: 8px;
-            .item-title {
-              font-style: normal;
-              font-weight: 600;
-              font-size: 14px;
-              line-height: 22px;
-              color: #313232;
-              margin-right: 5px;
+        .page-content {
+            display: flex;
+            .card {
+                box-shadow: 0px 4px 32px -14px rgba(0, 0, 0, 0.12);
+                border-radius: 8px;
+                margin-bottom: 30px;
+                padding: 12px 24px 5px 24px;
             }
-            a {
-              font-style: normal;
-              font-weight: normal;
-              font-size: 14px;
-              line-height: 22px;
-
-              color: #00B4C3;
+            .menu_content {
+                flex: 1;
+                width: 60%;
+                .page-content_drag {
+                    .user-content {
+                        &.card {
+                            padding: 24px;
+                            margin-bottom: 12px;
+                        }
+                        .user-title {
+                            padding-bottom: 20px;
+                            border-bottom: 1px solid #dfe3e8;
+                            .info-user {
+                                .user-name {
+                                    color: #37393e;
+                                    font-weight: 700;
+                                    line-height: 24px;
+                                    margin-left: 8px;
+                                }
+                                .role-user {
+                                    background-color: #def6f3;
+                                    color: #1dc9b7;
+                                    font-size: 12px;
+                                    border-radius: 50px;
+                                    padding: 2px 8px;
+                                    font-weight: 500;
+                                    margin-left: 8px;
+                                }
+                            }
+                            .user-time {
+                                font-style: normal;
+                                font-weight: normal;
+                                font-size: 14px;
+                                line-height: 22px;
+                                /* identical to box height, or 157% */
+                                /* Neutral / Neutral 7 */
+                                color: #626363;
+                            }
+                        }
+                        .user-text {
+                            margin-top: 24px;
+                            color: #37393e;
+                        }
+                        .ticket-attach-files {
+                            margin-top: 16px;
+                            .list-item {
+                                display: flex;
+                                .item {
+                                    margin-right: 16px;
+                                    .gallery-item {
+                                        position: relative;
+                                        img {
+                                            width: 84px !important;
+                                            height: 84px !important;
+                                            object-fit: cover;
+                                        }
+                                        .icon {
+                                            color: #fff;
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 50%;
+                                            transform: translate(-50%, -50%);
+                                            font-size: 25px;
+                                            cursor: pointer;
+                                            display: none;
+                                        }
+                                        &:before {
+                                            content: '';
+                                            position: absolute;
+                                            background-color: rgba(0, 0, 0, 0.2);
+                                            width: 100%;
+                                            height: 100%;
+                                            opacity: 0;
+                                        }
+                                        &:hover::before {
+                                            opacity: 1;
+                                            transition: 0.4s;
+                                        }
+                                        &:hover .icon {
+                                            display: block;
+                                            transition: 0.4s;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-      &.card {
-        padding: 24px;
-      }
-      .card {
-        padding: 18px;
-      }
+        .page-content_note {
+            width: 340px;
+            height: 100%;
+            margin-right: 24px;
+            .note-content {
+                .list-note {
+                    .item-note {
+                        line-height: 24px;
+                        margin-bottom: 8px;
+                        .item-title {
+                            font-style: normal;
+                            font-weight: 600;
+                            font-size: 14px;
+                            line-height: 22px;
+                            color: #313232;
+                            margin-right: 5px;
+                        }
+                        a {
+                            font-style: normal;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 22px;
+                            color: #00B4C3;
+                        }
+                    }
+                }
+            }
+            &.card {
+                padding: 24px;
+            }
+            .card {
+                padding: 18px;
+            }
+        }
     }
-  }
-  .footer {
-    width: 100%;
-    .group-button {
-      float: right;
-      button {
-        margin: 0 4px;
-      }
+    .footer {
+        width: 100%;
+        .group-button {
+            float: right;
+            button {
+                margin: 0 4px;
+            }
+        }
     }
-  }
 }
 
 .modal-reply-ticket {
-
-  background: #FFFFFF;
-  border-radius: 4px;
-  .modal-header{ 
-    padding: 12px 16px 12px 16px;
-
-  }
-  .modal-body{
-    padding: 16px;
-  }
-  .page-content{
-    margin: 0 !important;
-  }
-  .rule {
-    margin-top: 8px;
-    flex: 0 0 60%;
-    text-align: left;
-    font-size: 12px;
-    line-height: 18px;
-    color: #b0b3b9;
-  }
-  .form-control {
-    margin-top: 8px;
-    position: relative;
-    width: 100%;
-    border: 1px solid $color-neutral-4;
-    box-sizing: border-box;
-    border-radius: 8px;
-    min-height: 120px;
-    padding: 5px 0 0 16px;
-    color: $color-neutral-9;
-    &::placeholder{
-      color: $color-neutral-4
+    background: #FFFFFF;
+    border-radius: 4px;
+    .modal-header {
+        padding: 12px 16px 12px 16px;
     }
-  }
-
-  .footer {
-    i {
-      font-size: 12px;
-      line-height: 16px;
-      /* identical to box height, or 133% */
-
-
-      /* Neutral / Neutral 7 */
-
-      color: #626363;
+    .modal-body {
+        padding: 16px;
     }
-    .group-button {
-      flex: 0 0 40%;
-      text-align: right;
+    .page-content {
+        margin: 0 !important;
     }
-  }
-
-  .el-upload-dragger {
-    height: auto;
-    .el-upload__text {
-      line-height: 64px;
-      color:$color-java-blue-10;
-      font-weight: normal;
+    .rule {
+        margin-top: 8px;
+        flex: 0 0 60%;
+        text-align: left;
+        font-size: 12px;
+        line-height: 18px;
+        color: #b0b3b9;
     }
-  }
-
-  .remove-file {
-    cursor: pointer;
-    &:hover {
-      color: #db1802;
+    .form-control {
+        margin-top: 8px;
+        position: relative;
+        width: 100%;
+        border: 1px solid $color-neutral-4;
+        box-sizing: border-box;
+        border-radius: 8px;
+        min-height: 120px;
+        padding: 5px 0 0 16px;
+        color: $color-neutral-9;
+        &::placeholder {
+            color: $color-neutral-4
+        }
     }
-  }
+    .footer {
+        i {
+            font-size: 12px;
+            line-height: 16px;
+            /* identical to box height, or 133% */
+            /* Neutral / Neutral 7 */
+            color: #626363;
+        }
+        .group-button {
+            flex: 0 0 40%;
+            text-align: right;
+        }
+    }
+    .el-upload-dragger {
+        height: auto;
+        .el-upload__text {
+            line-height: 64px;
+            color: $color-java-blue-10;
+            font-weight: normal;
+        }
+    }
+    .remove-file {
+        cursor: pointer;
+        &:hover {
+            color: #db1802;
+        }
+    }
 }
+
 .ticket-attach-files {
-  .gallery-item::before {
-    content: none !important;
-  }
-  .gallery-item > div {
-    cursor: pointer;
-    &::before {
-      content: '';
-      position: absolute;
-      background-color: rgba(0, 0, 0, 0.2);
-      width: 100%;
-      height: 100%;
-      opacity: 0;
+    .gallery-item::before {
+        content: none !important;
     }
-  }
-  .gallery-item:hover > div {
-    &::before {
-      opacity: 1;
+    .gallery-item>div {
+        cursor: pointer;
+        &::before {
+            content: '';
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
     }
-  }
+    .gallery-item:hover>div {
+        &::before {
+            opacity: 1;
+        }
+    }
 }
-.ticket__error{
-  font-size: 12px;
-  border: 1px solid #ED857A;
-  background-color: #FFF4F3;
-  width: 95%;
-  margin: 0 auto;
-  border-radius: 4px;
-  &-title{
-    padding: 10px;
-  }
-  &-list{
-    padding: 0 10px 10px;
-  }
+
+.ticket__error {
+    font-size: 12px;
+    border: 1px solid #ED857A;
+    background-color: #FFF4F3;
+    width: 95%;
+    margin: 0 auto;
+    border-radius: 4px;
+    &-title {
+        padding: 10px;
+    }
+    &-list {
+        padding: 0 10px 10px;
+    }
 }
-.ticket__reply-files{
-  width: 95%;
-  margin: 0 auto;
+
+.ticket__reply-files {
+    width: 95%;
+    margin: 0 auto;
 }
 
 .claim-messages {
-  width: 100%;
-  position: relative;
-
-  .main-claim.fixed {
-    position: fixed;
-    z-index: 999;
-    top: 56px;
     width: 100%;
-  }
+    position: relative;
+    .main-claim.fixed {
+        position: fixed;
+        z-index: 999;
+        top: 56px;
+        width: 100%;
+    }
 }
 
-.err-span{
-  color: red;
-  font-size: 12px;
+.err-span {
+    color: red;
+    font-size: 12px;
 }
