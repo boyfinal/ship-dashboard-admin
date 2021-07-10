@@ -5,10 +5,7 @@ import AuthService from '@core/services/auth'
 const beforeEach = (router, store) => {
   router.beforeEach(async (to, from, next) => {
     // Logout
-    if (
-      to.fullPath.startsWith('/logout') ||
-      (!store.getters['auth/isAdmin'] && AuthService.isAuthenticated())
-    ) {
+    if (to.fullPath.startsWith('/logout')) {
       AuthService.clear()
       Browser.redirect('/')
       return
