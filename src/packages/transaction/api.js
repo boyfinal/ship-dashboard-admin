@@ -8,4 +8,7 @@ export default {
   countTransactionLogs(payload) {
     return http.get(`/transactions/count?${buildQueryString(payload)}`)
   },
+  changeStatusTransaction(payload) {
+    return http.put(`/transactions/status`, payload)
+  },
 }

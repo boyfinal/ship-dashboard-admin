@@ -2,6 +2,7 @@ import api from '../api'
 
 export const FETCH_LIST_TRANSACTIONS = 'fetchListTransactions'
 export const COUNT_LIST_TRANSACTIONS = 'countListTransactions'
+export const CHANGE_STATUS_TRANSACTION = 'changeStatusTransaction'
 
 export const state = {
   transaction_logs: [],
@@ -36,6 +37,19 @@ export const actions = {
     }
     commit(FETCH_LIST_TRANSACTIONS, list.transaction_logs)
     commit(COUNT_LIST_TRANSACTIONS, count)
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [CHANGE_STATUS_TRANSACTION]({ commit }, payload) {
+    let result = { success: true }
+    const res = await api.changeStatusTransaction(payload)
+    if (res.error || res.message) {
+      result = {
+        success: false,
+        message: res.errorMessage || res.error || res.message,
+      }
+    }
     return result
   },
 }

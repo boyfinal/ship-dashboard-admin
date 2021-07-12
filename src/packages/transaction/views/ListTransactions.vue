@@ -69,7 +69,25 @@
                       item.type === topupType ? 'Chuyển khoản' : 'N/A'
                     }}</td>
                     <td>{{ getAmount(item) }}</td>
-                    <td></td>
+                    <td>
+                      <div v-if="showBtn(item)">
+                        <p-button
+                          @click="handleConfirm(successStatus, item.id)"
+                          class="mr-2"
+                          :size="'xs'"
+                          type="info"
+                        >
+                          Xác nhận
+                        </p-button>
+                        <p-button
+                          @click="handleConfirm(failStatus, item.id)"
+                          :size="'xs'"
+                          type="danger"
+                        >
+                          Thất bại
+                        </p-button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -91,6 +109,26 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="visibleConfirmSuccess"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn về giao dịch này ?`"
+      :title="`Xác nhận giao dịch`"
+      @action="changeStatusTransactionHandle(successStatus)"
+      :loading="isChangingStatus"
+      :disabled="isChangingStatus"
+    ></modal-confirm>
+    <modal-confirm
+      :visible.sync="visibleConfirmFail"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn giao dịch này không thành công ?`"
+      :title="`Xác nhận thất bại`"
+      @action="changeStatusTransactionHandle(failStatus)"
+      :loading="isChangingStatus"
+      :disabled="isChangingStatus"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -102,19 +140,24 @@ import {
   TRANSACTION_TYPE,
   TransactionLogTypeTopup,
   TransactionLogTypePay,
+  TransactionStatusProcess,
+  TransactionStatusSuccess,
+  TransactionStatusFailure,
   MAP_NAME_STATUS_TRANSACTION,
 } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_LIST_TRANSACTIONS } from '../store'
+import { FETCH_LIST_TRANSACTIONS, CHANGE_STATUS_TRANSACTION } from '../store'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 export default {
   name: 'ListTransactions',
   mixins: [mixinRoute, mixinTable],
   components: {
     EmptySearchResult,
     TransactionStatusTab,
+    ModalConfirm,
   },
   data() {
     return {
@@ -135,6 +178,10 @@ export default {
         1: 'Nạp tiền',
         2: 'Thanh toán',
       },
+      isChangingStatus: false,
+      visibleConfirmSuccess: false,
+      visibleConfirmFail: false,
+      actionID: '',
     }
   },
   created() {
@@ -160,9 +207,18 @@ export default {
     topupType() {
       return TransactionLogTypeTopup
     },
+    successStatus() {
+      return TransactionStatusSuccess
+    },
+    failStatus() {
+      return TransactionStatusFailure
+    },
   },
   methods: {
-    ...mapActions('transaction', [FETCH_LIST_TRANSACTIONS]),
+    ...mapActions('transaction', [
+      FETCH_LIST_TRANSACTIONS,
+      CHANGE_STATUS_TRANSACTION,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -171,6 +227,53 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    handleConfirm(status, id) {
+      this.actionID = id
+      switch (status) {
+        case TransactionStatusSuccess:
+          this.visibleConfirmSuccess = true
+          break
+        case TransactionStatusFailure:
+          this.visibleConfirmFail = true
+          break
+        default:
+          break
+      }
+    },
+    async changeStatusTransactionHandle(status) {
+      this.isChangingStatus = true
+      const payload = {
+        id: this.actionID,
+        status: status,
+      }
+      const result = await this[CHANGE_STATUS_TRANSACTION](payload)
+      this.isChangingStatus = false
+      this.visibleConfirmSuccess = false
+      this.visibleConfirmFail = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      let msg = ''
+      switch (status) {
+        case TransactionStatusSuccess:
+          msg = 'Xác nhận giao dịch thành công'
+          break
+        case TransactionStatusFailure:
+          msg = 'Xác nhận giao dịch thất bại thành công'
+          break
+        default:
+          break
+      }
+      this.$toast.open({ message: msg, type: 'success' })
+      this.init()
+    },
+    showBtn(log) {
+      return (
+        log.type === TransactionLogTypeTopup &&
+        log.status === TransactionStatusProcess
+      )
     },
     getAmount(log) {
       switch (log.type) {
