@@ -1,123 +1,114 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="page-content">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-9">
-                <p-input
-                  placeholder="Tìm kiếm ..."
-                  suffixIcon="search"
-                  type="search"
-                  v-model="keywordSearch"
-                  @keyup.enter="handleSearch"
-                >
-                </p-input>
-              </div>
-              <div class="col-3">
-                <p-select
-                  placeholder="Please select"
-                  v-model="filter.search_by"
-                >
-                  <option
-                    :value="key"
-                    v-for="(value, key) in searchBy"
-                    :key="key"
+      <div class="row mb-12 search-input">
+        <div class="col-9 pl-0">
+          <p-input
+            placeholder="Tìm kiếm ..."
+            suffixIcon="search"
+            type="search"
+            :clearable="true"
+            v-model="keywordSearch"
+            @keyup.enter="handleSearch"
+          >
+          </p-input>
+        </div>
+        <div class="col-3">
+          <p-select placeholder="Please select" v-model="filter.search_by">
+            <option :value="key" v-for="(value, key) in searchBy" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <package-status-tab
+            :has-all="false"
+            :status="statusTab"
+            v-model="filter.status"
+            :count-status="count_status"
+          />
+          <VclTable class="mt-20" v-if="isFetching"></VclTable>
+          <template v-else-if="packages.length">
+            <div class="table-responsive">
+              <table class="table table-hover" id="tbl-packages">
+                <thead>
+                  <tr>
+                    <template>
+                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
+                      <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
+                      <th :class="{ hidden: hiddenClass }">Người nhận</th>
+                      <th :class="{ hidden: hiddenClass }"
+                        >Chi tiết hàng hóa</th
+                      >
+                      <th width="100" :class="{ hidden: hiddenClass }"
+                        >Ngày tạo
+                      </th>
+                      <th width="100" :class="{ hidden: hiddenClass }"
+                        >Trạng thái</th
+                      >
+                      <th :class="{ hidden: hiddenClass }">Tổng cước</th>
+                    </template>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(item, i) in packages"
+                    :key="i"
+                    :class="{ hover: isChecked(item) }"
                   >
-                    {{ value }}
-                  </option>
-                </p-select>
-              </div>
+                    <td>
+                      <router-link
+                        :to="{
+                          name: 'package-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        {{ item.code }}
+                      </router-link>
+                    </td>
+                    <td>{{ item.order_number }}</td>
+                    <td>
+                      {{ item.recipient }}
+                    </td>
+                    <td>
+                      <p-tooltip
+                        :label="item.detail"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.detail.length > 15"
+                      >
+                        {{ truncate(item.detail, 15) }}
+                      </p-tooltip>
+                    </td>
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td>
+                      <span
+                        v-status:status="mapStatus[item.status].value"
+                      ></span>
+                    </td>
+                    <td>{{ item.shipping_fee | formatPrice }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-            <package-status-tab
-              :has-all="false"
-              :status="statusTab"
-              v-model="filter.status"
-              :count-status="count_status"
-            />
-            <VclTable class="mt-20" v-if="isFetching"></VclTable>
-            <template v-else-if="packages.length">
-              <div class="table-responsive">
-                <table class="table table-hover" id="tbl-packages">
-                  <thead>
-                    <tr>
-                      <template>
-                        <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
-                        <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
-                        <th :class="{ hidden: hiddenClass }">Người nhận</th>
-                        <th :class="{ hidden: hiddenClass }"
-                          >Chi tiết hàng hóa</th
-                        >
-                        <th width="100" :class="{ hidden: hiddenClass }"
-                          >Ngày tạo
-                        </th>
-                        <th width="100" :class="{ hidden: hiddenClass }"
-                          >Trạng thái</th
-                        >
-                        <th :class="{ hidden: hiddenClass }">Tổng cước</th>
-                      </template>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(item, i) in packages"
-                      :key="i"
-                      :class="{ hover: isChecked(item) }"
-                    >
-                      <td>
-                        <router-link
-                          :to="{
-                            name: 'package-detail',
-                            params: {
-                              id: item.id,
-                            },
-                          }"
-                        >
-                          {{ item.code }}
-                        </router-link>
-                      </td>
-                      <td>{{ item.sku }}</td>
-                      <td>
-                        {{ item.recipient }}
-                      </td>
-                      <td>
-                        <p-tooltip
-                          :label="item.detail"
-                          size="large"
-                          position="top"
-                          type="dark"
-                          :active="item.detail.length > 15"
-                        >
-                          {{ truncate(item.detail, 15) }}
-                        </p-tooltip>
-                      </td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                      <td>
-                        <span
-                          v-status:status="mapStatus[item.status].value"
-                        ></span>
-                      </td>
-                      <td>{{ item.shipping_fee | formatPrice }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div
-                class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
-              >
-                <p-pagination
-                  :total="count"
-                  :perPage.sync="filter.limit"
-                  :current.sync="filter.page"
-                  size="sm"
-                ></p-pagination>
-              </div>
-            </template>
-            <empty-search-result v-else></empty-search-result>
-          </div>
+            <div
+              class="d-flex justify-content-between align-items-center mb-16"
+              v-if="count > 0"
+            >
+              <p-pagination
+                :total="count"
+                :perPage.sync="filter.limit"
+                :current.sync="filter.page"
+                size="sm"
+              ></p-pagination>
+            </div>
+          </template>
+          <empty-search-result v-else></empty-search-result>
         </div>
       </div>
     </div>
@@ -143,7 +134,6 @@ import {
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { date } from '@core/utils/datetime'
 
 export default {
   name: 'ListPackages',
@@ -172,6 +162,7 @@ export default {
       selected: [],
       searchBy: {
         code: 'Mã vận đơn',
+        order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
       },
@@ -179,7 +170,7 @@ export default {
   },
   created() {
     this.filter = this.getRouteQuery()
-    this.keywordSearch = this.filter.search
+    this.keywordSearch = this.filter.search.trim()
     this.init()
   },
   computed: {
@@ -215,17 +206,13 @@ export default {
     truncate,
     async init() {
       this.isFetching = true
-      this.action.selected = []
       this.handleUpdateRouteQuery()
+      this.keywordSearch = this.filter.search.trim()
       const result = await this.fetchListPackages(this.filter)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
-    },
-    selectDate(v) {
-      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
-      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
     },
   },
   watch: {

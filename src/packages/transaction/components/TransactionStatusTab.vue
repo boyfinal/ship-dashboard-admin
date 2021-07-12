@@ -1,5 +1,5 @@
 <template>
-  <div id="nav_container" class="p-tabs nav-tabs-horizontal mt-24">
+  <div id="nav_container" class="p-tabs nav-tabs-horizontal">
     <button class="icon-nav next" @click="clickLeftNav">
       <i class="left-nav"></i>
     </button>
@@ -36,7 +36,7 @@
 import { capitalize } from '@core/utils/string'
 
 export default {
-  name: 'PackageStatusTab',
+  name: 'TransactionStatusTab',
   props: {
     status: {
       type: Array,
@@ -47,6 +47,7 @@ export default {
       default: () => [],
     },
     value: {
+      type: [String, Number],
       default: '',
     },
     hasAll: {
@@ -63,6 +64,7 @@ export default {
   computed: {
     cleanStatus() {
       const status = this.hasAll ? [{ value: '', text: 'All' }] : []
+
       this.status.forEach((item) => {
         if (typeof item === 'object') {
           let count
@@ -87,7 +89,6 @@ export default {
           status.push({ value: item, text: capitalize(item) })
         }
       })
-
       return status
     },
     setRight() {
