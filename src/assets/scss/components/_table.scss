@@ -150,12 +150,12 @@
 //}
 .table-hover{
   tbody{
-    td:first-child{
-      border-left: 1px solid $color-neutral-3;
-    }
-    td:last-child{
-      border-right: 1px solid $color-neutral-3;
-    }
+    //td:first-child{
+    //  border-left: 1px solid $color-neutral-3;
+    //}
+    //td:last-child{
+    //  border-right: 1px solid $color-neutral-3;
+    //}
 
     tr:hover{
       td:first-child{

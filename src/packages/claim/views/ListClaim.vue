@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="d-flex list__claim-search mb-12">
         <p-input
-          placeholder="Tìm theo đơn hàng"
+          placeholder="Tìm theo mã vận đơn"
           prefixIcon="search"
           type="search"
           clearable
@@ -33,6 +33,7 @@
                       <th>NGÀY TẠO</th>
                       <th>NGÀY CẬP NHẬT GẦN NHẤT</th>
                       <th>TRẠNG THÁI </th>
+                      <th></th>
                     </tr>
                   </thead>
 
@@ -49,8 +50,18 @@
                           {{ item.id }}
                         </router-link>
                       </td>
-                      <td>{{ item.package.code }}</td>
-                      <td width="100">
+                      <td>
+                        <router-link
+                          class="text-no-underline"
+                          :to="{
+                            name: 'package-detail',
+                            params: { id: item.package.code },
+                          }"
+                        >
+                          {{ item.package.code }}
+                        </router-link>
+                      </td>
+                      <td width="150">
                         <p-tooltip
                           :label="item.title"
                           size="large"
@@ -69,6 +80,20 @@
                           v-status:status="converStatus(item.status)"
                         ></span>
                       </td>
+                      <td width="40">
+                        <router-link
+                          v-if="item.status_rep == claimCustomerReply"
+                          class="text-no-underline"
+                          :to="{
+                            name: 'claim-detail',
+                            params: { id: item.id },
+                          }"
+                        >
+                          <img
+                            src="@assets/img/messenger.svg"
+                            alt=""
+                          /> </router-link
+                      ></td>
                     </tr>
                   </tbody>
                 </table>
@@ -94,7 +119,7 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import { CLAIM_STATUS } from '../constants'
+import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -116,6 +141,7 @@ export default {
       },
       isFetching: false,
       claimStatus: CLAIM_STATUS,
+      claimCustomerReply: CLAIM_CUSTOMER_REPLY,
     }
   },
   created() {

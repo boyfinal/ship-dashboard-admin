@@ -1,8 +1,10 @@
 import Vue from 'vue'
+import VeeValidate from 'vee-validate'
 import Notifications from 'vue-notification'
 import VueClipboard from 'vue-clipboard2'
 import App from './App.vue'
 import MainPlugin from './plugins/main'
+// import DashboardPlugin from './material-dashboard'
 import * as filters from './core/helpers/filters'
 import initGlobalDirectives from '@core/vue/directives'
 import router from './core/router'
@@ -10,7 +12,6 @@ import store from './core/store'
 import '../uikit'
 import { VclTable } from 'vue-content-loading'
 import validationMessagesVi from 'vee-validate/dist/locale/vi'
-import VeeValidate from 'vee-validate'
 // import validationMessagesEn from 'vee-validate/dist/locale/en'
 
 Vue.use(VueClipboard)
@@ -19,10 +20,11 @@ Vue.use(VeeValidate, {
   dictionary: { vi: validationMessagesVi },
   aria: true,
 })
+// Vue.use(VeeValidate, { locale: 'en', dictionary: { en: validationMessagesEn } })
 Vue.use(Notifications)
 Vue.use(MainPlugin)
-
 Vue.component('VclTable', VclTable)
+// Vue.use(DashboardPlugin)
 initGlobalDirectives()
 
 VeeValidate.Validator.extend('username', {
@@ -158,7 +160,6 @@ VeeValidate.Validator.extend('address', {
     return regex.test(value)
   },
 })
-
 new Vue({
   router,
   store,

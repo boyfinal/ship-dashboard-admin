@@ -14,7 +14,7 @@
                 class="text__aria-title d-flex justify-content-between align-items-center"
               >
                 <label class="text-bold"
-                  >Nội dung<span class="text-danger">*</span></label
+                  >Nội dung: <span class="text-danger">*</span></label
                 >
                 <span class="countText" :class="[countText(message)]"
                   >{{ this.TicketNote }}/1000</span
@@ -23,19 +23,13 @@
               <textarea
                 class="form-control"
                 v-model="message"
-                v-validate="'required'"
-                data-vv-as="Nội dung"
-                name="message"
-                key="message"
+                @input="validate"
                 :class="{
-                  'error-color': errors.has('message'),
                   require: lengthContent,
                 }"
                 maxlength="1000"
               ></textarea>
-              <span class="err-span" v-if="errors.has('message')">{{
-                errors.first('message')
-              }}</span>
+              <span class="invalid-error" v-if="errors">{{ errors }}</span>
             </div>
             <div class="upload_file">
               <upload
@@ -214,6 +208,7 @@ export default {
         },
       },
       number: 0,
+      errors: '',
     }
   },
   destroyed() {
@@ -240,12 +235,6 @@ export default {
       this.fileErrors = []
     },
     handleChangeFile(file) {
-      // if (!this.validateSizeFile(file)) {
-      //   this.fileErrors.push(`"${file.name}" is less than 5Mb.`)
-      //   this.fileErrors = [...new Set(this.fileErrors)]
-      //   return
-      // }
-
       this.validateSize = false
       const index = this.files.findIndex(({ uid }) => uid === file.uid)
       if (index != -1) {
@@ -311,10 +300,17 @@ export default {
       this.isVisibleConfirmDelete = false
       this.files = this.files.filter(({ uid }) => uid != file.uid)
     },
+    validate() {
+      if (this.message == '') {
+        this.errors = 'Nội dung không được để trống'
+        return false
+      }
+      this.errors = ''
+      return true
+    },
     async handleUpdate() {
       if (this.isUploading) return
-      const validate = await this.$validator.validateAll()
-      if (!validate) {
+      if (!this.validate()) {
         return
       }
       if (this.lengthContent) return

@@ -1,6 +1,6 @@
 .package-detail {
   .page-header {
-    margin-top: 12px;
+    margin: 24px 0 18px 0;
     &__barcode{
       img{
         margin: 0 0 5px 8px;
@@ -92,6 +92,17 @@
     font-weight: bold;
     font-size: 20px;
     line-height: 28px;
+  }
+  .fee{
+    padding-top: 24px !important;
+    margin-left: 12px;
+    margin-right: 24px;
+  }
+  .fee-border{
+    margin-right: 25px;
+    border: 1px solid #E1E2E2;
+    width: 100%;
+    margin-bottom: 25px;
   }
 }
 

@@ -1,0 +1,55 @@
+.bill__detail{
+  padding: 24px;
+  .text{
+    color: $color-neutral-7;
+    font-weight: 500;
+  }
+  .page-header{
+    margin-bottom: 24px;
+  }
+  .page-header_back{
+    margin-bottom: 15px;
+  }
+  &-flex{
+    display: flex;
+    justify-content: space-between;
+  }
+  &-info{
+    display: grid;
+    grid-column-gap: 50px;
+    grid-template-columns: auto auto auto;
+  }
+  .item-gutters{
+    padding: 0 12px;
+  }
+  .card-header{
+    border-radius:4px 4px 0 0;
+  }
+
+  &-title{
+    color:$color-neutral-7;
+    font-size: 12px;
+  }
+  &-code{
+    color: $color-neutral-10;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  &-date{
+    color: $color-neutral-10;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  &-action{
+    .btn-danger {
+     color: #F5222D;
+      &:hover{
+        color: #FFFFFF;
+      }
+    }
+    .btn-primary{
+      color: #FFFFFF;
+    }
+  }
+}
