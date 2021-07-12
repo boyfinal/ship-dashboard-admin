@@ -204,9 +204,9 @@ export const getters = {
  * @param payload
  */
 const handleAuthenticated = (commit, payload) => {
-  if (payload.role !== ROLE_ADMIN) {
-    return
-  }
+  // if (payload.role !== ROLE_ADMIN) {
+  //   return
+  // }
 
   AuthService.set(payload)
   commit(AUTHENTICATE, payload)

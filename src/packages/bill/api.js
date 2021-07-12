@@ -19,4 +19,11 @@ export default {
   fetchExtraFee(payload) {
     return http.get(`/bills/fee/${payload.id}?${buildQueryString(payload)}`)
   },
+  billList(payload) {
+    return http.get(`/bills?${buildQueryString(payload)}`)
+  },
+
+  billCount(payload) {
+    return http.get(`/bills/count?${buildQueryString(payload)}`)
+  },
 }

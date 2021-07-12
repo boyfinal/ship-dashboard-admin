@@ -5,6 +5,8 @@ export const COUNT_FEE_CREATE = 'countFeeCreate'
 export const FETCH_FEE_CREATE = 'fetchFeeCreate'
 export const COUNT_FEE_EXTRA = 'countFeeExtra'
 export const FETCH_FEE_EXTRA = 'fetchFeeExtra'
+export const BILL_FETCH = 'billFetch'
+export const BILL_COUNT = 'billCount'
 export const state = {
   bill: {},
   feeEdit: [],
@@ -13,6 +15,8 @@ export const state = {
   countEdit: 0,
   countCreate: 0,
   countExtra: 0,
+  bills: [],
+  count: 0,
 }
 
 export const mutations = {
@@ -30,6 +34,12 @@ export const mutations = {
   },
   [FETCH_FEE_EXTRA]: (state, payload) => {
     state.feeExtra = payload
+  },
+  [BILL_FETCH]: (state, payload) => {
+    state.bills = payload
+  },
+  [BILL_COUNT]: (state, payload) => {
+    state.count = payload
   },
 }
 
@@ -59,5 +69,27 @@ export const actions = {
     commit(COUNT_FEE_EXTRA, res.count)
 
     return { success: true }
+  },
+
+  async [BILL_FETCH]({ commit }, payload) {
+    const res = await api.billList(payload)
+    if (!res || res.error) {
+      commit(BILL_FETCH, [])
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(BILL_FETCH, res.bills || [])
+    return { error: false }
+  },
+
+  async [BILL_COUNT]({ commit }, payload) {
+    const res = await api.billCount(payload)
+    if (!res || res.error) {
+      commit(BILL_COUNT, 0)
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(BILL_COUNT, res.count || 0)
+    return { error: false }
   },
 }

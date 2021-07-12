@@ -18,7 +18,7 @@
 }
 
 .table-responsive {
-    overflow-x: hidden;
+    overflow: revert;
     &::-webkit-scrollbar {
         height: 8px;
     }

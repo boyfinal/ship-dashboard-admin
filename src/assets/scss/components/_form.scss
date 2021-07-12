@@ -2,7 +2,7 @@ $input-height: 40px;
 $input-border-color: #f4f5f6;
 .form-control {
     height: $input-height;
-    position: absolute;
+    position: relative;
     left: 0px;
     top: 0px;
     background: #ffffff;
@@ -120,7 +120,6 @@ input[type='search'] {
         transform: translateY(-50%);
     }
     .p-input-search {
-        padding-left: 40px;
         border-radius: 8px !important;
         line-height: $input-height;
         &::placeholder {
@@ -145,6 +144,9 @@ input[type='search'] {
         right: 16px;
         left: auto;
         z-index: 4;
+        &+.form-control {
+            padding-left: 40px;
+        }
     }
 }
 
