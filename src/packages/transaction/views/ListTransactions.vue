@@ -4,7 +4,7 @@
       <div class="row mb-12" id="search-bar">
         <div class="col-8">
           <p-input
-            placeholder="Tìm kiếm ..."
+            :placeholder="getPlaceHolder"
             suffixIcon="search"
             type="search"
             v-model="keywordSearch"
@@ -211,6 +211,16 @@ export default {
     },
     successStatus() {
       return TransactionStatusSuccess
+    },
+    getPlaceHolder() {
+      switch (this.filter.search_by) {
+        case 'bill_id':
+          return 'Tìm theo mã hóa đơn'
+        case 'account_name':
+          return 'Tìm theo tài khoản khách'
+        default:
+          return ''
+      }
     },
     failStatus() {
       return TransactionStatusFailure
