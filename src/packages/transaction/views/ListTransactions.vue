@@ -323,9 +323,3 @@ export default {
   },
 }
 </script>
-
-<style>
-#search-bar .form-control {
-  width: calc(100% - 15px);
-}
-</style>
