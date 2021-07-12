@@ -28,7 +28,7 @@ export const actions = {
       api.fetchTransactionLogs(payload),
       api.countTransactionLogs(payload),
     ])
-    if (!list.transaction_logs || !count) {
+    if (!list.transactions || !count) {
       count = { count: 0 }
       result = {
         success: false,
