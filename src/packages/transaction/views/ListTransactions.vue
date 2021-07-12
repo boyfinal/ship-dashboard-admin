@@ -7,7 +7,7 @@
             :placeholder="getPlaceHolder"
             suffixIcon="search"
             type="search"
-            v-model="keywordSearch"
+            :value="filter.search"
             @keyup.enter="handleSearch"
           >
           </p-input>
@@ -174,7 +174,6 @@ export default {
         account_name: '',
         type: '',
       },
-      keywordSearch: '',
       isFetching: false,
       searchBy: {
         bill_id: 'Mã hoá đơn',
@@ -192,7 +191,6 @@ export default {
   },
   created() {
     this.filter = this.getRouteQuery()
-    this.keywordSearch = this.filter.search
     this.init()
   },
   computed: {
