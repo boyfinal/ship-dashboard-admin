@@ -130,13 +130,13 @@ import {
   EXPORT_PACKAGE,
   PROCESS_PACKAGE,
   CANCEL_PACKAGES,
-} from '../store'
+} from '@/packages/package/store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 
 export default {
-  name: 'ListPackages',
+  name: 'ListPackageInWarehouse',
   mixins: [mixinRoute, mixinTable],
   components: {
     EmptySearchResult,
@@ -208,7 +208,7 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.keywordSearch = this.filter.search.trim()
-      const result = await this[FETCH_LIST_PACKAGES](this.filter)
+      const result = await this.fetchListPackages(this.filter)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
