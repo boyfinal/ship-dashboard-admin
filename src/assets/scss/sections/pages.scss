@@ -5,7 +5,7 @@
     background: #F6F7F7;
     width: calc(100% - #{$width-sidebar});
     min-height: calc(100% - 56px);
-    padding: 0 24px;
+    padding: 24px;
     .page-header-group {
         display: flex;
         justify-content: space-between;
