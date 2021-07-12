@@ -2,7 +2,7 @@
   <div class="pages bill__detail ">
     <div class="page-header">
       <div class="page-header_back">
-        <router-link :to="{ name: 'list-claim' }" class="text">
+        <router-link :to="{ name: 'bill-list' }" class="text">
           <img
             src="@/assets/img/Arrow - Left Square 24px.png"
             class="page-header_back_icon"
@@ -23,9 +23,6 @@
           <div class="bill__detail-status">Chờ trả tiền</div>
         </div>
         <div class="bill__detail-action">
-          <a href="#" class="btn btn-danger">
-            <span>Hủy đơn</span>
-          </a>
           <a href="#" class="btn btn-primary ml-10">
             <span>Lịch sử thanh toán</span>
           </a>
@@ -39,11 +36,15 @@
             <div class="card-section">
               <div class="card-item">
                 <div class="card-item-title">Phí giao:</div>
-                <div class="card-item-price">$24.99</div>
+                <div class="card-item-price">{{
+                  bill.shipping_fee | formatPrice
+                }}</div>
               </div>
               <div class="card-item">
                 <div class="card-item-title">Phí phát sinh:</div>
-                <div class="card-item-price">$24.99</div>
+                <div class="card-item-price">{{
+                  bill.extra_fee | formatPrice
+                }}</div>
               </div>
             </div>
             <div class="card-section">
