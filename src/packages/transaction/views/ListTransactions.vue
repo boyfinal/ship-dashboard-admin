@@ -191,7 +191,6 @@ export default {
   },
   created() {
     this.filter = this.getRouteQuery()
-    this.init()
   },
   computed: {
     ...mapState('transaction', {

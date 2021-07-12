@@ -5,7 +5,7 @@ export const COUNT_LIST_TRANSACTIONS = 'countListTransactions'
 export const CHANGE_STATUS_TRANSACTION = 'changeStatusTransaction'
 
 export const state = {
-  transaction: [],
+  transactions: [],
   count: 0,
   count_status: [],
 }
@@ -34,6 +34,7 @@ export const actions = {
         success: false,
         message: list.errorMessage || '',
       }
+      return result
     }
     commit(FETCH_LIST_TRANSACTIONS, list.transactions)
     commit(COUNT_LIST_TRANSACTIONS, count)
