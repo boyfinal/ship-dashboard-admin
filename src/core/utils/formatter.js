@@ -40,8 +40,8 @@ export const formatTobe = (tobe, quantity, result = 'are') => {
  * @return {string}
  */
 export const formatPrice = (value) => {
-  let val = (value / 1).toFixed(2).replace('.', ',')
-  return `$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
+  let val = (value / 1).toFixed(2)
+  return `$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 }
 
 export const round = (value, digits = 0) => {
