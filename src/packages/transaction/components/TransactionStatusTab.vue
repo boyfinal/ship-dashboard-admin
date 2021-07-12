@@ -53,17 +53,18 @@ export default {
   computed: {
     cleanStatus() {
       const status = this.hasAll ? [{ value: '', text: 'All' }] : []
-
       this.status.forEach((item) => {
         if (typeof item === 'object') {
           let count
           let total = 0
-          this.countStatus.forEach((obj) => {
-            total += parseInt(obj.count)
-            if (obj.status === item.value) {
-              count = obj.count
-            }
-          })
+          if (this.countStatus) {
+            this.countStatus.forEach((obj) => {
+              total += parseInt(obj.count)
+              if (obj.status === item.value) {
+                count = obj.count
+              }
+            })
+          }
 
           let countText = count ? ' (' + count + ')' : ' (0)'
           if (item.value === '') {
