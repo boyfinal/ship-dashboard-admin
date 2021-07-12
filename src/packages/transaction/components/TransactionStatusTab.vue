@@ -1,17 +1,6 @@
 <template>
   <div id="nav_container" class="p-tabs nav-tabs-horizontal">
-    <button class="icon-nav next" @click="clickLeftNav">
-      <i class="left-nav"></i>
-    </button>
-    <button class="icon-nav prev active" @click="clickRightNav">
-      <i class="right-nav"></i>
-    </button>
-    <ul
-      role="tablist"
-      class="nav nav-tabs nav-tabs-line"
-      id="nav_packages"
-      :style="setRight"
-    >
+    <ul role="tablist" class="nav nav-tabs nav-tabs-line">
       <li
         role="presentation"
         class="nav-item"

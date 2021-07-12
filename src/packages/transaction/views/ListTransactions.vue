@@ -46,6 +46,7 @@
                       <th>Loại</th>
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
+                      <th>Khách hàng</th>
                       <th>Nội dung</th>
                       <th>Hình thức</th>
                       <th>Giá trị</th>
@@ -64,6 +65,9 @@
                         v-status:status="mapStatus[item.status].value"
                       ></span
                     ></td>
+                    <td>
+                      {{ item.user.full_name }}
+                    </td>
                     <td>{{ item.description }}</td>
                     <td>{{
                       item.type === topupType ? 'Chuyển khoản' : 'N/A'
