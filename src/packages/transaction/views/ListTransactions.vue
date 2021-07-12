@@ -166,6 +166,8 @@ export default {
         status: '',
         search: '',
         search_by: 'bill_id',
+        bill_id: '',
+        account_name: '',
         type: '',
       },
       keywordSearch: '',
@@ -289,6 +291,18 @@ export default {
   watch: {
     filter: {
       handler: function() {
+        switch (this.filter.search_by) {
+          case 'bill_id':
+            this.filter.bill_id = this.filter.search
+            this.filter.account_name = ''
+            break
+          case 'account_name':
+            this.filter.account_name = this.filter.search
+            this.filter.bill_id = ''
+            break
+          default:
+            break
+        }
         this.init()
       },
       deep: true,
