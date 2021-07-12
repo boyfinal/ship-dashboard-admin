@@ -290,11 +290,12 @@ export default {
       )
     },
     getAmount(log) {
+      let amount = this.$options.filters.formatPrice(log.amount)
       switch (log.type) {
         case TransactionLogTypeTopup:
-          return `+ $${log.amount} `
+          return `+ ${amount} `
         case TransactionLogTypePay:
-          return `- $${log.amount} `
+          return `- ${amount} `
         default:
           return null
       }
