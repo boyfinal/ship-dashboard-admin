@@ -1,3 +1,5 @@
+export const EditFeeBill = 8
+export const ExtraFeeBill = 7
 export const BILLING_STATUS_AWAITING_PAYMENT = 1
 export const BILLING_STATUS_UNPAID = 2
 export const BILLING_STATUS_PAID = 3
