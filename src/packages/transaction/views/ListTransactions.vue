@@ -1,107 +1,93 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="page-content">
-        <div class="card">
-          <div class="card-body">
-            <div class="row" id="search-bar">
-              <div class="col-8">
-                <p-input
-                  placeholder="Tìm kiếm ..."
-                  suffixIcon="search"
-                  type="search"
-                  v-model="keywordSearch"
-                  @keyup.enter="handleSearch"
-                >
-                </p-input>
-              </div>
-              <div class="col-2">
-                <p-select
-                  placeholder="Please select"
-                  v-model="filter.search_by"
-                >
-                  <option
-                    :value="key"
-                    v-for="(value, key) in searchBy"
-                    :key="key"
-                  >
-                    {{ value }}
-                  </option>
-                </p-select>
-              </div>
-              <div class="col-2">
-                <p-select placeholder="Please select" v-model="filter.type">
-                  <option value="">Tất cả</option>
-                  <option
-                    :value="key"
-                    v-for="(value, key) in optionType"
-                    :key="key"
-                  >
-                    {{ value }}
-                  </option>
-                </p-select>
-              </div>
+      <div class="row mb-12" id="search-bar">
+        <div class="col-8">
+          <p-input
+            placeholder="Tìm kiếm ..."
+            suffixIcon="search"
+            type="search"
+            v-model="keywordSearch"
+            @keyup.enter="handleSearch"
+          >
+          </p-input>
+        </div>
+        <div class="col-2">
+          <p-select placeholder="Please select" v-model="filter.search_by">
+            <option :value="key" v-for="(value, key) in searchBy" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+        <div class="col-2">
+          <p-select placeholder="Please select" v-model="filter.type">
+            <option value="">Tất cả</option>
+            <option :value="key" v-for="(value, key) in optionType" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <transaction-status-tab
+            :has-all="false"
+            :status="statusTab"
+            v-model="filter.status"
+            :count-status="count_status"
+          />
+          <VclTable class="mt-20" v-if="isFetching"></VclTable>
+          <template v-else-if="logs.length">
+            <div class="table-responsive">
+              <table class="table table-hover" id="tbl-packages">
+                <thead>
+                  <tr>
+                    <template>
+                      <th>Loại</th>
+                      <th>Ngày tạo</th>
+                      <th>Trạng thái</th>
+                      <th>Nội dung</th>
+                      <th>Hình thức</th>
+                      <th>Giá trị</th>
+                      <th>Thao tác</th>
+                    </template>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, i) in logs" :key="i">
+                    <td>
+                      {{ transactionType[item.type] }}
+                    </td>
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td
+                      ><span
+                        v-status:status="mapStatus[item.status].value"
+                      ></span
+                    ></td>
+                    <td>{{ item.description }}</td>
+                    <td>{{
+                      item.type === topupType ? 'Chuyển khoản' : 'N/A'
+                    }}</td>
+                    <td>{{ getAmount(item) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-            <transaction-status-tab
-              :has-all="false"
-              :status="statusTab"
-              v-model="filter.status"
-              :count-status="count_status"
-            />
-            <VclTable class="mt-20" v-if="isFetching"></VclTable>
-            <template v-else-if="logs.length">
-              <div class="table-responsive">
-                <table class="table table-hover" id="tbl-packages">
-                  <thead>
-                    <tr>
-                      <template>
-                        <th>Loại</th>
-                        <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
-                        <th>Nội dung</th>
-                        <th>Hình thức</th>
-                        <th>Giá trị</th>
-                        <th>Thao tác</th>
-                      </template>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, i) in logs" :key="i">
-                      <td>
-                        {{ transactionType[item.type] }}
-                      </td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                      <td
-                        ><span
-                          v-status:status="mapStatus[item.status].value"
-                        ></span
-                      ></td>
-                      <td>{{ item.description }}</td>
-                      <td>{{
-                        item.type === topupType ? 'Chuyển khoản' : 'N/A'
-                      }}</td>
-                      <td>{{ getAmount(item) }}</td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div
-                class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
-              >
-                <p-pagination
-                  :filter-limit="false"
-                  :total="count"
-                  :perPage.sync="filter.limit"
-                  :current.sync="filter.page"
-                  size="sm"
-                ></p-pagination>
-              </div>
-            </template>
-            <empty-search-result v-else></empty-search-result>
-          </div>
+            <div
+              class="d-flex justify-content-between align-items-center mb-16"
+              v-if="count > 0"
+            >
+              <p-pagination
+                :filter-limit="false"
+                :total="count"
+                :perPage.sync="filter.limit"
+                :current.sync="filter.page"
+                size="sm"
+              ></p-pagination>
+            </div>
+          </template>
+          <empty-search-result v-else></empty-search-result>
         </div>
       </div>
     </div>
