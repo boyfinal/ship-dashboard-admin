@@ -5,14 +5,14 @@ export const COUNT_LIST_TRANSACTIONS = 'countListTransactions'
 export const CHANGE_STATUS_TRANSACTION = 'changeStatusTransaction'
 
 export const state = {
-  transaction_logs: [],
+  transaction: [],
   count: 0,
   count_status: [],
 }
 
 export const mutations = {
   [FETCH_LIST_TRANSACTIONS]: (state, payload) => {
-    state.transaction_logs = payload
+    state.transactions = payload
   },
   [COUNT_LIST_TRANSACTIONS]: (state, payload) => {
     state.count = payload.count
@@ -28,14 +28,14 @@ export const actions = {
       api.fetchTransactionLogs(payload),
       api.countTransactionLogs(payload),
     ])
-    if (!list.transaction_logs || !count) {
+    if (!list.transactions || !count) {
       count = { count: 0 }
       result = {
         success: false,
         message: list.errorMessage || '',
       }
     }
-    commit(FETCH_LIST_TRANSACTIONS, list.transaction_logs)
+    commit(FETCH_LIST_TRANSACTIONS, list.transactions)
     commit(COUNT_LIST_TRANSACTIONS, count)
     return result
   },
