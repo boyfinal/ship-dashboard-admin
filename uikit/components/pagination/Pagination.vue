@@ -1,6 +1,6 @@
 <template>
   <div class="pagination-box">
-    <div class="select_limit_box">
+    <div class="select_limit_box" v-if="filterLimit">
       <span class="title">Bản ghi mỗi trang:</span>
       <div
         class="select_limit"
@@ -140,6 +140,10 @@ export default {
     current: {
       type: [Number, String],
       default: 1,
+    },
+    filterLimit: {
+      type: Boolean,
+      default: true,
     },
     size: String,
     simple: Boolean,
