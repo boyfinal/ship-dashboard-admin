@@ -70,7 +70,7 @@
                         {{ item.code }}
                       </router-link>
                     </td>
-                    <td>{{ item.sku }}</td>
+                    <td>{{ item.order_number }}</td>
                     <td>
                       {{ item.recipient }}
                     </td>
