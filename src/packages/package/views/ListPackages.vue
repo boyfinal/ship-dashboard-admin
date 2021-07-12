@@ -7,7 +7,7 @@
             placeholder="Tìm kiếm ..."
             suffixIcon="search"
             type="search"
-            clearable="true"
+            :clearable="true"
             v-model="keywordSearch"
             @keyup.enter="handleSearch"
           >
