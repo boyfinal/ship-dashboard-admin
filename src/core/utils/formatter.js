@@ -8,7 +8,10 @@ export function formatNumber(val) {
     return 0
   }
 
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return val
+    .toFixed(2)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 /**
