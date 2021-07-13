@@ -18,6 +18,7 @@
             @selected="handleSearchRole"
             @unselected="handleRemoveSearch"
             :optionSearch="filterRole"
+            :item="filter"
             :placeHolder="'Quyền'"
           />
         </div>
