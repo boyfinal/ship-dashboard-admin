@@ -1,8 +1,8 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12" id="search-bar">
-        <div class="col-10">
+      <div class="row mb-12">
+        <div class="col-12" id="search-box">
           <p-input
             placeholder="Tìm theo mã kiện hoặc nhãn kiện"
             suffixIcon="search"
@@ -11,6 +11,10 @@
             @keyup.enter="handleSearch"
           >
           </p-input>
+          <p-button type="primary">
+            <img src="~@/assets/img/plus.svg" alt="" />
+            Tạo kiện hàng
+          </p-button>
         </div>
       </div>
       <div class="card">
@@ -146,3 +150,10 @@ export default {
   },
 }
 </script>
+<style>
+#search-box .input-group {
+  width: calc(100% - 165px);
+  float: left;
+  margin-right: 10px;
+}
+</style>
