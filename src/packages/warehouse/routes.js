@@ -10,4 +10,13 @@ export const routes = [
         /* webpackChunkName: "sign-in" */ './views/ListPackageInWarehouse'
       ),
   },
+  {
+    path: '/warehouse/check-package',
+    name: 'check-package',
+    meta: {
+      title: 'Quét kiểm hàng',
+    },
+    component: () =>
+      import(/* webpackChunkName: "warehouse" */ './views/CheckPackage'),
+  },
 ]

@@ -25,6 +25,23 @@
   .card-header{
     border-radius:4px 4px 0 0;
   }
+  .card-pagi{
+    display: flex;
+  }
+  .btn-pagi{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #EDEEEE;
+    text-align: center;
+    cursor: pointer;
+      i{
+        line-height: 32px;
+      }
+  }
+  .disable-next-page{
+    pointer-events: none;
+  }
 
   &-title{
     color:$color-neutral-7;
@@ -42,6 +59,7 @@
   }
   &-status{
     color: $color-neutral-10;
+    font-weight: 600;
     font-size: 14px;
     margin-top: 6px;
   }

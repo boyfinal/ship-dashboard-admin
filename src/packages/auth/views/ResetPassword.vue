@@ -27,6 +27,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import valider from '@core/valider'
 
 export default {
   data() {
@@ -35,10 +36,17 @@ export default {
       password: null,
       requiredPassword: false,
       correctPassword: false,
+      valider: null,
     }
   },
 
   created() {
+    this.valider = valider.schema((y) => ({
+      password: y
+        .string()
+        .required('Password không để trống')
+        .min(6, 'Password tối thiểu 6 ký tự'),
+    }))
     this.init()
   },
 

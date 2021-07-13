@@ -7,7 +7,7 @@
           v-for="(menu, i) in menus"
           class="site-menu-item"
           :class="{
-            active: isActive(menu.route) || childrenNameRoute(menu.route.name),
+            active: isActive(menu.route) || childrenNameRoute(menu),
           }"
           :key="i"
         >
@@ -21,7 +21,7 @@
               <img
                 :class="{ 'is-active': menu.isOpen }"
                 class=""
-                v-if="menu.sub"
+                v-if="menu.sub.length"
                 src="@/assets/img/up-white.svg"
               />
             </div>
@@ -38,19 +38,13 @@
               v-for="(sub, j) in menu.sub"
               :key="j"
               :class="{
-                active:
-                  isActive(sub.route) ||
-                  isContainAlias(sub.alias) ||
-                  childrenNameRoute(sub.title),
+                active: isContainAlias(sub.alias),
               }"
             >
               <router-link :to="sub.route" class="animsition-link">
                 <span
                   :class="{
-                    active:
-                      isActive(sub.route) ||
-                      isContainAlias(sub.alias) ||
-                      childrenNameRoute(sub.title),
+                    active: isContainAlias(sub.alias),
                   }"
                   class="site-menu-sub-title"
                   >{{ sub.title }}</span
@@ -112,7 +106,7 @@ export default {
           title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
           iconActive: require('@assets/img/OrderActive.svg'),
-          route: '/',
+          route: { name: 'packages' },
           class: '',
           isOpen: false,
           sub: [
@@ -122,9 +116,9 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
-              route: '/packages/bills',
+              route: '/bills',
               title: 'Hóa đơn',
-              alias: ['/packages/bills', '/packages/bills/:id'],
+              alias: ['/bills', '/bills/:id'],
             },
             {
               route: '/transactions',
@@ -144,6 +138,7 @@ export default {
           iconActive: require('@assets/img/carActive.svg'),
           route: { name: 'deliver' },
           class: '',
+          sub: [],
         },
         q3: {
           title: 'Kho',
@@ -156,27 +151,27 @@ export default {
             {
               route: '/warehouse',
               title: 'Danh sách kho',
-              alias: ['/packages', '/packages/:id'],
+              alias: [],
             },
             {
               route: '/packages/claims',
               title: 'Quét nhận hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: [],
             },
             {
-              route: '/packages/claims',
+              route: '/warehouse/check-package',
               title: 'Quét kiểm hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/warehouse/check-package'],
             },
             {
               route: '/packages/claims',
               title: 'Kiện hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: [],
             },
             {
               route: '/packages/claims',
               title: 'Lô hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: [],
             },
           ],
         },
@@ -191,14 +186,17 @@ export default {
             {
               route: '/setting/account',
               title: 'Tài khoản',
+              alias: [],
             },
             {
               route: '',
               title: 'Truy cập',
+              alias: [],
             },
             {
               route: '',
               title: 'Bảng giá',
+              alias: [],
             },
           ],
         },
@@ -229,14 +227,10 @@ export default {
     },
 
     childrenNameRoute(title) {
-      let fullPath = this.$route.fullPath
-      if (title != null) {
-        title = title.toLowerCase()
-        if (fullPath.includes(title)) {
-          return true
-        }
+      let path = this.$route.matched.map((element) => element.path).toString()
+      if (title.sub.length > 0) {
+        return title.sub.some((element) => element.alias.includes(path))
       }
-      return false
     },
     handelRouter(menu) {
       if (menu.sub) {
@@ -247,3 +241,17 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.animsition-link {
+  position: relative;
+  &:before {
+    position: absolute;
+    content: '';
+    width: 210px;
+    height: 36px;
+    top: -7px;
+    left: 0;
+    margin-left: -18px;
+  }
+}
+</style>

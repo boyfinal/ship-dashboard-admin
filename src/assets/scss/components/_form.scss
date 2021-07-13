@@ -144,9 +144,6 @@ input[type='search'] {
         right: 16px;
         left: auto;
         z-index: 4;
-        &+.form-control {
-            padding-left: 40px;
-        }
     }
 }
 
