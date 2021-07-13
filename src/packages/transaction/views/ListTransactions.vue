@@ -301,11 +301,16 @@ export default {
       )
     },
     getDescription(transaction) {
+      let path = ''
       switch (transaction.type) {
         case TransactionLogTypeTopup:
           return `Nạp topup <strong>#${transaction.id}</strong>`
         case TransactionLogTypePay:
-          return `Thanh toán hóa đơn <strong>#${transaction.bill_id}</strong>`
+          path = this.$router.resolve({
+            name: 'bill-detail',
+            params: { id: transaction.bill_id },
+          }).href
+          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
         default:
           return null
       }
