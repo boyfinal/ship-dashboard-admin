@@ -82,10 +82,17 @@
         </div>
       </div>
     </div>
+    <modal-choice-shipping-box
+      :boxes="boxes"
+      @save="createContainerSubmit"
+      :visible.sync="visibleModalChoiceBox"
+    >
+    </modal-choice-shipping-box>
   </div>
 </template>
 <script>
 import ContainerStatusTab from '../components/ContainerStatusTab'
+import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
 import { mapState, mapActions } from 'vuex'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -93,13 +100,14 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 
 import { CONTAINER_STATUS_TAB, MAP_NAME_STATUS_CONTAINER } from '../contants'
-import { FETCH_LIST_CONTAINERS } from '../store'
+import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER } from '../store'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
   components: {
     EmptySearchResult,
     ContainerStatusTab,
+    ModalChoiceShippingBox,
   },
   data() {
     return {
@@ -110,6 +118,7 @@ export default {
         search: '',
       },
       isFetching: false,
+      visibleModalChoiceBox: false,
     }
   },
   created() {
@@ -118,6 +127,7 @@ export default {
   computed: {
     ...mapState('container', {
       containers: (state) => state.containers,
+      boxes: (state) => state.boxes,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
       statusTab() {
@@ -129,7 +139,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('container', [FETCH_LIST_CONTAINERS]),
+    ...mapActions('container', [FETCH_LIST_CONTAINERS, CREATE_CONTAINER]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -138,6 +148,33 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    CreateContainerHandle() {
+      this.visibleModalChoiceBox = true
+    },
+    async createContainerSubmit(body) {
+      if (body.box_type_id == 0) {
+        this.$toast.open({
+          type: 'error',
+          message: 'Box type is required',
+        })
+        return
+      }
+      const result = await this[CREATE_CONTAINER](body)
+      this.visibleModalChoiceBox = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
+        return
+      }
+
+      this.$toast.open({
+        type: 'success',
+        message: 'Tạo kiện hàng thành công',
+      })
+      this.init()
     },
   },
   watch: {
@@ -152,7 +189,7 @@ export default {
 </script>
 <style>
 #search-box .input-group {
-  width: calc(100% - 165px);
+  width: calc(100% - 166px);
   float: left;
   margin-right: 10px;
 }

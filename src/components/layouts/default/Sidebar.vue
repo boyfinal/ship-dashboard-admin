@@ -35,7 +35,7 @@
           >
             <div
               class="site-menu-sub-item"
-              v-for="(sub, j) in menu.sub"
+              v-for="(sub, j) in availableMenuSub(menu.sub)"
               :key="j"
               :class="{
                 active: isContainAlias(sub.alias),
@@ -86,9 +86,6 @@ export default {
     },
     shopName() {
       return this.shop.name
-    },
-    availableMenus() {
-      return this.menus.filter((menu) => menu.disable !== true)
     },
   },
   data() {
@@ -164,7 +161,7 @@ export default {
               alias: ['/warehouse/check-package'],
             },
             {
-              route: '/packages/claims',
+              route: '/containers',
               title: 'Kiện hàng',
               alias: [],
             },
@@ -184,9 +181,9 @@ export default {
           isOpen: false,
           sub: [
             {
-              route: '/setting/account',
+              route: '/account',
               title: 'Tài khoản',
-              alias: [],
+              alias: ['/account'],
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
@@ -241,6 +238,10 @@ export default {
         return ''
       }
       return menu.route
+    },
+
+    availableMenuSub(sub) {
+      return sub.filter((item) => item.disable !== true)
     },
   },
 }
