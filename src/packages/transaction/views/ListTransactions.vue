@@ -281,7 +281,7 @@ export default {
           break
       }
       this.$toast.open({ message: msg, type: 'success' })
-      this.init()
+      await this.init()
     },
     showBtn(log) {
       return (

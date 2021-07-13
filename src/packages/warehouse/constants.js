@@ -79,26 +79,3 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
 }
-
-export const CHANGE_PACKAGE_TYPE = [
-  '',
-  'Người nhận',
-  'Số điện thoại người nhận',
-  'Địa chỉ người nhận',
-  'Thành phố',
-  'Mã vùng',
-  'Mã bưu điện',
-  'Mã quốc gia',
-  'Trọng lượng',
-  'Kích thước (DxRxC)',
-  'Yêu cầu khi giao',
-  'Dịch vụ',
-  'Chi tiết hàng hóa',
-  'Địa chỉ phụ người nhận',
-]
-
-export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInit]: 'Đơn hàng được tạo mới',
-  [PackageStatusWattingTransport]: 'Đơn hàng đang chờ lấy',
-  [PackageStatusCancel]: 'Đơn hàng đã bị hủy',
-}
