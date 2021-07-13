@@ -88,7 +88,7 @@ export const actions = {
 
     return {
       success: false,
-      message: response.errorMessage || '',
+      message: response.errors || '',
     }
   },
 }
