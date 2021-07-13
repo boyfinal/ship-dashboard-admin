@@ -40,7 +40,11 @@
     font-size: 14px;
     margin-top: 6px;
   }
-
+  &-status{
+    color: $color-neutral-10;
+    font-size: 14px;
+    margin-top: 6px;
+  }
   &-action{
     .btn-danger {
      color: #F5222D;
@@ -50,6 +54,36 @@
     }
     .btn-primary{
       color: #FFFFFF;
+    }
+  }
+  .card-price{
+    padding: 20px 16px;
+  }
+  .card-item{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card-section:not(:last-child){
+    border-bottom: 1px solid #E1E2E2;
+    margin-bottom: 16px;
+  }
+  .card-footer{
+    justify-content: flex-end;
+    border-top: none;
+    .pagination-box{
+     margin: 0;
+    }
+    .select_limit_box{
+      display: none;
+    }
+  }
+
+  table{
+    tr:last-child{
+      td{
+        border-bottom: 1px solid $color-neutral-3 ;
+      }
     }
   }
 }

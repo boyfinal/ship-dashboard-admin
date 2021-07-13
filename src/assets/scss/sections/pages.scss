@@ -5,6 +5,9 @@
     background: #F6F7F7;
     width: calc(100% - #{$width-sidebar});
     min-height: calc(100% - 56px);
+    .link-icon{
+        margin-bottom: 2px;
+    }
     padding: 24px;
     .page-header-group {
         display: flex;
