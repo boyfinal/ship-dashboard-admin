@@ -112,7 +112,7 @@ export default {
           title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
           iconActive: require('@assets/img/OrderActive.svg'),
-          route: '/',
+          route: '/packages',
           class: '',
           isOpen: false,
           sub: [

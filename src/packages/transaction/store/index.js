@@ -34,6 +34,8 @@ export const actions = {
         success: false,
         message: list.errorMessage || '',
       }
+      commit(FETCH_LIST_TRANSACTIONS, [])
+      commit(COUNT_LIST_TRANSACTIONS, 0)
       return result
     }
     commit(FETCH_LIST_TRANSACTIONS, list.transactions)
