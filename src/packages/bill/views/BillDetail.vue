@@ -62,7 +62,6 @@
                   <thead>
                     <tr>
                       <th>Mã vận đơn</th>
-                      <th>Ngày tạo</th>
                       <th>Phí giao</th>
                     </tr>
                   </thead>
@@ -77,11 +76,13 @@
                             },
                           }"
                         >
-                          {{ item.id }}
+                          {{ item.code }}
+                          <img
+                            class="link-icon"
+                            src="@/assets/img/external.svg"
+                          />
                         </router-link>
-                        <img class="link-icon" src="@/assets/img/external.svg"
-                      /></td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                      </td>
                       <td>{{ item.shipping_fee | formatPrice }}</td>
                     </tr>
                   </tbody>
@@ -137,10 +138,13 @@
                             },
                           }"
                         >
-                          {{ item.package_id }}
+                          {{ item.package.code }}
+                          <img
+                            class="link-icon"
+                            src="@/assets/img/external.svg"
+                          />
                         </router-link>
-                        <img class="link-icon" src="@/assets/img/external.svg"
-                      /></td>
+                      </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>{{ item.amount | formatPrice }}</td>
                       <td>
