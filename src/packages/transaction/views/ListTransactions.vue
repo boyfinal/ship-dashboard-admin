@@ -153,6 +153,7 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { FETCH_LIST_TRANSACTIONS, CHANGE_STATUS_TRANSACTION } from '../store'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import { cloneDeep } from '../../../core/utils'
 export default {
   name: 'ListTransactions',
   mixins: [mixinRoute, mixinTable],
@@ -233,7 +234,20 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this[FETCH_LIST_TRANSACTIONS](this.filter)
+      let payload = cloneDeep(this.filter)
+      switch (this.filter.search_by) {
+        case 'bill_id':
+          payload.bill_id = this.filter.search
+          delete payload.account_name
+          break
+        case 'account_name':
+          payload.account_name = this.filter.search
+          delete payload.bill_id
+          break
+        default:
+          break
+      }
+      const result = await this[FETCH_LIST_TRANSACTIONS](payload)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
@@ -278,7 +292,7 @@ export default {
           break
       }
       this.$toast.open({ message: msg, type: 'success' })
-      this.init()
+      await this.init()
     },
     showBtn(transaction) {
       return (
@@ -311,18 +325,6 @@ export default {
   watch: {
     filter: {
       handler: function() {
-        switch (this.filter.search_by) {
-          case 'bill_id':
-            this.filter.bill_id = this.filter.search
-            this.filter.account_name = ''
-            break
-          case 'account_name':
-            this.filter.account_name = this.filter.search
-            this.filter.bill_id = ''
-            break
-          default:
-            break
-        }
         this.init()
       },
       deep: true,

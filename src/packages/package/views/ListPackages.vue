@@ -87,9 +87,7 @@
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
-                      <span
-                        v-status:status="mapStatus[item.status].value"
-                      ></span>
+                      <span v-status="mapStatus[item.status].value"></span>
                     </td>
                     <td>{{ item.shipping_fee | formatPrice }}</td>
                   </tr>

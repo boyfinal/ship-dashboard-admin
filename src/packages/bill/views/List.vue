@@ -8,8 +8,9 @@
             prefixIcon="search"
             type="search"
             clearable
-            :value.sync="filter.search"
+            v-model="filter.search"
             @keyup.enter="handleSearch"
+            @clear="handleSearch"
           >
           </p-input>
         </div>
@@ -24,7 +25,6 @@
       <div class="card">
         <div class="card-body">
           <div class="list__bill-list">
-            <status-tab v-model="filter.status" :status="statusTabs" />
             <vcl-table class="md-20" v-if="isFetching"></vcl-table>
             <template v-else-if="bills.length > 0">
               <div class="table-responsive">
@@ -32,15 +32,13 @@
                   <thead>
                     <tr class="list__claim-title">
                       <th>MÃ HÓA ĐƠN</th>
+                      <th>KHÁCH HÀNG</th>
                       <th>NGÀY TẠO</th>
-                      <th>TRẠNG THÁI</th>
-                      <th>PHÍ GIAO</th>
-                      <th>PHÍ PHÁT SINH</th>
                       <th>TỔNG HÓA ĐƠN</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in bills" :key="item.id">
+                    <tr v-for="item in transBills" :key="item.id">
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -52,19 +50,11 @@
                           {{ item.id }}
                         </router-link>
                       </td>
+                      <td>{{ item.customer }}</td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
-                        <span
-                          class="badge badge-round"
-                          :class="item.status | statusClass"
-                          >{{ item.status | statusText }}</span
-                        >
+                        {{ item.total_amount | formatNumber }}
                       </td>
-                      <td>{{ item.shipping_fee | formatNumber }}</td>
-                      <td>{{ item.extra_fee | formatNumber }}</td>
-                      <td>{{
-                        (item.shipping_fee + item.extra_fee) | formatNumber
-                      }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -94,7 +84,7 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { BILL_FETCH, BILL_COUNT } from '../store'
 import { mapActions, mapState } from 'vuex'
-import { BILL_STATUS_TAB, BILL_MAP_NAME_STATUS } from '../constants'
+import { BILL_MAP_NAME_STATUS } from '../constants'
 
 export default {
   name: 'BillList',
@@ -110,17 +100,41 @@ export default {
         status: '',
       },
       isFetching: false,
-      statusTabs: BILL_STATUS_TAB,
     }
   },
   mounted() {
     this.filter = this.getRouteQuery()
+    this.init()
   },
   computed: {
     ...mapState('bill', {
       count: (state) => state.count,
       bills: (state) => state.bills,
     }),
+
+    transBills() {
+      return this.bills.map((item) => {
+        let user = 'unknown'
+        if (item.user) {
+          const username = item.user.email || item.user.phone_number
+          if (item.user.full_name) {
+            user = `${item.user.full_name}-${username}`
+          } else {
+            user =
+              item.user.email && item.user.phone_number
+                ? `${item.user.email}-${item.user.phone_number}`
+                : username
+          }
+        }
+
+        return {
+          id: item.id,
+          customer: user,
+          created_at: item.created_at,
+          total_amount: item.shipping_fee + item.extra_fee,
+        }
+      })
+    },
 
     searchPlaceholder() {
       const maptext = {
@@ -164,8 +178,7 @@ export default {
       }
     },
 
-    handleSearch(e) {
-      this.filter.search = e.target.value
+    handleSearch() {
       this.filter.page = 1
       this.init()
     },
