@@ -2,7 +2,7 @@
   <div class="list-packages pages">
     <div class="page-content">
       <div class="row mb-12" id="search-bar">
-        <div class="col-9">
+        <div class="col-10">
           <p-input
             placeholder="Tìm theo mã kiện hoặc nhãn kiện"
             suffixIcon="search"
