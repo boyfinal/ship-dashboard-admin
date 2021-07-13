@@ -122,9 +122,9 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
-              route: '/packages/claims',
+              route: '/packages/bills',
               title: 'Hóa đơn',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/packages/bills', '/packages/bills/:id'],
             },
             {
               route: '/transactions',

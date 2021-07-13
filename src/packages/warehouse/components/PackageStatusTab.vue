@@ -1,6 +1,17 @@
 <template>
-  <div id="nav_container" class="p-tabs nav-tabs-horizontal">
-    <ul role="tablist" class="nav nav-tabs nav-tabs-line">
+  <div id="nav_container" class="p-tabs nav-tabs-horizontal mt-24">
+    <button class="icon-nav next" @click="clickLeftNav">
+      <i class="left-nav"></i>
+    </button>
+    <button class="icon-nav prev active" @click="clickRightNav">
+      <i class="right-nav"></i>
+    </button>
+    <ul
+      role="tablist"
+      class="nav nav-tabs nav-tabs-line"
+      id="nav_packages"
+      :style="setRight"
+    >
       <li
         role="presentation"
         class="nav-item"
@@ -25,7 +36,7 @@
 import { capitalize } from '@core/utils/string'
 
 export default {
-  name: 'TransactionStatusTab',
+  name: 'PackageStatusTab',
   props: {
     status: {
       type: Array,
@@ -36,7 +47,6 @@ export default {
       default: () => [],
     },
     value: {
-      type: [String, Number],
       default: '',
     },
     hasAll: {
@@ -57,14 +67,12 @@ export default {
         if (typeof item === 'object') {
           let count
           let total = 0
-          if (this.countStatus) {
-            this.countStatus.forEach((obj) => {
-              total += parseInt(obj.count)
-              if (obj.status === item.value) {
-                count = obj.count
-              }
-            })
-          }
+          this.countStatus.forEach((obj) => {
+            total += parseInt(obj.count)
+            if (obj.status === item.value) {
+              count = obj.count
+            }
+          })
 
           let countText = count ? ' (' + count + ')' : ' (0)'
           if (item.value === '') {
@@ -79,6 +87,7 @@ export default {
           status.push({ value: item, text: capitalize(item) })
         }
       })
+
       return status
     },
     setRight() {
