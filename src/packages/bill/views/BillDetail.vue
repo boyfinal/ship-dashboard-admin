@@ -15,15 +15,15 @@
         <div class="bill__detail-info">
           <div class="bill__detail-title">Mã hóa đơn:</div>
           <div class="bill__detail-title">Ngày tạo:</div>
-          <div class="bill__detail-title">Trạng thái:</div>
+          <div class="bill__detail-title"></div>
           <div class="bill__detail-code">{{ bill.id }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
-          <div class="bill__detail-status">Chờ trả tiền</div>
+          <div class="bill__detail-status"></div>
         </div>
         <div class="bill__detail-action">
-          <a href="#" class="btn btn-primary ml-10">
+          <a @click="handleRouter" href="#" class="btn btn-primary ml-10">
             <span>Lịch sử thanh toán</span>
           </a>
         </div>
@@ -111,7 +111,7 @@
                 </table>
               </div>
             </div>
-            <div class="card-footer">
+            <div v-if="countExtra > 0" class="card-footer">
               <div class="pagination-card">
                 <p-pagination
                   :total="countExtra"
@@ -168,7 +168,7 @@
                 </table>
               </div>
             </div>
-            <div class="card-footer">
+            <div v-if="countCreate > 0" class="card-footer">
               <div class="pagination-card">
                 <p-pagination
                   :total="countCreate"
@@ -219,7 +219,7 @@ export default {
       return this.total_fee - this.total_unpaid
     },
   },
-  created() {
+  mounted() {
     this.init()
   },
   methods: {
@@ -249,11 +249,39 @@ export default {
     },
     sum(array) {
       let tt = array
-        .map((item) => item.amount)
+        .map((item) => (item.status > 0 ? item.amount : 0))
         .reduce((previous, current) => {
           return previous + current
         }, 0)
       return tt
+    },
+    handleRouter() {
+      const { id } = this.$route.params
+      this.$router
+        .push({
+          name: 'list-transaction',
+          query: {
+            search_by: 'bill_id',
+            page: 1,
+            limit: 30,
+            search: id,
+          },
+        })
+        .catch()
+    },
+  },
+  watch: {
+    filter: {
+      handler: function() {
+        this.init()
+      },
+      deep: true,
+    },
+    filterExtra: {
+      handler: async function() {
+        await this[FETCH_BILL_EXTRA](this.filterExtra)
+      },
+      deep: true,
     },
   },
 }
