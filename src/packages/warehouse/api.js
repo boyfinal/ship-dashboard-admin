@@ -28,11 +28,15 @@ export default {
   fetchListService() {
     return http.get(`/services`)
   },
-  fetchListPackages(payload) {
-    return http.get(`/packages?${buildQueryString(payload)}`)
+  fetchListPackageInWareHouse(payload) {
+    return http.get(
+      `/warehouses/packages-in-warehouse?${buildQueryString(payload)}`
+    )
   },
-  countListPackages(payload) {
-    return http.get(`/packages/count?${buildQueryString(payload)}`)
+  countListPackageInWareHouse(payload) {
+    return http.get(
+      `/warehouses/packages-in-warehouse/count?${buildQueryString(payload)}`
+    )
   },
   importPackage(payload) {
     const formData = new FormData()

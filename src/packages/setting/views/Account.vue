@@ -21,8 +21,8 @@
             :placeHolder="'Quyền'"
           />
         </div>
-        <a href="#" class="btn btn-primary ml-8">
-          <span><i class="fa fa-plus"></i> Thêm quản lý</span>
+        <a href="#" class="btn btn-info ml-8" @click="visibleModalAddUser">
+          <span><i class="fa fa-plus"></i>Thêm quản lý</span>
         </a>
       </div>
       <div class="card">
@@ -120,8 +120,11 @@
       :title="actions.role.title"
       :type="actions.role.type"
       @action="handleUpdateRole(role, id)"
+      @close="init"
     >
     </modal-confirm>
+    <modal-add-user :visible.sync="isVisibleAddUser" v-if="isVisibleAddUser">
+    </modal-add-user>
   </div>
 </template>
 <script>
@@ -143,6 +146,7 @@ import {
 } from '../store/index'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import ModalAddUser from '../components/ModalAddUser'
 
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -155,6 +159,7 @@ export default {
     StatusTab,
     SelectRole,
     ModalConfirm,
+    ModalAddUser,
   },
   data() {
     return {
@@ -174,6 +179,7 @@ export default {
       },
       isVisibleConfirmStatus: false,
       isVisibleConfirmRole: false,
+      isVisibleAddUser: false,
       isFetching: false,
       statusDeactive: USER_STATUS_DEACTIVE,
       statusActive: USER_STATUS_ACTIVE,
@@ -282,7 +288,7 @@ export default {
       }
 
       const result = await this.updateRoleUser(payload)
-      this.isVisibleConfirmStatus = false
+      this.isVisibleConfirmRole = false
 
       if (!result || result.error) {
         return this.$toast.open({
@@ -297,6 +303,10 @@ export default {
         message: 'Cập nhật thành công',
         duration: 3000,
       })
+    },
+
+    visibleModalAddUser() {
+      this.isVisibleAddUser = true
     },
   },
   watch: {

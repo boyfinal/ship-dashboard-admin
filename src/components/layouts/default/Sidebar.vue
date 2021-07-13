@@ -149,7 +149,7 @@ export default {
           isOpen: false,
           sub: [
             {
-              route: '/packages',
+              route: '/warehouse',
               title: 'Danh sách kho',
               alias: [],
             },
@@ -187,6 +187,10 @@ export default {
               route: '/setting/account',
               title: 'Tài khoản',
               alias: [],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse(),
             },
             {
               route: '',
