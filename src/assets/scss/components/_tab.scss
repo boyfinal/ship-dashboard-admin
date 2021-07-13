@@ -1,6 +1,6 @@
 .nav-tabs {
     position: relative;
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     .nav-link {
         color: $color-neutral-7;
         //display: block;
@@ -20,7 +20,7 @@
                 position: absolute;
                 border-bottom: 2px solid #ccd5db;
                 width: 100%;
-                margin-top: 32px;
+                top:106%;
                 left: 0%;
             }
         }
@@ -40,7 +40,7 @@
             position: absolute;
             border-bottom: 2px solid $color-java-blue-10;
             width: 100%;
-            margin-top: 32px;
+           top: 106%;
             left: 0;
         }
     }
