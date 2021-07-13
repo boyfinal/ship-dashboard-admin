@@ -187,6 +187,10 @@ export default {
               route: '/setting/account',
               title: 'Tài khoản',
               alias: [],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse(),
             },
             {
               route: '',
