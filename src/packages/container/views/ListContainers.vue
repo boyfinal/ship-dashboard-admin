@@ -189,7 +189,7 @@ export default {
 </script>
 <style>
 #search-box .input-group {
-  width: calc(100% - 165px);
+  width: calc(100% - 166px);
   float: left;
   margin-right: 10px;
 }
