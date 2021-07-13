@@ -219,7 +219,7 @@ export default {
       return this.total_fee - this.total_unpaid
     },
   },
-  created() {
+  mounted() {
     this.init()
   },
   methods: {
@@ -254,6 +254,20 @@ export default {
           return previous + current
         }, 0)
       return tt
+    },
+  },
+  watch: {
+    filter: {
+      handler: function() {
+        this.init()
+      },
+      deep: true,
+    },
+    filterExtra: {
+      handler: async function() {
+        await this[FETCH_BILL_EXTRA](this.filterExtra)
+      },
+      deep: true,
     },
   },
 }
