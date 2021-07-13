@@ -1,21 +1,10 @@
 .btn {
   @include transition(all 0.2s);
-  display: inline-block;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  text-decoration: none !important;
-  outline: none;
   font-weight: $font-weight-bold;
-  border-radius: 8px;
-  padding: 8px 20px;
-  height: 40px;
-  font-size: 14px;
-  line-height: 22px;
-  /* identical to box height, or 157% */
-
-  align-items: center;
-
+  border-radius: .8rem;
+  padding: .8rem 2rem;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
 
   &:disabled, &.disabled {
     background: #DFE3E8;
@@ -34,81 +23,80 @@
     font-size: 16px;
   }
 }
+
 .btn-default {
-  font-weight: 600;
-  background: #FFFFFF;
-  color: #37393E;
-  border: 1px solid #37393E;
-  &:disabled {
-    background: #FFFFFF!important;
-    border: 1px solid #B0B3B9;
-    box-sizing: border-box;
-    border-radius: 4px;
-  }
-}
-.btn-primary {
-  background: $color-java-blue-6;
-  &:hover {
-    background-color: $color-java-blue-5;
-  }
-  &:focus, &:active {
-    background: $color-java-blue-6 !important;
-  }
+    font-weight: 600;
+    background: #FFFFFF;
+    color: #37393E;
+    border: 1px solid #37393E;
+    &:disabled {
+        background: #FFFFFF!important;
+        border: 1px solid #B0B3B9;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
 }
 
 .btn-pure {
-  &,
-  &:hover,
-  &:focus,
-  &:active,
-  &.active,
-  &:not([disabled]):not(.disabled):active,
-  &:not([disabled]):not(.disabled).active,
-  .open > &.dropdown-toggle,
-  .show > &.dropdown-toggle,
-  &[disabled],
-  fieldset[disabled] & {
-    background-color: transparent;
-    border-color: transparent;
-    box-shadow: none;
-
-    &:hover, &:focus, &.focus {
-      background-color: transparent;
-      border-color: transparent;
-      box-shadow: none;
-      color: #686B70;
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:not([disabled]):not(.disabled):active,
+    &:not([disabled]):not(.disabled).active,
+    .open>&.dropdown-toggle,
+    .show>&.dropdown-toggle,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        &:hover,
+        &:focus,
+        &.focus {
+            background-color: transparent;
+            border-color: transparent;
+            box-shadow: none;
+            color: #686B70;
+        }
     }
-  }
-  font-size: 14px;
-  line-height: 160%;
-  color: #686B70;
-  font-weight: 500;
-  .icon {
-    margin-right: 10px;
-    font-size: 12px;
-  }
-  a { 
-    font-weight: 500;
     font-size: 14px;
     line-height: 160%;
     color: #686B70;
-  }
-}
-
-.btn-danger {
-  background: #FFFFFF;
-  border: 1px solid #FFA39E;
-  color: #F5222D;
+    font-weight: 500;
+    .icon {
+        margin-right: 10px;
+        font-size: 12px;
+    }
+    a {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 160%;
+        color: #686B70;
+    }
 }
 
 .btn-primary-custom {
-  background: #FFFFFF;
-  border: 1px solid $color-java-blue-6;
-  color: $color-java-blue-6 !important;
+    background: #FFFFFF;
+    border: 1px solid $color-java-blue-6;
+    color: $color-java-blue-6 !important;
 }
 
 .p-button.btn-loading::after{
   border: 2px solid white;
   border-right-color: transparent;
   border-top-color: transparent;
+}
+
+@each $name, $color in $theme-colors {
+  .btn-#{$name} {
+    background-color: $color;
+    border-color: $color;
+  }
+
+  .btn-outline-#{$name} {
+    color: $color;
+    border-color: $color;
+  }
 }
