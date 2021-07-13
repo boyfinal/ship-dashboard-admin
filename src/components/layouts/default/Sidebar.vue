@@ -154,7 +154,7 @@ export default {
           isOpen: false,
           sub: [
             {
-              route: '/packages',
+              route: '/warehouse',
               title: 'Danh sách kho',
               alias: ['/packages', '/packages/:id'],
             },
