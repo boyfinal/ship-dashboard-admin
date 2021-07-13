@@ -23,7 +23,7 @@
           <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
         </div>
         <div class="bill__detail-action">
-          <a @click="handleRouter" href="#" class="btn btn-primary ml-10">
+          <a @click="handleRouter" href="#" class="btn btn-info ml-10">
             <span>Lịch sử thanh toán</span>
           </a>
         </div>
