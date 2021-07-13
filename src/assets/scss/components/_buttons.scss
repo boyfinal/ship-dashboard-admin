@@ -23,62 +23,64 @@
     font-size: 16px;
   }
 }
+
 .btn-default {
-  font-weight: 600;
-  background: #FFFFFF;
-  color: #37393E;
-  border: 1px solid #37393E;
-  &:disabled {
-    background: #FFFFFF!important;
-    border: 1px solid #B0B3B9;
-    box-sizing: border-box;
-    border-radius: 4px;
-  }
+    font-weight: 600;
+    background: #FFFFFF;
+    color: #37393E;
+    border: 1px solid #37393E;
+    &:disabled {
+        background: #FFFFFF!important;
+        border: 1px solid #B0B3B9;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
 }
 
 .btn-pure {
-  &,
-  &:hover,
-  &:focus,
-  &:active,
-  &.active,
-  &:not([disabled]):not(.disabled):active,
-  &:not([disabled]):not(.disabled).active,
-  .open > &.dropdown-toggle,
-  .show > &.dropdown-toggle,
-  &[disabled],
-  fieldset[disabled] & {
-    background-color: transparent;
-    border-color: transparent;
-    box-shadow: none;
-
-    &:hover, &:focus, &.focus {
-      background-color: transparent;
-      border-color: transparent;
-      box-shadow: none;
-      color: #686B70;
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &:not([disabled]):not(.disabled):active,
+    &:not([disabled]):not(.disabled).active,
+    .open>&.dropdown-toggle,
+    .show>&.dropdown-toggle,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        &:hover,
+        &:focus,
+        &.focus {
+            background-color: transparent;
+            border-color: transparent;
+            box-shadow: none;
+            color: #686B70;
+        }
     }
-  }
-  font-size: 14px;
-  line-height: 160%;
-  color: #686B70;
-  font-weight: 500;
-  .icon {
-    margin-right: 10px;
-    font-size: 12px;
-  }
-  a { 
-    font-weight: 500;
     font-size: 14px;
     line-height: 160%;
     color: #686B70;
-  }
+    font-weight: 500;
+    .icon {
+        margin-right: 10px;
+        font-size: 12px;
+    }
+    a {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 160%;
+        color: #686B70;
+    }
 }
 
 .btn-primary-custom {
-  background: #FFFFFF;
-  border: 1px solid $color-java-blue-6;
-  color: $color-java-blue-6 !important;
+    background: #FFFFFF;
+    border: 1px solid $color-java-blue-6;
+    color: $color-java-blue-6 !important;
 }
 
 .p-button.btn-loading::after{
