@@ -38,4 +38,9 @@
         border-radius: 0px 0px 8px 8px;
         max-height: none;
     }
+    &.input-valid {
+        .multiselect__tags {
+            border: 1px solid #FFA39E !important;
+        }
+    }
 }
