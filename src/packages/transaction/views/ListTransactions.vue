@@ -68,7 +68,7 @@
                     <td>
                       {{ item.user.full_name }}
                     </td>
-                    <td>{{ item.description }}</td>
+                    <td v-html="getDescription(item)"></td>
                     <td>{{
                       item.type === topupType ? 'Chuyển khoản' : 'N/A'
                     }}</td>
@@ -78,14 +78,12 @@
                         <p-button
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
-                          :size="'xs'"
                           type="info"
                         >
                           Xác nhận
                         </p-button>
                         <p-button
                           @click="handleConfirm(failStatus, item.id)"
-                          :size="'xs'"
                           type="danger"
                         >
                           Thất bại
@@ -287,6 +285,16 @@ export default {
         transaction.type === TransactionLogTypeTopup &&
         transaction.status === TransactionStatusProcess
       )
+    },
+    getDescription(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return `Nạp topup <strong>#${transaction.id}</strong>`
+        case TransactionLogTypePay:
+          return `Thanh toán hóa đơn <strong>#${transaction.bill_id}</strong>`
+        default:
+          return null
+      }
     },
     getAmount(transaction) {
       let amount = this.$options.filters.formatPrice(transaction.amount)
