@@ -23,7 +23,7 @@
           <div class="bill__detail-status"></div>
         </div>
         <div class="bill__detail-action">
-          <a href="#" class="btn btn-primary ml-10">
+          <a @click="handleRouter" href="#" class="btn btn-primary ml-10">
             <span>Lịch sử thanh toán</span>
           </a>
         </div>
@@ -254,6 +254,20 @@ export default {
           return previous + current
         }, 0)
       return tt
+    },
+    handleRouter() {
+      const { id } = this.$route.params
+      this.$router
+        .push({
+          name: 'list-transaction',
+          query: {
+            search_by: 'bill_id',
+            page: 1,
+            limit: 30,
+            search: id,
+          },
+        })
+        .catch()
     },
   },
   watch: {
