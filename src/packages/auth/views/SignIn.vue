@@ -110,7 +110,7 @@ export default {
     },
 
     async onSignIn() {
-      if (!(await this.valider.check(this.form))) {
+      if (!this.valider.check(this.form)) {
         return
       }
 

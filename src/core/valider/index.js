@@ -3,30 +3,28 @@ import * as yup from 'yup'
 const valider = {
   errors: {},
   shape: null,
+  value: null,
 
   schema(cb) {
     valider.shape = yup.object().shape(cb(yup))
     return valider
   },
 
-  async check(form) {
+  check(form) {
+    valider.errors = {}
+
     if (valider.shape == null) return true
 
-    const errors = await valider.shape
-      .validate(form, { abortEarly: false })
-      .then(() => [])
-      .catch((err) => {
-        if (err.name !== 'ValidationError') throw err
+    try {
+      valider.value = valider.shape.validateSync(form, { abortEarly: false })
+      return true
+    } catch (error) {
+      for (const err of error.inner) {
+        valider.errors[err.path] = err.message
+      }
 
-        return err.inner || []
-      })
-
-    valider.errors = {}
-    for (const err of errors) {
-      valider.errors[err.path] = err.message
+      return false
     }
-
-    return errors.length == 0
   },
 
   hasError(key) {
@@ -37,6 +35,11 @@ const valider = {
   error(key) {
     if (!valider.errors) return ''
     return valider.errors[key] || ''
+  },
+
+  reset() {
+    valider.value = null
+    valider.errors = {}
   },
 }
 
