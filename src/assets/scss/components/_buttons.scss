@@ -1,21 +1,10 @@
 .btn {
   @include transition(all 0.2s);
-  display: inline-block;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  text-decoration: none !important;
-  outline: none;
   font-weight: $font-weight-bold;
-  border-radius: 8px;
-  padding: 8px 20px;
-  height: 40px;
-  font-size: 14px;
-  line-height: 22px;
-  /* identical to box height, or 157% */
-
-  align-items: center;
-
+  border-radius: .8rem;
+  padding: .8rem 2rem;
+  font-size: 1.4rem;
+  line-height: 2.2rem;
 
   &:disabled, &.disabled {
     background: #DFE3E8;
@@ -44,15 +33,6 @@
     border: 1px solid #B0B3B9;
     box-sizing: border-box;
     border-radius: 4px;
-  }
-}
-.btn-primary {
-  background: $color-java-blue-6;
-  &:hover {
-    background-color: $color-java-blue-5;
-  }
-  &:focus, &:active {
-    background: $color-java-blue-6 !important;
   }
 }
 
@@ -95,12 +75,6 @@
   }
 }
 
-.btn-danger {
-  background: #FFFFFF;
-  border: 1px solid #FFA39E;
-  color: #F5222D;
-}
-
 .btn-primary-custom {
   background: #FFFFFF;
   border: 1px solid $color-java-blue-6;
@@ -111,4 +85,16 @@
   border: 2px solid white;
   border-right-color: transparent;
   border-top-color: transparent;
+}
+
+@each $name, $color in $theme-colors {
+  .btn-#{$name} {
+    background-color: $color;
+    border-color: $color;
+  }
+
+  .btn-outline-#{$name} {
+    color: $color;
+    border-color: $color;
+  }
 }
