@@ -20,6 +20,10 @@
               <div class="package-code">{{ package_detail.package.code }} </div>
             </div>
             <div>
+              <div>Dịch vụ </div>
+              <div>{{ $evaluate('package_detail.package.service?.name') }}</div>
+            </div>
+            <div>
               <div>Ngày tạo </div>
               <div>{{
                 package_detail.package.created_at
@@ -34,7 +38,8 @@
               @click="handleCancelPackage"
               v-if="
                 package_detail.package.status != statusCancel &&
-                  package_detail.package.status != PackageStatusShipSuccess
+                  package_detail.package.status != statusSuccess &&
+                  package_detail.package.status != statusShipping
               "
             >
               <span>Hủy đơn</span>
@@ -45,7 +50,8 @@
               class="btn btn-primary-custom ml-7"
               v-if="
                 package_detail.package.status != statusCancel &&
-                  package_detail.package.status != PackageStatusShipSuccess
+                  package_detail.package.status != statusSuccess &&
+                  package_detail.package.status != statusShipping
               "
             >
               <span>Sửa đơn</span>
@@ -129,19 +135,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="card-block">
-                  <div class="card-header">
-                    <div class="card-title">Yêu cầu khi giao</div>
-                  </div>
-                  <div class="card-content">
-                    <div
-                      >{{
-                        $evaluate('package_detail.package.note') ||
-                          'Không có yêu cầu'
-                      }}
-                    </div>
-                  </div>
-                </div>
               </div>
               <div class="col-3">
                 <div class="card-block">
@@ -151,7 +144,7 @@
                   <div class="card-content">
                     <div class="row">
                       <div class="col-4 mb-8">Trạng thái đơn:</div>
-                      <div class="col-7"
+                      <div class="col-8"
                         ><div
                           v-if="
                             package_detail.package.status &&
@@ -196,11 +189,14 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-4">Mã quốc gia:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.country_code')
-                        }}</div></div
+                      <div class="col-4">Trạng thái khiếu nại:</div>
+                      <div class="col-8">
+                        <div v-if="package_detail.status_ticket">
+                          Có
+                        </div>
+                        <div v-if="!package_detail.status_ticket">
+                          Không
+                        </div></div
                       >
                     </div>
                   </div>
@@ -230,7 +226,7 @@
                       <div class="col-4 mb-8">Mã đơn hàng:</div>
                       <div class="col-8"
                         ><div>{{
-                          $evaluate('package_detail.package.sku')
+                          $evaluate('package_detail.package.order_number')
                         }}</div></div
                       >
                     </div>
@@ -383,9 +379,27 @@
                                     }}
                                   </td>
                                   <td>
-                                    {{ item.old_value }}
+                                    <p-tooltip
+                                      :label="item.old_value"
+                                      size="large"
+                                      position="top"
+                                      type="dark"
+                                      :active="item.old_value.length > 15"
+                                    >
+                                      {{ truncate(item.old_value, 15) }}
+                                    </p-tooltip>
                                   </td>
-                                  <td></td>
+                                  <td>
+                                    <p-tooltip
+                                      :label="item.value"
+                                      size="large"
+                                      position="top"
+                                      type="dark"
+                                      :active="item.value.length > 15"
+                                    >
+                                      {{ truncate(item.value, 15) }}
+                                    </p-tooltip>
+                                  </td>
                                   <td>{{ item.extra_fee | formatPrice }}</td>
                                 </tr>
                               </tbody>
@@ -541,11 +555,13 @@ import {
   DELIVER_LOG_PACKAGE,
   PackageStatusCancel,
   PackageStatusShipSuccess,
+  PackageStatusShipping,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
+import { truncate } from '@core/utils/string'
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
@@ -654,6 +670,9 @@ export default {
     statusSuccess() {
       return PackageStatusShipSuccess
     },
+    statusShipping() {
+      return PackageStatusShipping
+    },
   },
   created() {
     this.packageID = parseInt(this.$route.params.id, 10)
@@ -667,6 +686,7 @@ export default {
       FETCH_LIST_SERVICE,
       CANCEL_PACKAGES,
     ]),
+    truncate,
     // ...mapActions('setting', [LIST_SENDER]),
     async init() {
       this.isFetching = true
