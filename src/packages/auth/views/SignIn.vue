@@ -2,22 +2,20 @@
   <div class="page vertical-align sign-in">
     <div class="vertical-align-middle">
       <div class="mb-16 header-text">
-        <div class="header-2 text-center"> Đăng nhập </div>
+        <div class="header-2 text-center">Đăng nhập</div>
       </div>
       <div>
         <form @submit.prevent="onSignIn">
           <div class="mb-16">
-            <label class="color-newtral-10 font-weight-600"
-              >Số điện thoại / Email</label
-            >
+            <label class="color-newtral-10 font-weight-600">
+              Số điện thoại / Email
+            </label>
             <p-input
               placeholder="Nhập số điện thoại hoặc email"
               v-model="form.email"
               @keyup.enter="onSignIn"
+              :error="valider.error('email')"
             />
-            <span class="invalid-error" v-if="valider.hasError('email')">
-              {{ valider.error('email') }}
-            </span>
           </div>
           <div class="mb-16">
             <div class="label">
@@ -29,10 +27,8 @@
               hiddenPass="on"
               v-model="form.password"
               @keyup.enter="onSignIn"
+              :error="valider.error('password')"
             />
-            <span class="invalid-error" v-if="valider.hasError('password')">
-              {{ valider.error('password') }}
-            </span>
           </div>
           <div class="captcha mt-40" v-if="count >= 1">
             <vue-recaptcha
