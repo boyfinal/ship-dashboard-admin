@@ -1,7 +1,13 @@
-export const CLAIM_STATUS = {
-  'Đang xử lý': 1,
-  'Đã xử lý': 2,
-}
+export const CLAIM_STATUS = [
+  {
+    value: 1,
+    text: 'Đang xử lý',
+  },
+  {
+    value: 2,
+    text: 'Đã xử lý',
+  },
+]
 
 export const CLAIM_STATUS_PENDING = 1
 export const CLAIM_STATUS_PROCESSED = 2
