@@ -161,7 +161,7 @@ export default {
               alias: ['/warehouse/check-package'],
             },
             {
-              route: '/packages/claims',
+              route: '/containers',
               title: 'Kiện hàng',
               alias: [],
             },
