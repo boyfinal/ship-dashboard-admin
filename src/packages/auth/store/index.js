@@ -1,4 +1,9 @@
-import { ROLE_ADMIN } from '@core/constants'
+import {
+  ROLE_ADMIN,
+  ROLE_ACCOUNTANT,
+  ROLE_WAREHOUSE,
+  ROLE_SUPPORT,
+} from '@core/constants'
 import api from '../api'
 import AuthService from '@core/services/auth'
 import { HTTP_STATUS_FORBIDDEN } from '@core/constants/http'
@@ -195,6 +200,15 @@ export const getters = {
   },
   isAdmin(state) {
     return state.user.role === ROLE_ADMIN
+  },
+  isSupport(state) {
+    return state.user.role === ROLE_SUPPORT
+  },
+  isAccountant(state) {
+    return state.user.role === ROLE_ACCOUNTANT
+  },
+  isWarehouse(state) {
+    return state.user.role === ROLE_WAREHOUSE
   },
 }
 

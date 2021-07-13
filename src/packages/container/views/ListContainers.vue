@@ -11,7 +11,7 @@
             @keyup.enter="handleSearch"
           >
           </p-input>
-          <p-button type="primary" @click="CreateContainerHandle">
+          <p-button type="info">
             <img src="~@/assets/img/plus.svg" alt="" />
             Tạo kiện hàng
           </p-button>

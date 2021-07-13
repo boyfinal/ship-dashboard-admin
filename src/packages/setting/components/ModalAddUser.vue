@@ -45,6 +45,8 @@
             >
             <p-input
               placeholder="Mật khẩu"
+              type="password"
+              hiddenPass="on"
               v-model="user.password"
               @keyup.enter="handleCreate"
               :error="valider.error('password')"
@@ -62,7 +64,7 @@
             </p-button>
             <p-button
               class="ml-8"
-              type="primary"
+              type="info"
               @click="handleCreate"
               :loading="loading"
             >

@@ -13,7 +13,7 @@
               >Hủy</p-button
             >
             <p-button
-              type="primary"
+              type="info"
               :loading="loading"
               :disabled="loading"
               @click.prevent="$emit('save')"
