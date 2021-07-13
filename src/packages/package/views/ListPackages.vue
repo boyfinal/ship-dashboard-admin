@@ -5,10 +5,10 @@
         <div class="col-9 pl-0">
           <p-input
             placeholder="Tìm kiếm ..."
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             :clearable="true"
-            v-model="keywordSearch"
+            :value.sync="keywordSearch"
             @keyup.enter="handleSearch"
           >
           </p-input>

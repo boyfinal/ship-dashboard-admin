@@ -20,10 +20,50 @@
 
 //setting-account
 .setting-account {
-    .card {
+    .search-input {
+        width: 85%;
+        .search-type {
+            width: 15%
+        }
+    }
+    .btn-primary {
+        width: 159px;
         i {
+            margin-right: 5px;
+        }
+    }
+    .card {
+        .btn {
+            width: 67px;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 22px;
+            &.lock {
+                background: #FFF1F0;
+                color: #F5222D;
+                &:hover {
+                    color: #FFF1F0;
+                    background: #F5222D;
+                }
+            }
+            &.unlock {
+                background: #F0FFF3;
+                color: #48BE78;
+                &:hover {
+                    color: #F0FFF3;
+                    background: #48BE78;
+                }
+            }
+            &:focus {
+                box-shadow: none;
+            }
+        }
+        .fa-circle {
             font-size: 8px;
-            margin-right: .5rem;
+            margin-right: 8px;
+            margin-top: 8px;
             &.active {
                 color: #48BE78;
             }
