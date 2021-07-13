@@ -37,7 +37,7 @@
             :count-status="count_status"
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
-          <template v-else-if="logs.length">
+          <template v-else-if="transactions.length">
             <div class="table-responsive">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
@@ -55,7 +55,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in logs" :key="i">
+                  <tr v-for="(item, i) in transactions" :key="i">
                     <td>
                       {{ transactionType[item.type] }}
                     </td>
@@ -68,7 +68,7 @@
                     <td>
                       {{ item.user.full_name }}
                     </td>
-                    <td>{{ item.description }}</td>
+                    <td v-html="getDescription(item)"></td>
                     <td>{{
                       item.type === topupType ? 'Chuyển khoản' : 'N/A'
                     }}</td>
@@ -78,14 +78,12 @@
                         <p-button
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
-                          :size="'xs'"
                           type="info"
                         >
                           Xác nhận
                         </p-button>
                         <p-button
                           @click="handleConfirm(failStatus, item.id)"
-                          :size="'xs'"
                           type="danger"
                         >
                           Thất bại
@@ -191,11 +189,10 @@ export default {
   },
   created() {
     this.filter = this.getRouteQuery()
-    this.init()
   },
   computed: {
     ...mapState('transaction', {
-      logs: (state) => state.transaction_logs,
+      transactions: (state) => state.transactions,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
     }),
@@ -283,15 +280,25 @@ export default {
       this.$toast.open({ message: msg, type: 'success' })
       this.init()
     },
-    showBtn(log) {
+    showBtn(transaction) {
       return (
-        log.type === TransactionLogTypeTopup &&
-        log.status === TransactionStatusProcess
+        transaction.type === TransactionLogTypeTopup &&
+        transaction.status === TransactionStatusProcess
       )
     },
-    getAmount(log) {
-      let amount = this.$options.filters.formatPrice(log.amount)
-      switch (log.type) {
+    getDescription(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return `Nạp topup <strong>#${transaction.id}</strong>`
+        case TransactionLogTypePay:
+          return `Thanh toán hóa đơn <strong>#${transaction.bill_id}</strong>`
+        default:
+          return null
+      }
+    },
+    getAmount(transaction) {
+      let amount = this.$options.filters.formatPrice(transaction.amount)
+      switch (transaction.type) {
         case TransactionLogTypeTopup:
           return `+ ${amount} `
         case TransactionLogTypePay:
