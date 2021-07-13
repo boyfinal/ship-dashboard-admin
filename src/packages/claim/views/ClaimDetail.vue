@@ -30,10 +30,10 @@
             class="page-header-group-actions__right"
             v-if="claim.status != claimStatusProcessed"
           >
-            <a href="#" class="btn btn-primary" @click="handleCancelTicket()">
+            <a href="#" class="btn btn-info" @click="handleCancelTicket()">
               <span>Đã xử lý</span>
             </a>
-            <a href="#" class="btn btn-primary" @click="showModalReply">
+            <a href="#" class="btn btn-info" @click="showModalReply">
               <span>Trả lời</span>
             </a>
           </div>
