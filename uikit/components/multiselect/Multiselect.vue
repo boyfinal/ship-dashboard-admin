@@ -495,7 +495,6 @@ fieldset[disabled] .multiselect {
 .multiselect,
 .multiselect__input,
 .multiselect__single {
-  font-family: inherit;
   font-size: 16px;
   touch-action: manipulation;
 }
@@ -536,9 +535,9 @@ fieldset[disabled] .multiselect {
   border-color: #20bfca;
 }
 
-.multiselect--active .multiselect__select {
+/* .multiselect--active .multiselect__select {
   transform: rotateZ(180deg);
-}
+} */
 
 .multiselect--above.multiselect--active .multiselect__current,
 .multiselect--above.multiselect--active .multiselect__input,
@@ -584,10 +583,10 @@ fieldset[disabled] .multiselect {
   outline: none;
 }
 
-.multiselect__single {
+/* .multiselect__single {
   padding-left: 5px;
   margin-bottom: 8px;
-}
+} */
 
 .multiselect__tags-wrap {
   display: inline;
