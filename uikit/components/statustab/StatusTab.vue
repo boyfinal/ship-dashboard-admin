@@ -27,8 +27,7 @@ export default {
   name: 'StatusTab',
   props: {
     status: {
-      type: Array,
-      Object,
+      type: [Array, Object],
       default: () => {},
     },
     value: {
@@ -72,7 +71,7 @@ export default {
             text = capitalize(item.text)
             value = String(item.value)
           } else {
-            text = capitalize(item)
+            text = capitalize(key)
             value = String(item)
           }
 
@@ -88,8 +87,7 @@ export default {
     },
 
     mapCount() {
-      if (this.hasCount) return {}
-
+      if (!this.hasCount) return {}
       const mapcount = {}
       for (const item of this.count) {
         mapcount[item.status] = item.count
