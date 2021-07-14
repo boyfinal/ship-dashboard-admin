@@ -64,9 +64,7 @@
                       </router-link>
                     </td>
                     <td
-                      ><span
-                        v-status="mapStatus[item.warehouse_status].text"
-                      ></span
+                      ><span v-status="mapStatus[item.status].value"></span
                     ></td>
                     <td>
                       {{ item.city }}
@@ -143,6 +141,7 @@ import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
+  MAP_NAME_STATUS_PACKAGE,
   PackageWareHouseStatusPick,
   PackageWareHouseStatusReturn,
 } from '../constants'
@@ -209,7 +208,7 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      return PACKAGE_IN_WAREHOUSE_STATUS_TAB
+      return MAP_NAME_STATUS_PACKAGE
     },
   },
   methods: {

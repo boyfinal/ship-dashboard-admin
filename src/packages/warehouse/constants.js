@@ -41,36 +41,32 @@ export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
 ]
 
 export const MAP_NAME_STATUS_PACKAGE = {
-  // [PackageStatusInit]: {
-  //   value: 'Tạo mới',
-  //   class: 'badge-primary',
-  // },
-  // [PackageStatusWattingTransport]: {
-  //   value: 'Chờ lấy',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusTransported]: {
-  //   value: 'Đã lấy',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusProcessing]: {
-  //   value: 'Đang xử lý',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusShipping]: {
-  //   value: 'Đang giao',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusShipSuccess]: {
-  //   value: 'Giao thành công',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusReturn]: {
-  //   value: 'Trả hàng',
-  //   class: 'badge-success',
-  // },
-  // [PackageStatusCancel]: {
-  //   value: 'Đã hủy',
-  //   class: 'badge-success',
-  // },
+  [PackageWareHouseStatusPick]: {
+    value: 'Đã lấy',
+    class: 'badge-primary',
+  },
+  [PackageStatusWareHouseLabeled]: {
+    value: 'Kiểm hàng',
+    class: 'badge-success',
+  },
+  [PackageWareHouseStatusInContainer]: {
+    value: 'Đóng kiện',
+    class: 'badge-success',
+  },
+  [PackageWareHouseStatusInShipment]: {
+    value: 'Đóng lô',
+    class: 'badge-success',
+  },
+  [PackageWareHouseStatusExport]: {
+    value: 'Xuất kho',
+    class: 'badge-success',
+  },
+  [PackageWareHouseStatusReturn]: {
+    value: 'Trả hàng',
+    class: 'badge-success',
+  },
+  [PackageWareHouseStatusCancelled]: {
+    value: 'Hủy',
+    class: 'badge-success',
+  },
 }
