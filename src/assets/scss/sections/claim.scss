@@ -4,6 +4,9 @@
         border: none;
         padding: 0;
     }
+    .table-responsive {
+        overflow: revert;
+    }
     &-search {
         .btn {
             min-width: 150px;
