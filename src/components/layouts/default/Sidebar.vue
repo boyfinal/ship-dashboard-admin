@@ -163,7 +163,7 @@ export default {
             {
               route: '/containers',
               title: 'Kiện hàng',
-              alias: [],
+              alias: ['/containers'],
             },
             {
               route: '/packages/claims',
