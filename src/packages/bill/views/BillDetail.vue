@@ -70,6 +70,7 @@
                     <tr v-for="(item, i) in feeCreate" :key="i">
                       <td>
                         <router-link
+                          class="text-no-underline"
                           :to="{
                             name: 'package-detail',
                             params: {
@@ -130,6 +131,7 @@
                     <tr v-for="(item, i) in feeExtra" :key="i">
                       <td>
                         <router-link
+                          class="text-no-underline"
                           :to="{
                             name: 'package-detail',
                             params: {
