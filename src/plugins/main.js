@@ -14,6 +14,15 @@ const MainPlugin = {
     Vue.prototype.$isAdmin = function() {
       return this.$store.getters['auth/isAdmin']
     }
+    Vue.prototype.$isSupport = function() {
+      return this.$store.getters['auth/isSupport']
+    }
+    Vue.prototype.$isAccountant = function() {
+      return this.$store.getters['auth/isAccountant']
+    }
+    Vue.prototype.$isWarehouse = function() {
+      return this.$store.getters['auth/isWarehouse']
+    }
     Vue.prototype.$hasAuthorize = function(key) {
       if (typeof ACL[key] === 'undefined') {
         return false

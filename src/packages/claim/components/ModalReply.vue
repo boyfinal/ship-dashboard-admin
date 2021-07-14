@@ -133,7 +133,7 @@
           </p-button>
         </div>
         <div class="ml-7">
-          <p-button type="primary" @click="handleUpdate" :loading="isUploading">
+          <p-button type="info" @click="handleUpdate" :loading="isUploading">
             Gửi trả lời
           </p-button>
         </div>

@@ -26,9 +26,9 @@
             width: 15%
         }
     }
-    .btn-primary {
+    .btn {
         width: 159px;
-        i {
+        .fa-plus {
             margin-right: 5px;
         }
     }
@@ -71,5 +71,15 @@
                 color: #FFD591;
             }
         }
+    }
+}
+
+//modal-add-user 
+.modal-add-user {
+    .modal-body {
+        overflow-y: inherit;
+    }
+    .btn-primary {
+        width: 80px;
     }
 }

@@ -1,11 +1,11 @@
 <template>
-  <div class="list-packages pages">
+  <div class="list-transactions pages">
     <div class="page-content">
       <div class="row mb-12" id="search-bar">
         <div class="col-8">
           <p-input
             :placeholder="getPlaceHolder"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             :value="filter.search"
             @keyup.enter="handleSearch"
@@ -56,25 +56,44 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in transactions" :key="i">
-                    <td>
-                      {{ transactionType[item.type] }}
+                    <td :title="transactionType[item.type]">
+                      <span class="tool-tip">{{
+                        transactionType[item.type]
+                      }}</span>
                     </td>
-                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td
+                    <td :title="item.created_at | date('dd/MM/yyyy')"
+                      ><span>{{
+                        item.created_at | date('dd/MM/yyyy')
+                      }}</span></td
+                    >
+                    <td :title="mapStatus[item.status].value"
                       ><span
                         v-status:status="mapStatus[item.status].value"
                       ></span
                     ></td>
-                    <td>
-                      {{ item.user.full_name }}
+                    <td :title="item.user.full_name">
+                      <span class="tool-tip"> {{ item.user.full_name }}</span>
                     </td>
-                    <td v-html="getDescription(item)"></td>
-                    <td>{{
-                      item.type === topupType ? 'Chuyển khoản' : 'N/A'
-                    }}</td>
-                    <td>{{ getAmount(item) }}</td>
-                    <td>
-                      <div v-if="showBtn(item)">
+                    <td :title="getTitle(item)"
+                      ><span
+                        class="tool-tip"
+                        v-html="getDescription(item)"
+                      ></span
+                    ></td>
+                    <td
+                      :title="item.type === topupType ? 'Chuyển khoản' : 'N/A'"
+                    >
+                      <span class="tool-tip">{{
+                        item.type === topupType ? 'Chuyển khoản' : 'N/A'
+                      }}</span>
+                    </td>
+                    <td width="120px" :title="getAmount(item)"
+                      ><span style="white-space: nowrap;">{{
+                        getAmount(item)
+                      }}</span></td
+                    >
+                    <td class="btn-action">
+                      <div v-if="showBtn(item)" style="display: flex">
                         <p-button
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
@@ -146,6 +165,7 @@ import {
   TransactionStatusSuccess,
   TransactionStatusFailure,
   MAP_NAME_STATUS_TRANSACTION,
+  TransactionLogTypeRefund,
 } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -300,6 +320,16 @@ export default {
         transaction.status === TransactionStatusProcess
       )
     },
+    getTitle(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return `Nạp topup ${transaction.id}`
+        case TransactionLogTypePay:
+          return `Thanh toán hóa đơn #${transaction.bill_id}`
+        default:
+          return null
+      }
+    },
     getDescription(transaction) {
       let path = ''
       switch (transaction.type) {
@@ -311,6 +341,12 @@ export default {
             params: { id: transaction.bill_id },
           }).href
           return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+        case TransactionLogTypeRefund:
+          path = this.$router.resolve({
+            name: 'bill-detail',
+            params: { id: transaction.bill_id },
+          }).href
+          return `Hủy hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
         default:
           return null
       }
@@ -322,6 +358,8 @@ export default {
           return `+ ${amount} `
         case TransactionLogTypePay:
           return `- ${amount} `
+        case TransactionLogTypeRefund:
+          return `+ ${amount} `
         default:
           return null
       }
@@ -337,3 +375,23 @@ export default {
   },
 }
 </script>
+
+<style>
+@media screen and (max-width: 1400px) {
+  .btn-action .btn {
+    padding: 0.4rem 1rem !important;
+    white-space: nowrap;
+  }
+  .btn-action {
+    min-width: 180px;
+  }
+  .list-transactions td > span.tool-tip {
+    width: 100%;
+    height: 23px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+}
+</style>

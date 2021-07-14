@@ -2,23 +2,17 @@
   <div class="list-packages pages">
     <div class="page-content">
       <div class="row mb-12 search-input">
-        <div class="col-9 pl-0">
+        <div class="col-12 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
-            suffixIcon="search"
+            placeholder="Tìm theo mã vận đơn ..."
+            prefixIcon="search"
             type="search"
-            :clearable="true"
+            clearable
             v-model="keywordSearch"
             @keyup.enter="handleSearch"
+            @clear="clearSearch"
           >
           </p-input>
-        </div>
-        <div class="col-3">
-          <p-select placeholder="Please select" v-model="filter.search_by">
-            <option :value="key" v-for="(value, key) in searchBy" :key="key">
-              {{ value }}
-            </option>
-          </p-select>
         </div>
       </div>
       <div class="card">
@@ -36,19 +30,17 @@
                 <thead>
                   <tr>
                     <template>
-                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
-                      <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
-                      <th :class="{ hidden: hiddenClass }">Người nhận</th>
-                      <th :class="{ hidden: hiddenClass }"
-                        >Chi tiết hàng hóa</th
-                      >
-                      <th width="100" :class="{ hidden: hiddenClass }"
-                        >Ngày tạo
-                      </th>
-                      <th width="100" :class="{ hidden: hiddenClass }"
-                        >Trạng thái</th
-                      >
-                      <th :class="{ hidden: hiddenClass }">Tổng cước</th>
+                      <th>Mã vận đơn</th>
+                      <th>Trạng thái</th>
+                      <th>Thành phố</th>
+                      <th>Mã bang</th>
+                      <th>Mã bưu điện </th>
+                      <th>Dịch vụ</th>
+                      <th>Nhãn đơn</th>
+                      <th>Nhãn kiện</th>
+                      <th>Mã kiện</th>
+                      <th>Mã lô</th>
+                      <th></th>
                     </template>
                   </tr>
                 </thead>
@@ -60,6 +52,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -70,28 +63,54 @@
                         {{ item.code }}
                       </router-link>
                     </td>
-                    <td>{{ item.order_number }}</td>
+                    <td
+                      ><span v-status="mapStatus[item.status].value"></span
+                    ></td>
                     <td>
-                      {{ item.recipient }}
+                      {{ item.city }}
                     </td>
+                    <td> {{ item.state_code }} </td>
+                    <td>{{ item.zipcode }}</td>
+                    <td>{{ item.service_name }}</td>
                     <td>
-                      <p-tooltip
-                        :label="item.detail"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.detail.length > 15"
+                      <router-link
+                        class="text-no-underline"
+                        v-if="item.tracking && item.tracking.length > 0"
+                        :to="`${item.tracking[0].label_url}`"
                       >
-                        {{ truncate(item.detail, 15) }}
-                      </p-tooltip>
+                        {{ item.tracking[0].tracking_number }}
+                      </router-link>
                     </td>
-                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td
+                      ><router-link
+                        class="text-no-underline"
+                        v-if="item.container_id"
+                        :to="`${item.container_label_url}`"
+                      >
+                        {{ item.container_tracking_number }}
+                      </router-link></td
+                    >
                     <td>
-                      <span
-                        v-status:status="mapStatus[item.status].value"
-                      ></span>
+                      {{ item.container_id ? item.container_id : '-' }}
                     </td>
-                    <td>{{ item.shipping_fee | formatPrice }}</td>
+                    <td>
+                      {{ item.shipment_id ? item.shipment_id : '-' }}
+                    </td>
+                    <td>
+                      <div>
+                        <p-button
+                          v-if="
+                            item.status === PackageWareHouseStatusPick ||
+                              item.status === PackageWareHouseStatusReturn
+                          "
+                          @click="handleConfirm(successStatus, item.id)"
+                          class="mr-2"
+                          type="info"
+                        >
+                          Kiểm hàng
+                        </p-button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -102,6 +121,7 @@
             >
               <p-pagination
                 :total="count"
+                :fixed-limit="true"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
@@ -120,17 +140,12 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 
 import {
-  PACKAGE_STATUS_TAB,
-  PackageStatusInit,
+  PACKAGE_IN_WAREHOUSE_STATUS_TAB,
   MAP_NAME_STATUS_PACKAGE,
+  PackageWareHouseStatusPick,
+  PackageWareHouseStatusReturn,
 } from '../constants'
-import {
-  FETCH_LIST_PACKAGES,
-  IMPORT_PACKAGE,
-  EXPORT_PACKAGE,
-  PROCESS_PACKAGE,
-  CANCEL_PACKAGES,
-} from '@/packages/package/store'
+import { FETCH_LIST_PACKAGES_IN_WAREHOUSE } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -145,10 +160,9 @@ export default {
   data() {
     return {
       filter: {
-        limit: 50,
+        limit: 30,
         status: '',
         search: '',
-        search_by: 'code',
         code: '',
       },
       labelDate: `Tìm theo ngày`,
@@ -166,6 +180,8 @@ export default {
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
       },
+      PackageWareHouseStatusPick: PackageWareHouseStatusPick,
+      PackageWareHouseStatusReturn: PackageWareHouseStatusReturn,
     }
   },
   created() {
@@ -174,43 +190,37 @@ export default {
     this.init()
   },
   computed: {
-    ...mapState('package', {
-      packages: (state) => state.packages,
-      count: (state) => state.countPackages,
+    ...mapState('warehouse', {
+      packages: (state) => state.packages_in_warehouse,
+      count: (state) => state.count_packages_in_warehouse,
       count_status: (state) => state.count_status,
       hiddenClass() {
         return this.action.selected.length > 0 || this.isAllChecked
       },
       isFilterInitTab() {
-        return this.filter.status === PackageStatusInit
+        return this.filter.status === PackageWareHouseStatusPick
       },
       items() {
         return this.packages
       },
     }),
     statusTab() {
-      return PACKAGE_STATUS_TAB
+      return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
       return MAP_NAME_STATUS_PACKAGE
     },
   },
   methods: {
-    ...mapActions('package', [
-      FETCH_LIST_PACKAGES,
-      IMPORT_PACKAGE,
-      EXPORT_PACKAGE,
-      PROCESS_PACKAGE,
-      CANCEL_PACKAGES,
-    ]),
+    ...mapActions('warehouse', [FETCH_LIST_PACKAGES_IN_WAREHOUSE]),
     truncate,
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.keywordSearch = this.filter.search.trim()
-      const result = await this.fetchListPackages(this.filter)
+      const result = await this[FETCH_LIST_PACKAGES_IN_WAREHOUSE](this.filter)
       this.isFetching = false
-      if (!result.success) {
+      if (!result || !result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },

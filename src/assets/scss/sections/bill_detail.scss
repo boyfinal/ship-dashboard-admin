@@ -17,13 +17,30 @@
   &-info{
     display: grid;
     grid-column-gap: 50px;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
   }
   .item-gutters{
     padding: 0 12px;
   }
   .card-header{
     border-radius:4px 4px 0 0;
+  }
+  .card-pagi{
+    display: flex;
+  }
+  .btn-pagi{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #EDEEEE;
+    text-align: center;
+    cursor: pointer;
+      i{
+        line-height: 32px;
+      }
+  }
+  .disable-next-page{
+    pointer-events: none;
   }
 
   &-title{
@@ -42,7 +59,8 @@
   }
   &-status{
     color: $color-neutral-10;
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 16px;
     margin-top: 6px;
   }
   &-action{

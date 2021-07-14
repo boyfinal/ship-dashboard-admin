@@ -4,10 +4,10 @@
     <div class="site-menubar-body">
       <ul class="site-menu">
         <li
-          v-for="(menu, i) in menus"
+          v-for="(menu, i) in availableMenus"
           class="site-menu-item"
           :class="{
-            active: isActive(menu.route) || childrenNameRoute(menu.route.name),
+            active: isActive(menu.route) || childrenNameRoute(menu),
           }"
           :key="i"
         >
@@ -21,7 +21,7 @@
               <img
                 :class="{ 'is-active': menu.isOpen }"
                 class=""
-                v-if="menu.sub"
+                v-if="menu.sub.length"
                 src="@/assets/img/up-white.svg"
               />
             </div>
@@ -35,22 +35,16 @@
           >
             <div
               class="site-menu-sub-item"
-              v-for="(sub, j) in menu.sub"
+              v-for="(sub, j) in availableMenuSub(menu.sub)"
               :key="j"
               :class="{
-                active:
-                  isActive(sub.route) ||
-                  isContainAlias(sub.alias) ||
-                  childrenNameRoute(sub.title),
+                active: isContainAlias(sub.alias),
               }"
             >
               <router-link :to="sub.route" class="animsition-link">
                 <span
                   :class="{
-                    active:
-                      isActive(sub.route) ||
-                      isContainAlias(sub.alias) ||
-                      childrenNameRoute(sub.title),
+                    active: isContainAlias(sub.alias),
                   }"
                   class="site-menu-sub-title"
                   >{{ sub.title }}</span
@@ -107,14 +101,15 @@ export default {
       activeSubIndex: 0,
       isactive: false,
       activeItem: '',
-      menus: {
-        q1: {
+      menus: [
+        {
           title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
           iconActive: require('@assets/img/OrderActive.svg'),
-          route: '/packages',
+          route: { name: 'packages' },
           class: '',
           isOpen: false,
+          disable: this.$isWarehouse(),
           sub: [
             {
               route: '/packages',
@@ -122,9 +117,9 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
-              route: '/packages/bills',
+              route: '/bills',
               title: 'Hóa đơn',
-              alias: ['/packages/bills', '/packages/bills/:id'],
+              alias: ['/bills', '/bills/:id'],
             },
             {
               route: '/transactions',
@@ -138,30 +133,32 @@ export default {
             },
           ],
         },
-        q2: {
+        {
           title: 'Vận chuyển',
           icon: require('@assets/img/car.svg'),
           iconActive: require('@assets/img/carActive.svg'),
           route: { name: 'deliver' },
           class: '',
+          sub: [],
         },
-        q3: {
+        {
           title: 'Kho',
           icon: require('@assets/img/warehouse.svg'),
           iconActive: require('@assets/img/warehouseActive.svg'),
           route: '/bill',
           class: '',
           isOpen: false,
+          disable: this.$isAccountant() || this.$isSupport(),
           sub: [
             {
-              route: '/packages',
+              route: '/warehouse',
               title: 'Danh sách kho',
-              alias: ['/packages', '/packages/:id'],
+              alias: ['/warehouse'],
             },
             {
               route: '/packages/claims',
               title: 'Quét nhận hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: [],
             },
             {
               route: '/warehouse/check-package',
@@ -169,40 +166,45 @@ export default {
               alias: ['/warehouse/check-package'],
             },
             {
-              route: '/packages/claims',
+              route: '/containers',
               title: 'Kiện hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/containers'],
             },
             {
-              route: '/packages/claims',
+              route: '/shipments',
               title: 'Lô hàng',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              alias: ['/shipments'],
             },
           ],
         },
-        q5: {
+        {
           title: 'Quản trị',
           icon: require('@assets/img/Setting.svg'),
           iconActive: require('@assets/img/SettingActive.svg'),
           route: { name: 'setting' },
           class: '',
           isOpen: false,
+          disable:
+            this.$isAccountant() || this.$isSupport() || this.$isWarehouse(),
           sub: [
             {
-              route: '/setting/account',
+              route: '/account',
               title: 'Tài khoản',
+              alias: ['/account'],
             },
             {
               route: '',
               title: 'Truy cập',
+              alias: [],
             },
             {
               route: '',
               title: 'Bảng giá',
+              alias: [],
             },
           ],
         },
-      },
+      ],
     }
   },
 
@@ -229,14 +231,10 @@ export default {
     },
 
     childrenNameRoute(title) {
-      let fullPath = this.$route.fullPath
-      if (title != null) {
-        title = title.toLowerCase()
-        if (fullPath.includes(title)) {
-          return true
-        }
+      let path = this.$route.matched.map((element) => element.path).toString()
+      if (title.sub.length > 0) {
+        return title.sub.some((element) => element.alias.includes(path))
       }
-      return false
     },
     handelRouter(menu) {
       if (menu.sub) {
@@ -244,6 +242,24 @@ export default {
       }
       return menu.route
     },
+
+    availableMenuSub(sub) {
+      return sub.filter((item) => item.disable !== true)
+    },
   },
 }
 </script>
+<style lang="scss">
+.animsition-link {
+  position: relative;
+  &:before {
+    position: absolute;
+    content: '';
+    width: 210px;
+    height: 36px;
+    top: -7px;
+    left: 0;
+    margin-left: -18px;
+  }
+}
+</style>

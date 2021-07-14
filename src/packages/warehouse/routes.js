@@ -1,13 +1,13 @@
 export const routes = [
   {
     path: '/warehouse',
-    name: 'list-package',
+    name: 'list-package-in-warehouse',
     meta: {
-      title: 'Quản lý vận đơn',
+      title: 'Danh sách kho',
     },
     component: () =>
       import(
-        /* webpackChunkName: "warehouse" */ './views/ListPackageInWarehouse'
+        /* webpackChunkName: "sign-in" */ './views/ListPackageInWarehouse'
       ),
   },
   {

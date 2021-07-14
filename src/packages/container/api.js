@@ -8,4 +8,10 @@ export default {
   countListContainers(payload) {
     return http.get(`/containers/count?${buildQueryString(payload)}`)
   },
+  fetchListContainerBoxes() {
+    return http.get(`/containers/box`)
+  },
+  createContainer(payload) {
+    return http.post(`/containers/`, payload)
+  },
 }

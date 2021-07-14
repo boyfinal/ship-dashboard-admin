@@ -1,9 +1,9 @@
 export const routes = [
   {
-    path: '/setting/account',
+    path: '/account',
     name: 'account',
     meta: {
-      title: 'Account',
+      title: 'Quản lý tài khoản',
     },
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/Account.vue'),

@@ -389,7 +389,7 @@
               >Hủy bỏ</p-button
             >
             <p-button
-              class="btn  btn-primary "
+              class="btn btn-info"
               :disabled="isUpdate"
               @click="handleUpdate"
               >Cập nhật</p-button

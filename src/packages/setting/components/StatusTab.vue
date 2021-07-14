@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     cleanStatus() {
-      const status = this.hasAll ? [{ value: '', text: 'All' }] : []
+      const status = this.hasAll ? [{ value: '', text: 'Tất cả' }] : []
 
       const listStatus = Object.keys(this.status)
       const listValues = Object.values(this.status)

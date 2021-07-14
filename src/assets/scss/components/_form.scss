@@ -122,6 +122,7 @@ input[type='search'] {
     .p-input-search {
         border-radius: 8px !important;
         line-height: $input-height;
+        padding-left: 40px;
         &::placeholder {
             color: $color-neutral-6;
         }
