@@ -160,6 +160,12 @@ export default {
         return
       }
       this.$emit('update:visible', false)
+      this.$emit('init', true)
+      this.$toast.open({
+        type: 'success',
+        message: 'Thêm thành công',
+        duration: 3000,
+      })
     },
 
     handleSelectRole(value) {
