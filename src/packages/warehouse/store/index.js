@@ -1,24 +1,22 @@
 import api from '../api'
 
-/**
- * Type
- */
 export const FETCH_LIST_PACKAGES_IN_WAREHOUSE = 'fetchPackageInWareHouse'
 export const COUNT_LIST_PACKAGES_IN_WAREHOUSE = 'countPackagesInWareHouse'
-/**
- * State
- */
+export const FETCH_PACKAGE_DETAIL = 'fetchPackageDetail'
+
 export const state = {
+  package: {},
   packages_in_warehouse: [],
   count_packages_in_warehouse: 0,
   count_status: [],
   products: [],
   service: [],
 }
-/**
- * Mutation
- */
+
 export const mutations = {
+  [FETCH_PACKAGE_DETAIL]: (state, payload) => {
+    state.package = payload
+  },
   [FETCH_LIST_PACKAGES_IN_WAREHOUSE]: (state, payload) => {
     state.packages_in_warehouse = payload
   },
@@ -28,11 +26,18 @@ export const mutations = {
   },
 }
 
-/**
- * Action
- */
-
 export const actions = {
+  async [FETCH_PACKAGE_DETAIL]({ commit }, payload) {
+    const res = await api.fetchPackage(payload)
+    if (!res || res.error) {
+      commit(FETCH_PACKAGE_DETAIL, {})
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_PACKAGE_DETAIL, res.package || {})
+    return { error: false }
+  },
+
   // eslint-disable-next-line no-unused-vars
   async fetchPackageInWareHouse({ commit }, payload) {
     let result = { success: true }
