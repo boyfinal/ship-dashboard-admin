@@ -46,9 +46,27 @@
                 <tbody>
                   <tr v-for="(item, i) in users" :key="i">
                     <td>
-                      {{ item.full_name }}
+                      <p-tooltip
+                        :label="item.full_name"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.full_name.length > 25"
+                      >
+                        {{ truncate(item.full_name, 25) }}
+                      </p-tooltip>
                     </td>
-                    <td>{{ item.email || item.phone_number }}</td>
+                    <td>
+                      <p-tooltip
+                        :label="item.email"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.email.length > 25"
+                      >
+                        {{ truncate(item.email, 25) || item.phone_number }}
+                      </p-tooltip>
+                    </td>
                     <td>
                       <span class="d-flex"
                         ><i
@@ -124,7 +142,11 @@
       @close="init"
     >
     </modal-confirm>
-    <modal-add-user :visible.sync="isVisibleAddUser" v-if="isVisibleAddUser">
+    <modal-add-user
+      :visible.sync="isVisibleAddUser"
+      v-if="isVisibleAddUser"
+      @init="init"
+    >
     </modal-add-user>
   </div>
 </template>
@@ -132,6 +154,7 @@
 import StatusTab from '../components/StatusTab.vue'
 import SelectRole from '../components/SelectRole.vue'
 import { mapState, mapActions } from 'vuex'
+import { truncate } from '@core/utils/string'
 
 import {
   USER_STATUS_TAB,
@@ -184,6 +207,8 @@ export default {
       isFetching: false,
       statusDeactive: USER_STATUS_DEACTIVE,
       statusActive: USER_STATUS_ACTIVE,
+      filterRole: ROLE,
+      statusUser: USER_STATUS_TAB,
     }
   },
   created() {
@@ -197,14 +222,9 @@ export default {
       users: (state) => state.users,
       count: (state) => state.count_user,
     }),
-    statusUser() {
-      return USER_STATUS_TAB
-    },
-    filterRole() {
-      return ROLE
-    },
   },
   methods: {
+    truncate,
     ...mapActions('setting', [
       LIST_USER,
       CREATE_USER,

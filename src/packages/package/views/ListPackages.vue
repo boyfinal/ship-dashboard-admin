@@ -60,6 +60,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {

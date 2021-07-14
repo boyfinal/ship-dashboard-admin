@@ -4,7 +4,7 @@
     <div class="site-menubar-body">
       <ul class="site-menu">
         <li
-          v-for="(menu, i) in menus"
+          v-for="(menu, i) in availableMenus"
           class="site-menu-item"
           :class="{
             active: isActive(menu.route) || childrenNameRoute(menu),
@@ -87,6 +87,9 @@ export default {
     shopName() {
       return this.shop.name
     },
+    availableMenus() {
+      return this.menus.filter((menu) => menu.disable !== true)
+    },
   },
   data() {
     return {
@@ -98,14 +101,15 @@ export default {
       activeSubIndex: 0,
       isactive: false,
       activeItem: '',
-      menus: {
-        q1: {
+      menus: [
+        {
           title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
           iconActive: require('@assets/img/OrderActive.svg'),
           route: { name: 'packages' },
           class: '',
           isOpen: false,
+          disable: this.$isWarehouse(),
           sub: [
             {
               route: '/packages',
@@ -129,7 +133,7 @@ export default {
             },
           ],
         },
-        q2: {
+        {
           title: 'Vận chuyển',
           icon: require('@assets/img/car.svg'),
           iconActive: require('@assets/img/carActive.svg'),
@@ -137,18 +141,19 @@ export default {
           class: '',
           sub: [],
         },
-        q3: {
+        {
           title: 'Kho',
           icon: require('@assets/img/warehouse.svg'),
           iconActive: require('@assets/img/warehouseActive.svg'),
           route: '/bill',
           class: '',
           isOpen: false,
+          disable: this.$isAccountant() || this.$isSupport(),
           sub: [
             {
               route: '/warehouse',
               title: 'Danh sách kho',
-              alias: [],
+              alias: ['/warehouse'],
             },
             {
               route: '/packages/claims',
@@ -163,7 +168,7 @@ export default {
             {
               route: '/containers',
               title: 'Kiện hàng',
-              alias: [],
+              alias: ['/containers'],
             },
             {
               route: '/shipments',
@@ -172,22 +177,20 @@ export default {
             },
           ],
         },
-        q5: {
+        {
           title: 'Quản trị',
           icon: require('@assets/img/Setting.svg'),
           iconActive: require('@assets/img/SettingActive.svg'),
           route: { name: 'setting' },
           class: '',
           isOpen: false,
+          disable:
+            this.$isAccountant() || this.$isSupport() || this.$isWarehouse(),
           sub: [
             {
               route: '/account',
               title: 'Tài khoản',
               alias: ['/account'],
-              disable:
-                this.$isAccountant() ||
-                this.$isSupport() ||
-                this.$isWarehouse(),
             },
             {
               route: '',
@@ -201,7 +204,7 @@ export default {
             },
           ],
         },
-      },
+      ],
     }
   },
 

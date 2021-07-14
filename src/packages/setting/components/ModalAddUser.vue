@@ -41,7 +41,7 @@
           </div>
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Mật khẩu::</label
+              >Mật khẩu:</label
             >
             <p-input
               placeholder="Mật khẩu"
@@ -160,6 +160,12 @@ export default {
         return
       }
       this.$emit('update:visible', false)
+      this.$emit('init', true)
+      this.$toast.open({
+        type: 'success',
+        message: 'Thêm thành công',
+        duration: 3000,
+      })
     },
 
     handleSelectRole(value) {
