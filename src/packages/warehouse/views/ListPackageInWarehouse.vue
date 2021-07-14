@@ -35,7 +35,7 @@
                       <th>Thành phố</th>
                       <th>Mã bang</th>
                       <th>Mã bưu điện </th>
-                      <th>Dịch vụ</th>
+                      <th width="100">Dịch vụ</th>
                       <th>Nhãn đơn</th>
                       <th>Nhãn kiện</th>
                       <th>Mã kiện</th>
