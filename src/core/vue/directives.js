@@ -167,6 +167,9 @@ const getFormatStatus = (status) => {
     case 'Chưa thanh toán':
       statusClass = 'unpaid'
       break
+    case 'Hủy':
+      statusClass = 'danger'
+      break
   }
 
   return {

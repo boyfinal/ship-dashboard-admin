@@ -1,8 +1,10 @@
 export const TransactionLogTypeTopup = 1
 export const TransactionLogTypePay = 2
+export const TransactionLogTypeRefund = 4
 export const TransactionStatusProcess = 1
 export const TransactionStatusSuccess = 2
 export const TransactionStatusFailure = 3
+export const TransactionStatusReFund = 4
 export const TRANSACTION_STATUS_TAB = [
   {
     value: '',
@@ -20,6 +22,10 @@ export const TRANSACTION_STATUS_TAB = [
     value: TransactionStatusFailure,
     text: 'Thất bại',
   },
+  {
+    value: TransactionStatusReFund,
+    text: 'Hủy',
+  },
 ]
 export const MAP_NAME_STATUS_TRANSACTION = {
   [TransactionStatusProcess]: {
@@ -30,9 +36,12 @@ export const MAP_NAME_STATUS_TRANSACTION = {
     value: 'Thành công',
     class: 'badge-success',
   },
-
   [TransactionStatusFailure]: {
     value: 'Thất bại',
+    class: 'badge-danger',
+  },
+  [TransactionStatusReFund]: {
+    value: 'Hủy',
     class: 'badge-danger',
   },
 }
@@ -40,4 +49,5 @@ export const MAP_NAME_STATUS_TRANSACTION = {
 export const TRANSACTION_TYPE = {
   [TransactionLogTypeTopup]: 'Nạp tiền',
   [TransactionLogTypePay]: 'Thanh toán',
+  [TransactionLogTypeRefund]: 'Huỷ',
 }
