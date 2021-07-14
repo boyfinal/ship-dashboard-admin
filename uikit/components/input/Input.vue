@@ -341,13 +341,5 @@ export default {
       this.$emit('clear')
     },
   },
-  watch: {
-    input: {
-      handler(newVal) {
-        this.formatInput = newVal
-      },
-      deep: true,
-    },
-  },
 }
 </script>
