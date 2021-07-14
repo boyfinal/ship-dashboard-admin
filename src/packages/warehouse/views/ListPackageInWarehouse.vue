@@ -4,8 +4,8 @@
       <div class="row mb-12 search-input">
         <div class="col-12 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
-            suffixIcon="search"
+            placeholder="Tìm theo mã vận đơn ..."
+            prefixIcon="search"
             type="search"
             :clearable="true"
             v-model="keywordSearch"
@@ -33,8 +33,9 @@
                       <th>Trạng thái</th>
                       <th>Thành phố</th>
                       <th>Mã bang</th>
-                      <th width="100">Mã bưu điện </th>
-                      <th width="100">Nhãn đơn</th>
+                      <th>Mã bưu điện </th>
+                      <th>Dịch vụ</th>
+                      <th>Nhãn đơn</th>
                       <th>Nhãn kiện</th>
                       <th>Mã kiện</th>
                       <th>Mã lô</th>
@@ -70,6 +71,7 @@
                     </td>
                     <td> {{ item.state_code }} </td>
                     <td>{{ item.zipcode }}</td>
+                    <td>{{ item.service_code }}</td>
                     <td>
                       <router-link
                         v-if="item.tracking && item.tracking.length > 0"
@@ -95,6 +97,12 @@
                     <td>
                       <div>
                         <p-button
+                          v-if="
+                            item.warehouse_status ==
+                              PackageWareHouseStatusPick ||
+                              item.warehouse_status ==
+                                PackageWareHouseStatusReturn
+                          "
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
                           type="info"
@@ -113,6 +121,7 @@
             >
               <p-pagination
                 :total="count"
+                :fixed-limit="true"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
@@ -133,6 +142,7 @@ import { truncate } from '@core/utils/string'
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
   PackageWareHouseStatusPick,
+  PackageWareHouseStatusReturn,
 } from '../constants'
 import { FETCH_LIST_PACKAGES_IN_WAREHOUSE } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -149,7 +159,7 @@ export default {
   data() {
     return {
       filter: {
-        limit: 50,
+        limit: 30,
         status: '',
         search: '',
         code: '',
@@ -169,6 +179,8 @@ export default {
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
       },
+      PackageWareHouseStatusPick: PackageWareHouseStatusPick,
+      PackageWareHouseStatusReturn: PackageWareHouseStatusReturn,
     }
   },
   created() {

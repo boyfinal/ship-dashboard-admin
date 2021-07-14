@@ -153,7 +153,7 @@ export default {
             {
               route: '/warehouse',
               title: 'Danh sách kho',
-              alias: [],
+              alias: ['/warehouse'],
             },
             {
               route: '/packages/claims',
