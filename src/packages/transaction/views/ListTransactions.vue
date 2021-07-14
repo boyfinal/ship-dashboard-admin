@@ -346,7 +346,7 @@ export default {
             name: 'bill-detail',
             params: { id: transaction.bill_id },
           }).href
-          return `Hủy hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
         default:
           return null
       }

@@ -24,7 +24,7 @@ export const TRANSACTION_STATUS_TAB = [
   },
   {
     value: TransactionStatusReFund,
-    text: 'Hủy',
+    text: 'Hoàn tiền',
   },
 ]
 export const MAP_NAME_STATUS_TRANSACTION = {
@@ -41,7 +41,7 @@ export const MAP_NAME_STATUS_TRANSACTION = {
     class: 'badge-danger',
   },
   [TransactionStatusReFund]: {
-    value: 'Hủy',
+    value: 'Hoàn tiền',
     class: 'badge-danger',
   },
 }
@@ -49,5 +49,5 @@ export const MAP_NAME_STATUS_TRANSACTION = {
 export const TRANSACTION_TYPE = {
   [TransactionLogTypeTopup]: 'Nạp tiền',
   [TransactionLogTypePay]: 'Thanh toán',
-  [TransactionLogTypeRefund]: 'Huỷ',
+  [TransactionLogTypeRefund]: 'Hoàn tiền',
 }
