@@ -109,6 +109,7 @@ export default {
           route: { name: 'packages' },
           class: '',
           isOpen: false,
+          disable: this.$isWarehouse(),
           sub: [
             {
               route: '/packages',
@@ -183,16 +184,13 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse(),
+          disable:
+            this.$isAccountant() || this.$isSupport() || this.$isWarehouse(),
           sub: [
             {
               route: '/account',
               title: 'Tài khoản',
               alias: ['/account'],
-              disable:
-                this.$isAccountant() ||
-                this.$isSupport() ||
-                this.$isWarehouse(),
             },
             {
               route: '',
