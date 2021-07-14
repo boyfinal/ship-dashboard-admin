@@ -32,6 +32,7 @@
                 <thead>
                   <tr>
                     <template>
+                      <th>ID</th>
                       <th>Mã kiện</th>
                       <th>Nhãn kiện</th>
                       <th>Ngày tạo</th>
@@ -43,6 +44,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in containers" :key="i">
+                    <td>#{{ item.id }}</td>
                     <td>
                       {{ item.code }}
                     </td>
@@ -50,7 +52,10 @@
                       <a :href="item.label_url">{{ item.tracking_number }}</a>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
+                    <td v-if="isCloseContainer(item)">{{
+                      item.updated_at | date('dd/MM/yyyy')
+                    }}</td>
+                    <td v-else></td>
                     <td>
                       {{ item.quantity }}
                     </td>
@@ -70,7 +75,6 @@
               v-if="count > 0"
             >
               <p-pagination
-                :filter-limit="false"
                 :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
@@ -99,7 +103,11 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 
-import { CONTAINER_STATUS_TAB, MAP_NAME_STATUS_CONTAINER } from '../contants'
+import {
+  CONTAINER_STATUS_TAB,
+  MAP_NAME_STATUS_CONTAINER,
+  ContainerClosed,
+} from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER } from '../store'
 export default {
   name: 'ListContainers',
@@ -148,6 +156,9 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    isCloseContainer(container) {
+      return container.status === ContainerClosed
     },
     CreateContainerHandle() {
       this.visibleModalChoiceBox = true
