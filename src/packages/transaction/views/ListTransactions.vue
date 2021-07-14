@@ -5,7 +5,7 @@
         <div class="col-8">
           <p-input
             :placeholder="getPlaceHolder"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             :value="filter.search"
             @keyup.enter="handleSearch"
