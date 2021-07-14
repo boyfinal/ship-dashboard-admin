@@ -1,11 +1,10 @@
-export const PackageWareHouseStatusPick = 1
-export const PackageWareHouseStatusChecked = 2
-export const PackageWareHouseStatusLabeled = 3
-export const PackageWareHouseStatusInContainer = 4
-export const PackageWareHouseStatusInShipment = 5
-export const PackageWareHouseStatusExport = 6
-export const PackageWareHouseStatusReturn = 7
-export const PackageWareHouseStatusCancelled = 8
+export const PackageWareHouseStatusPick = 10
+export const PackageStatusWareHouseLabeled = 11
+export const PackageWareHouseStatusInContainer = 12
+export const PackageWareHouseStatusInShipment = 13
+export const PackageWareHouseStatusExport = 14
+export const PackageWareHouseStatusReturn = 40
+export const PackageWareHouseStatusCancelled = 50
 export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
   {
     value: '',
@@ -16,12 +15,8 @@ export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
     text: 'Đã lấy',
   },
   {
-    value: PackageWareHouseStatusChecked,
+    value: PackageStatusWareHouseLabeled,
     text: 'Kiểm hàng',
-  },
-  {
-    value: PackageWareHouseStatusLabeled,
-    text: 'Đã dán nhãn',
   },
   {
     value: PackageWareHouseStatusInContainer,

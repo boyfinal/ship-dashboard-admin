@@ -7,9 +7,10 @@
             placeholder="Tìm theo mã vận đơn ..."
             prefixIcon="search"
             type="search"
-            :clearable="true"
+            clearable
             v-model="keywordSearch"
             @keyup.enter="handleSearch"
+            @clear="clearSearch"
           >
           </p-input>
         </div>
@@ -71,7 +72,7 @@
                     </td>
                     <td> {{ item.state_code }} </td>
                     <td>{{ item.zipcode }}</td>
-                    <td>{{ item.service_code }}</td>
+                    <td>{{ item.service_name }}</td>
                     <td>
                       <router-link
                         v-if="item.tracking && item.tracking.length > 0"
@@ -98,10 +99,8 @@
                       <div>
                         <p-button
                           v-if="
-                            item.warehouse_status ==
-                              PackageWareHouseStatusPick ||
-                              item.warehouse_status ==
-                                PackageWareHouseStatusReturn
+                            item.status === PackageWareHouseStatusPick ||
+                              item.status === PackageWareHouseStatusReturn
                           "
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
