@@ -160,6 +160,7 @@ export default {
         return
       }
       this.$emit('update:visible', false)
+      this.$emit('init', true)
     },
 
     handleSelectRole(value) {
