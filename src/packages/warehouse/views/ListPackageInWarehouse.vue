@@ -52,6 +52,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -75,6 +76,7 @@
                     <td>{{ item.service_name }}</td>
                     <td>
                       <router-link
+                        class="text-no-underline"
                         v-if="item.tracking && item.tracking.length > 0"
                         :to="`${item.tracking[0].label_url}`"
                       >
@@ -83,6 +85,7 @@
                     </td>
                     <td
                       ><router-link
+                        class="text-no-underline"
                         v-if="item.container_id"
                         :to="`${item.container_label_url}`"
                       >
