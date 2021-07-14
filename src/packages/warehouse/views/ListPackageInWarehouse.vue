@@ -7,9 +7,10 @@
             placeholder="Tìm theo mã vận đơn ..."
             prefixIcon="search"
             type="search"
-            :clearable="true"
+            clearable
             v-model="keywordSearch"
             @keyup.enter="handleSearch"
+            @clear="clearSearch"
           >
           </p-input>
         </div>
@@ -51,6 +52,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -62,18 +64,17 @@
                       </router-link>
                     </td>
                     <td
-                      ><span
-                        v-status="mapStatus[item.warehouse_status].text"
-                      ></span
+                      ><span v-status="mapStatus[item.status].value"></span
                     ></td>
                     <td>
                       {{ item.city }}
                     </td>
                     <td> {{ item.state_code }} </td>
                     <td>{{ item.zipcode }}</td>
-                    <td>{{ item.service_code }}</td>
+                    <td>{{ item.service_name }}</td>
                     <td>
                       <router-link
+                        class="text-no-underline"
                         v-if="item.tracking && item.tracking.length > 0"
                         :to="`${item.tracking[0].label_url}`"
                       >
@@ -82,6 +83,7 @@
                     </td>
                     <td
                       ><router-link
+                        class="text-no-underline"
                         v-if="item.container_id"
                         :to="`${item.container_label_url}`"
                       >
@@ -98,10 +100,8 @@
                       <div>
                         <p-button
                           v-if="
-                            item.warehouse_status ==
-                              PackageWareHouseStatusPick ||
-                              item.warehouse_status ==
-                                PackageWareHouseStatusReturn
+                            item.status === PackageWareHouseStatusPick ||
+                              item.status === PackageWareHouseStatusReturn
                           "
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
@@ -141,6 +141,7 @@ import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
+  MAP_NAME_STATUS_PACKAGE,
   PackageWareHouseStatusPick,
   PackageWareHouseStatusReturn,
 } from '../constants'
@@ -207,7 +208,7 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      return PACKAGE_IN_WAREHOUSE_STATUS_TAB
+      return MAP_NAME_STATUS_PACKAGE
     },
   },
   methods: {

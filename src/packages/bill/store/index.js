@@ -7,6 +7,7 @@ export const COUNT_FEE_EXTRA = 'countFeeExtra'
 export const FETCH_FEE_EXTRA = 'fetchFeeExtra'
 export const BILL_FETCH = 'billFetch'
 export const BILL_COUNT = 'billCount'
+export const CANCEL_EXTRA_FEE = 'cancelExtraFee'
 export const state = {
   bill: {},
   feeEdit: [],
@@ -67,6 +68,15 @@ export const actions = {
 
     commit(FETCH_FEE_EXTRA, res.fees)
     commit(COUNT_FEE_EXTRA, res.count)
+
+    return { success: true }
+  },
+  // eslint-disable-next-line no-unused-vars
+  async cancelExtraFee({ commit }, payload) {
+    const res = await api.cancelExtraFee(payload)
+    if (!res || res.error) {
+      return { success: false, message: res.errorMessage || '' }
+    }
 
     return { success: true }
   },

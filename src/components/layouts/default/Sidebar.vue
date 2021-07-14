@@ -171,9 +171,9 @@ export default {
               alias: ['/containers'],
             },
             {
-              route: '/packages/claims',
+              route: '/shipments',
               title: 'Lô hàng',
-              alias: [],
+              alias: ['/shipments'],
             },
           ],
         },

@@ -17,7 +17,7 @@
   &-info{
     display: grid;
     grid-column-gap: 50px;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
   }
   .item-gutters{
     padding: 0 12px;
@@ -60,7 +60,7 @@
   &-status{
     color: $color-neutral-10;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 6px;
   }
   &-action{
