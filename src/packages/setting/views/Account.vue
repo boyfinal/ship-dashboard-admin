@@ -124,7 +124,11 @@
       @close="init"
     >
     </modal-confirm>
-    <modal-add-user :visible.sync="isVisibleAddUser" v-if="isVisibleAddUser">
+    <modal-add-user
+      :visible.sync="isVisibleAddUser"
+      v-if="isVisibleAddUser"
+      @init="init"
+    >
     </modal-add-user>
   </div>
 </template>
