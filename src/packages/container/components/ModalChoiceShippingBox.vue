@@ -78,7 +78,7 @@
           Bỏ qua
         </p-button>
         <p-button
-          type="primary"
+          type="info"
           @click="handleSave"
           :disabled="loading || type < 1"
         >
