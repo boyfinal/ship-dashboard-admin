@@ -355,6 +355,7 @@ export default {
   watch: {
     input: {
       handler(newVal) {
+        console.log(newVal)
         this.formatInput = newVal
       },
       deep: true,
