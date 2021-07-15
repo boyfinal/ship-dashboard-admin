@@ -1,8 +1,8 @@
 import {
   ACL,
-  ORDER_STATUS_FULFILLED,
-  ORDER_STATUS_PAID,
-  ORDER_STATUS_PROCESS,
+  // ORDER_STATUS_FULFILLED,
+  // ORDER_STATUS_PAID,
+  // ORDER_STATUS_PROCESS,
 } from '@core/constants'
 import { clickoutside } from '@core/vue/directives'
 
@@ -32,15 +32,15 @@ const MainPlugin = {
       return ACL[key].indexOf(role) !== -1
     }
 
-    Vue.prototype.$isVisibleTrackingNumber = function(status) {
-      return (
-        [
-          ORDER_STATUS_PAID,
-          ORDER_STATUS_PROCESS,
-          ORDER_STATUS_FULFILLED,
-        ].indexOf(status) !== -1
-      )
-    }
+    // Vue.prototype.$isVisibleTrackingNumber = function(status) {
+    //   return (
+    //     [
+    //       ORDER_STATUS_PAID,
+    //       ORDER_STATUS_PROCESS,
+    //       ORDER_STATUS_FULFILLED,
+    //     ].indexOf(status) !== -1
+    //   )
+    // }
 
     Vue.directive('click-outside', clickoutside)
   },
