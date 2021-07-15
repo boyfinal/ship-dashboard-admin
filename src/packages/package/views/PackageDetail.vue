@@ -792,7 +792,7 @@ export default {
     deliverLogPackage(log) {
       return log.type === PackageStatusCancelled
         ? DELIVER_LOG_PACKAGE[log.type] +
-            ` bởi <strong>${log.user.full_name}</strong>`
+            ` bởi <strong>${log.updated_user_name}</strong>`
         : DELIVER_LOG_PACKAGE[log.type]
     },
   },

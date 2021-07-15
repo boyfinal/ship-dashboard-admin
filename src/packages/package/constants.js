@@ -66,10 +66,19 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Đã lấy',
     class: 'badge-success',
   },
-  [PackageStatusWareHouseLabeled ||
-  PackageStatusWareHouseInContainer ||
-  PackageStatusWareHouseInShipment ||
-  PackageStatusWareHouseExport]: {
+  [PackageStatusWareHouseLabeled]: {
+    value: 'Đang xử lý',
+    class: 'badge-success',
+  },
+  [PackageStatusWareHouseInContainer]: {
+    value: 'Đang xử lý',
+    class: 'badge-success',
+  },
+  [PackageStatusWareHouseInShipment]: {
+    value: 'Đang xử lý',
+    class: 'badge-success',
+  },
+  [PackageStatusWareHouseExport]: {
     value: 'Đang xử lý',
     class: 'badge-success',
   },

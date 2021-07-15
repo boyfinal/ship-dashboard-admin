@@ -13,12 +13,15 @@
         vertical-align: middle;
     }
     thead th {
+        text-transform: uppercase;
         position: relative;
         height: 64px;
-        line-height: 160%;
+        line-height: 16px;
         vertical-align: middle;
         color: #AAABAB;
         border: none;
+        font-size: 12px;
+        font-weight: bold;
     }
     tbody tr td {
         height: 48px !important;

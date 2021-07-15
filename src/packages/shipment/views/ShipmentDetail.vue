@@ -1,5 +1,5 @@
 <template>
-  <div class="package-detail pages">
+  <div class="shipment-detail pages">
     <div class="page-content">
       <div class="page-header">
         <div class="page-header_back">
@@ -13,8 +13,8 @@
           </router-link>
         </div>
 
-        <div class="page-header__subtitle">
-          <div class="page-header__info">
+        <div class="page-header__subtitle row">
+          <div class="page-header__info col-6">
             <p-input
               placeholder="Tìm theo mã kiện hàng"
               prefixIcon="search"
@@ -22,21 +22,35 @@
               v-model="code"
             >
             </p-input>
-            <p-button type="info" @click="handleAppendShipment">
+            <p-button
+              type="info"
+              :class="'btn-add-container ml-3'"
+              @click="handleAppendShipment"
+            >
+              <img src="@/assets/img/plus_blue.svg" />
               Thêm
             </p-button>
           </div>
-          <div class="page-header__action">
-            <p-button type="info" v-if="!isStartScan" @click="handleStartScan">
+          <div class="page-header__action col-6 text-right">
+            <p-button
+              type="info"
+              :class="`mr-3`"
+              v-if="!isStartScan"
+              @click="handleStartScan"
+            >
               Bắt đầu quét
             </p-button>
-            <p-button v-else @click="handleStopScan" type="info"
+            <p-button v-else @click="handleStopScan" type="info" :class="`mr-3`"
               >Dừng quét</p-button
             >
-            <p-button type="primary" @click="handleCloseShipment">
+            <p-button type="info" @click="handleCloseShipment" :class="`mr-3`">
               Đóng lô hàng
             </p-button>
-            <p-button type="danger" @click="handleCancelShipment">
+            <p-button
+              type="danger"
+              :class="`btn-cancel-shipment`"
+              @click="handleCancelShipment"
+            >
               Hủy lô hàng
             </p-button>
           </div>
@@ -91,6 +105,7 @@
                       <td>
                         <p-button
                           type="danger"
+                          :class="`btn-cancel-container`"
                           @click="handleCancelContainer(item.id)"
                         >
                           Hủy
@@ -299,3 +314,51 @@ export default {
   },
 }
 </script>
+<style>
+.shipment-detail .btn-add-container {
+  background-color: #dff6f7;
+  color: #00b4c3;
+  white-space: nowrap;
+  border: none;
+}
+.shipment-detail .page-header_back {
+  margin-bottom: 16px;
+}
+.shipment-detail .page-header_back a {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0.2px;
+  color: #626363;
+}
+.shipment-detail .page-header_back a img {
+  margin-top: -2px;
+}
+.shipment-detail .page-header_back a span {
+  margin-left: 10px;
+}
+.shipment-detail .page-header {
+  margin-bottom: 18px;
+}
+.shipment-detail .btn-add-container img {
+  margin-top: -6px;
+}
+.shipment-detail .page-header__info {
+  display: flex;
+}
+.shipment-detail .page-header__info .input-group {
+  width: calc(100% - 100px);
+}
+.shipment-detail .btn-cancel-container {
+  padding: 6px 16px;
+  background-color: #fff1f0;
+  border: none;
+  color: red;
+  border-radius: 4px;
+}
+.shipment-detail .btn-cancel-shipment {
+  border: 1px solid #f5222d;
+  color: red;
+  background-color: #fff;
+}
+</style>
