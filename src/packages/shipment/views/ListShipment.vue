@@ -58,7 +58,7 @@
                       </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td v-if="item.status == ShipmentWaitingClose">-</td>
+                    <td v-if="item.status != ShipmentClosed">-</td>
                     <td v-else>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
                     <td>
                       {{ item.quantity }}
@@ -102,10 +102,9 @@
   </div>
 </template>
 <script>
-import { SHIPMENT_STATUS_TAB } from '../constants'
+import { SHIPMENT_STATUS_TAB, ShipmentClosed } from '../constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
-import { ShipmentWaitingClose } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
@@ -131,14 +130,14 @@ export default {
       },
       isFetching: false,
       visibleConfirm: false,
-      ShipmentWaitingClose: ShipmentWaitingClose,
+      ShipmentClosed: ShipmentClosed,
     }
   },
   created() {
     this.filter = this.getRouteQuery()
   },
   computed: {
-    ...mapState('shipments', {
+    ...mapState('shipment', {
       shipments: (state) => state.shipments,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
@@ -151,7 +150,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('shipments', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
+    ...mapActions('shipment', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
