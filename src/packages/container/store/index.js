@@ -55,7 +55,6 @@ export const actions = {
     let result = { success: true }
 
     let response = await api.createContainer(payload)
-    console.log(response)
     if (!response || !response.container) {
       result = {
         success: false,
