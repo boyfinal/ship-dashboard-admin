@@ -5,10 +5,12 @@
         <div class="col-12" id="search-box">
           <p-input
             placeholder="Tìm theo mã lô hoặc mã kiện"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
+            clearable
             @keyup.enter="handleSearch"
             :value="filter.search"
+            @clear="clearSearch"
           >
           </p-input>
           <p-button @click="visibleModal" type="info">
@@ -43,10 +45,21 @@
                 <tbody>
                   <tr v-for="(item, i) in shipments" :key="i">
                     <td>
-                      {{ item.id }}
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'shipment-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        {{ item.id }}
+                      </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
+                    <td v-if="item.status == ShipmentWaitingClose">-</td>
+                    <td v-else>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
                     <td>
                       {{ item.quantity }}
                     </td>
@@ -84,6 +97,7 @@
       :description="`Bạn có muốn tạo lô hàng ?`"
       :title="`Xác nhận`"
       @action="handleCreate"
+      :size="`sm`"
     ></modal-confirm>
   </div>
 </template>
@@ -91,6 +105,7 @@
 import { SHIPMENT_STATUS_TAB } from '../constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
+import { ShipmentWaitingClose } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
@@ -116,6 +131,7 @@ export default {
       },
       isFetching: false,
       visibleConfirm: false,
+      ShipmentWaitingClose: ShipmentWaitingClose,
     }
   },
   created() {
