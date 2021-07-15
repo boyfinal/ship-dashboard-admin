@@ -5,7 +5,7 @@
         <div class="col-8">
           <p-input
             :placeholder="getPlaceHolder"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             :value="filter.search"
             @keyup.enter="handleSearch"
@@ -165,6 +165,7 @@ import {
   TransactionStatusSuccess,
   TransactionStatusFailure,
   MAP_NAME_STATUS_TRANSACTION,
+  TransactionLogTypeRefund,
 } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -340,6 +341,12 @@ export default {
             params: { id: transaction.bill_id },
           }).href
           return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+        case TransactionLogTypeRefund:
+          path = this.$router.resolve({
+            name: 'bill-detail',
+            params: { id: transaction.bill_id },
+          }).href
+          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
         default:
           return null
       }
@@ -351,6 +358,8 @@ export default {
           return `+ ${amount} `
         case TransactionLogTypePay:
           return `- ${amount} `
+        case TransactionLogTypeRefund:
+          return `+ ${amount} `
         default:
           return null
       }

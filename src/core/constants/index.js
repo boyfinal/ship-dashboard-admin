@@ -1,20 +1,8 @@
 // Roles
-export const ROLE_CUSTOMER = 'customer'
 export const ROLE_ADMIN = 'admin'
 export const ROLE_ACCOUNTANT = 'accountant'
 export const ROLE_WAREHOUSE = 'warehouse'
 export const ROLE_SUPPORT = 'support'
-
-// Order and order status
-export const ORDER_STATUS_DRAFT = 'draft'
-export const ORDER_STATUS_PENDING = 'pending'
-export const ORDER_STATUS_PROCESS = 'process'
-export const ORDER_STATUS_PAID = 'paid'
-export const ORDER_STATUS_UNPAID = 'unpaid'
-export const ORDER_STATUS_CANCELED = 'canceled'
-export const ORDER_STATUS_FULFILLED = 'fulfilled'
-export const ORDER_STATUS_AWAITING = 'awaiting'
-export const ORDER_STATUS_REJECT = 'rejected'
 
 export const ACL_KEYS = {
   setStatusPaid: 'setStatusPaid',
@@ -26,9 +14,7 @@ export const ACL_KEYS = {
   updateOrder: 'updateOrder',
 }
 
-export const ACL = {
-  [ACL_KEYS.updateOrder]: [ROLE_CUSTOMER],
-}
+export const ACL = {}
 
 export const NOT_STAFF_GET_LIMIT = 200
 

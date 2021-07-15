@@ -15,18 +15,16 @@
         <div class="bill__detail-info">
           <div class="bill__detail-title">Mã hóa đơn:</div>
           <div class="bill__detail-title">Ngày tạo:</div>
+          <div class="bill__detail-title">Tên khách hàng</div>
           <div class="bill__detail-title">Tổng hóa đơn</div>
           <div class="bill__detail-code">{{ bill.id }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
+          <div class="bill__detail-date">{{ bill.user.full_name || '' }}</div>
           <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
         </div>
-        <div class="bill__detail-action">
-          <a @click="handleRouter" href="#" class="btn btn-info ml-10">
-            <span>Lịch sử thanh toán</span>
-          </a>
-        </div>
+        <div class="bill__detail-action"> </div>
       </div>
     </div>
     <div class="page-content">
@@ -62,7 +60,6 @@
                   <thead>
                     <tr>
                       <th>Mã vận đơn</th>
-                      <th>Ngày tạo</th>
                       <th>Phí giao</th>
                     </tr>
                   </thead>
@@ -70,6 +67,7 @@
                     <tr v-for="(item, i) in feeCreate" :key="i">
                       <td>
                         <router-link
+                          class="text-no-underline"
                           :to="{
                             name: 'package-detail',
                             params: {
@@ -77,11 +75,13 @@
                             },
                           }"
                         >
-                          {{ item.id }}
+                          {{ item.code }}
+                          <img
+                            class="link-icon"
+                            src="@/assets/img/external.svg"
+                          />
                         </router-link>
-                        <img class="link-icon" src="@/assets/img/external.svg"
-                      /></td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                      </td>
                       <td>{{ item.shipping_fee | formatPrice }}</td>
                     </tr>
                   </tbody>
@@ -121,8 +121,9 @@
                   <thead>
                     <tr>
                       <th>Mã vận đơn</th>
-                      <th>Ngày tạo</th>
+                      <th>Thời gian</th>
                       <th>Phí phát sinh</th>
+                      <th>Thao tác</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -130,6 +131,7 @@
                     <tr v-for="(item, i) in feeExtra" :key="i">
                       <td>
                         <router-link
+                          class="text-no-underline"
                           :to="{
                             name: 'package-detail',
                             params: {
@@ -137,12 +139,22 @@
                             },
                           }"
                         >
-                          {{ item.package_id }}
+                          {{ item.package.code }}
+                          <img
+                            class="link-icon"
+                            src="@/assets/img/external.svg"
+                          />
                         </router-link>
-                        <img class="link-icon" src="@/assets/img/external.svg"
-                      /></td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                      </td>
+                      <td>{{
+                        item.created_at | date('dd/MM/yyyy HH:mm:ss')
+                      }}</td>
                       <td>{{ item.amount | formatPrice }}</td>
+                      <td>
+                        <a @click="handelModal(item.id)" class="btn btn-danger">
+                          <span>Huỷ</span>
+                        </a>
+                      </td>
                       <td>
                         <span
                           v-if="item.status == 10"
@@ -158,17 +170,27 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="visibleConfirmFail"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn hủy phí này ?`"
+      :title="`Xác nhận hủy phí`"
+      @action="handleCancel"
+    ></modal-confirm>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { FETCH_BILL_DETAIL, FETCH_BILL_EXTRA } from '../store'
+import { FETCH_BILL_DETAIL, FETCH_BILL_EXTRA, CANCEL_EXTRA_FEE } from '../store'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'BillDetail',
   mixins: [mixinRoute, mixinTable],
+  components: { ModalConfirm },
   data() {
     return {
       filterExtra: {
@@ -181,6 +203,8 @@ export default {
       },
       total_fee: 0,
       total_unpaid: 0,
+      visibleConfirmFail: false,
+      idExtra: 0,
     }
   },
   computed: {
@@ -207,7 +231,11 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions('bill', [FETCH_BILL_DETAIL, FETCH_BILL_EXTRA]),
+    ...mapActions('bill', [
+      FETCH_BILL_DETAIL,
+      FETCH_BILL_EXTRA,
+      CANCEL_EXTRA_FEE,
+    ]),
     async init() {
       const { id } = this.$route.params
       this.filterExtra.id = id
@@ -282,6 +310,24 @@ export default {
           : this.filterExtra.page + 1
       this.$set(this.filterExtra, 'page', page)
       await this[FETCH_BILL_EXTRA](this.filterExtra)
+    },
+    handelModal(id) {
+      this.visibleConfirmFail = true
+      this.idExtra = id
+    },
+    async handleCancel() {
+      let { id } = this.$route.params
+      let params = {
+        id_extra: this.idExtra,
+        id: id,
+      }
+      let res = await this[CANCEL_EXTRA_FEE](params)
+      if (!res.success) {
+        this.$toast.open({ message: res.message, type: 'error' })
+        return
+      }
+      this.visibleConfirmFail = false
+      this.init()
     },
   },
   watch: {

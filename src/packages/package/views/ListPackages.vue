@@ -10,6 +10,7 @@
             :clearable="true"
             :value.sync="keywordSearch"
             @keyup.enter="handleSearch"
+            @clear="clearSearch"
           >
           </p-input>
         </div>
@@ -60,6 +61,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {

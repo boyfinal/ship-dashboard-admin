@@ -4,12 +4,13 @@
       <div class="row mb-12 search-input">
         <div class="col-12 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
-            suffixIcon="search"
+            placeholder="Tìm theo mã vận đơn ..."
+            prefixIcon="search"
             type="search"
-            :clearable="true"
+            clearable
             v-model="keywordSearch"
             @keyup.enter="handleSearch"
+            @clear="clearSearch"
           >
           </p-input>
         </div>
@@ -33,8 +34,9 @@
                       <th>Trạng thái</th>
                       <th>Thành phố</th>
                       <th>Mã bang</th>
-                      <th width="100">Mã bưu điện </th>
-                      <th width="100">Nhãn đơn</th>
+                      <th>Mã bưu điện </th>
+                      <th width="100">Dịch vụ</th>
+                      <th>Nhãn đơn</th>
                       <th>Nhãn kiện</th>
                       <th>Mã kiện</th>
                       <th>Mã lô</th>
@@ -50,6 +52,7 @@
                   >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -61,17 +64,17 @@
                       </router-link>
                     </td>
                     <td
-                      ><span
-                        v-status="mapStatus[item.warehouse_status].text"
-                      ></span
+                      ><span v-status="mapStatus[item.status].value"></span
                     ></td>
                     <td>
                       {{ item.city }}
                     </td>
                     <td> {{ item.state_code }} </td>
                     <td>{{ item.zipcode }}</td>
+                    <td>{{ item.service_name }}</td>
                     <td>
                       <router-link
+                        class="text-no-underline"
                         v-if="item.tracking && item.tracking.length > 0"
                         :to="`${item.tracking[0].label_url}`"
                       >
@@ -80,6 +83,7 @@
                     </td>
                     <td
                       ><router-link
+                        class="text-no-underline"
                         v-if="item.container_id"
                         :to="`${item.container_label_url}`"
                       >
@@ -95,6 +99,10 @@
                     <td>
                       <div>
                         <p-button
+                          v-if="
+                            item.status === PackageWareHouseStatusPick ||
+                              item.status === PackageWareHouseStatusReturn
+                          "
                           @click="handleConfirm(successStatus, item.id)"
                           class="mr-2"
                           type="info"
@@ -113,6 +121,7 @@
             >
               <p-pagination
                 :total="count"
+                :fixed-limit="true"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
@@ -132,7 +141,9 @@ import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
+  MAP_NAME_STATUS_PACKAGE,
   PackageWareHouseStatusPick,
+  PackageWareHouseStatusReturn,
 } from '../constants'
 import { FETCH_LIST_PACKAGES_IN_WAREHOUSE } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -149,7 +160,7 @@ export default {
   data() {
     return {
       filter: {
-        limit: 50,
+        limit: 30,
         status: '',
         search: '',
         code: '',
@@ -169,6 +180,8 @@ export default {
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
       },
+      PackageWareHouseStatusPick: PackageWareHouseStatusPick,
+      PackageWareHouseStatusReturn: PackageWareHouseStatusReturn,
     }
   },
   created() {
@@ -195,7 +208,7 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      return PACKAGE_IN_WAREHOUSE_STATUS_TAB
+      return MAP_NAME_STATUS_PACKAGE
     },
   },
   methods: {
