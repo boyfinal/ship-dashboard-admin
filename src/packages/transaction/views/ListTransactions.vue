@@ -201,6 +201,7 @@ export default {
       optionType: {
         1: 'Nạp tiền',
         2: 'Thanh toán',
+        4: 'Hoàn tiền',
       },
       isChangingStatus: false,
       visibleConfirmSuccess: false,

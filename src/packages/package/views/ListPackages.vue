@@ -121,7 +121,7 @@ import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_STATUS_TAB,
-  PackageStatusInit,
+  PackageStatusCreated,
   MAP_NAME_STATUS_PACKAGE,
 } from '../constants'
 import {
@@ -182,7 +182,7 @@ export default {
         return this.action.selected.length > 0 || this.isAllChecked
       },
       isFilterInitTab() {
-        return this.filter.status === PackageStatusInit
+        return this.filter.status === PackageStatusCreated
       },
       items() {
         return this.packages
