@@ -207,6 +207,13 @@ export default {
     },
     async handleAppendShipment() {
       this.code = this.code.trim()
+      if (this.code == '') {
+        this.$toast.open({
+          message: `Nhập mã kiện hàng để thêm`,
+          type: 'error',
+        })
+        return
+      }
       const payload = {
         search: this.code,
         shipment_id: parseInt(this.$route.params.id),
