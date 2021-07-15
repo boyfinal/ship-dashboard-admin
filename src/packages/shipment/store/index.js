@@ -3,6 +3,8 @@ import api from '../api'
 export const FETCH_SHIPMENT_DETAIL = 'fetchShipmentDetail'
 export const APPEND_SHIPMENT = 'appendShipment'
 export const CANCEL_CONTAINER = 'cancelContainer'
+export const CANCEL_SHIPMENT = 'cancelShipment'
+export const CLOSE_SHIPMENT = 'closeShipment'
 
 export const state = {
   shipment: {},
@@ -51,6 +53,30 @@ export const actions = {
   async [CANCEL_CONTAINER]({ commit }, payload) {
     let result = { success: true }
     let response = await api.cancelContainer(payload)
+    if (response.error || response.errorMessage) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+    }
+    return result
+  },
+  // eslint-disable-next-line no-unused-vars
+  async [CANCEL_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.cancelShipment(payload)
+    if (response.error || response.errorMessage) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+    }
+    return result
+  },
+  // eslint-disable-next-line no-unused-vars
+  async [CLOSE_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.closeShipment(payload)
     if (response.error || response.errorMessage) {
       result = {
         success: false,

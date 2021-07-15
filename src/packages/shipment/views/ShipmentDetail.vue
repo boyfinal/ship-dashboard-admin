@@ -27,13 +27,16 @@
             </p-button>
           </div>
           <div class="page-header__action">
-            <p-button type="info">
+            <p-button type="info" v-if="!isStartScan" @click="handleStartScan">
               Bắt đầu quét
             </p-button>
-            <p-button type="primary">
+            <p-button v-else @click="handleStopScan" type="info"
+              >Dừng quét</p-button
+            >
+            <p-button type="primary" @click="handleCloseShipment">
               Đóng lô hàng
             </p-button>
-            <p-button type="danger">
+            <p-button type="danger" @click="handleCancelShipment">
               Hủy lô hàng
             </p-button>
           </div>
@@ -88,7 +91,7 @@
                       <td>
                         <p-button
                           type="danger"
-                          @click="handleCancelhipment(item.id)"
+                          @click="handleCancelContainer(item.id)"
                         >
                           Hủy
                         </p-button>
@@ -121,9 +124,12 @@
 import { mapState, mapActions } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import mixinBarcode from '@core/mixins/barcode'
 import {
   APPEND_SHIPMENT,
   CANCEL_CONTAINER,
+  CANCEL_SHIPMENT,
+  CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
 } from '../store'
 import { cloneDeep } from '../../../core/utils'
@@ -131,7 +137,7 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 
 export default {
   name: 'ShipmentDetail',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinBarcode],
   components: {
     EmptySearchResult,
   },
@@ -144,6 +150,7 @@ export default {
         search: '',
       },
       code: '',
+      isStartScan: false,
     }
   },
   computed: {
@@ -164,6 +171,8 @@ export default {
       FETCH_SHIPMENT_DETAIL,
       APPEND_SHIPMENT,
       CANCEL_CONTAINER,
+      CANCEL_SHIPMENT,
+      CLOSE_SHIPMENT,
     ]),
     async init() {
       this.isFetching = true
@@ -198,7 +207,7 @@ export default {
       })
       this.init()
     },
-    async handleCancelhipment(container_id) {
+    async handleCancelContainer(container_id) {
       const payload = {
         container_id: container_id,
         shipment_id: parseInt(this.$route.params.id),
@@ -213,6 +222,68 @@ export default {
       }
       this.$toast.open({
         message: `Hủy kiện hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    async handleCancelShipment() {
+      const payload = {
+        id: parseInt(this.$route.params.id),
+      }
+      const result = await this[CANCEL_SHIPMENT](payload)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Hủy lô hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    async handleCloseShipment() {
+      const payload = {
+        id: parseInt(this.$route.params.id),
+      }
+      const result = await this[CLOSE_SHIPMENT](payload)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Đóng lô hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    handleStartScan() {
+      this.isStartScan = true
+    },
+    handleStopScan() {
+      this.isStartScan = false
+    },
+    async barcodeSubmit(keyword) {
+      if (!this.isStartScan) {
+        this.$toast.error('Bạn phải nhấn bắt đầu quét trước khi quét.')
+        return
+      }
+      const payload = {
+        tracking_number: keyword,
+        shipment_id: parseInt(this.$route.params.id),
+      }
+      const result = await this[APPEND_SHIPMENT](payload)
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      this.$toast.open({
+        message: `Thêm kiện hàng thành công`,
         type: 'success',
       })
       this.init()
