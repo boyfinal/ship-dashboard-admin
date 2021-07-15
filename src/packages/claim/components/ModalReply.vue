@@ -5,112 +5,110 @@
     title="Trả lời"
     @close="handleClose"
   >
-    <div class="content-page">
-      <div class="page-content">
-        <div class="menu_content ">
-          <div class="page-content_drag card2">
-            <div class="form-group">
-              <div
-                class="text__aria-title d-flex justify-content-between align-items-center"
+    <div class="page-content">
+      <div class="menu_content ">
+        <div class="page-content_drag card2">
+          <div class="form-group">
+            <div
+              class="text__aria-title d-flex justify-content-between align-items-center"
+            >
+              <label class="text-bold"
+                >Nội dung: <span class="text-danger">*</span></label
               >
-                <label class="text-bold"
-                  >Nội dung: <span class="text-danger">*</span></label
-                >
-                <span class="countText" :class="[countText(message)]"
-                  >{{ this.TicketNote }}/1000</span
-                >
-              </div>
-              <textarea
-                class="form-control"
-                v-model="message"
-                @input="validate"
-                :class="{
-                  require: lengthContent,
-                }"
-                maxlength="1000"
-              ></textarea>
-              <span class="invalid-error" v-if="errors">{{ errors }}</span>
+              <span class="countText" :class="[countText(message)]"
+                >{{ this.TicketNote }}/1000</span
+              >
             </div>
-            <div class="upload_file">
-              <upload
-                class="file-uploader"
-                :action="uploadFileEndpoint"
-                drag
-                list-type="picture"
-                :headers="uploadHeaders"
-                @e-change="listenChange"
-                :on-change="handleChangeFile"
-                multiple
-                :auto-upload="false"
-                :on-max-size="errorMaximum"
-                :max-file-size="maximumSize"
-              >
-                <div class="el-upload__text">
-                  Thả tệp hoặc hình ảnh để tải lên
-                </div>
-              </upload>
+            <textarea
+              class="form-control"
+              v-model="message"
+              @input="validate"
+              :class="{
+                require: lengthContent,
+              }"
+              maxlength="1000"
+            ></textarea>
+            <span class="invalid-error" v-if="errors">{{ errors }}</span>
+          </div>
+          <div class="upload_file">
+            <upload
+              class="file-uploader"
+              :action="uploadFileEndpoint"
+              drag
+              list-type="picture"
+              :headers="uploadHeaders"
+              @e-change="listenChange"
+              :on-change="handleChangeFile"
+              multiple
+              :auto-upload="false"
+              :on-max-size="errorMaximum"
+              :max-file-size="maximumSize"
+            >
+              <div class="el-upload__text">
+                Thả tệp hoặc hình ảnh để tải lên
+              </div>
+            </upload>
 
-              <div class="row mb-20">
-                <div v-if="fileErrors.length > 0" class="ticket__error">
-                  <div class="ticket__error-title">
-                    <img
-                      src="~@/assets/img/alert.svg"
-                      alt=""
-                      class="ticket__error-icon"
-                    />
-                    <span>Tệp tin chưa được thêm vào:</span>
-                  </div>
-                  <ul class="ticket__error-list">
-                    <li
-                      v-for="(item, i) in fileErrors"
-                      :key="i"
-                      class="ticket__error-item"
-                    >
-                      {{ item }}</li
-                    >
-                  </ul>
+            <div class="row mb-20">
+              <div v-if="fileErrors.length > 0" class="ticket__error">
+                <div class="ticket__error-title">
+                  <img
+                    src="~@/assets/img/alert.svg"
+                    alt=""
+                    class="ticket__error-icon"
+                  />
+                  <span>Tệp tin chưa được thêm vào:</span>
                 </div>
-
-                <div v-if="this.validateSize" class="ticket__error">
-                  <div class="ticket__error-title">
-                    <img
-                      src="~@/assets/img/alert.svg"
-                      alt=""
-                      class="ticket__error-icon"
-                    />
-                    <span>Tệp tin chưa được thêm vào:</span>
-                  </div>
-                  <ul class="ticket__error-list">
-                    <li class="ticket__error-item">
-                      {{ this.name }} đang lớn hơn 5Mb.Vui lòng chọn tệp nhỏ
-                      hơn.</li
-                    >
-                  </ul>
-                </div>
-
-                <div v-if="files != null" class="mt-3 ticket__reply-files">
-                  <div
-                    class="el-before-upload__filename d-flex justify-content-between"
-                    v-for="(item, i) in files"
+                <ul class="ticket__error-list">
+                  <li
+                    v-for="(item, i) in fileErrors"
                     :key="i"
+                    class="ticket__error-item"
                   >
-                    <div class="filename mr-3">{{ item.name }}</div>
-                    <div :class="{ isUpload: isUploading }" class="remove-file">
-                      <img
-                        src="~@/assets/img/x-sm.svg"
-                        alt=""
-                        class="icon-remove"
-                        @click.prevent="actionDeletefile(item)"
-                      />
-                    </div>
+                    {{ item }}</li
+                  >
+                </ul>
+              </div>
+
+              <div v-if="this.validateSize" class="ticket__error">
+                <div class="ticket__error-title">
+                  <img
+                    src="~@/assets/img/alert.svg"
+                    alt=""
+                    class="ticket__error-icon"
+                  />
+                  <span>Tệp tin chưa được thêm vào:</span>
+                </div>
+                <ul class="ticket__error-list">
+                  <li class="ticket__error-item">
+                    {{ this.name }} đang lớn hơn 5Mb.Vui lòng chọn tệp nhỏ
+                    hơn.</li
+                  >
+                </ul>
+              </div>
+
+              <div v-if="files != null" class="mt-3 ticket__reply-files">
+                <div
+                  class="el-before-upload__filename d-flex justify-content-between"
+                  v-for="(item, i) in files"
+                  :key="i"
+                >
+                  <div class="filename mr-3">{{ item.name }}</div>
+                  <div :class="{ isUpload: isUploading }" class="remove-file">
+                    <img
+                      src="~@/assets/img/x-sm.svg"
+                      alt=""
+                      class="icon-remove"
+                      @click.prevent="actionDeletefile(item)"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="rule">
-                Định dạng file hợp lệ : XLSX, PNG, JPG, JPEG.Và có dung lượng
-                dưới 5Mb
-              </div>
+            <div class="rule">
+              Định dạng file hợp lệ : XLSX, PNG, JPG, JPEG.Và có dung lượng dưới
+              5Mb
             </div>
           </div>
         </div>
