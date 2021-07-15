@@ -74,8 +74,8 @@
                     <td :title="item.user.full_name">
                       <span class="tool-tip"> {{ item.user.full_name }}</span>
                     </td>
-                    <td :title="getTitle(item)"
-                      ><span
+                    <td :title="getTitle(item)">
+                      <span
                         class="tool-tip"
                         v-html="getDescription(item)"
                       ></span
@@ -87,8 +87,8 @@
                         item.type === topupType ? 'Chuyển khoản' : 'N/A'
                       }}</span>
                     </td>
-                    <td width="120px" :title="getAmount(item)"
-                      ><span style="white-space: nowrap;">{{
+                    <td width="120px" :title="getAmount(item)">
+                      <span style="white-space: nowrap;">{{
                         getAmount(item)
                       }}</span></td
                     >
@@ -326,6 +326,8 @@ export default {
           return `Nạp topup ${transaction.id}`
         case TransactionLogTypePay:
           return `Thanh toán hóa đơn #${transaction.bill_id}`
+        case TransactionLogTypeRefund:
+          return `Hoàn tiền hóa đơn #${transaction.bill_id}`
         default:
           return null
       }
