@@ -1,8 +1,6 @@
 <template>
   <div :class="wrapperClasses">
-    <template
-      v-if="!['textarea', 'password', 'phonenumber', 'search'].includes(type)"
-    >
+    <template v-if="!['textarea', 'password', 'search'].includes(type)">
       <div class="input-group-prepend" v-if="$slots.prepend">
         <slot name="prepend"></slot>
       </div>
@@ -24,41 +22,17 @@
       >
       </i>
       <input
-        @focus="focusUsername = true"
-        @blur="focusUsername = false"
         :class="formControlClasses"
         v-bind="$attrs"
         :value="nativeInputValue"
         :disabled="disabled"
         :readonly="readonly"
         :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @change="handleChange"
         v-on="listeners"
-        v-model="formatInput"
         :type="type"
-        ref="input"
-      />
-      <div class="input-group-append" v-if="$slots.append">
-        <slot name="append"></slot>
-      </div>
-    </template>
-
-    <template v-if="type == 'phonenumber'">
-      <div class="input-group-prepend" v-if="$slots.prepend">
-        <slot name="prepend"></slot>
-      </div>
-      <input
-        :class="formControlClasses"
-        v-bind="$attrs"
-        :value="nativeInputValue"
-        :disabled="disabled"
-        :readonly="readonly"
-        :autocomplete="autocomplete"
-        @change="handleChange"
-        v-on="listeners"
-        v-model="formatInput"
-        :type="type"
-        name="phonenumber"
         ref="input"
       />
       <div class="input-group-append" v-if="$slots.append">
@@ -90,11 +64,11 @@
         :disabled="disabled"
         :readonly="readonly"
         :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @change="handleChange"
         v-on="listeners"
-        v-model="formatInput"
         :type="typeInputPassword"
-        name="password"
         ref="input"
       />
       <div class="input-group-append" v-if="$slots.append">
@@ -110,8 +84,10 @@
         :disabled="disabled"
         :readonly="readonly"
         :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @change="handleChange"
-        ref="textarea"
+        ref="input"
       >
       </textarea>
     </template>
@@ -143,16 +119,18 @@
       </i>
 
       <input
+        class="p-input-search"
         :class="formControlClasses"
         v-bind="$attrs"
         :value="nativeInputValue"
         :disabled="disabled"
         :readonly="readonly"
         :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @change="handleChange"
         v-on="listeners"
         ref="input"
-        class="p-input-search"
       />
 
       <div class="input-group-append" v-if="$slots.append">
@@ -245,7 +223,7 @@ export default {
   },
   data() {
     return {
-      formatInput: '',
+      focused: false,
       focusUsername: false,
       typeInputPassword: 'password',
     }
@@ -272,6 +250,7 @@ export default {
         'p-input',
         'form-control',
         {
+          focus: this.focused,
           rounded: this.rounded,
           'input-invalid': this.hasError,
         },
@@ -293,15 +272,6 @@ export default {
         : this.value
     },
 
-    setInputValue: {
-      get() {
-        return this.formatInput
-      },
-      set(value) {
-        this.formatInput = value
-      },
-    },
-
     listeners() {
       return {
         ...this.$listeners,
@@ -316,10 +286,29 @@ export default {
     },
   },
   methods: {
+    focus() {
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
+    },
+
+    blur() {
+      this.$refs.input.blur()
+    },
+
+    handleFocus(e) {
+      this.focused = true
+      this.$emit('focus', e)
+    },
+
+    handleBlur(e) {
+      this.focused = false
+      this.$emit('blur', e)
+    },
+
     onInput(event) {
       if (event.target.value !== this.value) {
         this.$emit('input', event.target.value)
-        this.$emit('onchange', true)
       }
     },
     keypress(evt) {
@@ -350,14 +339,6 @@ export default {
       this.$emit('input', '')
       this.$emit('update:value', '')
       this.$emit('clear')
-    },
-  },
-  watch: {
-    input: {
-      handler(newVal) {
-        this.formatInput = newVal
-      },
-      deep: true,
     },
   },
 }

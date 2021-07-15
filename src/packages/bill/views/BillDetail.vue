@@ -15,14 +15,14 @@
         <div class="bill__detail-info">
           <div class="bill__detail-title">Mã hóa đơn:</div>
           <div class="bill__detail-title">Ngày tạo:</div>
-          <div class="bill__detail-title">Tổng hóa đơn</div>
           <div class="bill__detail-title">Tên khách hàng</div>
+          <div class="bill__detail-title">Tổng hóa đơn</div>
           <div class="bill__detail-code">{{ bill.id }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
-          <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
           <div class="bill__detail-date">{{ bill.user.full_name || '' }}</div>
+          <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
         </div>
         <div class="bill__detail-action"> </div>
       </div>
@@ -121,7 +121,7 @@
                   <thead>
                     <tr>
                       <th>Mã vận đơn</th>
-                      <th>Ngày tạo</th>
+                      <th>Thời gian</th>
                       <th>Phí phát sinh</th>
                       <th>Thao tác</th>
                       <th></th>

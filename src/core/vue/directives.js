@@ -173,7 +173,7 @@ const getFormatStatus = (status) => {
     case 'Đóng kiện':
       statusClass = 'unpaid'
       break
-    case 'Hủy':
+    case 'Hoàn tiền':
       statusClass = 'danger'
       break
   }
