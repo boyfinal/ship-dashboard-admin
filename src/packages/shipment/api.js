@@ -23,4 +23,13 @@ export default {
   closeShipment(payload) {
     return http.put(`/shipments/close/${payload.id}`)
   },
+  fetchListShipments(payload) {
+    return http.get(`/shipments?${buildQueryString(payload)}`)
+  },
+  countListShipments(payload) {
+    return http.get(`/shipments/count?${buildQueryString(payload)}`)
+  },
+  createShipment() {
+    return http.post(`/shipments/create`)
+  },
 }
