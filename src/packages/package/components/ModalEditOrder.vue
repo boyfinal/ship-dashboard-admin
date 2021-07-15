@@ -390,7 +390,7 @@ export default {
         .string()
         .required('Tên không để trống')
         .matches(
-          /^[a-zA-z0-9 !"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
+          /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
           'Tên không hợp lệ'
         ),
       phone: y
@@ -450,9 +450,10 @@ export default {
         .string()
         .required('Địa chỉ không để trống')
         .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
-      address2: y
-        .string()
-        .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ phụ không hợp lệ'),
+      address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
+        message: 'Địa chỉ phụ không hợp lệ',
+        excludeEmptyString: true,
+      }),
     }))
   },
   methods: {
