@@ -137,7 +137,7 @@ export default {
     this.filter = this.getRouteQuery()
   },
   computed: {
-    ...mapState('shipments', {
+    ...mapState('shipment', {
       shipments: (state) => state.shipments,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
@@ -150,7 +150,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('shipments', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
+    ...mapActions('shipment', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
