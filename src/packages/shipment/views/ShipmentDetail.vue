@@ -19,11 +19,10 @@
               placeholder="Tìm theo mã kiện hàng"
               prefixIcon="search"
               type="search"
-              :value="filter.search"
-              @keyup.enter="handleSearch"
+              v-model="code"
             >
             </p-input>
-            <p-button type="info">
+            <p-button type="info" @click="handleAppendShipment">
               Thêm
             </p-button>
           </div>
@@ -87,7 +86,10 @@
                         {{ getBoxInfo(item) }}
                       </td>
                       <td>
-                        <p-button type="danger">
+                        <p-button
+                          type="danger"
+                          @click="handleCancelhipment(item.id)"
+                        >
                           Hủy
                         </p-button>
                       </td>
@@ -119,9 +121,14 @@
 import { mapState, mapActions } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_SHIPMENT_DETAIL } from '../store'
+import {
+  APPEND_SHIPMENT,
+  CANCEL_CONTAINER,
+  FETCH_SHIPMENT_DETAIL,
+} from '../store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable],
@@ -136,6 +143,7 @@ export default {
         page: 1,
         search: '',
       },
+      code: '',
     }
   },
   computed: {
@@ -152,7 +160,11 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions('shipment', [FETCH_SHIPMENT_DETAIL]),
+    ...mapActions('shipment', [
+      FETCH_SHIPMENT_DETAIL,
+      APPEND_SHIPMENT,
+      CANCEL_CONTAINER,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -168,6 +180,42 @@ export default {
       return container.box
         ? `${container.box.length} x ${container.box.width}  x ${container.box.height}`
         : null
+    },
+    async handleAppendShipment() {
+      this.code = this.code.trim()
+      const payload = {
+        search: this.code,
+        shipment_id: parseInt(this.$route.params.id),
+      }
+      const result = await this[APPEND_SHIPMENT](payload)
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      this.$toast.open({
+        message: `Thêm kiện hàng mã ${result.container.code} thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    async handleCancelhipment(container_id) {
+      const payload = {
+        container_id: container_id,
+        shipment_id: parseInt(this.$route.params.id),
+      }
+      const result = await this[CANCEL_CONTAINER](payload)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Hủy kiện hàng thành công`,
+        type: 'success',
+      })
+      this.init()
     },
   },
   watch: {
