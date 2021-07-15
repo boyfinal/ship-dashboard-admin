@@ -1,6 +1,6 @@
 <template>
   <div class="modal-confirm">
-    <p-modal :active="visible" :title="title" @close="handleClose">
+    <p-modal :size="size" :active="visible" :title="title" @close="handleClose">
       <template>
         <span v-html="description"></span>
         <span
@@ -82,6 +82,10 @@ export default {
       default: '',
     },
     errorUrl: {
+      type: String,
+      default: '',
+    },
+    size: {
       type: String,
       default: '',
     },

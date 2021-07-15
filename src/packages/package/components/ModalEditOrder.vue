@@ -46,21 +46,14 @@
                       Họ và tên: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="vd. Nguyen Van A"
                         type="fullname"
-                        validate="on"
-                        v-model="fullname"
-                        :input="fullname"
-                        class="form-control"
-                        v-validate="'required'"
+                        v-model="form.fullname"
+                        :input="form.fullname"
                         name="name"
-                        data-vv-as="Tên"
-                        :class="{ 'error-color': errors.has('name') }"
+                        :error="valider.error('fullname')"
                       />
-                      <span class="err-span" v-if="errors.has('name')">{{
-                        errors.first('name')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -68,21 +61,15 @@
                       Điện thoại: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập số điện thoại"
                         type="phonenumber"
                         ref="email"
-                        v-model="phone"
-                        :input="phone"
-                        class="form-control"
-                        v-validate="'required|phoneAddress'"
+                        v-model="form.phone"
+                        :input="form.phone"
                         name="phone"
-                        data-vv-as="Số điện thoại"
-                        :class="{ 'error-color': errors.has('phone') }"
+                        :error="valider.error('phone')"
                       />
-                      <span class="err-span" v-if="errors.has('phone')">{{
-                        errors.first('phone')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -90,20 +77,14 @@
                       Thành phố: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập thành phố"
                         type="text"
-                        v-model="city"
-                        :input="city"
-                        class="form-control"
-                        v-validate="'required'"
+                        v-model="form.city"
+                        :input="form.city"
                         name="city"
-                        data-vv-as="Thành phố"
-                        :class="{ 'error-color': errors.has('city') }"
+                        :error="valider.error('city')"
                       />
-                      <span class="err-span" v-if="errors.has('city')">{{
-                        errors.first('city')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -111,20 +92,14 @@
                       Địa chỉ: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập địa chỉ"
                         type="text"
-                        v-model="address"
-                        :input="address"
-                        class="form-control"
-                        v-validate="'required|address'"
+                        v-model="form.address"
+                        :input="form.address"
                         name="address"
-                        data-vv-as="Địa chỉ"
-                        :class="{ 'error-color': errors.has('address') }"
+                        :error="valider.error('address')"
                       />
-                      <span class="err-span" v-if="errors.has('address')">{{
-                        errors.first('address')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -132,20 +107,14 @@
                       Địa chỉ phụ:
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập địa chỉ phụ"
                         type="text"
-                        v-model="address2"
-                        :input="address2"
-                        class="form-control"
-                        v-validate="'address'"
+                        v-model="form.address2"
+                        :input="form.address2"
                         name="address2"
-                        data-vv-as="Địa chỉ phụ"
-                        :class="{ 'error-color': errors.has('address2') }"
+                        :error="valider.error('address2')"
                       />
-                      <span class="err-span" v-if="errors.has('address2')">{{
-                        errors.first('address2')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -154,20 +123,14 @@
                       (state): <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập mã vùng"
                         type="text"
-                        class="form-control"
-                        v-model="state"
-                        :input="state"
-                        v-validate="'required|state'"
+                        v-model="form.state"
+                        :input="form.state"
                         name="state"
-                        data-vv-as="Mã vùng"
-                        :class="{ 'error-color': errors.has('state') }"
+                        :error="valider.error('state')"
                       />
-                      <span class="err-span" v-if="errors.has('state')">{{
-                        errors.first('state')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -175,20 +138,14 @@
                       Mã bưu điện: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập mã bưu điện"
                         type="text"
-                        v-model="postcode"
-                        :input="postcode"
-                        class="form-control"
-                        v-validate="'required|postcode'"
+                        v-model="form.postcode"
+                        :input="form.postcode"
                         name="postcode"
-                        data-vv-as="Mã bưu điện"
-                        :class="{ 'error-color': errors.has('postcode') }"
+                        :error="valider.error('postcode')"
                       />
-                      <span class="err-span" v-if="errors.has('postcode')">{{
-                        errors.first('postcode')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -196,20 +153,14 @@
                       Mã quốc gia: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập mã quốc gia"
                         type="text"
-                        v-model="countrycode"
-                        :input="countrycode"
-                        class="form-control"
-                        v-validate="'required|countrycode'"
+                        v-model="form.countrycode"
+                        :input="form.countrycode"
                         name="countrycode"
-                        data-vv-as="Mã quốc gia"
-                        :class="{ 'error-color': errors.has('countrycode') }"
+                        :error="valider.error('countrycode')"
                       />
-                      <span class="err-span" v-if="errors.has('countrycode')">{{
-                        errors.first('countrycode')
-                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -242,20 +193,14 @@
                       Chi tiết hàng hóa : <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập chi tiết hàng hóa"
                         type="text"
-                        v-model="detail"
-                        :input="detail"
-                        class="form-control"
-                        v-validate="'required'"
+                        v-model="form.detail"
+                        :input="form.detail"
                         name="detail"
-                        data-vv-as="Chi tiết hàng hóa"
-                        :class="{ 'error-color': errors.has('detail') }"
+                        :error="valider.error('detail')"
                       />
-                      <span class="err-span" v-if="errors.has('detail')">{{
-                        errors.first('detail')
-                      }}</span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -263,84 +208,60 @@
                       Trọng lượng: <span>*</span>
                     </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập trọng lượng"
                         type="text"
-                        v-model="weight"
-                        :input="weight"
-                        class="form-control"
-                        v-validate="'required|weight'"
+                        v-model="form.weight"
+                        :input="form.weight"
                         name="weight"
-                        data-vv-as="Trọng lượng"
                         :disabled="isDisable"
-                        :class="{ 'error-color': errors.has('weight') }"
+                        :error="valider.error('weight')"
                       />
-                      <span class="err-span" v-if="errors.has('weight')">{{
-                        errors.first('weight')
-                      }}</span>
                       <div class="card__w-unit">gram</div>
                     </div>
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label"> Dài: <span>*</span> </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập chiều dài "
                         type="text"
-                        v-model="length"
-                        :input="length"
-                        class="form-control"
-                        v-validate="'required|length'"
+                        v-model="form.length"
+                        :input="form.length"
                         name="length"
-                        data-vv-as="Chiều dài"
                         :disabled="isDisable"
-                        :class="{ 'error-color': errors.has('length') }"
+                        :error="valider.error('length')"
                       />
-                      <span class="err-span" v-if="errors.has('length')">{{
-                        errors.first('length')
-                      }}</span>
                       <div class="card__w-unit">cm</div>
                     </div>
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label"> Rộng: <span>*</span> </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập chiều rộng "
                         type="text"
-                        v-model="width"
-                        :input="width"
-                        class="form-control"
-                        v-validate="'required|width'"
+                        v-model="form.width"
+                        :input="form.width"
                         name="width"
                         :disabled="isDisable"
-                        data-vv-as="Chiều rộng"
-                        :class="{ 'error-color': errors.has('width') }"
+                        :error="valider.error('width')"
                       />
-                      <span class="err-span" v-if="errors.has('width')">{{
-                        errors.first('width')
-                      }}</span>
                       <div class="card__w-unit">cm</div>
                     </div>
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label"> Cao: <span>*</span> </label>
                     <div class="card__w-input">
-                      <input
+                      <p-input
                         placeholder="Nhập chiều cao "
                         type="text"
-                        v-model="height"
-                        :input="height"
-                        class="form-control"
-                        v-validate="'required|height'"
+                        v-model="form.height"
+                        :input="form.height"
                         name="height"
                         :disabled="isDisable"
-                        data-vv-as="Chiều cao"
-                        :class="{ 'error-color': errors.has('height') }"
+                        :error="valider.error('height')"
                       />
-                      <span class="err-span" v-if="errors.has('height')">{{
-                        errors.first('height')
-                      }}</span>
                       <div class="card__w-unit">cm</div>
                     </div>
                   </div>
@@ -358,7 +279,7 @@
                     <div class="card__w-input">
                       <multiselect
                         class="multiselect-custom dropdown-reason"
-                        v-model="service"
+                        v-model="form.service"
                         :options="services"
                         placeholder="Chọn một "
                         :allow-empty="false"
@@ -404,6 +325,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { FETCH_LIST_PRODUCTS, GET_SERVICE, UPDATE_PACKAGE } from '../store'
 import PButton from '../../../../uikit/components/button/Button'
+import valider from '@core/valider'
 // import {GET_SENDER, LIST_SENDER} from "../../../setting/store";
 
 export default {
@@ -439,47 +361,119 @@ export default {
         id: 0,
         name: '',
       },
-      fullname: '',
-      phone: '',
-      city: '',
-      state: '',
-      postcode: '',
-      note: '',
-      code: '',
-      weight: '',
-      length: '',
-      width: '',
-      height: '',
-      countrycode: '',
-      detail: '',
-      address: '',
+      form: {
+        fullname: '',
+        phone: '',
+        city: '',
+        state: '',
+        postcode: '',
+        note: '',
+        code: '',
+        weight: '',
+        length: '',
+        width: '',
+        height: '',
+        countrycode: '',
+        detail: '',
+        address: '',
+        address2: '',
+      },
       isDisable: false,
-      address2: '',
       isUpdate: false,
+      valider: null,
     }
   },
   created() {
     this.init()
+    this.valider = valider.schema((y) => ({
+      fullname: y
+        .string()
+        .required('Tên không để trống')
+        .matches(
+          /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
+          'Tên không hợp lệ'
+        ),
+      phone: y
+        .string()
+        .required('Số điện thoại không được để trống')
+        .matches(
+          /^[0-9+()-. ]+$/,
+          'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
+        ),
+      city: y
+        .string()
+        .required('Thành phố không để trống')
+        .matches(
+          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
+          'Thành phố không hợp lệ'
+        ),
+      state: y
+        .string()
+        .required('Mã vùng không để trống')
+        .matches(
+          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
+          'Mã vùng không hợp lệ'
+        ),
+      postcode: y
+        .string()
+        .required('Mã bưu điện không để trống')
+        .matches(/^[0-9\-_ ]{1,15}$/, 'Mã bưu điện không hợp lệ'),
+      weight: y
+        .string()
+        .required('Số cân nặng không để trống')
+        .matches(
+          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+          'Số  cân nặng không hợp lệ'
+        ),
+      length: y
+        .string()
+        .required('Số đo chiều dài không để trống')
+        .matches(
+          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+          'Số đo chiều dài không hợp lệ'
+        ),
+      width: y
+        .string()
+        .required('Số đo chiều rộng không để trống')
+        .matches(
+          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+          'Số đo chiều rộng không hợp lệ'
+        ),
+      height: y
+        .string()
+        .required('Số đo chiều cao không để trống')
+        .matches(
+          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+          'Số đo chiều cao không hợp lệ'
+        ),
+      address: y
+        .string()
+        .required('Địa chỉ không để trống')
+        .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
+      address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
+        message: 'Địa chỉ phụ không hợp lệ',
+        excludeEmptyString: true,
+      }),
+    }))
   },
   methods: {
     ...mapActions('package', [FETCH_LIST_PRODUCTS, UPDATE_PACKAGE]),
     async init() {
-      console.log('a')
       await this[FETCH_LIST_PRODUCTS]()
-      this.fullname = this.package_detail.package.recipient
-      this.phone = this.package_detail.package.phone_number
-      this.city = this.package_detail.package.city
-      this.state = this.package_detail.package.state_code
-      this.postcode = this.package_detail.package.zipcode
-      this.note = this.package_detail.package.note || 'Không có yêu cầu'
-      this.code = this.package_detail.package.code
-      this.items = this.package_detail.package.items
-      this.weight = this.package_detail.package.weight
-      this.length = this.package_detail.package.length
-      this.width = this.package_detail.package.width
-      this.height = this.package_detail.package.height
-      this.countrycode = this.package_detail.package.country_code
-      this.service = {
+      this.form.fullname = this.package_detail.package.recipient
+      this.form.phone = this.package_detail.package.phone_number
+      this.form.city = this.package_detail.package.city
+      this.form.state = this.package_detail.package.state_code
+      this.form.postcode = this.package_detail.package.zipcode
+      this.form.note = this.package_detail.package.note
+      this.form.code = this.package_detail.package.code
+      this.form.items = this.package_detail.package.items
+      this.form.weight = this.package_detail.package.weight
+      this.form.length = this.package_detail.package.length
+      this.form.width = this.package_detail.package.width
+      this.form.height = this.package_detail.package.height
+      this.form.countrycode = this.package_detail.package.country_code
+      this.form.service = {
         id: this.package_detail.package.service
           ? this.package_detail.package.service.id
           : 0,
@@ -487,45 +481,37 @@ export default {
           ? this.package_detail.package.service.name
           : '',
       }
-      this.address = this.package_detail.package.address_1
-      this.address2 = this.package_detail.package.address_2
-      this.detail = this.package_detail.package.detail
+      this.form.address = this.package_detail.package.address_1
+      this.form.address2 = this.package_detail.package.address_2
+      this.form.detail = this.package_detail.package.detail
     },
     handleClose() {
-      this.fullname = ''
-      this.phone = ''
-      this.city = ''
-      this.state = ''
-      this.postcode = ''
-      this.note = ''
-      this.code = ''
-      this.items = ''
-      this.weight = ''
-      this.length = ''
-      this.width = ''
-      this.height = ''
-      this.countrycode = ''
-      this.service = ''
-      this.address = ''
-      this.$validator.pause()
-      this.$nextTick(() => {
-        this.$validator.errors.clear()
-        this.$validator.fields.items.forEach((field) => field.reset())
-        this.$validator.fields.items.forEach((field) =>
-          this.errors.remove(field)
-        )
-        this.$validator.resume()
-      })
+      this.form.fullname = ''
+      this.form.phone = ''
+      this.form.city = ''
+      this.form.state = ''
+      this.form.postcode = ''
+      this.form.note = ''
+      this.form.code = ''
+      this.form.items = ''
+      this.form.weight = ''
+      this.form.length = ''
+      this.form.width = ''
+      this.form.height = ''
+      this.form.countrycode = ''
+      this.form.service = ''
+      this.form.address = ''
+      this.valider.errors = null
       this.$emit('update:visible', false)
     },
     customLabel(item) {
       return item.name
     },
     handleSelect(value) {
-      this.width = value.width
-      this.height = value.height
-      this.weight = value.weight
-      this.length = value.length
+      this.form.width = value.width
+      this.form.height = value.height
+      this.form.weight = value.weight
+      this.form.length = value.length
       this.isDisable = true
     },
     handleSelectService(value) {
@@ -533,35 +519,34 @@ export default {
     },
     handleRemove() {
       this.isDisable = false
-      this.weight = this.package_detail.package.weight
-      this.length = this.package_detail.package.length
-      this.width = this.package_detail.package.width
-      this.height = this.package_detail.package.height
+      this.form.weight = this.package_detail.package.weight
+      this.form.length = this.package_detail.package.length
+      this.form.width = this.package_detail.package.width
+      this.form.height = this.package_detail.package.height
     },
     async handleUpdate() {
-      const validate = await this.$validator.validateAll()
-      if (!validate) {
+      if (!this.valider.check(this.form)) {
         return
       }
       this.isUpdate = true
       const { id } = this.$route.params
       const params = {
         id: id,
-        recipient: this.fullname,
-        phone_number: this.phone.trim(),
-        address_1: this.address,
-        city: this.city,
-        state_code: this.state,
-        zipcode: this.postcode,
-        country_code: this.countrycode,
-        detail: this.detail,
-        weight: +this.weight,
-        width: +this.width,
-        length: +this.length,
-        height: +this.height,
-        service: this.service.name,
-        note: this.note,
-        address_2: this.address2,
+        recipient: this.form.fullname,
+        phone_number: this.form.phone.trim(),
+        address_1: this.form.address,
+        city: this.form.city,
+        state_code: this.form.state,
+        zipcode: this.form.postcode,
+        country_code: this.form.countrycode,
+        detail: this.form.detail,
+        weight: +this.form.weight,
+        width: +this.form.width,
+        length: +this.form.length,
+        height: +this.form.height,
+        service: this.form.service.name,
+        note: this.form.note,
+        address_2: this.form.address2,
       }
       let result = await this[UPDATE_PACKAGE](params)
       if (result.error) {

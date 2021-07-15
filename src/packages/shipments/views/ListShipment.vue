@@ -5,11 +5,15 @@
         <div class="col-12" id="search-box">
           <p-input
             placeholder="Tìm theo mã lô hoặc mã kiện"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
+            clearable
+            @keyup.enter="handleSearch"
+            :value="filter.search"
+            @clear="clearSearch"
           >
           </p-input>
-          <p-button type="info">
+          <p-button @click="visibleModal" type="info">
             <img src="~@/assets/img/plus.svg" alt="" />
             Tạo lô hàng
           </p-button>
@@ -17,14 +21,14 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <status-tab
+          <shipment-status-tab
             :has-all="false"
             v-model="filter.status"
             :status="statusTab"
-            :count="0"
+            :count-status="count_status"
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
-          <template v-else-if="containers.length">
+          <template v-else-if="shipments.length">
             <div class="table-responsive">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
@@ -39,12 +43,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in containers" :key="i">
+                  <tr v-for="(item, i) in shipments" :key="i">
                     <td>
-                      {{ item.code }}
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'shipment-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        {{ item.id }}
+                      </router-link>
                     </td>
-                    <td>{{ item.created_at }}</td>
-                    <td>{{ item.updated_at }}</td>
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td v-if="item.status == ShipmentWaitingClose">-</td>
+                    <td v-else>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
                     <td>
                       {{ item.quantity }}
                     </td>
@@ -64,7 +79,7 @@
             >
               <p-pagination
                 :filter-limit="false"
-                :total="1"
+                :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
@@ -75,13 +90,38 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="visibleConfirm"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có muốn tạo lô hàng ?`"
+      :title="`Xác nhận`"
+      @action="handleCreate"
+      :size="`sm`"
+    ></modal-confirm>
   </div>
 </template>
 <script>
 import { SHIPMENT_STATUS_TAB } from '../constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
+import { mapState, mapActions } from 'vuex'
+import { ShipmentWaitingClose } from '../constants'
+
+import EmptySearchResult from '@components/shared/EmptySearchResult'
+import mixinRoute from '@core/mixins/route'
+import mixinTable from '@core/mixins/table'
+import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT } from '../store'
+import ShipmentStatusTab from '../components/ShipmentStatusTab'
+import ModalConfirm from '../../../components/shared/modal/ModalConfirm'
+
 export default {
   name: 'ListShipment',
+  mixins: [mixinRoute, mixinTable],
+  components: {
+    EmptySearchResult,
+    ShipmentStatusTab,
+    ModalConfirm,
+  },
   data() {
     return {
       filter: {
@@ -90,23 +130,58 @@ export default {
         status: '',
       },
       isFetching: false,
-      containers: [
-        {
-          code: 1,
-          created_at: '22/12/2012',
-          updated_at: '22/12/2012',
-          quantity: 1,
-          status: 1,
-        },
-      ],
+      visibleConfirm: false,
+      ShipmentWaitingClose: ShipmentWaitingClose,
     }
   },
+  created() {
+    this.filter = this.getRouteQuery()
+  },
   computed: {
-    statusTab() {
-      return SHIPMENT_STATUS_TAB
+    ...mapState('shipments', {
+      shipments: (state) => state.shipments,
+      count: (state) => state.count,
+      count_status: (state) => state.count_status,
+      statusTab() {
+        return SHIPMENT_STATUS_TAB
+      },
+      mapStatus() {
+        return MAP_NAME_STATUS_SHIPMENT
+      },
+    }),
+  },
+  methods: {
+    ...mapActions('shipments', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
+    async init() {
+      this.isFetching = true
+      this.handleUpdateRouteQuery()
+      const result = await this[FETCH_LIST_SHIPMENT](this.filter)
+      this.isFetching = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
     },
-    mapStatus() {
-      return MAP_NAME_STATUS_SHIPMENT
+    async handleCreate() {
+      const result = await this[CREATE_SHIPMENT]()
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      this.$toast.open({ message: 'Tạo lô thành công', type: 'success' })
+      this.visibleConfirm = false
+      this.init()
+    },
+    visibleModal() {
+      this.visibleConfirm = true
+    },
+  },
+  watch: {
+    filter: {
+      handler: function() {
+        this.init()
+      },
+      deep: true,
     },
   },
 }

@@ -33,7 +33,7 @@
             <a href="#" class="btn btn-info" @click="handleCancelTicket()">
               <span>Đã xử lý</span>
             </a>
-            <a href="#" class="btn btn-info" @click="showModalReply">
+            <a href="#" class="btn btn-info ml-8" @click="showModalReply">
               <span>Trả lời</span>
             </a>
           </div>

@@ -169,19 +169,18 @@
                       <div class="col-7">
                         <div
                           v-if="
-                            package_detail.package.warehouse_status &&
-                              package_detail.package.warehouse_status > 0
+                            package_detail.package.status &&
+                              package_detail.package.status > 0
                           "
                           >{{
-                            mapStatusWareHouse[
-                              package_detail.package.warehouse_status
-                            ].value
+                            mapStatusWareHouse[package_detail.package.status]
+                              .value
                           }}</div
                         >
                         <div
                           v-if="
-                            !package_detail.package.warehouse_status ||
-                              package_detail.package.warehouse_status < 1
+                            !package_detail.package.status ||
+                              package_detail.package.status < 1
                           "
                         >
                           N/A
@@ -553,9 +552,9 @@ import {
   MAP_NAME_STATUS_PACKAGE,
   CHANGE_PACKAGE_TYPE,
   DELIVER_LOG_PACKAGE,
-  PackageStatusCancel,
-  PackageStatusShipSuccess,
-  PackageStatusShipping,
+  PackageStatusCancelled,
+  PackageStatusDelivered,
+  PackageStatusInTransit,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -665,13 +664,13 @@ export default {
       return CHANGE_PACKAGE_TYPE
     },
     statusCancel() {
-      return PackageStatusCancel
+      return PackageStatusCancelled
     },
     statusSuccess() {
-      return PackageStatusShipSuccess
+      return PackageStatusDelivered
     },
     statusShipping() {
-      return PackageStatusShipping
+      return PackageStatusInTransit
     },
   },
   created() {
@@ -791,9 +790,9 @@ export default {
       }
     },
     deliverLogPackage(log) {
-      return log.type === PackageStatusCancel
+      return log.type === PackageStatusCancelled
         ? DELIVER_LOG_PACKAGE[log.type] +
-            ` bởi <strong>${log.user.full_name}</strong>`
+            ` bởi <strong>${log.updated_user_name}</strong>`
         : DELIVER_LOG_PACKAGE[log.type]
     },
   },
