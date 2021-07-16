@@ -73,6 +73,6 @@ export default {
   },
 
   returnPackage(payload) {
-    return http.put(`/warehouses/packages/${payload.id}/return`, payload)
+    return http.post(`/warehouses/packages/${payload.id}/return`, payload)
   },
 }

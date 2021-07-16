@@ -63,10 +63,10 @@ export const MAP_NAME_STATUS_PACKAGE = {
   },
   [PackageWareHouseStatusReturn]: {
     value: 'Trả hàng',
-    class: 'badge-success',
+    class: 'badge-warning',
   },
   [PackageWareHouseStatusCancelled]: {
     value: 'Hủy',
-    class: 'badge-success',
+    class: 'badge-danger',
   },
 }
