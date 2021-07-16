@@ -20,6 +20,7 @@
               prefixIcon="search"
               type="search"
               v-model="code"
+              @keyup.enter="handleSearch"
             >
             </p-input>
             <p-button
@@ -216,6 +217,11 @@ export default {
       return container.box
         ? `${container.box.length} x ${container.box.width}  x ${container.box.height}`
         : null
+    },
+    handleSearch(e) {
+      this.filter.page = 1
+      this.code = e.target.value.trim()
+      this.$set(this.filter, 'search', this.code)
     },
     async handleAppendShipment() {
       this.code = this.code.trim()
