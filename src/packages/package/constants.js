@@ -10,50 +10,54 @@ export const PackageStatusDelivered = 31
 export const PackageStatusReturned = 40
 export const PackageStatusCancelled = 50
 
+export const PackageStatusCreatedText = 'created'
+export const PackageStatusPendingPickupText = 'pending-pickup'
+export const PackageStatusProcessingText = 'processing'
+export const PackageStatusInTransitText = 'in-transit'
+export const PackageStatusDeliveredText = 'delivered'
+export const PackageStatusReturnText = 'return'
+export const PackageStatusCancelledText = 'cancelled'
+
 export const PACKAGE_STATUS_TAB = [
   {
     value: '',
     text: 'Tất cả',
   },
   {
-    value: PackageStatusCreated,
+    value: PackageStatusCreatedText,
     text: 'Tạo mới',
   },
   {
-    value: PackageStatusPendingPickup,
+    value: PackageStatusPendingPickupText,
     text: 'Chờ lấy',
   },
   {
-    value: PackageStatusPicked,
-    text: 'Đã lấy',
-  },
-  {
-    value:
-      PackageStatusWareHouseLabeled ||
-      PackageStatusWareHouseInContainer ||
-      PackageStatusWareHouseInShipment ||
-      PackageStatusWareHouseExport,
+    value: PackageStatusProcessingText,
     text: 'Đang xử lý',
   },
   {
-    value: PackageStatusInTransit,
+    value: PackageStatusInTransitText,
     text: 'Đang giao',
   },
   {
-    value: PackageStatusDelivered,
+    value: PackageStatusDeliveredText,
     text: 'Giao thành công',
   },
   {
-    value: PackageStatusReturned,
+    value: PackageStatusReturnText,
     text: 'Trả hàng',
   },
   {
-    value: PackageStatusCancelled,
+    value: PackageStatusCancelledText,
     text: 'Đã huỷ',
   },
 ]
 
 export const MAP_NAME_STATUS_PACKAGE = {
+  ['']: {
+    value: '-',
+    class: '',
+  },
   [PackageStatusCreated]: {
     value: 'Tạo mới',
     class: 'badge-primary',
@@ -95,6 +99,41 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusCancelled]: {
+    value: 'Đã hủy',
+    class: 'badge-success',
+  },
+}
+
+export const MAP_NAME_STATUS_STRING_PACKAGE = {
+  ['']: {
+    value: '-',
+    class: '',
+  },
+  [PackageStatusCreatedText]: {
+    value: 'Tạo mới',
+    class: 'badge-primary',
+  },
+  [PackageStatusPendingPickupText]: {
+    value: 'Chờ lấy',
+    class: 'badge-success',
+  },
+  [PackageStatusProcessingText]: {
+    value: 'Đang xử lý',
+    class: 'badge-success',
+  },
+  [PackageStatusInTransitText]: {
+    value: 'Đang giao',
+    class: 'badge-success',
+  },
+  [PackageStatusDeliveredText]: {
+    value: 'Giao thành công',
+    class: 'badge-success',
+  },
+  [PackageStatusReturnText]: {
+    value: 'Trả hàng',
+    class: 'badge-success',
+  },
+  [PackageStatusCancelledText]: {
     value: 'Đã hủy',
     class: 'badge-success',
   },
