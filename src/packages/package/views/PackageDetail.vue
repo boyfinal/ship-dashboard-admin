@@ -471,14 +471,6 @@
                           ><div>{{ sumExtraFee | formatPrice }}</div></div
                         >
                       </div>
-                      <div v-if="package_detail.refund_fee" class="row">
-                        <div class="col-8 mb-8">Hoàn tiền:</div>
-                        <div class="col-4 more-extra-fee"
-                          ><div>{{
-                            package_detail.refund_fee | formatPrice
-                          }}</div></div
-                        >
-                      </div>
                       <div class="row sum-price">
                         <div class="col-8">Tổng cước:</div>
                         <div class="col-4"
