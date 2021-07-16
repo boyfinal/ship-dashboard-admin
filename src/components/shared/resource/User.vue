@@ -3,7 +3,7 @@
     class="multiselect-custom"
     v-model="selected"
     :options="users"
-    placeholder="Search user"
+    :placeholder="label"
     :custom-label="customLabel"
     :loading="isLoading"
     @search-change="handleSearch"
@@ -28,6 +28,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    label: {
+      type: String,
+      default: 'Search user',
+    },
   },
   data() {
     return {
@@ -47,10 +51,8 @@ export default {
       let response = await api.fetchUsersByRole(
         Object.assign({}, this.filter, { search: search })
       )
-
       if (response && response.errorMessage) {
         this.users = []
-        this.$toast.open({ type: 'error', message: response.errorMessage })
         return
       }
 
@@ -67,18 +69,16 @@ export default {
       this.isLoading = false
 
       if (result && result.success) {
-        // this.selected = this.value
-        //   ? this.users.find(({ id }) => parseInt(this.value) === parseInt(id))
-        //   : null
-        // this.handleSelect(this.selected)
         return
       }
 
       this.$toast.open({ type: 'error', message: result.message })
     },
 
-    customLabel({ username, email }) {
-      return typeof username !== 'undefined' ? `${username} - ${email}` : ''
+    customLabel({ full_name, email, phone_number }) {
+      return typeof email !== 'undefined'
+        ? `${full_name} - ${email}`
+        : `${full_name} - ${phone_number}`
     },
 
     handleSelect(shop) {
