@@ -2,7 +2,7 @@
   <div class="pages list__claim">
     <div class="page-content">
       <div class="row mb-12">
-        <div class="col-9">
+        <div class="col-8">
           <p-input
             :placeholder="searchPlaceholder"
             prefixIcon="search"
@@ -14,12 +14,18 @@
           >
           </p-input>
         </div>
-        <div class="col-3">
+        <div class="col-2">
           <select v-model="filter.search_by" class="form-control">
             <option value="id">Mã hoá đơn</option>
             <option value="code">Mã vận đơn</option>
             <option value="customer">Khách hàng</option>
           </select>
+        </div>
+        <div class="col-2 text-right">
+          <p-button type="info" @click="handleShowModalCreateExtraFee">
+            <img src="~@/assets/img/plus.svg" />
+            Tạo hóa đơn
+          </p-button>
         </div>
       </div>
       <div class="card">
@@ -76,20 +82,35 @@
         </div>
       </div>
     </div>
+    <modal-create-extra-fee
+      :types="fee_types"
+      :visible.sync="visibleCreateExtraFeeModal"
+      :loading="isSubmitting"
+      @save="handleSubmitExtraFee"
+    >
+    </modal-create-extra-fee>
   </div>
 </template>
 <script>
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { BILL_FETCH, BILL_COUNT } from '../store'
+import {
+  BILL_FETCH,
+  BILL_COUNT,
+  FETCH_FEE_EXTRA_TYPES,
+  CREATE_EXTRA_FEE,
+} from '../store'
 import { mapActions, mapState } from 'vuex'
 import { BILL_MAP_NAME_STATUS } from '../constants'
-
+import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 export default {
   name: 'BillList',
   mixins: [mixinRoute, mixinTable],
-  components: { EmptySearchResult },
+  components: {
+    EmptySearchResult,
+    ModalCreateExtraFee,
+  },
   data() {
     return {
       filter: {
@@ -99,6 +120,8 @@ export default {
         search_by: 'id',
         status: '',
       },
+      isSubmitting: false,
+      visibleCreateExtraFeeModal: false,
       isFetching: false,
     }
   },
@@ -110,6 +133,7 @@ export default {
     ...mapState('bill', {
       count: (state) => state.count,
       bills: (state) => state.bills,
+      fee_types: (state) => state.extraFeeTypes,
     }),
 
     transBills() {
@@ -135,10 +159,9 @@ export default {
         }
       })
     },
-
     searchPlaceholder() {
       const maptext = {
-        id: 'Tìm theo mã đơn hàng',
+        id: 'Tìm theo mã hoá đơn',
         code: 'Tìm theo mã vận đơn',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
       }
@@ -158,6 +181,8 @@ export default {
     ...mapActions('bill', {
       fetchHandle: BILL_FETCH,
       countHandle: BILL_COUNT,
+      fetchFeeType: FETCH_FEE_EXTRA_TYPES,
+      createExtraFee: CREATE_EXTRA_FEE,
     }),
 
     async init() {
@@ -168,6 +193,7 @@ export default {
       const res = await Promise.all([
         this.fetchHandle(this.filter),
         this.countHandle(this.filter),
+        this.fetchFeeType(),
       ])
 
       this.isFetching = false
@@ -177,10 +203,31 @@ export default {
         return
       }
     },
+    async handleSubmitExtraFee(payload) {
+      this.isSubmitting = true
+      const result = await this.createExtraFee(payload)
+      this.isSubmitting = false
+      this.visibleCreateExtraFeeModal = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
+        return
+      }
 
+      this.$toast.open({
+        type: 'success',
+        message: 'Tạo phí phát sinh thành công',
+      })
+      this.init()
+    },
     handleSearch() {
       this.filter.page = 1
       this.init()
+    },
+    handleShowModalCreateExtraFee() {
+      this.visibleCreateExtraFeeModal = true
     },
   },
   watch: {

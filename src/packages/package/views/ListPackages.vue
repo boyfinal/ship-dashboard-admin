@@ -89,7 +89,9 @@
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
-                      <span v-status="mapStatus[item.status].value"></span>
+                      <span
+                        v-status:status="mapStatus[item.status_string].value"
+                      ></span>
                     </td>
                     <td>{{ item.shipping_fee | formatPrice }}</td>
                   </tr>
@@ -121,8 +123,8 @@ import { truncate } from '@core/utils/string'
 
 import {
   PACKAGE_STATUS_TAB,
-  PackageStatusCreated,
-  MAP_NAME_STATUS_PACKAGE,
+  PackageStatusCreatedText,
+  MAP_NAME_STATUS_STRING_PACKAGE,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -171,7 +173,6 @@ export default {
   created() {
     this.filter = this.getRouteQuery()
     this.keywordSearch = this.filter.search.trim()
-    this.init()
   },
   computed: {
     ...mapState('package', {
@@ -182,7 +183,7 @@ export default {
         return this.action.selected.length > 0 || this.isAllChecked
       },
       isFilterInitTab() {
-        return this.filter.status === PackageStatusCreated
+        return this.filter.status_string === PackageStatusCreatedText
       },
       items() {
         return this.packages
@@ -192,7 +193,7 @@ export default {
       return PACKAGE_STATUS_TAB
     },
     mapStatus() {
-      return MAP_NAME_STATUS_PACKAGE
+      return MAP_NAME_STATUS_STRING_PACKAGE
     },
   },
   methods: {
