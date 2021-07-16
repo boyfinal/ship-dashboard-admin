@@ -161,7 +161,7 @@ export default {
     },
     searchPlaceholder() {
       const maptext = {
-        id: 'Tìm theo mã đơn hàng',
+        id: 'Tìm theo mã hoá đơn',
         code: 'Tìm theo mã vận đơn',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
       }

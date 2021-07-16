@@ -170,7 +170,8 @@
                         <div
                           v-if="
                             package_detail.package.status &&
-                              package_detail.package.status > 0
+                              package_detail.package.status > 0 &&
+                              mapStatusWareHouse[package_detail.package.status]
                           "
                           >{{
                             mapStatusWareHouse[package_detail.package.status]
@@ -180,7 +181,8 @@
                         <div
                           v-if="
                             !package_detail.package.status ||
-                              package_detail.package.status < 1
+                              package_detail.package.status < 1 ||
+                              mapStatusWareHouse[package_detail.package.status]
                           "
                         >
                           N/A

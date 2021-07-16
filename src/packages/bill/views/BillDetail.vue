@@ -21,7 +21,9 @@
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
-          <div class="bill__detail-date">{{ bill.user.full_name || '' }}</div>
+          <div v-if="bill" class="bill__detail-date">{{
+            bill.user.full_name || ''
+          }}</div>
           <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
         </div>
         <div class="bill__detail-action"> </div>
@@ -215,9 +217,6 @@ export default {
       countExtra: (state) => state.countExtra,
       bill: (state) => state.bill,
     }),
-    sumPaid() {
-      return this.total_fee - this.total_unpaid
-    },
     totalPageCreate() {
       const totalPages = Math.ceil(this.countCreate / this.filter.limit)
       return totalPages
@@ -248,24 +247,11 @@ export default {
         this.isFetching = false
         return
       }
-      this.total_fee = result.total
+      this.total_fee = this.bill.extra_fee + this.bill.shipping_fee
       this.total_unpaid = result.total_unpaid
       await this[FETCH_BILL_EXTRA](this.filterExtra)
 
       this.isFetching = false
-    },
-    total(shipping_fee, extra__fee = 0, promotion = 0) {
-      let totalFee = 0
-      totalFee = shipping_fee + extra__fee - promotion
-      return totalFee
-    },
-    sum(array) {
-      let tt = array
-        .map((item) => (item.status > 0 ? item.amount : 0))
-        .reduce((previous, current) => {
-          return previous + current
-        }, 0)
-      return tt
     },
     handleRouter() {
       const { id } = this.$route.params
