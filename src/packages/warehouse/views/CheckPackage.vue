@@ -189,7 +189,7 @@ import {
 import { mapActions, mapState } from 'vuex'
 import ModalAccept from '../components/ModalAccept'
 import {
-  PackageStatusWareHouseLabeled,
+  PACKAGE_STATUS_WAREHOUSE_LABELED,
   MAP_NAME_STATUS_PACKAGE,
 } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
@@ -228,7 +228,8 @@ export default {
     },
     isAccepted() {
       return (
-        this.current.id && this.current.status >= PackageStatusWareHouseLabeled
+        this.current.id &&
+        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED
       )
     },
     disBtnReturn() {
