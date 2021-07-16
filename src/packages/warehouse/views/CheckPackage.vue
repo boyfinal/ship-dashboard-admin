@@ -8,7 +8,7 @@
               <div class="d-flex">
                 <p-input
                   :value="keyword"
-                  @keydown.enter="searchHandle"
+                  @keydown.enter.prevent="searchHandle"
                 ></p-input>
                 <button
                   :disabled="disBtnAccept"
@@ -266,6 +266,11 @@ export default {
       isSubmitting: false,
     }
   },
+  mounted() {
+    if (this.keyword === '' && this.current.code) {
+      this.keyword = this.current.code
+    }
+  },
   methods: {
     ...mapActions('shared', ['loading']),
     ...mapActions('warehouse', {
@@ -284,7 +289,7 @@ export default {
 
     beforeFetchPackge(keyword) {
       keyword = keyword.trim()
-      // if (this.keyword === keyword) return
+      if (this.keyword === keyword) return
 
       if (!this.current.id || this.isAccepted) {
         this.keyword = keyword
@@ -332,25 +337,25 @@ export default {
     },
 
     async acceptHandle() {
-      // if (this.isAccepted || this.isSubmitting || !this.current.id) return
-      // this.loading(true)
-      // this.isSubmitting = true
-      // const body = { id: this.current.id }
-      // if (this.messages.length) {
-      //   body.weight = this.volume.weight
-      //   body.length = this.volume.length
-      //   body.width = this.volume.width
-      //   body.height = this.volume.height
-      // }
-      // const res = await this.acceptPackageSubmit(body)
-      // this.isSubmitting = false
-      // this.loading(false)
-      // if (res.error) {
-      //   this.$toast.error(res.message)
-      //   return
-      // }
-      // this.isVisibleModalAccept = false
-      // this.printLabel()
+      if (this.isAccepted || this.isSubmitting || !this.current.id) return
+      this.loading(true)
+      this.isSubmitting = true
+      const body = { id: this.current.id }
+      if (this.messages.length) {
+        body.weight = this.volume.weight
+        body.length = this.volume.length
+        body.width = this.volume.width
+        body.height = this.volume.height
+      }
+      const res = await this.acceptPackageSubmit(body)
+      this.isSubmitting = false
+      this.loading(false)
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+      this.isVisibleModalAccept = false
+      this.printLabel()
     },
 
     returnHandleConfirm() {
