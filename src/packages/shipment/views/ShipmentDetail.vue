@@ -26,12 +26,16 @@
               type="info"
               :class="'btn-add-container ml-3'"
               @click="handleAppendShipment"
+              v-if="!isClosedShipment && !isCanceledShipment"
             >
               <img src="@/assets/img/plus_blue.svg" />
               Thêm
             </p-button>
           </div>
-          <div class="page-header__action col-6 text-right">
+          <div
+            class="page-header__action col-6 text-right"
+            v-if="!isClosedShipment && !isCanceledShipment"
+          >
             <p-button
               type="info"
               :class="`mr-3`"
@@ -104,6 +108,7 @@
                       </td>
                       <td>
                         <p-button
+                          v-if="!isClosedShipment"
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handleCancelContainer(item.id)"
@@ -150,7 +155,7 @@ import {
 } from '../store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
-
+import { ShipmentClosed, ShipmentCanceled } from '../constants'
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -174,6 +179,12 @@ export default {
       shipment: (state) => state.shipment,
       containers: (state) => state.containers,
       count: (state) => state.container_count,
+      isCanceledShipment() {
+        return this.shipment.status === ShipmentCanceled
+      },
+      isClosedShipment() {
+        return this.shipment.status === ShipmentClosed
+      },
     }),
     items() {
       return this.containers
