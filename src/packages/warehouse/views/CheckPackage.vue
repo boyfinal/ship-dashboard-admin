@@ -64,7 +64,7 @@
                     <label class="form-label">Trọng lượng thực:</label>
                     <p-input
                       type="text"
-                      v-model="volume.weight"
+                      v-model.number="volume.weight"
                       placeholder="eg: 69 (đơn vị grams)"
                     ></p-input>
                   </div>
@@ -72,7 +72,7 @@
                     <label class="form-label">Chiều dài thực:</label>
                     <p-input
                       type="text"
-                      v-model="volume.length"
+                      v-model.number="volume.length"
                       placeholder="eg: 15 (đơn vị cm)"
                     ></p-input>
                   </div>
@@ -80,7 +80,7 @@
                     <label class="form-label">Chiều rộng thực:</label>
                     <p-input
                       type="text"
-                      v-model="volume.width"
+                      v-model.number="volume.width"
                       placeholder="eg: 10 (đơn vị cm)"
                     ></p-input>
                   </div>
@@ -88,7 +88,7 @@
                     <label class="form-label">Chiều cao thực:</label>
                     <p-input
                       type="text"
-                      v-model="volume.height"
+                      v-model.number="volume.height"
                       placeholder="eg: 3 (đơn vị cm)"
                     ></p-input>
                   </div>
@@ -112,6 +112,7 @@
               <div class="text-right" style="align-self: flex-start;">
                 <button
                   :disabled="disBtnIncurred"
+                  @click.prevent="extraHandle"
                   class="btn btn-outline-danger"
                   >Phát sinh</button
                 >
@@ -163,7 +164,10 @@
                 ></textarea>
               </div>
               <div class="text-right mt-4">
-                <button :disabled="disBtnReturn" class="btn btn-danger"
+                <button
+                  :disabled="disBtnReturn"
+                  @click.prevent="returnHandle"
+                  class="btn btn-danger"
                   >Trả hàng</button
                 >
               </div>
@@ -185,7 +189,7 @@ import {
 import { mapActions, mapState } from 'vuex'
 import ModalAccept from '../components/ModalAccept'
 import {
-  PackageStatusWareHouseLabeled,
+  PACKAGE_STATUS_WAREHOUSE_LABELED,
   MAP_NAME_STATUS_PACKAGE,
 } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
@@ -224,7 +228,8 @@ export default {
     },
     isAccepted() {
       return (
-        this.current.id && this.current.status >= PackageStatusWareHouseLabeled
+        this.current.id &&
+        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED
       )
     },
     disBtnReturn() {
@@ -301,12 +306,10 @@ export default {
         title: 'Xác nhận duyệt?',
         message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không',
         onConfirm: () => {
-          console.log('accept', keyword)
           this.acceptHandle()
         },
         onCancel: () => {
           this.keyword = keyword
-          console.log('cancel', keyword)
           this.fetchPackageSubmit()
         },
       })
@@ -334,6 +337,13 @@ export default {
 
     showModalAcceptHandle() {
       this.isVisibleModalAccept = true
+    },
+
+    extraHandle() {
+      this.$dialog.confirm({
+        title: 'Xác nhận thay đổi trọng lượng và kích thước?',
+        onConfirm: () => this.acceptHandle(),
+      })
     },
 
     async acceptHandle() {
@@ -364,6 +374,7 @@ export default {
         onConfirm: () => this.returnHandle(),
       })
     },
+
     async returnHandle() {
       if (this.isSubmitting || !this.current.id || this.note == '') return
 
