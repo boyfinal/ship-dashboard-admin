@@ -70,6 +70,7 @@
               :total="count"
               :perPage.sync="filter.limit"
               :current.sync="filter.page"
+              :filter-limit="false"
               size="sm"
             ></p-pagination>
           </div>
@@ -161,6 +162,7 @@ export default {
     }),
 
     async init() {
+      this.filter.limit = this.filter.limit != 30 ? 30 : this.filter.limit
       this.handleUpdateRouteQuery()
 
       this.isFetching = true
