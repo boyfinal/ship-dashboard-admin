@@ -7,8 +7,8 @@ export const RETURN_PACKAGE = 'returnPackage'
 export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 
 import {
-  PackageStatusWareHouseLabeled,
-  PackageWareHouseStatusReturn,
+  PACKAGE_STATUS_WAREHOUSE_LABELED,
+  PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
 
 export const state = {
@@ -34,7 +34,7 @@ export const mutations = {
   [ACCEPT_PACKAGE_LABEL]: (state, payload) => {
     if (payload.id != state.package.id) return
 
-    state.package.status = PackageStatusWareHouseLabeled
+    state.package.status = PACKAGE_STATUS_WAREHOUSE_LABELED
     state.package.tracking = {
       id: payload.track_id,
       base64_label: `data:image/png;base64,${payload.base64_labels}`,
@@ -43,7 +43,7 @@ export const mutations = {
   },
   [RETURN_PACKAGE]: (state, id) => {
     if (id != state.package.id) return
-    state.package.status = PackageWareHouseStatusReturn
+    state.package.status = PACKAGE_WAREHOUSE_STATUS_RETURN
   },
 }
 

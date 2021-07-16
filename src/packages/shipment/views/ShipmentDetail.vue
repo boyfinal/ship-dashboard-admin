@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="page-header">
         <div class="page-header_back">
-          <router-link :to="{ name: 'list-package' }" class="text">
+          <router-link :to="{ name: 'list-shipment' }" class="text">
             <img
               src="@/assets/img/chevron-left.svg"
               alt=""
@@ -124,6 +124,7 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
+                  :filter-limit="false"
                 ></p-pagination>
               </div>
             </template>

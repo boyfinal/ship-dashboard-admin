@@ -142,8 +142,8 @@ import { truncate } from '@core/utils/string'
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
   MAP_NAME_STATUS_PACKAGE,
-  PackageWareHouseStatusPick,
-  PackageWareHouseStatusReturn,
+  PACKAGE_WAREHOUSE_STATUS_PICK,
+  PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
 import { FETCH_LIST_PACKAGES_IN_WAREHOUSE } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -180,8 +180,8 @@ export default {
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
       },
-      PackageWareHouseStatusPick: PackageWareHouseStatusPick,
-      PackageWareHouseStatusReturn: PackageWareHouseStatusReturn,
+      PackageWareHouseStatusPick: PACKAGE_WAREHOUSE_STATUS_PICK,
+      PackageWareHouseStatusReturn: PACKAGE_WAREHOUSE_STATUS_RETURN,
     }
   },
   created() {
@@ -198,7 +198,7 @@ export default {
         return this.action.selected.length > 0 || this.isAllChecked
       },
       isFilterInitTab() {
-        return this.filter.status === PackageWareHouseStatusPick
+        return this.filter.status === PACKAGE_WAREHOUSE_STATUS_PICK
       },
       items() {
         return this.packages
