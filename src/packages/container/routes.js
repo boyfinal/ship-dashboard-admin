@@ -10,4 +10,15 @@ export const routes = [
         /* webpackChunkName: "list-containers" */ './views/ListContainers.vue'
       ),
   },
+  {
+    path: '/containers/:id',
+    name: 'container-detail',
+    meta: {
+      title: 'Chi tiết kiện hàng',
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "list-containers" */ './views/ContainerDetail.vue'
+      ),
+  },
 ]

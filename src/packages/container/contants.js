@@ -1,6 +1,6 @@
-export const ContainerWaitingClose = 1
-export const ContainerClosed = 2
-export const ContainerCanceled = 3
+export const CONTAINER_WAITING_CLOSE = 1
+export const CONTAINER_CLOSE = 2
+export const CONTAINER_CANCEL = 3
 
 export const CONTAINER_STATUS_TAB = [
   {
@@ -8,30 +8,30 @@ export const CONTAINER_STATUS_TAB = [
     text: 'Tất cả',
   },
   {
-    value: ContainerWaitingClose,
+    value: CONTAINER_WAITING_CLOSE,
     text: 'Chờ đóng kiện',
   },
   {
-    value: ContainerClosed,
+    value: CONTAINER_CLOSE,
     text: 'Đã đóng kiện',
   },
   {
-    value: ContainerCanceled,
+    value: CONTAINER_CANCEL,
     text: 'Đã hủy',
   },
 ]
 
 export const MAP_NAME_STATUS_CONTAINER = {
-  [ContainerWaitingClose]: {
+  [CONTAINER_WAITING_CLOSE]: {
     value: 'Chờ đóng kiện',
     class: 'badge-await',
   },
-  [ContainerClosed]: {
+  [CONTAINER_CLOSE]: {
     value: 'Đã đóng kiện',
     class: 'badge-success',
   },
 
-  [ContainerCanceled]: {
+  [CONTAINER_CANCEL]: {
     value: 'Đã hủy',
     class: 'badge-danger',
   },

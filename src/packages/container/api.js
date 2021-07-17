@@ -14,4 +14,23 @@ export default {
   createContainer(payload) {
     return http.post(`/containers/`, payload)
   },
+  detailContainer(payload) {
+    return http.get(`/containers/${payload.id}`)
+  },
+
+  appendPackage(payload) {
+    return http.post(`/containers/append`, payload)
+  },
+
+  removePackage(payload) {
+    return http.put(`/containers/remove`, payload)
+  },
+
+  closeContainer(payload) {
+    return http.put(`/containers/close/${payload.id}`, payload)
+  },
+
+  cancelContainer(payload) {
+    return http.put(`/containers/cancel/${payload.id}`, payload)
+  },
 }
