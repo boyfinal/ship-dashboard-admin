@@ -279,9 +279,9 @@
                     <div class="card__w-input">
                       <multiselect
                         class="multiselect-custom dropdown-reason"
-                        v-model="form.service"
+                        v-model="service"
                         :options="services"
-                        placeholder="Chọn một "
+                        placeholder="Chọn một"
                         :allow-empty="false"
                         @select="handleSelectService"
                         :custom-label="customLabel"
@@ -515,7 +515,8 @@ export default {
       this.isDisable = true
     },
     handleSelectService(value) {
-      this.service = value
+      this.form.service = value
+      console.log(this.form.service)
     },
     handleRemove() {
       this.isDisable = false

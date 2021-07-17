@@ -173,7 +173,7 @@ export default {
             {
               route: '/shipments',
               title: 'Lô hàng',
-              alias: ['/shipments'],
+              alias: ['/shipments', '/shipments/:id'],
             },
           ],
         },
