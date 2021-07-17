@@ -484,6 +484,7 @@ export default {
       this.form.address = this.package_detail.package.address_1
       this.form.address2 = this.package_detail.package.address_2
       this.form.detail = this.package_detail.package.detail
+      this.service = this.form.service
     },
     handleClose() {
       this.form.fullname = ''
@@ -516,7 +517,6 @@ export default {
     },
     handleSelectService(value) {
       this.form.service = value
-      console.log(this.form.service)
     },
     handleRemove() {
       this.isDisable = false
