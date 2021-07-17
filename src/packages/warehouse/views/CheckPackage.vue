@@ -67,6 +67,7 @@
                       type="text"
                       v-model.number="volume.weight"
                       placeholder="eg: 69 (đơn vị grams)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -75,6 +76,7 @@
                       type="text"
                       v-model.number="volume.length"
                       placeholder="eg: 15 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -83,6 +85,7 @@
                       type="text"
                       v-model.number="volume.width"
                       placeholder="eg: 10 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -91,6 +94,7 @@
                       type="text"
                       v-model.number="volume.height"
                       placeholder="eg: 3 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                 </div>
@@ -191,10 +195,10 @@ import {
 import { mapActions, mapState, mapMutations } from 'vuex'
 import ModalAccept from '../components/ModalAccept'
 import {
-  PACKAGE_STATUS_WAREHOUSE_LABELED,
   MAP_NAME_STATUS_PACKAGE,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
+  PACKAGE_WAREHOUSE_STATUS_PICK,
 } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
@@ -230,16 +234,24 @@ export default {
 
       return messages
     },
+    disInput() {
+      return (
+        !this.current.id || this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+      )
+    },
     isAccepted() {
       return (
         this.current.id &&
-        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED
+        this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK &&
+        !this.isSubmitting &&
+        !this.isFetching
       )
     },
     disReturn() {
       return (
         this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN ||
-        this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED
+        this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED ||
+        this.current.status < PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     disBtnReturn() {
@@ -251,10 +263,23 @@ export default {
       )
     },
     disBtnAccept() {
-      return !this.current.id || this.isAccepted || this.isSubmitting
+      return (
+        !this.current.id ||
+        !this.isAccepted ||
+        this.isSubmitting ||
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+      )
     },
     disBtnIncurred() {
-      return !this.messages.length || this.isSubmitting
+      return (
+        !this.messages.length ||
+        this.isSubmitting ||
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
+        !this.volume.weight ||
+        !this.volume.length ||
+        !this.volume.width ||
+        !this.volume.height
+      )
     },
     statusText() {
       if (!this.current.id) return ''
@@ -379,7 +404,7 @@ export default {
     },
 
     async acceptHandle() {
-      if (this.isAccepted || this.isSubmitting || !this.current.id) return
+      if (this.isAccepted || this.isSubmitting) return
       this.loading(true)
       this.isSubmitting = true
       const body = { id: this.current.id }
@@ -460,7 +485,10 @@ export default {
 
     beforeLeaveHandle() {
       window.onbeforeunload = () => {
-        if (this.current.id && !this.isAccepted) {
+        if (
+          this.current.id &&
+          this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
+        ) {
           return 'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
         }
 
@@ -470,18 +498,20 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    if (!this.current.id || this.isAccepted) {
-      next()
-      return
-    }
-
-    const answer = window.confirm(
-      'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
-    )
-    if (answer) {
-      next()
+    if (
+      this.current.id &&
+      this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
+    ) {
+      const answer = window.confirm(
+        'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
+      )
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
     } else {
-      next(false)
+      next()
     }
   },
 }
