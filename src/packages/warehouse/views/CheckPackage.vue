@@ -383,12 +383,14 @@ export default {
       this.loading(true)
       this.isSubmitting = true
       const body = { id: this.current.id }
+
       if (this.messages.length) {
-        body.weight = this.volume.weight
-        body.length = this.volume.length
-        body.width = this.volume.width
-        body.height = this.volume.height
+        body.weight = this.volume.weight || 0
+        body.length = this.volume.length || 0
+        body.width = this.volume.width || 0
+        body.height = this.volume.height || 0
       }
+
       const res = await this.acceptPackageSubmit(body)
       this.isSubmitting = false
       this.loading(false)
