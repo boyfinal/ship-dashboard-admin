@@ -361,6 +361,7 @@ export default {
         message: `Thêm đơn hàng thành công`,
         type: 'success',
       })
+      this.code = ''
       this.init()
     },
 
