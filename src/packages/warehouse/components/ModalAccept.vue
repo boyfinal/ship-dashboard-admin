@@ -1,7 +1,7 @@
 <template>
   <p-modal :active="visible" @close="handleClose" title="Duyệt">
     <div class="form-group">
-      <label class="form-label">Loại vẩn chuyển:</label>
+      <label class="form-label">Loại vận chuyển:</label>
       <select type="text" class="form-control">
         <option value="">USPS</option>
       </select>
