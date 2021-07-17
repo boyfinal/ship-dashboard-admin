@@ -139,10 +139,6 @@
                       </td>
                       <td>
                         <p-button
-                          v-if="
-                            container_detail.status ===
-                              CONTAINER_WAITING_CLOSE && filter.search === ''
-                          "
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handlerRemovePackage(item.id)"
