@@ -70,16 +70,6 @@
                 <table class="table table-hover" id="tbl-packages">
                   <thead>
                     <tr>
-                      <th width="40">
-                        <p-checkbox
-                          class="order-select-checkbox"
-                          :class="{ checkAll: totalSelected > 0 }"
-                          :style="totalSelected > 0 && { width: 0 }"
-                          :value="isAllChecked"
-                          @change.native="toggleSelectAll"
-                          :indeterminate="isIndeterminate"
-                        ></p-checkbox>
-                      </th>
                       <th>Mã kiện hàng</th>
                       <th>Ngày tạo</th>
                       <th>Nhãn kiện hàng</th>
@@ -91,12 +81,6 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in containers" :key="i">
-                      <td width="40">
-                        <p-checkbox
-                          v-model="action.selected"
-                          :native-value="item"
-                        ></p-checkbox>
-                      </td>
                       <td>{{ item.code }}</td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
