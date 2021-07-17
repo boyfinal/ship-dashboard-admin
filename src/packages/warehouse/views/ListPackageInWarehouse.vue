@@ -99,10 +99,7 @@
                     <td>
                       <div>
                         <p-button
-                          v-if="
-                            item.status === PackageWareHouseStatusPick ||
-                              item.status === PackageWareHouseStatusReturn
-                          "
+                          v-if="item.status == PackageWareHouseStatusPick"
                           @click="acceptHandle(item.code)"
                           class="mr-2"
                           type="info"
