@@ -13,7 +13,7 @@
                 ></p-input>
                 <button
                   :disabled="disBtnAccept"
-                  @click="showModalAcceptHandle"
+                  @click="quickAcceptHandle"
                   class="btn btn-info ml-3 text-nowrap"
                   >Duyệt</button
                 >
@@ -241,10 +241,7 @@ export default {
     },
     isAccepted() {
       return (
-        this.current.id &&
-        this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK &&
-        !this.isSubmitting &&
-        !this.isFetching
+        this.current.id && this.current.status > PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     disReturn() {
@@ -265,8 +262,8 @@ export default {
     disBtnAccept() {
       return (
         !this.current.id ||
-        !this.isAccepted ||
         this.isSubmitting ||
+        this.isFetching ||
         this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
@@ -392,6 +389,14 @@ export default {
       this.volume.height = this.current.height
     },
 
+    quickAcceptHandle() {
+      this.volume.weight = this.current.weight
+      this.volume.length = this.current.length
+      this.volume.width = this.current.width
+      this.volume.height = this.current.height
+      this.showModalAcceptHandle()
+    },
+
     showModalAcceptHandle() {
       this.isVisibleModalAccept = true
     },
@@ -399,12 +404,17 @@ export default {
     extraHandle() {
       this.$dialog.confirm({
         title: 'Xác nhận thay đổi trọng lượng và kích thước?',
-        onConfirm: () => this.acceptHandle(),
+        onConfirm: () => this.showModalAcceptHandle(),
       })
     },
 
     async acceptHandle() {
-      if (this.isAccepted || this.isSubmitting) return
+      if (
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.isSubmitting
+      )
+        return
+
       this.loading(true)
       this.isSubmitting = true
       const body = { id: this.current.id }
