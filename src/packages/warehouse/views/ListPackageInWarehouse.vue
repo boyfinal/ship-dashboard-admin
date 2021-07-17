@@ -103,7 +103,7 @@
                             item.status === PackageWareHouseStatusPick ||
                               item.status === PackageWareHouseStatusReturn
                           "
-                          @click="handleConfirm(successStatus, item.id)"
+                          @click="acceptHandle(item.code)"
                           class="mr-2"
                           type="info"
                         >
@@ -223,6 +223,9 @@ export default {
       if (!result || !result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    acceptHandle(code) {
+      this.$router.push({ name: 'check-package', query: { keyword: code } })
     },
   },
   watch: {
