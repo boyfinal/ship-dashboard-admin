@@ -1,5 +1,6 @@
 import http from '@core/services/http'
 import { buildQueryString } from '@core/utils/url'
+import { RESPONSE_TYPE_BLOB } from '@core/constants/http'
 
 export default {
   fetchListContainers(payload) {
@@ -32,5 +33,12 @@ export default {
 
   cancelContainer(payload) {
     return http.put(`/containers/cancel/${payload.id}`, payload)
+  },
+
+  downloadLabel(payload) {
+    return http.get(
+      `/uploads/file-export/download?${buildQueryString(payload)}`,
+      RESPONSE_TYPE_BLOB
+    )
   },
 }

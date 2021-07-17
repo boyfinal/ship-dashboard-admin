@@ -31,7 +31,11 @@
             </div>
             <div>
               <div>Trạng thái kiện: </div>
-              <div>{{ statusContainer[container_detail.status].text }}</div>
+              <div>{{
+                container_detail.status
+                  ? statusContainer[container_detail.status].text
+                  : '-'
+              }}</div>
             </div>
           </div>
         </div>
@@ -121,8 +125,10 @@
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
                         <a
+                          class="text-no-underline"
                           v-if="item.tracking"
-                          :href="item.tracking.label_url"
+                          href="javascript:void(0)"
+                          @click="downloadLabel(item.tracking.label_url)"
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
@@ -175,12 +181,14 @@ import {
   CLOSE_CONTAINER,
   FETCH_CONTAINER_DETAIL,
   REMOVE_PACKAGE_FROM_CONTAINER,
+  GET_LABEL,
 } from '../store'
 
 import { CONTAINER_STATUS_TAB, CONTAINER_WAITING_CLOSE } from '../contants'
 
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+import Browser from '@core/helpers/browser'
 
 export default {
   name: 'ContainerDetail',
@@ -224,6 +232,7 @@ export default {
       REMOVE_PACKAGE_FROM_CONTAINER,
       CLOSE_CONTAINER,
       CANCEL_CONTAINER,
+      GET_LABEL,
     ]),
     async init() {
       this.isFetching = true
@@ -345,6 +354,33 @@ export default {
         type: 'success',
       })
       this.init()
+    },
+
+    async downloadLabel(labelUrl) {
+      if (labelUrl === '') {
+        this.$toast.open({
+          type: 'error',
+          message: 'Đơn không có tracking',
+          duration: 3000,
+        })
+        return
+      }
+
+      let result = ''
+      this.isFetching = true
+      const payload = {
+        url: labelUrl,
+        type: 'labels',
+      }
+      result = await this.getLabel(payload)
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      this.isFetching = false
+
+      Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
     },
   },
   watch: {

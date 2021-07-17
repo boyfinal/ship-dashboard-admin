@@ -9,6 +9,7 @@ export const FETCH_CONTAINER_DETAIL = 'fetchContainerDetail'
 export const REMOVE_PACKAGE_FROM_CONTAINER = 'removePackageFromContainer'
 export const CLOSE_CONTAINER = 'closeContainer'
 export const CANCEL_CONTAINER = 'cancelContainer'
+export const GET_LABEL = 'getLabel'
 
 export const state = {
   containers: [],
@@ -145,6 +146,21 @@ export const actions = {
         message: response.errorMessage,
       }
     }
+    return result
+  },
+
+  // eslint-disable-next-line no-empty-pattern
+  async getLabel({}, payload) {
+    let result = { success: true }
+    let response = await api.downloadLabel(payload)
+
+    if (!response || response.error) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+    }
+    result.blob = response
     return result
   },
 }
