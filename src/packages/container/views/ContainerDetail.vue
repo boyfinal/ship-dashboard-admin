@@ -47,6 +47,7 @@
               prefixIcon="search"
               type="search"
               v-model="code"
+              @keyup.enter="handleSearch"
             >
             </p-input>
             <p-button
@@ -111,7 +112,7 @@
                 <table class="table table-hover" id="tbl-packages">
                   <thead>
                     <tr>
-                      <th>Mã kiện hàng</th>
+                      <th>Mã vận đơn</th>
                       <th>Ngày tạo</th>
                       <th>Nhãn đơn hàng</th>
                       <th>Trọng lượng</th>
@@ -138,6 +139,10 @@
                       </td>
                       <td>
                         <p-button
+                          v-if="
+                            container_detail.status ===
+                              CONTAINER_WAITING_CLOSE && filter.search === ''
+                          "
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handlerRemovePackage(item.id)"
@@ -158,6 +163,7 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
+                  :filter-limit="false"
                 ></p-pagination>
               </div>
             </template>
@@ -237,6 +243,7 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      this.filter.search = this.code
       let payload = cloneDeep(this.filter)
       payload = { ...payload, ...{ id: parseInt(this.$route.params.id) } }
       const result = await this[FETCH_CONTAINER_DETAIL](payload)
@@ -270,6 +277,7 @@ export default {
         message: `Thêm đơn hàng thành công`,
         type: 'success',
       })
+      this.code = ''
       await this.init()
     },
     async handlerRemovePackage(package_id) {
@@ -304,7 +312,7 @@ export default {
         return
       }
       this.$toast.open({
-        message: `Hủy lô hàng thành công`,
+        message: `Hủy kiện hàng thành công`,
         type: 'success',
       })
       await this.init()
@@ -381,6 +389,11 @@ export default {
       this.isFetching = false
 
       Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
+    },
+    handleSearch(e) {
+      this.filter.page = 1
+      this.code = e.target.value.trim()
+      this.$set(this.filter, 'search', this.code)
     },
   },
   watch: {

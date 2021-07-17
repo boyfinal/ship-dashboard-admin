@@ -16,7 +16,7 @@ export default {
     return http.post(`/containers/`, payload)
   },
   detailContainer(payload) {
-    return http.get(`/containers/${payload.id}`)
+    return http.get(`/containers/${payload.id}?${buildQueryString(payload)}`)
   },
 
   appendPackage(payload) {
