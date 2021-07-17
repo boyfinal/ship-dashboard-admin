@@ -246,6 +246,7 @@ export default {
     },
     disReturn() {
       return (
+        !this.current.id ||
         this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN ||
         this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED ||
         this.current.status < PACKAGE_WAREHOUSE_STATUS_PICK
@@ -371,6 +372,8 @@ export default {
 
     async fetchPackageSubmit() {
       if (this.keyword === '') return
+
+      this.reset()
 
       this.loading(true)
       this.isFetching = true
@@ -504,6 +507,11 @@ export default {
 
         return null
       }
+    },
+
+    reset() {
+      ;(this.note = ''),
+        (this.volume = { weight: 0, length: 0, width: 0, height: 0 })
     },
   },
 
