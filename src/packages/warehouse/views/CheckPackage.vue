@@ -9,10 +9,11 @@
                 <p-input
                   :value="keyword"
                   @keydown.enter.prevent="searchHandle"
+                  placeholder="Nhập mã vận đơn"
                 ></p-input>
                 <button
                   :disabled="disBtnAccept"
-                  @click="showModalAcceptHandle"
+                  @click="quickAcceptHandle"
                   class="btn btn-info ml-3 text-nowrap"
                   >Duyệt</button
                 >
@@ -66,6 +67,7 @@
                       type="text"
                       v-model.number="volume.weight"
                       placeholder="eg: 69 (đơn vị grams)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -74,6 +76,7 @@
                       type="text"
                       v-model.number="volume.length"
                       placeholder="eg: 15 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -82,6 +85,7 @@
                       type="text"
                       v-model.number="volume.width"
                       placeholder="eg: 10 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -90,6 +94,7 @@
                       type="text"
                       v-model.number="volume.height"
                       placeholder="eg: 3 (đơn vị cm)"
+                      :disabled="disInput"
                     ></p-input>
                   </div>
                 </div>
@@ -126,24 +131,24 @@
               <div class="card-title">Kiểm tra loại hàng</div>
             </div>
             <div class="card-body">
-              <div class="d-flex">
-                <p style="width: 120px;">Mã hàng hoá:</p>
-                <p>{{ current.code }}</p>
+              <div class="row">
+                <p class="col-5">Mã vận đơn:</p>
+                <p class="col-7">{{ current.code }}</p>
               </div>
-              <div class="d-flex">
-                <p style="width: 120px;">Tên hàng hoá:</p>
-                <p>{{ current.detail }}</p>
+              <div class="row">
+                <p class="col-5">Chi tiết hàng hóa:</p>
+                <p class="col-7">{{ current.detail }}</p>
               </div>
-              <div class="d-flex">
-                <p style="width: 120px;">Trạng thái:</p>
-                <p v-if="statusText"
+              <div class="row">
+                <p class="col-5">Trạng thái:</p>
+                <p class="col-7" v-if="statusText"
                   ><span class="badge badge-round" :class="statusClass">{{
                     statusText
                   }}</span></p
                 >
               </div>
               <div class="d-flex" v-if="tracking.id">
-                <p style="width: 120px;">Tracking:</p>
+                <p style="width: 130px;">Tracking:</p>
                 <p
                   ><a href="#" @click.prevent="printLabel">{{
                     tracking.tracking_number
@@ -161,6 +166,7 @@
                   class="p-input form-control"
                   v-model.trim="note"
                   rows="3"
+                  :disabled="disReturn"
                 ></textarea>
               </div>
               <div class="text-right mt-4">
@@ -186,11 +192,13 @@ import {
   ACCEPT_PACKAGE_LABEL,
   RETURN_PACKAGE,
 } from '../store'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import ModalAccept from '../components/ModalAccept'
 import {
-  PACKAGE_STATUS_WAREHOUSE_LABELED,
   MAP_NAME_STATUS_PACKAGE,
+  PACKAGE_WAREHOUSE_STATUS_RETURN,
+  PACKAGE_WAREHOUSE_STATUS_CANCELLED,
+  PACKAGE_WAREHOUSE_STATUS_PICK,
 } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
@@ -226,20 +234,49 @@ export default {
 
       return messages
     },
+    disInput() {
+      return (
+        !this.current.id || this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+      )
+    },
     isAccepted() {
       return (
-        this.current.id &&
-        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED
+        this.current.id && this.current.status > PACKAGE_WAREHOUSE_STATUS_PICK
+      )
+    },
+    disReturn() {
+      return (
+        this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN ||
+        this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED ||
+        this.current.status < PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     disBtnReturn() {
-      return !this.current.id || this.note === '' || this.isSubmitting
+      return (
+        !this.current.id ||
+        this.note === '' ||
+        this.isSubmitting ||
+        this.disReturn
+      )
     },
     disBtnAccept() {
-      return !this.current.id || this.isAccepted || this.isSubmitting
+      return (
+        !this.current.id ||
+        this.isSubmitting ||
+        this.isFetching ||
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+      )
     },
     disBtnIncurred() {
-      return !this.messages.length || this.isSubmitting
+      return (
+        !this.messages.length ||
+        this.isSubmitting ||
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
+        !this.volume.weight ||
+        !this.volume.length ||
+        !this.volume.width ||
+        !this.volume.height
+      )
     },
     statusText() {
       if (!this.current.id) return ''
@@ -272,9 +309,14 @@ export default {
     }
   },
   mounted() {
-    if (this.keyword === '' && this.current.code) {
-      this.keyword = this.current.code
+    if (this.$route.query.keyword) {
+      this.keyword = this.$route.query.keyword.trim()
+      this.fetchPackageSubmit()
+    } else {
+      this.setPackage({})
     }
+
+    this.beforeLeaveHandle()
   },
   methods: {
     ...mapActions('shared', ['loading']),
@@ -282,6 +324,9 @@ export default {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
       returnPackageSubmit: RETURN_PACKAGE,
+    }),
+    ...mapMutations('warehouse', {
+      setPackage: FETCH_PACKAGE_DETAIL,
     }),
 
     searchHandle(e) {
@@ -298,20 +343,29 @@ export default {
 
       if (!this.current.id || this.isAccepted) {
         this.keyword = keyword
+        this.pushQuery(keyword)
         this.fetchPackageSubmit()
         return
       }
 
       this.$dialog.confirm({
-        title: 'Xác nhận duyệt?',
-        message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không',
+        title: `Xác nhận duyệt mã vận đơn ${this.keyword}?`,
+        message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không.',
         onConfirm: () => {
           this.acceptHandle()
         },
         onCancel: () => {
           this.keyword = keyword
+          this.pushQuery(keyword)
           this.fetchPackageSubmit()
         },
+      })
+    },
+
+    pushQuery(keyword) {
+      this.$router.push({
+        query: { keyword: keyword },
+        path: this.$route.path,
       })
     },
 
@@ -335,6 +389,14 @@ export default {
       this.volume.height = this.current.height
     },
 
+    quickAcceptHandle() {
+      this.volume.weight = this.current.weight
+      this.volume.length = this.current.length
+      this.volume.width = this.current.width
+      this.volume.height = this.current.height
+      this.showModalAcceptHandle()
+    },
+
     showModalAcceptHandle() {
       this.isVisibleModalAccept = true
     },
@@ -342,21 +404,28 @@ export default {
     extraHandle() {
       this.$dialog.confirm({
         title: 'Xác nhận thay đổi trọng lượng và kích thước?',
-        onConfirm: () => this.acceptHandle(),
+        onConfirm: () => this.showModalAcceptHandle(),
       })
     },
 
     async acceptHandle() {
-      if (this.isAccepted || this.isSubmitting || !this.current.id) return
+      if (
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.isSubmitting
+      )
+        return
+
       this.loading(true)
       this.isSubmitting = true
       const body = { id: this.current.id }
+
       if (this.messages.length) {
-        body.weight = this.volume.weight
-        body.length = this.volume.length
-        body.width = this.volume.width
-        body.height = this.volume.height
+        body.weight = this.volume.weight || 0
+        body.length = this.volume.length || 0
+        body.width = this.volume.width || 0
+        body.height = this.volume.height || 0
       }
+
       const res = await this.acceptPackageSubmit(body)
       this.isSubmitting = false
       this.loading(false)
@@ -423,6 +492,37 @@ export default {
         this.$toast.error('File error !!!')
       }
     },
+
+    beforeLeaveHandle() {
+      window.onbeforeunload = () => {
+        if (
+          this.current.id &&
+          this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
+        ) {
+          return 'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
+        }
+
+        return null
+      }
+    },
+  },
+
+  beforeRouteLeave(to, from, next) {
+    if (
+      this.current.id &&
+      this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
+    ) {
+      const answer = window.confirm(
+        'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
+      )
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
 }
 </script>
