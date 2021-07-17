@@ -12,6 +12,10 @@ export default {
     return http.get(`/packages/${payload}`)
   },
 
+  fetchPackageByCode(payload) {
+    return http.get(`/packages/${payload}/code`)
+  },
+
   /**
    * fetch list product
    * @param payload
@@ -61,5 +65,14 @@ export default {
   },
   cancelPackages(payload) {
     return http.put(`/packages/cancel`, payload)
+  },
+
+  // duyet don va tao label
+  acceptAndLabel(payload) {
+    return http.post(`/warehouses/packages/${payload.id}/accept`, payload)
+  },
+
+  returnPackage(payload) {
+    return http.post(`/warehouses/packages/${payload.id}/return`, payload)
   },
 }

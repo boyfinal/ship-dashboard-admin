@@ -5,7 +5,7 @@
         <div class="col-12" id="search-box">
           <p-input
             placeholder="Tìm theo mã kiện,ID hoặc nhãn kiện"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             :value="filter.search"
             @keyup.enter="handleSearch"

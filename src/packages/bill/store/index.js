@@ -5,9 +5,11 @@ export const COUNT_FEE_CREATE = 'countFeeCreate'
 export const FETCH_FEE_CREATE = 'fetchFeeCreate'
 export const COUNT_FEE_EXTRA = 'countFeeExtra'
 export const FETCH_FEE_EXTRA = 'fetchFeeExtra'
+export const FETCH_FEE_EXTRA_TYPES = 'fetchFeeExtraTypes'
 export const BILL_FETCH = 'billFetch'
 export const BILL_COUNT = 'billCount'
 export const CANCEL_EXTRA_FEE = 'cancelExtraFee'
+export const CREATE_EXTRA_FEE = 'createExtraFee'
 export const state = {
   bill: {},
   feeEdit: [],
@@ -18,6 +20,7 @@ export const state = {
   countExtra: 0,
   bills: [],
   count: 0,
+  extraFeeTypes: [],
 }
 
 export const mutations = {
@@ -41,6 +44,9 @@ export const mutations = {
   },
   [BILL_COUNT]: (state, payload) => {
     state.count = payload
+  },
+  [FETCH_FEE_EXTRA_TYPES]: (state, payload) => {
+    state.extraFeeTypes = payload
   },
 }
 
@@ -69,6 +75,15 @@ export const actions = {
     commit(FETCH_FEE_EXTRA, res.fees)
     commit(COUNT_FEE_EXTRA, res.count)
 
+    return { success: true }
+  },
+  async fetchFeeExtraTypes({ commit }) {
+    const res = await api.fetchExtraFeeTypes()
+    if (!res || res.error) {
+      return { success: false, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_FEE_EXTRA_TYPES, res.extra_fee_types)
     return { success: true }
   },
   // eslint-disable-next-line no-unused-vars
@@ -101,5 +116,15 @@ export const actions = {
 
     commit(BILL_COUNT, res.count || 0)
     return { error: false }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [CREATE_EXTRA_FEE]({ commit }, payload) {
+    const res = await api.createExtraFee(payload)
+    if (!res || res.error) {
+      return { success: false, message: res.errorMessage || '' }
+    }
+
+    return { success: true }
   },
 }

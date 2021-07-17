@@ -21,7 +21,7 @@
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
-          <div v-if="bill" class="bill__detail-date">{{
+          <div v-if="bill && bill.user" class="bill__detail-date">{{
             bill.user.full_name || ''
           }}</div>
           <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
@@ -226,7 +226,9 @@ export default {
       return totalPages
     },
   },
-  mounted() {
+  created() {
+    this.filterExtra.id = this.$route.params.id
+    this.filter.id = this.$route.params.id
     this.init()
   },
   methods: {
@@ -236,9 +238,6 @@ export default {
       CANCEL_EXTRA_FEE,
     ]),
     async init() {
-      const { id } = this.$route.params
-      this.filterExtra.id = id
-      this.filter.id = id
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let result = await this[FETCH_BILL_DETAIL](this.filter)

@@ -29,4 +29,10 @@ export default {
   cancelExtraFee(payload) {
     return http.post(`/bills/${payload.id}`, payload)
   },
+  fetchExtraFeeTypes() {
+    return http.get(`/bills/extra-fee-types`)
+  },
+  createExtraFee(payload) {
+    return http.post(`/bills/extra-fee`, payload)
+  },
 }
