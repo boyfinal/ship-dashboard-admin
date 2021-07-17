@@ -408,10 +408,10 @@ export default {
       }
     },
 
-    formatStatus(status) {
-      for (const [key, value] of Object.entries(this.claimStatus)) {
-        if (status == value) {
-          return key
+    formatStatus(value) {
+      for (const status of this.claimStatus) {
+        if (status.value == value) {
+          return status.text
         }
       }
     },
