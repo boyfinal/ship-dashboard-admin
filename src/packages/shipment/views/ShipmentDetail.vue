@@ -13,6 +13,25 @@
           </router-link>
         </div>
 
+        <div class="page-header__subtitle">
+          <div class="page-header__info">
+            <div>
+              <div>Mã lô:</div>
+              <div class="package-code">{{ shipment.id }} </div>
+            </div>
+            <div>
+              <div>Ngày tạo: </div>
+              <div>{{
+                shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
+              }}</div>
+            </div>
+            <div>
+              <div>Trạng thái lô: </div>
+              <div>{{ shipmentStatus[shipment.status].text }}</div>
+            </div>
+          </div>
+        </div>
+
         <div class="page-header__subtitle row">
           <div class="page-header__info col-6">
             <p-input
@@ -81,7 +100,18 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in containers" :key="i">
-                      <td>{{ item.code }}</td>
+                      <td>
+                        <router-link
+                          :to="{
+                            name: 'container-detail',
+                            params: {
+                              id: item.id,
+                            },
+                          }"
+                        >
+                          {{ item.code }}
+                        </router-link>
+                      </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
                         <a :href="item.label_url">{{ item.tracking_number }}</a>
@@ -140,7 +170,11 @@ import {
 } from '../store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
-import { ShipmentClosed, ShipmentCanceled } from '../constants'
+import {
+  ShipmentClosed,
+  ShipmentCanceled,
+  SHIPMENT_STATUS_TAB,
+} from '../constants'
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -169,6 +203,9 @@ export default {
       },
       isClosedShipment() {
         return this.shipment.status === ShipmentClosed
+      },
+      shipmentStatus() {
+        return SHIPMENT_STATUS_TAB
       },
     }),
     items() {
@@ -369,5 +406,17 @@ export default {
   border: 1px solid #f5222d;
   color: red;
   background-color: #fff;
+}
+.page-header__info > div {
+  margin-right: 50px;
+}
+.page-header__info > div div:last-child {
+  font-size: 16px;
+  font-weight: 600;
+}
+.page-header__subtitle {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
 }
 </style>
