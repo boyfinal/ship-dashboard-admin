@@ -62,7 +62,6 @@
 <script>
 import UserResource from '@/components/shared/resource/User'
 import PInput from '../../../../uikit/components/input/Input'
-import Storage from '@core/helpers/storage'
 export default {
   name: 'ModalCreateExtraFee',
   components: { PInput, UserResource },
@@ -90,11 +89,11 @@ export default {
     }
   },
   created() {
-    this.user_id = Storage.get('user_id') || 0
-    this.package_code = Storage.get('package_code') || ''
-    this.extra_fee_type_id = Storage.get('extra_fee_type_id') || 0
-    this.amount = Storage.get('amount') || ''
-    this.description = Storage.get('description') || ''
+    this.user_id = 0
+    this.package_code = ''
+    this.extra_fee_type_id = 0
+    this.amount = ''
+    this.description = ''
   },
   methods: {
     handleClose() {
@@ -141,59 +140,12 @@ export default {
 
       const payload = {
         user_id: this.user_id,
-        package_code: this.package_code,
+        package_code: this.package_code.trim(),
         extra_fee_type_id: this.extra_fee_type_id,
         amount: parseFloat(this.amount),
         description: this.description,
       }
       this.$emit('save', payload)
-    },
-  },
-  watch: {
-    user_id: {
-      handler: function(value) {
-        if (value) {
-          Storage.set('user_id', value)
-        } else {
-          Storage.remove('user_id')
-        }
-      },
-    },
-    package_code: {
-      handler: function(value) {
-        if (value) {
-          Storage.set('package_code', value)
-        } else {
-          Storage.remove('package_code')
-        }
-      },
-    },
-    extra_fee_type_id: {
-      handler: function(value) {
-        if (value) {
-          Storage.set('extra_fee_type_id', value)
-        } else {
-          Storage.remove('extra_fee_type_id')
-        }
-      },
-    },
-    amount: {
-      handler: function(value) {
-        if (value) {
-          Storage.set('amount', value)
-        } else {
-          Storage.remove('amount')
-        }
-      },
-    },
-    description: {
-      handler: function(value) {
-        if (value) {
-          Storage.set('description', value)
-        } else {
-          Storage.remove('description')
-        }
-      },
     },
   },
 }
