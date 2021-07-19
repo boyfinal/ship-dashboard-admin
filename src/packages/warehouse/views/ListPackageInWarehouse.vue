@@ -77,28 +77,50 @@
                     <td>{{ item.zipcode }}</td>
                     <td>{{ item.service_name }}</td>
                     <td>
-                      <router-link
+                      <a
                         class="text-no-underline"
                         v-if="item.tracking && item.tracking.length > 0"
-                        :to="`${item.tracking[0].label_url}`"
+                        @click="showLabel(item.tracking[0].label_url)"
                       >
                         {{ item.tracking[0].tracking_number }}
-                      </router-link>
+                      </a>
+                      <span v-else>-</span>
                     </td>
                     <td
-                      ><router-link
+                      ><a
                         class="text-no-underline"
-                        v-if="item.container_id"
-                        :to="`${item.container_label_url}`"
+                        v-if="item.container_tracking_number"
+                        @click="showLabel(item.container_label_url)"
                       >
                         {{ item.container_tracking_number }}
-                      </router-link></td
+                      </a>
+                      <span v-else>-</span></td
                     >
                     <td>
-                      {{ item.container_code || '-' }}
+                      <router-link
+                        v-if="item.container_code"
+                        class="text-no-underline"
+                        :to="{
+                          name: 'container-detail',
+                          params: { id: item.container_id },
+                        }"
+                      >
+                        {{ item.container_code }}
+                      </router-link>
+                      <span v-else>-</span>
                     </td>
                     <td>
-                      {{ item.shipment_id || '-' }}
+                      <router-link
+                        v-if="item.container_code"
+                        class="text-no-underline"
+                        :to="{
+                          name: 'shipment-detail',
+                          params: { id: item.shipment_id },
+                        }"
+                      >
+                        {{ item.shipment_id }}
+                      </router-link>
+                      <span v-else>-</span>
                     </td>
                     <td>
                       <div>
@@ -139,6 +161,8 @@
 import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
+import { printImage } from '@core/utils/print'
+import api from '../api'
 
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
@@ -230,6 +254,33 @@ export default {
     },
     acceptHandle(code) {
       this.$router.push({ name: 'check-package', query: { keyword: code } })
+    },
+
+    async showLabel(label) {
+      document.activeElement && document.activeElement.blur()
+      if (this.blob && this.isImage) {
+        printImage(this.blob)
+        return
+      }
+      const res = await api.fetchBarcodeFile({
+        url: label,
+        type: 'labels',
+      })
+      if (!res && res.error) {
+        this.$toast.open({
+          type: 'error',
+          message: res.errorMessage,
+          duration: 3000,
+        })
+        return
+      }
+
+      try {
+        this.blob = (window.webkitURL || window.URL).createObjectURL(res)
+        printImage(this.blob)
+      } catch (error) {
+        this.$toast.error('File error !!!')
+      }
     },
   },
   watch: {

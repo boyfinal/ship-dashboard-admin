@@ -438,8 +438,12 @@
                     <div class="card-header">
                       <div class="card-title">Phí phát sinh</div>
                     </div>
-                    <div class="card-content" v-if="extraFee.length">
-                      <div class="row" v-for="(item, i) in extraFee" :key="i">
+                    <div class="card-content" v-if="mapExtraFee.length">
+                      <div
+                        class="row"
+                        v-for="(item, i) in mapExtraFee"
+                        :key="i"
+                      >
                         <div class="col-8 mb-8"
                           >{{ item.extra_fee_types.name }} :</div
                         >
@@ -563,6 +567,7 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
+import { cloneDeep } from '@core/utils'
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
@@ -673,6 +678,20 @@ export default {
     },
     statusShipping() {
       return PackageStatusInTransit
+    },
+    mapExtraFee() {
+      let arr = cloneDeep(this.extraFee),
+        result = []
+
+      for (const ele of arr) {
+        let index = result.findIndex(
+          (x) => x.extra_fee_types.name == ele.extra_fee_types.name
+        )
+        if (index == -1) {
+          result.push(ele)
+        } else result[index].amount += ele.amount
+      }
+      return result
     },
   },
   created() {
