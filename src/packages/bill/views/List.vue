@@ -1,8 +1,8 @@
 <template>
   <div class="pages list__claim">
     <div class="page-content">
-      <div class="row mb-12">
-        <div class="col-8">
+      <div class="d-flex mb-12">
+        <div class="flex-grow-1">
           <p-input
             :placeholder="searchPlaceholder"
             prefixIcon="search"
@@ -14,14 +14,14 @@
           >
           </p-input>
         </div>
-        <div class="col-2">
+        <div class="ml-5">
           <select v-model="filter.search_by" class="form-control">
             <option value="id">Mã hoá đơn</option>
             <option value="code">Mã vận đơn</option>
             <option value="customer">Khách hàng</option>
           </select>
         </div>
-        <div class="col-2 text-right">
+        <div class="ml-5">
           <p-button type="info" @click="handleShowModalCreateExtraFee">
             <img src="~@/assets/img/plus.svg" />
             Tạo hóa đơn

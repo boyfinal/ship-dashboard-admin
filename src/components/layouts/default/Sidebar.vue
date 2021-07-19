@@ -168,7 +168,7 @@ export default {
             {
               route: '/containers',
               title: 'Kiện hàng',
-              alias: ['/containers'],
+              alias: ['/containers', '/containers/:id'],
             },
             {
               route: '/shipments',

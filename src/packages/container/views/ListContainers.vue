@@ -37,14 +37,25 @@
                       <th>Nhãn kiện</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
-                      <th>Số lượng đơn</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in containers" :key="i">
-                    <td>#{{ item.id }}</td>
+                    <td
+                      ><router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'container-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        {{ item.id }}
+                      </router-link></td
+                    >
                     <td>
                       {{ item.code }}
                     </td>
@@ -56,9 +67,6 @@
                       item.updated_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
-                    <td>
-                      {{ item.quantity }}
-                    </td>
                     <td>
                       <span
                         class="badge badge-round"
@@ -107,7 +115,7 @@ import mixinTable from '@core/mixins/table'
 import {
   CONTAINER_STATUS_TAB,
   MAP_NAME_STATUS_CONTAINER,
-  ContainerClosed,
+  CONTAINER_CLOSE,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER } from '../store'
 export default {
@@ -159,7 +167,7 @@ export default {
       }
     },
     isCloseContainer(container) {
-      return container.status === ContainerClosed
+      return container.status === CONTAINER_CLOSE
     },
     CreateContainerHandle() {
       this.visibleModalChoiceBox = true
