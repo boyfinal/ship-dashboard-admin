@@ -6,7 +6,7 @@
     :placeholder="label"
     :custom-label="customLabel"
     :loading="isLoading"
-    @search-change="handleSearch"
+    @search-change="fetchUsers"
     @select="handleSelect"
     @remove="handleRemove"
   >
@@ -68,11 +68,12 @@ export default {
       )
       this.isLoading = false
 
-      if (result && result.success) {
+      if (result && result.errorMessage) {
+        this.users = []
         return
       }
 
-      this.$toast.open({ type: 'error', message: result.message })
+      this.users = result.users
     },
 
     customLabel({ full_name, email, phone_number }) {
