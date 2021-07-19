@@ -61,7 +61,13 @@
                       {{ item.code }}
                     </td>
                     <td>
-                      <a :href="item.label_url">{{ item.tracking_number }}</a>
+                      <a
+                        class="text-no-underline"
+                        v-if="item.tracking_number"
+                        href="javascript:void(0)"
+                        @click="downloadLabel(item.label_url)"
+                        >{{ item.tracking_number }}</a
+                      >
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="isCloseContainer(item)">{{
@@ -121,7 +127,8 @@ import {
   MAP_NAME_STATUS_CONTAINER,
   CONTAINER_CLOSE,
 } from '../contants'
-import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER } from '../store'
+import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
+import Browser from '@core/helpers/browser'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
@@ -160,7 +167,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('container', [FETCH_LIST_CONTAINERS, CREATE_CONTAINER]),
+    ...mapActions('container', [
+      FETCH_LIST_CONTAINERS,
+      CREATE_CONTAINER,
+      GET_LABEL,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -175,6 +186,30 @@ export default {
     },
     CreateContainerHandle() {
       this.visibleModalChoiceBox = true
+    },
+    async downloadLabel(labelUrl) {
+      if (labelUrl == '') {
+        this.$toast.open({
+          type: 'error',
+          message: "This tracking doesn't have label",
+          duration: 3000,
+        })
+        return
+      }
+      let result = ''
+
+      const payload = {
+        url: labelUrl,
+        type: 'labels',
+      }
+      result = await this[GET_LABEL](payload)
+
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
     },
     async createContainerSubmit(body) {
       if (body.box_type_id == 0) {
