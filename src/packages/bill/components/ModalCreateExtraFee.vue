@@ -97,13 +97,6 @@ export default {
       txtError: '',
     }
   },
-  created() {
-    this.user_id = 0
-    this.package_code = ''
-    this.extra_fee_type_id = 0
-    this.amount = ''
-    this.description = ''
-  },
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
@@ -190,6 +183,17 @@ export default {
         description: this.description,
       }
       this.$emit('save', payload)
+    },
+  },
+  watch: {
+    visible: {
+      handler: function() {
+        this.user_id = 0
+        this.package_code = ''
+        this.extra_fee_type_id = 0
+        this.amount = ''
+        this.description = ''
+      },
     },
   },
 }
