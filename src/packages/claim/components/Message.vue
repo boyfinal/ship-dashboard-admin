@@ -32,7 +32,7 @@
 </template>
 <script>
 import File from './File'
-import { ROLE_ADMIN } from '@core/constants'
+import { ROLE_ADMIN, ROLE_SUPPORT, ROLE_ACCOUNTANT } from '@core/constants'
 
 export default {
   name: 'TicketMessage',
@@ -54,7 +54,11 @@ export default {
       return this.current.full_name || 'Undefined'
     },
     roleName() {
-      if (this.current.role === ROLE_ADMIN) {
+      if (
+        this.current.role === ROLE_ADMIN ||
+        this.current.role === ROLE_SUPPORT ||
+        this.current.role === ROLE_ACCOUNTANT
+      ) {
         return 'CSKH'
       }
 

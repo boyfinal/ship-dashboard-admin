@@ -53,6 +53,7 @@
                     <td>
                       <router-link
                         class="text-no-underline"
+                        v-if="admin"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -62,6 +63,9 @@
                       >
                         {{ item.code }}
                       </router-link>
+                      <span v-else class="text-no-underline">{{
+                        item.code
+                      }}</span>
                     </td>
                     <td
                       ><span v-status="mapStatus[item.status].value"></span
@@ -91,10 +95,10 @@
                       </router-link></td
                     >
                     <td>
-                      {{ item.container_id ? item.container_id : '-' }}
+                      {{ item.container_code || '-' }}
                     </td>
                     <td>
-                      {{ item.shipment_id ? item.shipment_id : '-' }}
+                      {{ item.shipment_id || '-' }}
                     </td>
                     <td>
                       <div>
@@ -199,6 +203,9 @@ export default {
       },
       items() {
         return this.packages
+      },
+      admin() {
+        return this.$isAdmin()
       },
     }),
     statusTab() {
