@@ -32,7 +32,7 @@
         <p-input type="text" v-model="package_code"> </p-input>
       </div>
       <div class="col-6">
-        <label for=""><b>Phí</b></label>
+        <label for=""><b>Phí</b> ($)</label>
         <p-input type="text" v-model="amount"></p-input>
       </div>
     </div>
@@ -117,7 +117,7 @@ export default {
         return false
       }
 
-      if (!/^[0-9,]+$/.test(this.amount)) {
+      if (!/^[0-9.]+$/.test(this.amount)) {
         this.$toast.open({
           type: 'error',
           message: 'Số tiền không hợp lệ !',
