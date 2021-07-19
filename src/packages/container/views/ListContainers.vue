@@ -37,6 +37,7 @@
                       <th>Nhãn kiện</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
+                      <th class="text-center">Số lượng đơn</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -67,6 +68,9 @@
                       item.updated_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
+                    <td class="text-center">{{
+                      item.container_items ? item.container_items.length : '0'
+                    }}</td>
                     <td>
                       <span
                         class="badge badge-round"

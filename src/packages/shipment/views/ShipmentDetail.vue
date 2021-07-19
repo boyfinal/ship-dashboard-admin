@@ -118,7 +118,9 @@
                       <td>
                         <a :href="item.label_url">{{ item.tracking_number }}</a>
                       </td>
-                      <td>{{ item.quantity }}</td>
+                      <td>{{
+                        item.container_items ? item.container_items.length : '0'
+                      }}</td>
                       <td>{{ item.weight }}</td>
                       <td>
                         {{ getBoxInfo(item) }}
