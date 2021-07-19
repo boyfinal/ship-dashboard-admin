@@ -76,7 +76,7 @@ export default {
     },
 
     customLabel({ full_name, email, phone_number }) {
-      return typeof email !== 'undefined'
+      return email !== ''
         ? `${full_name} - ${email}`
         : `${full_name} - ${phone_number}`
     },
