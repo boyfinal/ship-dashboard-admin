@@ -87,7 +87,7 @@
             <p-button
               v-if="container_detail.status === CONTAINER_WAITING_CLOSE"
               type="info"
-              @click="handlerClose"
+              @click="showModalClose"
               :class="`mr-3`"
             >
               Đóng kiện hàng
@@ -96,7 +96,7 @@
               v-if="container_detail.status === CONTAINER_WAITING_CLOSE"
               type="danger"
               :class="`btn-cancel-shipment`"
-              @click="handleCancelShipment"
+              @click="handelModal"
             >
               Hủy kiện hàng
             </p-button>
@@ -122,7 +122,16 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in packages_in_container" :key="i">
-                      <td>{{ item.code }}</td>
+                      <td
+                        ><router-link
+                          v-if="isAdmin"
+                          class="text-no-underline"
+                          :to="`/packages/${item.id}`"
+                        >
+                          {{ item.code }}
+                        </router-link>
+                        <span v-if="!isAdmin">{{ item.code }}</span>
+                      </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
                         <a
@@ -168,6 +177,21 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="visibleConfirm"
+      :type="`danger`"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn hủy kiện ?`"
+      :title="`Xác nhận hủy`"
+      @action="handleCancelContainer"
+    ></modal-confirm>
+    <modal-close-container
+      :visible.sync="visibleModalClose"
+      :actionConfirm="`Xác nhận`"
+      :cancel="`Hủy`"
+      @action="handlerClose"
+    ></modal-close-container>
   </div>
 </template>
 
@@ -176,6 +200,8 @@ import { mapState, mapActions } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import mixinBarcode from '@core/mixins/barcode'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import ModalCloseContainer from '../components/ModalCloseContainer'
 
 import {
   APPEND_PACKAGE_TO_CONTAINER,
@@ -197,6 +223,8 @@ export default {
   mixins: [mixinRoute, mixinTable, mixinBarcode],
   components: {
     EmptySearchResult,
+    ModalConfirm,
+    ModalCloseContainer,
   },
   data() {
     return {
@@ -206,9 +234,11 @@ export default {
         page: 1,
         search: '',
       },
+      visibleConfirm: false,
       code: '',
       isStartScan: false,
       CONTAINER_WAITING_CLOSE: CONTAINER_WAITING_CLOSE,
+      visibleModalClose: false,
     }
   },
   computed: {
@@ -222,6 +252,9 @@ export default {
     },
     statusContainer() {
       return CONTAINER_STATUS_TAB
+    },
+    isAdmin() {
+      return this.$isAdmin()
     },
   },
   created() {
@@ -295,7 +328,8 @@ export default {
       })
       await this.init()
     },
-    async handleCancelShipment() {
+    async handleCancelContainer() {
+      this.visibleConfirm = false
       const payload = {
         id: parseInt(this.$route.params.id),
       }
@@ -313,9 +347,23 @@ export default {
       })
       await this.init()
     },
-    async handlerClose() {
+
+    showModalClose() {
+      this.visibleModalClose = true
+    },
+    async handlerClose(weight) {
+      if (weight <= 0) {
+        this.$toast.open({
+          message: 'Trọng lượng phải lớn hơn 0',
+          type: 'error',
+        })
+        return
+      }
+      this.visibleModalClose = false
+
       const payload = {
         id: parseInt(this.$route.params.id),
+        weight: +weight,
       }
       const result = await this[CLOSE_CONTAINER](payload)
       if (!result.success) {
@@ -391,6 +439,9 @@ export default {
       this.filter.page = 1
       this.code = e.target.value.trim()
       this.$set(this.filter, 'search', this.code)
+    },
+    handelModal() {
+      this.visibleConfirm = true
     },
   },
   watch: {
