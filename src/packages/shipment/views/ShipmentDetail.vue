@@ -27,7 +27,9 @@
             </div>
             <div>
               <div>Trạng thái lô: </div>
-              <div>{{ shipmentStatus[shipment.status].text }}</div>
+              <div>{{
+                shipment.status ? shipmentStatus[shipment.status].text : '-'
+              }}</div>
             </div>
           </div>
         </div>
