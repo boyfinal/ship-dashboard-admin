@@ -126,6 +126,7 @@
                       <th>Thời gian</th>
                       <th>Phí phát sinh</th>
                       <th>Loại phí</th>
+                      <th>Nội dung</th>
                       <th>Thao tác</th>
                       <th></th>
                     </tr>
@@ -154,6 +155,7 @@
                       }}</td>
                       <td>{{ item.amount | formatPrice }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
+                      <td>{{ item.description }}</td>
                       <td>
                         <a @click="handelModal(item.id)" class="btn btn-danger">
                           <span>Huỷ</span>
