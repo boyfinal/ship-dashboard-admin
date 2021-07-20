@@ -33,7 +33,15 @@
       </div>
       <div class="col-6">
         <label for=""><b>Phí</b> ($)</label>
-        <p-input type="text" v-model="amount"></p-input>
+        <p-input
+          type="text"
+          v-model="amount"
+          @input="validateAmount"
+          @change="formatAmount"
+        ></p-input>
+        <div class="invalid-error" v-if="txtError">
+          {{ txtError }}
+        </div>
       </div>
     </div>
     <div class="row mb-16">
@@ -86,20 +94,49 @@ export default {
       extra_fee_type_id: 0,
       amount: '',
       description: '',
+      txtError: '',
     }
-  },
-  created() {
-    this.user_id = 0
-    this.package_code = ''
-    this.extra_fee_type_id = 0
-    this.amount = ''
-    this.description = ''
   },
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
     },
+    formatAmount() {
+      this.amount = this.amount.replace(/\s+/g, '').replaceAll(',', '')
+      let isValid = isFinite(this.amount)
+      if (!isValid) {
+        return
+      }
+      let decimal = this.amount.split('.')[1]
+      let number = this.amount.split('.')[0]
+      number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+      if (decimal !== undefined && decimal.length >= 2) {
+        let formated = (Math.floor(this.amount * 100) / 100).toFixed(2)
+        decimal = formated.split('.')[1]
+      }
+      if (this.amount.includes('.')) {
+        this.amount =
+          decimal === undefined ? `${number}.` : `${number}.${decimal}`
+      } else {
+        this.amount = number
+      }
+    },
+    validateAmount() {
+      this.amount = this.amount.replace(/\s+/g, '').replaceAll(',', '')
+      let isValid = isFinite(this.amount)
+      if (!isValid) {
+        this.txtError = 'Số tiền không hợp lệ !'
+        return
+      }
+      this.txtError = ''
+      let decimal = this.amount.split('.')[1]
+      if (decimal !== undefined && decimal.length >= 2) {
+        this.amount = (Math.floor(this.amount * 100) / 100).toFixed(2)
+      }
+    },
     validateParams() {
+      this.txtError = ''
       if (this.user_id === 0) {
         this.$toast.open({
           type: 'error',
@@ -123,8 +160,8 @@ export default {
         })
         return false
       }
-
-      if (!/^[0-9.]+$/.test(this.amount)) {
+      let amount = this.amount.replace(/\s+/g, '').replaceAll(',', '')
+      if (!isFinite(amount)) {
         this.$toast.open({
           type: 'error',
           message: 'Số tiền không hợp lệ !',
@@ -142,10 +179,21 @@ export default {
         user_id: this.user_id,
         package_code: this.package_code.trim(),
         extra_fee_type_id: this.extra_fee_type_id,
-        amount: parseFloat(this.amount),
+        amount: parseFloat(this.amount.replace(/\s+/g, '').replaceAll(',', '')),
         description: this.description,
       }
       this.$emit('save', payload)
+    },
+  },
+  watch: {
+    visible: {
+      handler: function() {
+        this.user_id = 0
+        this.package_code = ''
+        this.extra_fee_type_id = 0
+        this.amount = ''
+        this.description = ''
+      },
     },
   },
 }

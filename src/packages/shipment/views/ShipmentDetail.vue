@@ -13,6 +13,27 @@
           </router-link>
         </div>
 
+        <div class="page-header__subtitle">
+          <div class="page-header__info">
+            <div>
+              <div>Mã lô:</div>
+              <div class="package-code">{{ shipment.id }} </div>
+            </div>
+            <div>
+              <div>Ngày tạo: </div>
+              <div>{{
+                shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
+              }}</div>
+            </div>
+            <div>
+              <div>Trạng thái lô: </div>
+              <div>{{
+                shipment.status ? shipmentStatus[shipment.status].text : '-'
+              }}</div>
+            </div>
+          </div>
+        </div>
+
         <div class="page-header__subtitle row">
           <div class="page-header__info col-6">
             <p-input
@@ -81,12 +102,31 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in containers" :key="i">
-                      <td>{{ item.code }}</td>
+                      <td>
+                        <router-link
+                          :to="{
+                            name: 'container-detail',
+                            params: {
+                              id: item.id,
+                            },
+                          }"
+                        >
+                          {{ item.code }}
+                        </router-link>
+                      </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
-                        <a :href="item.label_url">{{ item.tracking_number }}</a>
+                        <a
+                          class="text-no-underline"
+                          v-if="item.tracking_number"
+                          href="javascript:void(0)"
+                          @click="downloadLabel(item.label_url)"
+                          >{{ item.tracking_number }}</a
+                        >
                       </td>
-                      <td>{{ item.quantity }}</td>
+                      <td>{{
+                        item.container_items ? item.container_items.length : '0'
+                      }}</td>
                       <td>{{ item.weight }}</td>
                       <td>
                         {{ getBoxInfo(item) }}
@@ -138,9 +178,15 @@ import {
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
 } from '../store'
+import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
-import { ShipmentClosed, ShipmentCanceled } from '../constants'
+import {
+  ShipmentClosed,
+  ShipmentCanceled,
+  SHIPMENT_STATUS_TAB,
+} from '../constants'
+import Browser from '@core/helpers/browser'
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -170,6 +216,9 @@ export default {
       isClosedShipment() {
         return this.shipment.status === ShipmentClosed
       },
+      shipmentStatus() {
+        return SHIPMENT_STATUS_TAB
+      },
     }),
     items() {
       return this.containers
@@ -186,6 +235,7 @@ export default {
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
     ]),
+    ...mapActions('container', [GET_LABEL]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -201,6 +251,30 @@ export default {
       return container.box
         ? `${container.box.length} x ${container.box.width}  x ${container.box.height}`
         : null
+    },
+    async downloadLabel(labelUrl) {
+      if (labelUrl == '') {
+        this.$toast.open({
+          type: 'error',
+          message: "This tracking doesn't have label",
+          duration: 3000,
+        })
+        return
+      }
+      let result = ''
+
+      const payload = {
+        url: labelUrl,
+        type: 'labels',
+      }
+      result = await this[GET_LABEL](payload)
+
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
     },
     handleSearch(e) {
       this.filter.page = 1
@@ -369,5 +443,17 @@ export default {
   border: 1px solid #f5222d;
   color: red;
   background-color: #fff;
+}
+.page-header__info > div {
+  margin-right: 50px;
+}
+.page-header__info > div div:last-child {
+  font-size: 16px;
+  font-weight: 600;
+}
+.page-header__subtitle {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
 }
 </style>
