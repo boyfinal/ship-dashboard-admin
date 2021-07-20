@@ -125,7 +125,7 @@
                     </td>
                     <td>
                       <router-link
-                        v-if="item.container_code"
+                        v-if="item.shipment_id"
                         class="text-no-underline"
                         :to="{
                           name: 'shipment-detail',
