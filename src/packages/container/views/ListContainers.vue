@@ -4,7 +4,7 @@
       <div class="row mb-12">
         <div class="col-12" id="search-box">
           <p-input
-            placeholder="Tìm theo mã kiện,ID hoặc nhãn kiện"
+            placeholder="Tìm theo mã kiện, ID kiện, nhãn kiện hoặc mã vận đơn"
             prefixIcon="search"
             type="search"
             :value="filter.search"
