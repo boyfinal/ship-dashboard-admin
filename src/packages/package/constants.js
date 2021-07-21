@@ -160,6 +160,8 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
+  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
+  [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {
