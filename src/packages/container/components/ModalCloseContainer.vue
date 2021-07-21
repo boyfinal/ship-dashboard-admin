@@ -12,7 +12,7 @@
           <p-button type="default" @click="handleClose">
             {{ cancel }}
           </p-button>
-          <p-button @click.prevent="handleAction()">
+          <p-button type="info" @click.prevent="handleAction()">
             {{ actionConfirm }}
           </p-button>
         </div>
@@ -34,7 +34,7 @@ export default {
     },
     description: {
       type: String,
-      default: 'Nhập số trọng lượng kiện sau khi cân (gram)',
+      default: 'Nhập số trọng lượng kiện sau khi cân (kg)',
     },
     actionConfirm: {
       type: String,

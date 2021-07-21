@@ -2,7 +2,7 @@
   <p-modal :active.sync="isShow" :title="`Tạo kiện hàng`" @close="handleClose">
     <div class="row">
       <div class="col-4">
-        <label for=""><b>Chiều cao:</b></label>
+        <label for=""><b>Chiều cao:</b> (cm)</label>
         <p-select :disabled="true" class="floating" v-model="type" name="high">
           <option value="0">Chọn chiều cao</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -11,7 +11,7 @@
         </p-select>
       </div>
       <div class="col-4">
-        <label for=""><b>Chiều rộng:</b></label>
+        <label for=""><b>Chiều rộng:</b> (cm)</label>
         <p-select :disabled="true" class="floating" v-model="type" name="width">
           <option value="0">Chọn chiều rộng</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -20,7 +20,7 @@
         </p-select>
       </div>
       <div class="col-4">
-        <label for=""><b>Chiều dài:</b></label>
+        <label for=""><b>Chiều dài:</b> (cm)</label>
         <p-select
           :disabled="true"
           class="floating"
@@ -37,7 +37,7 @@
     <br />
     <div class="row">
       <div class="col-4">
-        <label for=""><b>Cân nặng tối đa:</b></label>
+        <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
         <p-select
           :disabled="true"
           class="floating"

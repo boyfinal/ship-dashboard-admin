@@ -154,14 +154,6 @@
                             mapStatus[package_detail.package.status].value
                           }}</div
                         >
-                        <div
-                          v-if="
-                            !package_detail.package.status ||
-                              package_detail.package.status < 1
-                          "
-                        >
-                          N/A
-                        </div>
                       </div>
                     </div>
                     <div class="row">
@@ -178,15 +170,6 @@
                               .value
                           }}</div
                         >
-                        <div
-                          v-if="
-                            !package_detail.package.status ||
-                              package_detail.package.status < 1 ||
-                              mapStatusWareHouse[package_detail.package.status]
-                          "
-                        >
-                          N/A
-                        </div>
                       </div>
                     </div>
                     <div class="row">
@@ -208,7 +191,7 @@
                   </div>
                   <div class="card-content">
                     <div class="row">
-                      <div class="col-4 mb-8">Mã vận hàng:</div>
+                      <div class="col-4 mb-8">Mã vận đơn:</div>
                       <div class="col-8"
                         ><div>{{
                           $evaluate('package_detail.package.code')
@@ -561,6 +544,7 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
+  PackageStatusReturned,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -811,10 +795,19 @@ export default {
       }
     },
     deliverLogPackage(log) {
-      return log.type === PackageStatusCancelled
-        ? DELIVER_LOG_PACKAGE[log.type] +
+      switch (log.type) {
+        case PackageStatusCancelled:
+          return (
+            DELIVER_LOG_PACKAGE[log.type] +
             ` bởi <strong>${log.updated_user_name}</strong>`
-        : DELIVER_LOG_PACKAGE[log.type]
+          )
+        case PackageStatusReturned:
+          return (
+            DELIVER_LOG_PACKAGE[log.type] + `<p>Lí do: ${log.description}</p>`
+          )
+        default:
+          return DELIVER_LOG_PACKAGE[log.type]
+      }
     },
   },
 

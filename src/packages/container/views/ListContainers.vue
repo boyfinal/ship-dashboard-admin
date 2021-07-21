@@ -4,7 +4,7 @@
       <div class="row mb-12">
         <div class="col-12" id="search-box">
           <p-input
-            placeholder="Tìm theo mã kiện,ID hoặc nhãn kiện"
+            placeholder="Tìm theo mã kiện, ID kiện, nhãn kiện hoặc mã vận đơn"
             prefixIcon="search"
             type="search"
             :value="filter.search"
@@ -37,6 +37,7 @@
                       <th>Nhãn kiện</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
+                      <th class="text-center">Số lượng đơn</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -60,13 +61,22 @@
                       {{ item.code }}
                     </td>
                     <td>
-                      <a :href="item.label_url">{{ item.tracking_number }}</a>
+                      <a
+                        class="text-no-underline"
+                        v-if="item.tracking_number"
+                        href="javascript:void(0)"
+                        @click="downloadLabel(item.label_url)"
+                        >{{ item.tracking_number }}</a
+                      >
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="isCloseContainer(item)">{{
                       item.updated_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
+                    <td class="text-center">{{
+                      item.container_items ? item.container_items.length : '0'
+                    }}</td>
                     <td>
                       <span
                         class="badge badge-round"
@@ -117,7 +127,8 @@ import {
   MAP_NAME_STATUS_CONTAINER,
   CONTAINER_CLOSE,
 } from '../contants'
-import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER } from '../store'
+import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
+import Browser from '@core/helpers/browser'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
@@ -156,7 +167,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('container', [FETCH_LIST_CONTAINERS, CREATE_CONTAINER]),
+    ...mapActions('container', [
+      FETCH_LIST_CONTAINERS,
+      CREATE_CONTAINER,
+      GET_LABEL,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -171,6 +186,30 @@ export default {
     },
     CreateContainerHandle() {
       this.visibleModalChoiceBox = true
+    },
+    async downloadLabel(labelUrl) {
+      if (labelUrl == '') {
+        this.$toast.open({
+          type: 'error',
+          message: "This tracking doesn't have label",
+          duration: 3000,
+        })
+        return
+      }
+      let result = ''
+
+      const payload = {
+        url: labelUrl,
+        type: 'labels',
+      }
+      result = await this[GET_LABEL](payload)
+
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
     },
     async createContainerSubmit(body) {
       if (body.box_type_id == 0) {

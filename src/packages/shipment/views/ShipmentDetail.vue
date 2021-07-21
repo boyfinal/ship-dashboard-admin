@@ -116,9 +116,17 @@
                       </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
-                        <a :href="item.label_url">{{ item.tracking_number }}</a>
+                        <a
+                          class="text-no-underline"
+                          v-if="item.tracking_number"
+                          href="javascript:void(0)"
+                          @click="downloadLabel(item.label_url)"
+                          >{{ item.tracking_number }}</a
+                        >
                       </td>
-                      <td>{{ item.quantity }}</td>
+                      <td>{{
+                        item.container_items ? item.container_items.length : '0'
+                      }}</td>
                       <td>{{ item.weight }}</td>
                       <td>
                         {{ getBoxInfo(item) }}
@@ -170,6 +178,7 @@ import {
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
 } from '../store'
+import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import {
@@ -177,6 +186,7 @@ import {
   ShipmentCanceled,
   SHIPMENT_STATUS_TAB,
 } from '../constants'
+import Browser from '@core/helpers/browser'
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -225,6 +235,7 @@ export default {
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
     ]),
+    ...mapActions('container', [GET_LABEL]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -240,6 +251,30 @@ export default {
       return container.box
         ? `${container.box.length} x ${container.box.width}  x ${container.box.height}`
         : null
+    },
+    async downloadLabel(labelUrl) {
+      if (labelUrl == '') {
+        this.$toast.open({
+          type: 'error',
+          message: "This tracking doesn't have label",
+          duration: 3000,
+        })
+        return
+      }
+      let result = ''
+
+      const payload = {
+        url: labelUrl,
+        type: 'labels',
+      }
+      result = await this[GET_LABEL](payload)
+
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
     },
     handleSearch(e) {
       this.filter.page = 1
