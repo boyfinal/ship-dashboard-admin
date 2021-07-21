@@ -44,10 +44,6 @@ export const formatTobe = (tobe, quantity, result = 'are') => {
  */
 export const formatPrice = (value) => {
   let val = (value / 1).toFixed(2)
-  if (val < 0) {
-    val = Math.abs(val)
-    return `-$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-  }
   return `$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 }
 
