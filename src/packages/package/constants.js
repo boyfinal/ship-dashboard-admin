@@ -187,7 +187,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-success',
   },
   [PackageStatusReturned]: {
-    value: 'Chờ trả tiền',
+    value: 'Trả hàng',
     class: 'badge-success',
   },
   [PackageStatusCancelled]: {
