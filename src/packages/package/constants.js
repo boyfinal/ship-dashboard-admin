@@ -67,7 +67,7 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusPicked]: {
-    value: 'Đã lấy',
+    value: 'Đang xử lý',
     class: 'badge-success',
   },
   [PackageStatusWareHouseLabeled]: {
