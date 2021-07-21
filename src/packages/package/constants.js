@@ -83,7 +83,7 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusWareHouseExport]: {
-    value: 'Đang xử lý',
+    value: 'Đang giao',
     class: 'badge-success',
   },
   [PackageStatusInTransit]: {
@@ -159,6 +159,7 @@ export const CHANGE_PACKAGE_TYPE = [
 export const DELIVER_LOG_PACKAGE = {
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
+  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
 }
 
