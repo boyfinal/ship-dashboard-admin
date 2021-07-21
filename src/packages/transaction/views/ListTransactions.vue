@@ -355,11 +355,16 @@ export default {
       }
     },
     getAmount(transaction) {
-      let amount = this.$options.filters.formatPrice(transaction.amount)
+      let amount = this.$options.filters.formatPrice(
+        transaction.amount < 0
+          ? Math.abs(transaction.amount)
+          : transaction.amount
+      )
       switch (transaction.type) {
         case TransactionLogTypeTopup:
           return `+ ${amount} `
         case TransactionLogTypePay:
+          console.log(amount)
           return `- ${amount} `
         case TransactionLogTypeRefund:
           return `+ ${amount} `

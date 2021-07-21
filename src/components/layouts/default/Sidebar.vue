@@ -156,9 +156,9 @@ export default {
               alias: ['/warehouse'],
             },
             {
-              route: '/packages/claims',
+              route: '/warehouse/check-in',
               title: 'Quét nhận hàng',
-              alias: [],
+              alias: ['/warehouse/check-in'],
             },
             {
               route: '/warehouse/check-package',

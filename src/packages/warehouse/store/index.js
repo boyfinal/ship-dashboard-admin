@@ -5,8 +5,10 @@ export const COUNT_LIST_PACKAGES_IN_WAREHOUSE = 'countPackagesInWareHouse'
 export const FETCH_PACKAGE_DETAIL = 'fetchPackageDetail'
 export const RETURN_PACKAGE = 'returnPackage'
 export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
+export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 
 import {
+  PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
@@ -44,6 +46,9 @@ export const mutations = {
   [RETURN_PACKAGE]: (state, id) => {
     if (id != state.package.id) return
     state.package.status = PACKAGE_WAREHOUSE_STATUS_RETURN
+  },
+  [WAREHOUSE_CHECK_IN]: (state, payload) => {
+    state.package = payload
   },
 }
 
@@ -97,6 +102,24 @@ export const actions = {
     }
 
     commit(RETURN_PACKAGE, payload.id)
+    return { error: false }
+  },
+
+  async [WAREHOUSE_CHECK_IN]({ commit }, code) {
+    commit(WAREHOUSE_CHECK_IN, {})
+
+    if (code == '') return { error: false }
+
+    const res = await api.checkIn(code)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    if (res.package.status < PACKAGE_STATUS_PENDING_PICKUP) {
+      return { error: true, message: 'Mã vận đơn không tồn tại.' }
+    }
+
+    commit(WAREHOUSE_CHECK_IN, res.package)
     return { error: false }
   },
 }

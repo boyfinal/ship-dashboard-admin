@@ -67,7 +67,7 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusPicked]: {
-    value: 'Đã lấy',
+    value: 'Đang xử lý',
     class: 'badge-success',
   },
   [PackageStatusWareHouseLabeled]: {
@@ -83,7 +83,7 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusWareHouseExport]: {
-    value: 'Đang xử lý',
+    value: 'Đang giao',
     class: 'badge-success',
   },
   [PackageStatusInTransit]: {
@@ -159,7 +159,10 @@ export const CHANGE_PACKAGE_TYPE = [
 export const DELIVER_LOG_PACKAGE = {
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
+  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
+  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
+  [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {
@@ -184,7 +187,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-success',
   },
   [PackageStatusReturned]: {
-    value: 'Chờ trả tiền',
+    value: 'Trả hàng',
     class: 'badge-success',
   },
   [PackageStatusCancelled]: {
