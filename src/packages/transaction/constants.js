@@ -22,10 +22,6 @@ export const TRANSACTION_STATUS_TAB = [
     value: TransactionStatusFailure,
     text: 'Thất bại',
   },
-  {
-    value: TransactionStatusReFund,
-    text: 'Hoàn tiền',
-  },
 ]
 export const MAP_NAME_STATUS_TRANSACTION = {
   [TransactionStatusProcess]: {
