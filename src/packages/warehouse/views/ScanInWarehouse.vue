@@ -27,8 +27,8 @@
                 <div class="table-responsive">
                   <table class="table table-borderless tb-scan-in">
                     <tr>
-                      <td>Mã đơn hàng:</td>
-                      <td>{{ pkg.order_number }}</td>
+                      <td>Mã vận đơn:</td>
+                      <td>{{ pkg.code }}</td>
                     </tr>
                     <tr>
                       <td>Người gửi:</td>
@@ -80,6 +80,10 @@
               <div class="card-content">
                 <div class="table-responsive">
                   <table class="table table-borderless tb-scan-in">
+                    <tr>
+                      <td>Mã đơn hàng:</td>
+                      <td>{{ pkg.order_number }}</td>
+                    </tr>
                     <tr>
                       <td>Chi tiết hàng hóa:</td>
                       <td>{{ pkg.detail }}</td>
