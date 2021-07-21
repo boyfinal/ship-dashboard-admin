@@ -148,6 +148,9 @@
                       </td>
                       <td>
                         <p-button
+                          v-if="
+                            container_detail.status === CONTAINER_WAITING_CLOSE
+                          "
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handlerRemovePackage(item.id)"
@@ -392,6 +395,11 @@ export default {
         this.$toast.error('Bạn phải nhấn bắt đầu quét trước khi quét.')
         return
       }
+
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+
       const payload = {
         tracking_number: keyword,
         container_id: +this.$route.params.id,

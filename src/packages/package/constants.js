@@ -161,6 +161,8 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
   [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
+  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
+  [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {
