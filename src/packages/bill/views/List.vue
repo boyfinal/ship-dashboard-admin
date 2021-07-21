@@ -24,7 +24,7 @@
         <div class="ml-5">
           <p-button type="info" @click="handleShowModalCreateExtraFee">
             <img src="~@/assets/img/plus.svg" />
-            Tạo hóa đơn
+            Tạo phí phát sinh
           </p-button>
         </div>
       </div>
