@@ -8,6 +8,7 @@ export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 
 import {
+  PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
@@ -112,6 +113,10 @@ export const actions = {
     const res = await api.checkIn(code)
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
+    }
+
+    if (res.package.status < PACKAGE_STATUS_PENDING_PICKUP) {
+      return { error: true, message: 'Mã vận đơn không tồn tại.' }
     }
 
     commit(WAREHOUSE_CHECK_IN, res.package)
