@@ -816,7 +816,7 @@ export default {
         case PackageStatusCancelled:
           return (
             DELIVER_LOG_PACKAGE[log.type] +
-            ` bởi <strong>${this.displayUserName(log)}</strong>`
+            ` bởi <strong>${log.updated_user_name}</strong>`
           )
         case PackageStatusReturned:
           return (
