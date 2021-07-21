@@ -561,6 +561,7 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
+  PackageStatusReturned,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -811,10 +812,19 @@ export default {
       }
     },
     deliverLogPackage(log) {
-      return log.type === PackageStatusCancelled
-        ? DELIVER_LOG_PACKAGE[log.type] +
-            ` bởi <strong>${log.updated_user_name}</strong>`
-        : DELIVER_LOG_PACKAGE[log.type]
+      switch (log.type) {
+        case PackageStatusCancelled:
+          return (
+            DELIVER_LOG_PACKAGE[log.type] +
+            ` bởi <strong>${this.displayUserName(log)}</strong>`
+          )
+        case PackageStatusReturned:
+          return (
+            DELIVER_LOG_PACKAGE[log.type] + `<p>Lí do: ${log.description}</p>`
+          )
+        default:
+          return DELIVER_LOG_PACKAGE[log.type]
+      }
     },
   },
 
