@@ -154,13 +154,13 @@ export const CHANGE_PACKAGE_TYPE = [
   'Dịch vụ',
   'Chi tiết hàng hóa',
   'Địa chỉ phụ người nhận',
-  'Sửa phí phát sinh do Covid',
-  'Sửa phí phát sinh quá cỡ',
-  'Sửa phí phát sinh sửa trọng lượng',
-  'Sửa phí phát sinh sửa kích thước',
-  'Sửa phí phát sinh dịch vụ',
-  'Sửa phí phát sinh sửa đơn',
-  'Sửa phí phát sinh hoàn tiền',
+  'Covid',
+  'Quá cỡ',
+  'Sửa trọng lượng',
+  'Sửa kích thước',
+  'Dịch vụ',
+  'Sửa đơn',
+  'Hoàn tiền',
 ]
 
 export const DELIVER_LOG_PACKAGE = {
