@@ -346,6 +346,10 @@
                               <tbody>
                                 <tr
                                   v-for="(item, i) in displayAuditLogs"
+                                  :class="{
+                                    'bold-line': item.active,
+                                    'through-line': !item.active,
+                                  }"
                                   :key="i"
                                 >
                                   <td>
@@ -523,6 +527,14 @@
 .disable-extra-fee {
   color: #cfd0d0;
 }
+.bold-line {
+  font-weight: 600;
+}
+.through-line,
+.through-line td {
+  text-decoration-line: line-through;
+  color: #aaabab !important;
+}
 </style>
 <script>
 import { mapState, mapActions } from 'vuex'
@@ -615,10 +627,21 @@ export default {
       const start =
         (this.auditPagination.currentPage - 1) *
         this.auditPagination.itemsPerPage
-      return this.package_detail.audit_logs.slice(
+      let arrTemp = []
+      let auditLogsSliced = this.package_detail.audit_logs.slice(
         start,
         start + this.auditPagination.itemsPerPage
       )
+
+      auditLogsSliced.forEach((ele, index) => {
+        if (!arrTemp.includes(ele.type)) {
+          auditLogsSliced[index].active = true
+          arrTemp.push(ele.type)
+        } else {
+          auditLogsSliced[index].active = false
+        }
+      })
+      return auditLogsSliced
     },
 
     sumExtraFee() {
