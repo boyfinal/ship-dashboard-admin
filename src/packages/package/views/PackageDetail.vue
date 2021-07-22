@@ -327,7 +327,7 @@
                             >Hành trình đơn</a
                           ></div
                         >
-                        <div class="card-title">Lịch sử phát sinh</div>
+                        <div class="card-title">Lịch sử đơn</div>
                       </div>
                       <div class="card-content">
                         <template>
