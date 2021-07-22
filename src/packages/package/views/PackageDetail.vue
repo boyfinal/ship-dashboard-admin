@@ -261,7 +261,7 @@
                         <div class="card-title">Hành trình đơn</div>
                         <div class="card-action"
                           ><a @click="changeDisplayDeliverDetail()" href="#"
-                            >Lịch sử phát sinh</a
+                            >Lịch sử đơn</a
                           ></div
                         >
                       </div>
