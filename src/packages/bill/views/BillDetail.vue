@@ -153,7 +153,10 @@
                       <td>{{
                         item.created_at | date('dd/MM/yyyy HH:mm:ss')
                       }}</td>
-                      <td>{{ item.amount | formatPrice }}</td>
+                      <td v-if="item.amount < 0"
+                        >-{{ Math.abs(item.amount) | formatPrice }}</td
+                      >
+                      <td v-else>{{ item.amount | formatPrice }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
                       <td>{{ item.description }}</td>
                       <td>
