@@ -147,7 +147,7 @@ export default {
   data() {
     return {
       filter: {
-        limit: 50,
+        limit: 30,
         status: '',
         search: '',
         search_by: 'code',

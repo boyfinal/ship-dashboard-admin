@@ -171,7 +171,6 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
-                  :filter-limit="false"
                 ></p-pagination>
               </div>
             </template>

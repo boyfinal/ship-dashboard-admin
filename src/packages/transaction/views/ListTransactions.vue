@@ -118,7 +118,6 @@
               v-if="count > 0"
             >
               <p-pagination
-                :filter-limit="false"
                 :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
