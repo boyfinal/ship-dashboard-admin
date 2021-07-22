@@ -69,7 +69,12 @@
             <p-button v-else @click="handleStopScan" type="info" :class="`mr-3`"
               >Dừng quét</p-button
             >
-            <p-button type="info" @click="handleCloseShipment" :class="`mr-3`">
+            <p-button
+              type="info"
+              @click="handleCloseShipment"
+              :loading="loading"
+              :class="`mr-3`"
+            >
               Đóng lô hàng
             </p-button>
             <p-button
@@ -203,6 +208,7 @@ export default {
       },
       code: '',
       isStartScan: false,
+      loading: false,
     }
   },
   computed: {
@@ -343,10 +349,12 @@ export default {
       this.init()
     },
     async handleCloseShipment() {
+      this.loading = true
       const payload = {
         id: parseInt(this.$route.params.id),
       }
       const result = await this[CLOSE_SHIPMENT](payload)
+      this.loading = false
       if (!result.success) {
         this.$toast.open({
           message: result.message,
