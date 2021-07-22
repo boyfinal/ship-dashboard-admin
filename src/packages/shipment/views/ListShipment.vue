@@ -78,7 +78,6 @@
               class="d-flex justify-content-between align-items-center mb-16"
             >
               <p-pagination
-                :filter-limit="false"
                 :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
