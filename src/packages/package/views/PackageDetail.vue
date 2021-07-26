@@ -627,21 +627,17 @@ export default {
       const start =
         (this.auditPagination.currentPage - 1) *
         this.auditPagination.itemsPerPage
+      let auditLogs = cloneDeep(this.package_detail.audit_logs)
       let arrTemp = []
-      let auditLogsSliced = this.package_detail.audit_logs.slice(
-        start,
-        start + this.auditPagination.itemsPerPage
-      )
-
-      auditLogsSliced.forEach((ele, index) => {
+      auditLogs.forEach((ele, index) => {
         if (!arrTemp.includes(ele.type)) {
-          auditLogsSliced[index].active = true
+          auditLogs[index].active = true
           arrTemp.push(ele.type)
         } else {
-          auditLogsSliced[index].active = false
+          auditLogs[index].active = false
         }
       })
-      return auditLogsSliced
+      return auditLogs.slice(start, start + this.auditPagination.itemsPerPage)
     },
 
     sumExtraFee() {
