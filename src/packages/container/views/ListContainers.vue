@@ -44,7 +44,17 @@
                 <tbody>
                   <tr v-for="(item, i) in containers" :key="i">
                     <td>
-                      C{{ item.id }}
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'container-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        C{{ item.id }}
+                      </router-link>
                       <span
                         class="page-header__barcode"
                         @click="printBarcode(item.barcode)"
