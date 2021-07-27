@@ -99,6 +99,7 @@
                     <td>
                       <router-link
                         class="text-no-underline"
+                        v-if="item.container_id"
                         :to="{
                           name: 'container-detail',
                           params: { id: item.container_id },
@@ -106,6 +107,7 @@
                       >
                         C{{ item.container_id }}
                       </router-link>
+                      <span v-else>-</span>
                     </td>
                     <td>
                       <router-link
