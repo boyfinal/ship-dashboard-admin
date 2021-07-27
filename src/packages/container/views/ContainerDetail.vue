@@ -16,12 +16,17 @@
         <div class="page-header__subtitle">
           <div class="page-header__info">
             <div>
-              <div>Kiện hàng:</div>
-              <div class="package-code">{{ container_detail.id }} </div>
-            </div>
-            <div>
               <div>Mã kiện:</div>
-              <div class="package-code">{{ container_detail.code }} </div>
+              <div class="package-code"
+                >C{{ container_detail.id }}
+                <span
+                  class="page-header__barcode"
+                  style="vertical-align: bottom;"
+                  @click="printBarcode"
+                >
+                  <img src="@/assets/img/barcode.svg" alt="barcode" />
+                </span>
+              </div>
             </div>
             <div>
               <div>Ngày tạo: </div>
@@ -219,7 +224,8 @@ import { CONTAINER_STATUS_TAB, CONTAINER_WAITING_CLOSE } from '../contants'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import Browser from '@core/helpers/browser'
-
+import api from '../api'
+import { printImage } from '@core/utils/print'
 export default {
   name: 'ContainerDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -415,7 +421,29 @@ export default {
       this.code = ''
       this.init()
     },
+    async printBarcode() {
+      document.activeElement && document.activeElement.blur()
 
+      const res = await api.downloadLabel({
+        url: this.container_detail.barcode,
+        type: 'labels',
+      })
+      if (!res && res.error) {
+        this.$toast.open({
+          type: 'error',
+          message: res.errorMessage,
+          duration: 3000,
+        })
+        return
+      }
+
+      try {
+        let blob = (window.webkitURL || window.URL).createObjectURL(res)
+        printImage(blob)
+      } catch (error) {
+        this.$toast.error('File error !!!')
+      }
+    },
     async downloadLabel(labelUrl) {
       if (labelUrl === '') {
         this.$toast.open({
@@ -531,5 +559,8 @@ export default {
       font-weight: 600;
     }
   }
+}
+.page-header__barcode img {
+  cursor: pointer;
 }
 </style>
