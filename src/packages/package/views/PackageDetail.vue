@@ -350,10 +350,6 @@
                               <tbody>
                                 <tr
                                   v-for="(item, i) in displayAuditLogs"
-                                  :class="{
-                                    'bold-line': item.active,
-                                    'through-line': !item.active,
-                                  }"
                                   :key="i"
                                 >
                                   <td>
@@ -651,17 +647,10 @@ export default {
       const start =
         (this.auditPagination.currentPage - 1) *
         this.auditPagination.itemsPerPage
-      let auditLogs = cloneDeep(this.package_detail.audit_logs)
-      let arrTemp = []
-      auditLogs.forEach((ele, index) => {
-        if (!arrTemp.includes(ele.type)) {
-          auditLogs[index].active = true
-          arrTemp.push(ele.type)
-        } else {
-          auditLogs[index].active = false
-        }
-      })
-      return auditLogs.slice(start, start + this.auditPagination.itemsPerPage)
+      return this.package_detail.audit_logs.slice(
+        start,
+        start + this.auditPagination.itemsPerPage
+      )
     },
 
     sumExtraFee() {

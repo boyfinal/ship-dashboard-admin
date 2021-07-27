@@ -4,7 +4,7 @@
       <div class="row mb-12">
         <div class="col-12" id="search-box">
           <p-input
-            placeholder="Tìm theo mã kiện, ID kiện, nhãn kiện hoặc mã vận đơn"
+            placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
             prefixIcon="search"
             type="search"
             :value="filter.search"
@@ -32,7 +32,6 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>ID</th>
                       <th>Mã kiện</th>
                       <th>Nhãn kiện</th>
                       <th>Ngày tạo</th>
@@ -44,8 +43,8 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in containers" :key="i">
-                    <td
-                      ><router-link
+                    <td>
+                      <router-link
                         class="text-no-underline"
                         :to="{
                           name: 'container-detail',
@@ -54,11 +53,14 @@
                           },
                         }"
                       >
-                        {{ item.id }}
-                      </router-link></td
-                    >
-                    <td>
-                      {{ item.code }}
+                        C{{ item.id }}
+                      </router-link>
+                      <span
+                        class="page-header__barcode"
+                        @click="printBarcode(item.barcode)"
+                      >
+                        <img src="@/assets/img/barcode.svg" alt="barcode" />
+                      </span>
                     </td>
                     <td>
                       <a
@@ -128,6 +130,8 @@ import {
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import Browser from '@core/helpers/browser'
+import api from '../api'
+import { printImage } from '@core/utils/print'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
@@ -209,6 +213,29 @@ export default {
       }
 
       Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
+    },
+    async printBarcode(barcode) {
+      document.activeElement && document.activeElement.blur()
+
+      const res = await api.downloadLabel({
+        url: barcode,
+        type: 'labels',
+      })
+      if (!res && res.error) {
+        this.$toast.open({
+          type: 'error',
+          message: res.errorMessage,
+          duration: 3000,
+        })
+        return
+      }
+
+      try {
+        let blob = (window.webkitURL || window.URL).createObjectURL(res)
+        printImage(blob)
+      } catch (error) {
+        this.$toast.error('File error !!!')
+      }
     },
     async createContainerSubmit(body) {
       if (body.box_type_id == 0) {
