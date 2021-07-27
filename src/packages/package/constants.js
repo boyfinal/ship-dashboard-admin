@@ -4,7 +4,6 @@ export const PackageStatusPicked = 10
 export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
 export const PackageStatusWareHouseInShipment = 13
-export const PackageStatusWareHouseExport = 14
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 31
 export const PackageStatusReturned = 40
@@ -82,10 +81,6 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Đang xử lý',
     class: 'badge-success',
   },
-  [PackageStatusWareHouseExport]: {
-    value: 'Đang giao',
-    class: 'badge-success',
-  },
   [PackageStatusInTransit]: {
     value: 'Đang giao',
     class: 'badge-success',
@@ -154,6 +149,13 @@ export const CHANGE_PACKAGE_TYPE = [
   'Dịch vụ',
   'Chi tiết hàng hóa',
   'Địa chỉ phụ người nhận',
+  'Covid',
+  'Quá cỡ',
+  'Sửa kích thước',
+  'Sửa trọng lượng',
+  'Dịch vụ',
+  'Sửa đơn',
+  'Hoàn tiền',
 ]
 
 export const DELIVER_LOG_PACKAGE = {
@@ -161,7 +163,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
   [PackageStatusPicked]: 'Đơn hàng được xác nhận đã giao cho nhân viên kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
-  [PackageStatusWareHouseExport]: 'Đơn hàng xuất kho',
+  [PackageStatusInTransit]: 'Đơn hàng xuất kho',
   [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
 }
 
@@ -182,7 +184,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Đóng lô',
     class: 'badge-success',
   },
-  [PackageStatusWareHouseExport]: {
+  [PackageStatusInTransit]: {
     value: 'Xuất kho',
     class: 'badge-success',
   },
