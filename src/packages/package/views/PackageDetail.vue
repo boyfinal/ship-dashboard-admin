@@ -259,11 +259,11 @@
                     <div class="card-block">
                       <div class="card-header">
                         <div class="card-title">Hành trình đơn</div>
-                        <div class="card-action"
-                          ><a @click="changeDisplayDeliverDetail()" href="#"
+                        <div class="card-action">
+                          <a href="#" @click="changeDisplayDeliverDetail()"
                             >Lịch sử đơn</a
-                          ></div
-                        >
+                          >
+                        </div>
                       </div>
                       <div class="card-content deliver-log">
                         <div class="timeline">
@@ -277,15 +277,19 @@
                             class="timeline-item"
                           >
                             <div class="timeline-item__left">
-                              <div>{{
-                                item.created_at | datetime('dd/MM/yyyy')
-                              }}</div>
-                              <div>{{
-                                item.created_at | datetime('HH:mm:ss')
-                              }}</div>
+                              <div>
+                                {{ item.ship_time | datetime('dd/MM/yyyy') }}
+                              </div>
+                              <div>
+                                {{ item.ship_time | datetime('HH:mm:ss') }}
+                              </div>
                             </div>
                             <div class="timeline-item__right">
-                              <div v-html="deliverLogPackage(item)"></div>
+                              <div v-html="item.text"></div>
+                              <span v-if="item.location"
+                                ><i class="fa fa-map-marker mr-1"></i>
+                                {{ item.location }}</span
+                              >
                             </div>
                           </div>
                         </div>
@@ -618,10 +622,30 @@ export default {
       const start =
         (this.timelinePagination.currentPage - 1) *
         this.timelinePagination.itemsPerPage
-      return this.package_detail.deliver_logs.slice(
-        start,
-        start + this.timelinePagination.itemsPerPage
-      )
+
+      return this.package_detail.deliver_logs
+        .slice(start, start + this.timelinePagination.itemsPerPage)
+        .map((log) => {
+          let text = ''
+          switch (log.type) {
+            case PackageStatusCancelled:
+              text = `${DELIVER_LOG_PACKAGE[log.type]} bởi <strong>${
+                log.updated_user_name
+              }</strong>`
+              break
+            case PackageStatusReturned:
+              text = `${DELIVER_LOG_PACKAGE[log.type]} <p>Lí do: ${
+                log.description
+              }</p>`
+              break
+            default:
+              text = DELIVER_LOG_PACKAGE[log.type]
+          }
+
+          text = text || log.description
+
+          return { ship_time: log.ship_time, text, location: log.location }
+        })
     },
     displayAuditLogs() {
       const start =
@@ -811,21 +835,6 @@ export default {
         printImage(this.blob)
       } catch (error) {
         this.$toast.error('File error !!!')
-      }
-    },
-    deliverLogPackage(log) {
-      switch (log.type) {
-        case PackageStatusCancelled:
-          return (
-            DELIVER_LOG_PACKAGE[log.type] +
-            ` bởi <strong>${log.updated_user_name}</strong>`
-          )
-        case PackageStatusReturned:
-          return (
-            DELIVER_LOG_PACKAGE[log.type] + `<p>Lí do: ${log.description}</p>`
-          )
-        default:
-          return DELIVER_LOG_PACKAGE[log.type]
       }
     },
   },
