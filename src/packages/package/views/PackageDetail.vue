@@ -389,7 +389,7 @@
                                     </p-tooltip>
                                   </td>
                                   <td style="text-align: right">{{
-                                    item.fee | formatPrice
+                                    item.extra_fee | formatPrice
                                   }}</td>
                                 </tr>
                               </tbody>
