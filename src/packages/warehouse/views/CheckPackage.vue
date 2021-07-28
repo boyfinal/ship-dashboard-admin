@@ -297,6 +297,7 @@ export default {
         width: 0,
         height: 0,
       },
+      isChange: false,
       isVisibleModalAccept: false,
       isSubmitting: false,
     }
@@ -385,12 +386,15 @@ export default {
     },
 
     quickAcceptHandle() {
+      this.isChange = false
+
       if (
         parseFloat(this.volume.weight) != parseFloat(this.current.weight) ||
         parseFloat(this.volume.length) != parseFloat(this.current.length) ||
         parseFloat(this.volume.width) != parseFloat(this.current.width) ||
         parseFloat(this.volume.height) != parseFloat(this.current.height)
       ) {
+        this.isChange = true
         this.extraHandle()
         return
       }
@@ -424,7 +428,7 @@ export default {
       this.isSubmitting = true
       const body = { id: this.current.id }
 
-      if (this.messages.length) {
+      if (this.isChange) {
         body.weight = this.volume.weight || 0
         body.length = this.volume.length || 0
         body.width = this.volume.width || 0
