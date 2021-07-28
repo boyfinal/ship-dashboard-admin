@@ -19,7 +19,6 @@
       <div class="col-6">
         <label for=""><b>Loại phí</b></label>
         <p-select class="floating" v-model="extra_fee_type_id">
-          <option value="10">Phí phát sinh</option>
           <option v-for="type in types" :key="type.id" :value="type.id">{{
             type.name
           }}</option>
