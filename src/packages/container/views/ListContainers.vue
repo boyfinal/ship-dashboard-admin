@@ -132,6 +132,7 @@ import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import Browser from '@core/helpers/browser'
 import api from '../api'
 import { printImage } from '@core/utils/print'
+import { cloneDeep } from '../../../core/utils'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
@@ -178,7 +179,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this[FETCH_LIST_CONTAINERS](this.filter)
+      let payload = cloneDeep(this.filter)
+      payload.search = payload.search.toUpperCase()
+      const result = await this[FETCH_LIST_CONTAINERS](payload)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
