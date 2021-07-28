@@ -44,7 +44,7 @@ export const formatTobe = (tobe, quantity, result = 'are') => {
  */
 export const formatPrice = (value) => {
   let val = (value / 1).toFixed(2)
-  return `$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+  return `${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}$`
 }
 
 export const round = (value, digits = 0) => {
