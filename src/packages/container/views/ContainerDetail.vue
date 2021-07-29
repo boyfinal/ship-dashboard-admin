@@ -147,7 +147,7 @@
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
-                      <td>{{ item.weight }}</td>
+                      <td>{{ item.tracking.weight }}</td>
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
