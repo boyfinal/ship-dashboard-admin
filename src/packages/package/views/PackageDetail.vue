@@ -388,7 +388,9 @@
                                       {{ truncate(item.value, 15) }}
                                     </p-tooltip>
                                   </td>
-                                  <td>{{ item.fee | formatPrice }}</td>
+                                  <td style="text-align: right">{{
+                                    item.fee | formatPrice
+                                  }}</td>
                                 </tr>
                               </tbody>
                             </table>
