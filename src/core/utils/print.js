@@ -41,6 +41,6 @@ export function printImage(url) {
       win.focus()
       win.print()
       win.close()
-    }, 100)
+    }, 1500)
   }
 }
