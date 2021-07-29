@@ -379,7 +379,7 @@ export default {
         return
       }
       const payload = {
-        tracking_number: keyword,
+        barcode: keyword,
         shipment_id: parseInt(this.$route.params.id),
       }
       const result = await this[APPEND_SHIPMENT](payload)
