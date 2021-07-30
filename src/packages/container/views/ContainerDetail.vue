@@ -290,7 +290,7 @@ export default {
       }
     },
     getBoxInfo(packageDetail) {
-      return `${packageDetail.length} x ${packageDetail.width}  x ${packageDetail.height}`
+      return `${packageDetail.tracking.length} x ${packageDetail.tracking.width}  x ${packageDetail.tracking.height}`
     },
     async handleAppend() {
       this.code = this.code.trim()
