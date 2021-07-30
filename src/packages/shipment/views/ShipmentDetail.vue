@@ -58,16 +58,15 @@
             class="page-header__action col-6 text-right"
             v-if="!isClosedShipment && !isCanceledShipment"
           >
-            <p-button
-              type="info"
-              :class="`mr-3`"
+            <a
+              class="p-button btn btn-info mr-3"
               v-if="!isStartScan"
               @click="handleStartScan"
             >
               Bắt đầu quét
-            </p-button>
-            <p-button v-else @click="handleStopScan" type="info" :class="`mr-3`"
-              >Dừng quét</p-button
+            </a>
+            <a class="p-button btn btn-info mr-3" v-else @click="handleStopScan"
+              >Dừng quét</a
             >
             <p-button
               type="info"
