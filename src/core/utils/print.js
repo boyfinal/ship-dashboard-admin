@@ -25,7 +25,9 @@ export function printImage(url) {
 				<title>Document</title>
 			</head>
 			<body>
-				<img src="${url}">
+        <div  style="text-align: center;">
+          <img src="${url}">
+        </div>
 			</body>
 		</html>
 	`
