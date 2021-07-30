@@ -379,7 +379,7 @@ export default {
         return
       }
       const payload = {
-        barcode: keyword,
+        barcode: keyword.toUpperCase(),
         shipment_id: parseInt(this.$route.params.id),
       }
       const result = await this[APPEND_SHIPMENT](payload)
