@@ -4,7 +4,7 @@
       <div class="row mb-12">
         <div class="col-12" id="search-box">
           <p-input
-            placeholder="Tìm theo mã lô hoặc mã kiện,ID kiện  "
+            placeholder="Tìm theo mã lô hoặc mã kiện"
             prefixIcon="search"
             type="search"
             clearable
@@ -78,7 +78,6 @@
               class="d-flex justify-content-between align-items-center mb-16"
             >
               <p-pagination
-                :filter-limit="false"
                 :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
@@ -112,6 +111,7 @@ import mixinTable from '@core/mixins/table'
 import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT } from '../store'
 import ShipmentStatusTab from '../components/ShipmentStatusTab'
 import ModalConfirm from '../../../components/shared/modal/ModalConfirm'
+import { cloneDeep } from '../../../core/utils'
 
 export default {
   name: 'ListShipment',
@@ -154,7 +154,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this[FETCH_LIST_SHIPMENT](this.filter)
+      let payload = cloneDeep(this.filter)
+      payload.search = payload.search.toUpperCase()
+      const result = await this[FETCH_LIST_SHIPMENT](payload)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })

@@ -19,7 +19,6 @@
       <div class="col-6">
         <label for=""><b>Loại phí</b></label>
         <p-select class="floating" v-model="extra_fee_type_id">
-          <option value="0">Chọn loại phí</option>
           <option v-for="type in types" :key="type.id" :value="type.id">{{
             type.name
           }}</option>
@@ -190,7 +189,7 @@ export default {
       handler: function() {
         this.user_id = 0
         this.package_code = ''
-        this.extra_fee_type_id = 0
+        this.extra_fee_type_id = 10
         this.amount = ''
         this.description = ''
       },

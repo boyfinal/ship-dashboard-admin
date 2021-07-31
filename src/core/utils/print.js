@@ -24,25 +24,25 @@ export function printImage(url) {
 				<meta charset="UTF-8">
 				<title>Document</title>
 			</head>
-			<body onload="window.print();window.close()">
-				<img style="width:100%" src="${url}">
+			<body>
+        <div  style="text-align: center;">
+          <img src="${url}">
+        </div>
 			</body>
 		</html>
 	`
 
   let win = window.open('', name, specs)
-  win.document.open()
   win.document.write(html)
-  win.document.close()
 
-  // const img = new Image()
-  // img.src = url
-  // img.onload = function() {
-  //   setTimeout(function() {
-  //     win.document.close()
-  //     win.focus()
-  //     win.print()
-  //     win.close()
-  //   }, 100)
-  // }
+  const img = new Image()
+  img.src = url
+  img.onload = function() {
+    setTimeout(function() {
+      win.document.close()
+      win.focus()
+      win.print()
+      win.close()
+    }, 1500)
+  }
 }

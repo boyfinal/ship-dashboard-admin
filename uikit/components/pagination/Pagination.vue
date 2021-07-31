@@ -143,7 +143,7 @@ export default {
     },
     filterLimit: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     size: String,
     simple: Boolean,

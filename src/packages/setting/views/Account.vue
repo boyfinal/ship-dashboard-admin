@@ -4,7 +4,7 @@
       <div class="d-flex mb-16">
         <div class="search-input d-flex">
           <p-input
-            placeholder="Tìm theo tên"
+            placeholder="Tìm theo tên/email"
             prefixIcon="search"
             type="search"
             :clearable="true"

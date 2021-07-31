@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="user-text">
-        {{ current.content }}
+        <span v-html="formatText(current.content)"></span>
       </div>
       <div class="gallery ticket-attach-files" v-if="hasFiles">
         <div class="list-item">
@@ -73,6 +73,12 @@ export default {
       }
 
       return 'gallery-item'
+    },
+    formatText(text) {
+      var urlRegex = /(https?:\/\/[^\s]+)/g
+      return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '" target="_blank">' + url + '</a>'
+      })
     },
   },
 }

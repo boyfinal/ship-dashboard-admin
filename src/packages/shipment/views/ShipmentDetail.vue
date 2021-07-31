@@ -58,18 +58,22 @@
             class="page-header__action col-6 text-right"
             v-if="!isClosedShipment && !isCanceledShipment"
           >
-            <p-button
-              type="info"
-              :class="`mr-3`"
+            <a
+              class="p-button btn btn-info mr-3"
               v-if="!isStartScan"
               @click="handleStartScan"
             >
               Bắt đầu quét
-            </p-button>
-            <p-button v-else @click="handleStopScan" type="info" :class="`mr-3`"
-              >Dừng quét</p-button
+            </a>
+            <a class="p-button btn btn-info mr-3" v-else @click="handleStopScan"
+              >Dừng quét</a
             >
-            <p-button type="info" @click="handleCloseShipment" :class="`mr-3`">
+            <p-button
+              type="info"
+              @click="handleCloseShipment"
+              :loading="loading"
+              :class="`mr-3`"
+            >
               Đóng lô hàng
             </p-button>
             <p-button
@@ -154,7 +158,6 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
-                  :filter-limit="false"
                 ></p-pagination>
               </div>
             </template>
@@ -203,6 +206,7 @@ export default {
       },
       code: '',
       isStartScan: false,
+      loading: false,
     }
   },
   computed: {
@@ -343,10 +347,12 @@ export default {
       this.init()
     },
     async handleCloseShipment() {
+      this.loading = true
       const payload = {
         id: parseInt(this.$route.params.id),
       }
       const result = await this[CLOSE_SHIPMENT](payload)
+      this.loading = false
       if (!result.success) {
         this.$toast.open({
           message: result.message,
@@ -372,7 +378,7 @@ export default {
         return
       }
       const payload = {
-        tracking_number: keyword,
+        barcode: keyword.toUpperCase(),
         shipment_id: parseInt(this.$route.params.id),
       }
       const result = await this[APPEND_SHIPMENT](payload)

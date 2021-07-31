@@ -15,7 +15,7 @@
                   :disabled="disBtnAccept"
                   @click="quickAcceptHandle"
                   class="btn btn-info ml-3 text-nowrap"
-                  >Duyệt</button
+                  >In label</button
                 >
               </div>
             </div>
@@ -113,14 +113,6 @@
                     >{{ message }}</p
                   >
                 </div>
-              </div>
-              <div class="text-right" style="align-self: flex-start;">
-                <button
-                  :disabled="disBtnIncurred"
-                  @click.prevent="extraHandle"
-                  class="btn btn-outline-danger"
-                  >Phát sinh</button
-                >
               </div>
             </div>
           </div>
@@ -305,6 +297,7 @@ export default {
         width: 0,
         height: 0,
       },
+      isChange: false,
       isVisibleModalAccept: false,
       isSubmitting: false,
     }
@@ -353,7 +346,7 @@ export default {
         title: `Xác nhận duyệt mã vận đơn ${this.keyword}?`,
         message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không.',
         onConfirm: () => {
-          this.acceptHandle()
+          this.quickAcceptHandle()
         },
         onCancel: () => {
           this.keyword = keyword
@@ -393,6 +386,19 @@ export default {
     },
 
     quickAcceptHandle() {
+      this.isChange = false
+
+      if (
+        parseFloat(this.volume.weight) != parseFloat(this.current.weight) ||
+        parseFloat(this.volume.length) != parseFloat(this.current.length) ||
+        parseFloat(this.volume.width) != parseFloat(this.current.width) ||
+        parseFloat(this.volume.height) != parseFloat(this.current.height)
+      ) {
+        this.isChange = true
+        this.extraHandle()
+        return
+      }
+
       this.volume.weight = this.current.weight
       this.volume.length = this.current.length
       this.volume.width = this.current.width
@@ -422,7 +428,7 @@ export default {
       this.isSubmitting = true
       const body = { id: this.current.id }
 
-      if (this.messages.length) {
+      if (this.isChange) {
         body.weight = this.volume.weight || 0
         body.length = this.volume.length || 0
         body.width = this.volume.width || 0

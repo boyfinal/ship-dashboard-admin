@@ -38,7 +38,6 @@
                       <th width="100">Dịch vụ</th>
                       <th>Nhãn đơn</th>
                       <th>Nhãn kiện</th>
-                      <th>ID kiện</th>
                       <th>Mã kiện</th>
                       <th>ID lô</th>
                       <th></th>
@@ -99,27 +98,14 @@
                     >
                     <td>
                       <router-link
+                        class="text-no-underline"
                         v-if="item.container_id"
-                        class="text-no-underline"
                         :to="{
                           name: 'container-detail',
                           params: { id: item.container_id },
                         }"
                       >
-                        {{ item.container_id }}
-                      </router-link>
-                      <span v-else>-</span>
-                    </td>
-                    <td>
-                      <router-link
-                        v-if="item.container_code"
-                        class="text-no-underline"
-                        :to="{
-                          name: 'container-detail',
-                          params: { id: item.container_id },
-                        }"
-                      >
-                        {{ item.container_code }}
+                        C{{ item.container_id }}
                       </router-link>
                       <span v-else>-</span>
                     </td>
