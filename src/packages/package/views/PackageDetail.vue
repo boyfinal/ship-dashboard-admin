@@ -17,7 +17,9 @@
           <div class="page-header__info">
             <div>
               <div>Mã vận đơn</div>
-              <div class="package-code">{{ package_detail.package.code }} </div>
+              <div class="package-code"
+                >{{ $evaluate('package_detail.package.package_code?.code') }}
+              </div>
             </div>
             <div>
               <div>Dịch vụ </div>
@@ -194,7 +196,7 @@
                       <div class="col-4 mb-8">Mã vận đơn:</div>
                       <div class="col-8"
                         ><div>{{
-                          $evaluate('package_detail.package.code')
+                          $evaluate('package_detail.package.package_code?.code')
                         }}</div></div
                       >
                     </div>
