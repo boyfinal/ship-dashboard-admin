@@ -77,7 +77,7 @@
                             },
                           }"
                         >
-                          {{ item.code }}
+                          {{ item.package_code.code }}
                           <img
                             class="link-icon"
                             src="@/assets/img/external.svg"
@@ -143,7 +143,7 @@
                             },
                           }"
                         >
-                          {{ item.package.code }}
+                          {{ item.package.package_code.code }}
                           <img
                             class="link-icon"
                             src="@/assets/img/external.svg"
