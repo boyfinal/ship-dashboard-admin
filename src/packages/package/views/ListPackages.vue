@@ -68,6 +68,7 @@
                             id: item.id,
                           },
                         }"
+                        v-if="item.package_code"
                       >
                         {{ item.package_code.code }}
                       </router-link>
