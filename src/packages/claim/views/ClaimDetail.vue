@@ -64,7 +64,11 @@
                       params: { id: claim.package.id },
                     }"
                   >
-                    {{ claim.package.code }}
+                    {{
+                      claim.package.package_code
+                        ? claim.package.package_code.code
+                        : ''
+                    }}
                   </router-link>
                 </li>
                 <li class="item-note">

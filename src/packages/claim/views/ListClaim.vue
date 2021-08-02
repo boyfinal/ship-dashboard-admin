@@ -55,10 +55,14 @@
                           class="text-no-underline"
                           :to="{
                             name: 'package-detail',
-                            params: { id: item.package.code },
+                            params: { id: item.package.id },
                           }"
                         >
-                          {{ item.package.code }}
+                          {{
+                            item.package.package_code
+                              ? item.package.package_code.code
+                              : ''
+                          }}
                         </router-link>
                       </td>
                       <td width="150">
