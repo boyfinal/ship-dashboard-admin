@@ -126,7 +126,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, i) in packages_in_container" :key="i">
+                    <tr v-for="(item, i) in items" :key="i">
                       <td
                         ><router-link
                           v-if="isAdmin"
@@ -256,7 +256,10 @@ export default {
       count: (state) => state.count_packages_in_container,
     }),
     items() {
-      return this.packages_in_container
+      return this.packages_in_container.map((item) => {
+        item.code = item.package_code ? item.package_code.code : ''
+        return item
+      })
     },
     statusContainer() {
       return CONTAINER_STATUS_TAB
