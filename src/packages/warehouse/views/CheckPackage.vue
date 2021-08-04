@@ -125,7 +125,9 @@
             <div class="card-body">
               <div class="row">
                 <p class="col-5">Mã vận đơn:</p>
-                <p class="col-7">{{ current.package_code.code }}</p>
+                <p class="col-7">{{
+                  current.package_code ? current.package_code.code : ''
+                }}</p>
               </div>
               <div class="row">
                 <p class="col-5">Chi tiết hàng hóa:</p>
