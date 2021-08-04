@@ -58,9 +58,7 @@
                       </td>
                       <td>{{ item.customer }}</td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                      <td>
-                        {{ item.total_amount | formatNumber }}
-                      </td>
+                      <td> {{ item.total_amount | formatNumber }} $ </td>
                     </tr>
                   </tbody>
                 </table>
