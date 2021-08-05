@@ -4,8 +4,10 @@ export const PACKAGE_STATUS_WAREHOUSE_LABELED = 11
 export const PACKAGE_WAREHOUSE_STATUS_IN_CONTAINER = 12
 export const PACKAGE_WAREHOUSE_STATUS_IN_SHIPMENT = 13
 export const PACKAGE_WAREHOUSE_STATUS_INTRANSIT = 30
+export const PACKAGE_STATUS_DELIVERED = 31
 export const PACKAGE_WAREHOUSE_STATUS_RETURN = 40
 export const PACKAGE_WAREHOUSE_STATUS_CANCELLED = 50
+
 export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
   {
     value: '',
@@ -60,6 +62,10 @@ export const MAP_NAME_STATUS_PACKAGE = {
   },
   [PACKAGE_WAREHOUSE_STATUS_INTRANSIT]: {
     value: 'Xuất kho',
+    class: 'badge-success',
+  },
+  [PACKAGE_STATUS_DELIVERED]: {
+    value: 'Giao thành công',
     class: 'badge-success',
   },
   [PACKAGE_WAREHOUSE_STATUS_RETURN]: {
