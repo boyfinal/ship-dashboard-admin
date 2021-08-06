@@ -28,7 +28,9 @@
                   <table class="table table-borderless tb-scan-in">
                     <tr>
                       <td>Mã vận đơn:</td>
-                      <td>{{ pkg.code }}</td>
+                      <td>{{
+                        pkg.package_code ? pkg.package_code.code : ''
+                      }}</td>
                     </tr>
                     <tr>
                       <td>Người gửi:</td>
