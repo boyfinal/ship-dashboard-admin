@@ -58,7 +58,7 @@
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label">
-                      Điện thoại: <span>*</span>
+                      Điện thoại:
                     </label>
                     <div class="card__w-input">
                       <p-input
@@ -395,9 +395,9 @@ export default {
         ),
       phone: y
         .string()
-        .required('Số điện thoại không được để trống')
+        .notRequired()
         .matches(
-          /^[0-9+()-. ]+$/,
+          /^$|^[0-9+()-. ]+$/,
           'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
         ),
       city: y
