@@ -475,11 +475,6 @@ export default {
       document.activeElement && document.activeElement.blur()
 
       try {
-        if (this.tracking.base64_label) {
-          printImage(this.tracking.base64_label)
-          return
-        }
-
         if (!this.tracking.label_url) return
         const url = this.tracking.label_url
 
