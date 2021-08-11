@@ -10,7 +10,7 @@
         <user-resource
           v-model="user_id"
           class="user-resource is-fullwidth"
-          :filter="{ role: 'customer', code: package_code }"
+          :filter="{ role: 'customer' }"
           :label="`Tìm khách hàng`"
         />
       </div>
