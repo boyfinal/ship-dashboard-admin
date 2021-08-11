@@ -36,10 +36,18 @@ export const mutations = {
   [ACCEPT_PACKAGE_LABEL]: (state, payload) => {
     if (payload.id != state.package.id) return
 
+    let base64 = ''
+    if (payload.base64_labels) {
+      base64 = /^http/gi.test(payload.base64_labels)
+        ? base64
+        : `data:image/png;base64,${payload.base64_labels}`
+    }
+
     state.package.status = PACKAGE_STATUS_WAREHOUSE_LABELED
     state.package.tracking = {
       id: payload.track_id,
-      base64_label: `data:image/png;base64,${payload.base64_labels}`,
+      base64_label: base64,
+      label_url: payload.label_url,
       tracking_number: payload.tracking_number,
     }
   },
