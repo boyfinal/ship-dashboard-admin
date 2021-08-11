@@ -21,7 +21,10 @@
             <option value="customer">Khách hàng</option>
           </select>
         </div>
-        <div class="ml-5">
+        <div
+          v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+          class="ml-5"
+        >
           <p-button type="info" @click="handleShowModalCreateExtraFee">
             <img src="~@/assets/img/plus.svg" />
             Tạo phí phát sinh
@@ -102,6 +105,8 @@ import {
 import { mapActions, mapState } from 'vuex'
 import { BILL_MAP_NAME_STATUS } from '../constants'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
+import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+
 export default {
   name: 'BillList',
   mixins: [mixinRoute, mixinTable],
@@ -121,6 +126,8 @@ export default {
       isSubmitting: false,
       visibleCreateExtraFeeModal: false,
       isFetching: false,
+      ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
     }
   },
   mounted() {
@@ -132,6 +139,9 @@ export default {
       count: (state) => state.count,
       bills: (state) => state.bills,
       fee_types: (state) => state.extraFeeTypes,
+    }),
+    ...mapState('shared', {
+      user: (state) => state.user,
     }),
 
     transBills() {

@@ -127,7 +127,13 @@
                       <th>Phí phát sinh</th>
                       <th>Loại phí</th>
                       <th>Nội dung</th>
-                      <th>Thao tác</th>
+                      <th
+                        v-if="
+                          user.role == ROLE_ADMIN ||
+                            user.role == ROLE_ACCOUNTANT
+                        "
+                        >Thao tác</th
+                      >
                       <th></th>
                     </tr>
                   </thead>
@@ -159,7 +165,12 @@
                       <td v-else>{{ item.amount | formatPrice }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
                       <td>{{ item.description }}</td>
-                      <td>
+                      <td
+                        v-if="
+                          user.role == ROLE_ADMIN ||
+                            user.role == ROLE_ACCOUNTANT
+                        "
+                      >
                         <a @click="handelModal(item.id)" class="btn btn-danger">
                           <span>Huỷ</span>
                         </a>
@@ -195,6 +206,7 @@ import { FETCH_BILL_DETAIL, FETCH_BILL_EXTRA, CANCEL_EXTRA_FEE } from '../store'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 
 export default {
   name: 'BillDetail',
@@ -214,6 +226,8 @@ export default {
       total_unpaid: 0,
       visibleConfirmFail: false,
       idExtra: 0,
+      ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
     }
   },
   computed: {
@@ -224,6 +238,10 @@ export default {
       countExtra: (state) => state.countExtra,
       bill: (state) => state.bill,
     }),
+    ...mapState('shared', {
+      user: (state) => state.user,
+    }),
+
     totalPageCreate() {
       const totalPages = Math.ceil(this.countCreate / this.filter.limit)
       return totalPages
