@@ -72,7 +72,11 @@ export default {
         this.users = []
         return
       }
-
+      if (this.filter.code) {
+        this.selected = result.users ? result.users[0] : ''
+        this.handleSelect(this.selected)
+        console.log(this.selected)
+      }
       this.users = result.users
     },
 
@@ -88,6 +92,14 @@ export default {
 
     handleRemove() {
       this.$emit('input', 0)
+    },
+  },
+  watch: {
+    filter: {
+      handler: function() {
+        this.fetchUsers()
+      },
+      deep: true,
     },
   },
 }
