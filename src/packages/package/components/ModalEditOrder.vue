@@ -184,6 +184,7 @@
                         placeholder="Chọn một "
                         @select="handleSelect"
                         :custom-label="customLabel"
+                        :disabled="isDisable"
                         @remove="handleRemove"
                       ></multiselect>
                     </div>
@@ -285,6 +286,7 @@
                         :allow-empty="false"
                         @select="handleSelectService"
                         :custom-label="customLabel"
+                        :disabled="isDisable"
                       ></multiselect>
                     </div>
                   </div>
@@ -378,7 +380,7 @@ export default {
         address: '',
         address2: '',
       },
-      isDisable: false,
+      isDisable: true,
       isUpdate: false,
       valider: null,
     }
@@ -519,7 +521,7 @@ export default {
       this.form.service = value
     },
     handleRemove() {
-      this.isDisable = false
+      this.isDisable = true
       this.form.weight = this.package_detail.package.weight
       this.form.length = this.package_detail.package.length
       this.form.width = this.package_detail.package.width

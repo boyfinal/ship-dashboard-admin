@@ -68,7 +68,8 @@
               v-if="
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
-                  package_detail.package.status != statusShipping
+                  package_detail.package.status != statusShipping &&
+                  !package_detail.package.tracking
               "
             >
               <span>Sửa đơn</span>
