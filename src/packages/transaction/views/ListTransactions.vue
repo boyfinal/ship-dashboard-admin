@@ -87,10 +87,11 @@
                         item.type === topupType ? 'Chuyển khoản' : 'N/A'
                       }}</span>
                     </td>
-                    <td width="120px" :title="getAmount(item)">
-                      <span style="white-space: nowrap;">{{
-                        getAmount(item)
-                      }}</span></td
+                    <td width="120px">
+                      <span style="white-space: nowrap;"
+                        >{{ item.type == typePay ? '-' : '+' }}
+                        {{ Math.abs(item.amount) | formatPrice }}</span
+                      ></td
                     >
                     <td class="btn-action">
                       <div v-if="showBtn(item)" style="display: flex">
@@ -105,7 +106,7 @@
                           @click="handleConfirm(failStatus, item.id)"
                           type="danger"
                         >
-                          Thất bại
+                          Từ chối
                         </p-button>
                       </div>
                     </td>
@@ -144,7 +145,7 @@
       :actionConfirm="`Có`"
       :cancel="`Không`"
       :description="`Bạn có chắc chắn giao dịch này không thành công ?`"
-      :title="`Xác nhận thất bại`"
+      :title="`Từ chối giao dịch`"
       @action="changeStatusTransactionHandle(failStatus)"
       :loading="isChangingStatus"
       :disabled="isChangingStatus"
@@ -173,6 +174,8 @@ import mixinTable from '@core/mixins/table'
 import { FETCH_LIST_TRANSACTIONS, CHANGE_STATUS_TRANSACTION } from '../store'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { cloneDeep } from '../../../core/utils'
+import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+
 export default {
   name: 'ListTransactions',
   mixins: [mixinRoute, mixinTable],
@@ -206,6 +209,7 @@ export default {
       visibleConfirmSuccess: false,
       visibleConfirmFail: false,
       actionID: '',
+      typePay: TransactionLogTypePay,
     }
   },
   created() {
@@ -216,6 +220,9 @@ export default {
       transactions: (state) => state.transactions,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
+    }),
+    ...mapState('shared', {
+      user: (state) => state.user,
     }),
     transactionType() {
       return TRANSACTION_TYPE
@@ -306,7 +313,7 @@ export default {
           msg = 'Xác nhận giao dịch thành công'
           break
         case TransactionStatusFailure:
-          msg = 'Xác nhận giao dịch thất bại thành công'
+          msg = 'Từ chối giao dịch thành công'
           break
         default:
           break
@@ -317,7 +324,8 @@ export default {
     showBtn(transaction) {
       return (
         transaction.type === TransactionLogTypeTopup &&
-        transaction.status === TransactionStatusProcess
+        transaction.status === TransactionStatusProcess &&
+        (this.user.role == ROLE_ADMIN || this.user.role == ROLE_ACCOUNTANT)
       )
     },
     getTitle(transaction) {
@@ -349,24 +357,6 @@ export default {
             params: { id: transaction.bill_id },
           }).href
           return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
-        default:
-          return null
-      }
-    },
-    getAmount(transaction) {
-      let amount = this.$options.filters.formatPrice(
-        transaction.amount < 0
-          ? Math.abs(transaction.amount)
-          : transaction.amount
-      )
-      switch (transaction.type) {
-        case TransactionLogTypeTopup:
-          return `+ ${amount} `
-        case TransactionLogTypePay:
-          console.log(amount)
-          return `- ${amount} `
-        case TransactionLogTypeRefund:
-          return `+ ${amount} `
         default:
           return null
       }
