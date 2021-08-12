@@ -12,8 +12,8 @@ export default {
   defaultModalScroll: null,
 
   // Dialog
-  defaultDialogConfirmText: null,
-  defaultDialogCancelText: null,
+  defaultDialogConfirmText: 'Có',
+  defaultDialogCancelText: 'Không',
 
   // Toast
   defaultNoticeQueue: true,

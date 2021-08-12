@@ -5,23 +5,7 @@
   >
     <div class="app container-fluid">
       <div class="row">
-        <div class="img  disable-moblie hide-tablet">
-          <div class="img_logo">
-            <router-link :to="{ name: 'sign-in' }">
-              <img class="img_logo-img" alt="" />
-            </router-link>
-          </div>
-        </div>
         <div class="content ">
-          <div class="content_help  hide-tablet disable-moblie">
-            <img
-              class="content_help-icon"
-              src="~@/assets/img/Support.svg"
-              alt=""
-            />
-
-            <a target="_blank" class="content_help-text">Cần trợ giúp ?</a>
-          </div>
           <!-- logo tablet -->
           <div class="logo_tablet">
             <img

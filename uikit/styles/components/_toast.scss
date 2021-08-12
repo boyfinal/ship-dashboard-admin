@@ -8,10 +8,6 @@
   z-index: 999999;
   pointer-events: none;
   height: 56px;
-  &.is-home{
-    width: 70%;
-    right: 0;
-  }
   .p-toast {
     display: inline-flex;
     animation-duration: $speed-slow;

@@ -1,119 +1,85 @@
 .setting {
-  .page-content {
-    .page-header {
-
-      height: 86px;
-      .page-header_back {
-        a {
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 22px;
-          letter-spacing: 0.2px;
-          color:$color-neutral-7;
-          span {
-            margin-left: 10px;
-          }
+    .page-content {
+        .page-header {
+            height: 86px;
+            .page-header_back {
+                a {
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 22px;
+                    letter-spacing: 0.2px;
+                    color: $color-neutral-7;
+                    span {
+                        margin-left: 10px;
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 
 //setting-account
 .setting-account {
-  overflow-y:hidden;
-  .page-body {
-    background: #FFFFFF;
-    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.12), 0px 0.5px 2px rgba(96, 97, 112, 0.26);
-    padding: 16px 32px;
-    height: calc(100vh - 160px);
-    position: relative;
-    .account {
-      border-bottom: 1px solid #E1E2E2;
-      margin-bottom: 16px;
-      .title {
-        font-weight: bold;
-        font-size: 12px;
-        line-height: 16px;
-        letter-spacing: 0.75px;
-        text-transform: uppercase;
-        color: $color-neutral-5;
-        margin-bottom: 16px;
-      }
-      .form {
-        .col-6 {
-          margin-bottom: 24px;
-          label {
-            text-align: left;
-            margin-bottom: 4px !important;
+    .search-input {
+        width: 85%;
+        .search-type {
+            width: 15%
+        }
+    }
+    .btn {
+        width: 159px;
+        .fa-plus {
+            margin-right: 5px;
+        }
+    }
+    .card {
+        .btn {
+            width: 67px;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-weight: 600;
+            font-size: 14px;
             line-height: 22px;
-          }
-          .birthday {
-            .reportrange-text{
-              padding-top: 10px;
-              line-height: 20px;
-              img {
-                margin-top: 3px !important;
-              }
+            &.lock {
+                background: #FFF1F0;
+                color: #F5222D;
+                &:hover {
+                    color: #FFF1F0;
+                    background: #F5222D;
+                }
             }
-            .daterangepicker {
-              top:45px !important;
-              right: 0  !important;
-              min-width: auto;
-              .drp-calendar {
-                width: 350px;
-              }
-              .ranges{
-                display: none;
-              }
-              .opensleft {
-                left: 0;
-              }
+            &.unlock {
+                background: #F0FFF3;
+                color: #48BE78;
+                &:hover {
+                    color: #F0FFF3;
+                    background: #48BE78;
+                }
             }
-          }
-          .clear {
-            border: 1px solid #ccc;
-            width: 40px;
-            height: 40px;
-            background: #FFFFFF;
-            border-radius: 12px;
-            padding: 0px 10px;
-          }
+            &:focus {
+                box-shadow: none;
+            }
         }
-        .left {
-          padding-right: 12px;
+        .fa-circle {
+            font-size: 8px;
+            margin-right: 8px;
+            margin-top: 8px;
+            &.active {
+                color: #48BE78;
+            }
+            &.deactive {
+                color: #FFD591;
+            }
         }
-        .right {
-          padding-left: 12px;
-        }
-      }
     }
-    .note {
-      position: relative;
-      img {
-        position: absolute;
-        display: inline-block;
-        top: 5px;
-      }
-      p {
-        margin-left: 20px;
-        display: inline-block;
-        font-size: 12px;
-        line-height: 16px;
-        color: #626363;
-        .text {
-          font-style: italic;
-        }
-      }
-    }
-    .save {
-      position: absolute;
-      right: 32px;
-      top: 315px;
-    }
-  }
+}
 
-  .required {
-    color: #F5222D;
-  }
+//modal-add-user 
+.modal-add-user {
+    .modal-body {
+        overflow-y: inherit;
+    }
+    .btn-primary {
+        width: 80px;
+    }
 }

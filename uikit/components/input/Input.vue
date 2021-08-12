@@ -1,22 +1,115 @@
 <template>
   <div :class="wrapperClasses">
-    <template>
+    <template v-if="!['textarea', 'password', 'search'].includes(type)">
       <div class="input-group-prepend" v-if="$slots.prepend">
         <slot name="prepend"></slot>
       </div>
-
       <i
         class="form-control-icon form-control-icon-left"
         v-if="prefixIcon"
         :class="`wb-${prefixIcon}`"
       >
       </i>
-
       <i
         class="form-control-icon form-control-icon-right"
         v-if="suffixIcon"
         :class="`wb-${suffixIcon}`"
       ></i>
+      <i
+        class="form-control-icon form-control-icon-right wb-close"
+        v-else-if="isShowClear"
+        @click="clear"
+      >
+      </i>
+      <input
+        :class="formControlClasses"
+        v-bind="$attrs"
+        :value="nativeInputValue"
+        :disabled="disabled"
+        :readonly="readonly"
+        :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+        v-on="listeners"
+        :type="type"
+        ref="input"
+      />
+      <div class="input-group-append" v-if="$slots.append">
+        <slot name="append"></slot>
+      </div>
+    </template>
+
+    <template v-if="type == 'password'">
+      <div class="input-group-prepend" v-if="$slots.prepend">
+        <slot name="prepend"></slot>
+      </div>
+      <img
+        v-if="hiddenPass == 'on'"
+        class="form-control-icon form-control-icon-right"
+        :src="
+          `${
+            typeInputPassword == 'password'
+              ? require('@assets/img/eye.svg')
+              : require('@assets/img/eye-close.svg')
+          }`
+        "
+        @click.prevent="togglePasswordVisibelity()"
+      />
+
+      <input
+        :class="formControlClasses"
+        v-bind="$attrs"
+        :value="nativeInputValue"
+        :disabled="disabled"
+        :readonly="readonly"
+        :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+        v-on="listeners"
+        :type="typeInputPassword"
+        ref="input"
+      />
+      <div class="input-group-append" v-if="$slots.append">
+        <slot name="append"></slot>
+      </div>
+    </template>
+
+    <template v-if="type == 'textarea'">
+      <textarea
+        :class="formControlClasses"
+        v-bind="$attrs"
+        :value="value"
+        :disabled="disabled"
+        :readonly="readonly"
+        :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+        ref="input"
+      >
+      </textarea>
+    </template>
+
+    <template v-if="type == 'search'">
+      <div class="input-group-prepend" v-if="$slots.prepend">
+        <slot name="prepend"></slot>
+      </div>
+
+      <img
+        class="form-control-icon form-control-icon-left"
+        v-if="prefixIcon"
+        src="@assets/img/search.svg"
+      />
+
+      <img
+        class="form-control-icon form-control-icon-right"
+        v-if="suffixIcon"
+        src="@assets/img/search.svg"
+        style="cursor: pointer"
+        @click="suffixFunc"
+      />
 
       <i
         class="form-control-icon form-control-icon-right wb-close"
@@ -26,28 +119,27 @@
       </i>
 
       <input
+        class="p-input-search"
         :class="formControlClasses"
         v-bind="$attrs"
         :value="nativeInputValue"
         :disabled="disabled"
         :readonly="readonly"
         :autocomplete="autocomplete"
+        @focus="handleFocus"
+        @blur="handleBlur"
         @change="handleChange"
         v-on="listeners"
-        :type="type"
         ref="input"
       />
 
       <div class="input-group-append" v-if="$slots.append">
         <slot name="append"></slot>
       </div>
+      <slot />
     </template>
-    <slot name="input-footer" v-bind:isFocused="isFocused"></slot>
-    <template v-if="hasError">
-      <span class="invalid-error" v-for="(message, i) in messages" :key="i">
-        {{ message }}
-      </span>
-    </template>
+
+    <span class="invalid-error" v-if="hasError">{{ error }}</span>
   </div>
 </template>
 <script>
@@ -57,6 +149,10 @@ export default {
   inheritAttrs: false,
   mixins: [FormElementMixin],
   props: {
+    input: {
+      type: [String, Number],
+      default: '',
+    },
     value: {
       type: [String, Number],
     },
@@ -79,6 +175,10 @@ export default {
       type: String,
       default: 'text',
     },
+    autosize: {
+      type: [Boolean, Object],
+      default: false,
+    },
     autocomplete: {
       type: String,
       default: 'off',
@@ -86,6 +186,10 @@ export default {
     suffixIcon: {
       type: String,
       default: '',
+    },
+    suffixFunc: {
+      type: Function,
+      default: () => {},
     },
     prefixIcon: {
       type: String,
@@ -107,36 +211,52 @@ export default {
       type: Boolean,
       default: false,
     },
-    error: [Object, Array, String],
+    hiddenPass: {
+      type: String,
+      default: 'off',
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    error: String,
+  },
+  data() {
+    return {
+      focused: false,
+      focusUsername: false,
+      typeInputPassword: 'password',
+    }
   },
   computed: {
-    hasError() {
-      if (!this.error) return false
-      if (Array.isArray(this.error)) return this.error.length > 0
-      return this.error.keys().length > 0
-    },
-    messages() {
-      return typeof this.error === 'object' ? this.error : [this.error]
-    },
     wrapperClasses() {
-      const classList = ['p-input-group', 'input-group']
-
-      if (this.size) classList.push(`input-group-${this.size}`)
-
-      if (this.prefixIcon || this.suffixIcon || this.isShowClear) {
-        classList.push('form-icons')
-      }
-
-      if (this.type === 'file') {
-        classList.push('input-group-file')
-      }
-
-      if (this.error) classList.push('border-color')
-      return classList
+      return [
+        'p-input-group',
+        'input-group',
+        this.size ? `input-group-${this.size}` : '',
+        {
+          'form-icons':
+            this.prefixIcon ||
+            this.suffixIcon ||
+            this.isShowClear ||
+            this.hiddenPass,
+        },
+        this.type === 'file' ? 'input-group-file' : '',
+      ]
     },
+
     formControlClasses() {
-      return ['p-input', 'form-control', { rounded: this.rounded }]
+      return [
+        'p-input',
+        'form-control',
+        {
+          focus: this.focused,
+          rounded: this.rounded,
+          'input-invalid': this.hasError,
+        },
+      ]
     },
+
     isShowClear() {
       return (
         this.clearable &&
@@ -156,19 +276,36 @@ export default {
       return {
         ...this.$listeners,
         input: this.onInput,
-        blur: this.onBlur,
         focus: this.onFocus,
         keypress: this.keypress,
       }
     },
+
+    hasError() {
+      return this.error !== undefined && this.error !== ''
+    },
   },
   methods: {
     focus() {
-      this.getInput().focus()
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
     },
+
     blur() {
-      this.getInput().blur()
+      this.$refs.input.blur()
     },
+
+    handleFocus(e) {
+      this.focused = true
+      this.$emit('focus', e)
+    },
+
+    handleBlur(e) {
+      this.focused = false
+      this.$emit('blur', e)
+    },
+
     onInput(event) {
       if (event.target.value !== this.value) {
         this.$emit('input', event.target.value)
@@ -192,11 +329,16 @@ export default {
     handleChange(e) {
       this.$emit('input', e.target.value)
     },
+
+    togglePasswordVisibelity() {
+      this.typeInputPassword =
+        this.typeInputPassword == 'password' ? 'text' : 'password'
+    },
+
     clear() {
       this.$emit('input', '')
-    },
-    getInput() {
-      return this.$refs.input
+      this.$emit('update:value', '')
+      this.$emit('clear')
     },
   },
 }

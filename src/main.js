@@ -3,6 +3,7 @@ import Notifications from 'vue-notification'
 import VueClipboard from 'vue-clipboard2'
 import App from './App.vue'
 import MainPlugin from './plugins/main'
+// import DashboardPlugin from './material-dashboard'
 import * as filters from './core/helpers/filters'
 import initGlobalDirectives from '@core/vue/directives'
 import router from './core/router'
@@ -11,9 +12,9 @@ import '../uikit'
 import { VclTable } from 'vue-content-loading'
 
 Vue.use(VueClipboard)
+
 Vue.use(Notifications)
 Vue.use(MainPlugin)
-
 Vue.component('VclTable', VclTable)
 initGlobalDirectives()
 

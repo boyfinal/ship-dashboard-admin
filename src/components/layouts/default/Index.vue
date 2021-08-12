@@ -1,8 +1,7 @@
 <template>
   <div class="animsition dashboard site-menubar-unfold">
-    <p-header :user="user" />
     <p-sidebar />
-
+    <p-header :user="user" />
     <router-view :key="$route.path"></router-view>
   </div>
 </template>

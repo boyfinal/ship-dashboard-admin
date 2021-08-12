@@ -1,10 +1,10 @@
 <template>
   <div class="pagination-box">
-    <div class="select_limit_box">
+    <div class="select_limit_box" v-if="filterLimit">
       <span class="title">Bản ghi mỗi trang:</span>
       <div
         class="select_limit"
-        :options="limitPage"
+        :options="limitPageDisplay"
         :custom-label="customLabel"
         @change="handleSelect"
         @mouseleave="selectpage = false"
@@ -16,9 +16,9 @@
           <img src="@assets/img/Frame.svg" style="margin-top: 10px;"
         /></span>
         <nav>
-          <ul v-if="selectpage">
+          <ul v-if="selectpage && !fixedLimit">
             <li
-              v-for="(item, i) in limitPage"
+              v-for="(item, i) in limitPageDisplay"
               :key="i"
               :value="item.value"
               class="s_option"
@@ -141,6 +141,10 @@ export default {
       type: [Number, String],
       default: 1,
     },
+    filterLimit: {
+      type: Boolean,
+      default: false,
+    },
     size: String,
     simple: Boolean,
     rounded: Boolean,
@@ -150,6 +154,10 @@ export default {
     ariaPreviousLabel: String,
     ariaPageLabel: String,
     ariaCurrentLabel: String,
+    fixedLimit: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -184,6 +192,14 @@ export default {
           'is-rounded': this.rounded,
         },
       ]
+    },
+
+    limitPageDisplay() {
+      if (this.fixedLimit) {
+        return this.limitPage.filter((e) => +e.value === this.perPage)
+      } else {
+        return this.limitPage
+      }
     },
     // checkSelected(item) {
     //   return this.perPage == item ? 'checked': '';

@@ -11,16 +11,13 @@
         </div>
       </div>
       <form @submit.prevent="onForgot">
-        <label class=" font-weight-bold mb-4  ">Email</label>
+        <label class=" font-weight-bold mb-4">Email</label>
         <p-input
           type="email"
           class="mb-20"
           name="email"
           placeholder="you@example.com"
           v-model="email"
-          :input="email"
-          validate="on"
-          :required="requiredEmail"
         />
         <div class="captcha mb-40 mt-40">
           <vue-recaptcha
@@ -50,6 +47,7 @@
 <script>
 import { mapActions } from 'vuex'
 import VueRecaptcha from 'vue-recaptcha'
+import valider from '@core/valider'
 
 export default {
   name: 'forgot',
@@ -62,25 +60,21 @@ export default {
       },
       requiredEmail: false,
       check: true,
+      valider: null,
     }
+  },
+  created() {
+    this.valider = valider.schema((y) => ({
+      email: y.string().required('Email không để trống'),
+    }))
   },
   methods: {
     ...mapActions('auth', ['forgotPassword']),
-    checkRequired() {
-      let result = true
-      if (!this.email) {
-        this.requiredEmail = true
-        result = false
-      } else {
-        this.requiredEmail = false
-      }
-      return result
-    },
-
     async onForgot() {
-      if (!this.checkRequired()) {
+      if (!(await this.valider.check({ email: this.email }))) {
         return
       }
+
       if (!this.form.checkCaptcha) {
         this.check = false
         return

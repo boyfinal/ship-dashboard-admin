@@ -3,10 +3,10 @@
     class="multiselect-custom"
     v-model="selected"
     :options="users"
-    placeholder="Search user"
+    :placeholder="label"
     :custom-label="customLabel"
     :loading="isLoading"
-    @search-change="handleSearch"
+    @search-change="fetchUsers"
     @select="handleSelect"
     @remove="handleRemove"
   >
@@ -28,6 +28,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    label: {
+      type: String,
+      default: 'Search user',
+    },
   },
   data() {
     return {
@@ -47,10 +51,8 @@ export default {
       let response = await api.fetchUsersByRole(
         Object.assign({}, this.filter, { search: search })
       )
-
       if (response && response.errorMessage) {
         this.users = []
-        this.$toast.open({ type: 'error', message: response.errorMessage })
         return
       }
 
@@ -66,19 +68,21 @@ export default {
       )
       this.isLoading = false
 
-      if (result && result.success) {
-        // this.selected = this.value
-        //   ? this.users.find(({ id }) => parseInt(this.value) === parseInt(id))
-        //   : null
-        // this.handleSelect(this.selected)
+      if (result && result.errorMessage) {
+        this.users = []
         return
       }
-
-      this.$toast.open({ type: 'error', message: result.message })
+      // if (this.filter.code) {
+      //   this.selected = result.users ? result.users[0] : ''
+      //   this.handleSelect(this.selected)
+      // }
+      this.users = result.users
     },
 
-    customLabel({ username, email }) {
-      return typeof username !== 'undefined' ? `${username} - ${email}` : ''
+    customLabel({ full_name, email, phone_number }) {
+      return email !== ''
+        ? `${full_name} - ${email}`
+        : `${full_name} - ${phone_number}`
     },
 
     handleSelect(shop) {
@@ -89,5 +93,13 @@ export default {
       this.$emit('input', 0)
     },
   },
+  // watch: {
+  //   filter: {
+  //     handler: function() {
+  //       this.fetchUsers()
+  //     },
+  //     deep: true,
+  //   },
+  // },
 }
 </script>

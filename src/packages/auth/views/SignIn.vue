@@ -1,35 +1,33 @@
 <template>
   <div class="page vertical-align sign-in">
     <div class="vertical-align-middle">
-      <div class="mb-16">
-        <div class="header-2">
-          Đăng nhập
-        </div>
+      <div class="mb-16 header-text">
+        <div class="header-2 text-center">Đăng nhập</div>
       </div>
       <div>
         <form @submit.prevent="onSignIn">
           <div class="mb-16">
-            <label class=" color-newtral-10 font-weight-600"
-              >Số điện thoại / Email</label
-            >
+            <label class="color-newtral-10 font-weight-600">
+              Số điện thoại / Email
+            </label>
             <p-input
               placeholder="Nhập số điện thoại hoặc email"
-              v-model="email"
+              v-model="form.email"
               @keyup.enter="onSignIn"
-              :required="requiredEmail"
+              :error="valider.error('email')"
             />
           </div>
           <div class="mb-16">
             <div class="label">
-              <label class=" color-newtral-10 font-weight-600">Mật khẩu</label>
+              <label class="color-newtral-10 font-weight-600">Mật khẩu</label>
             </div>
             <p-input
               placeholder="Nhập mật khẩu của bạn"
               type="password"
               hiddenPass="on"
-              v-model="password"
-              :required="requiredPassword"
+              v-model="form.password"
               @keyup.enter="onSignIn"
+              :error="valider.error('password')"
             />
           </div>
           <div class="captcha mt-40" v-if="count >= 1">
@@ -45,7 +43,7 @@
             </span>
           </div>
           <p-button
-            class="mb-16 btn btn-special  "
+            class="mb-16 btn btn-special"
             :loading="isLoading"
             @click="onSignIn"
             :type="`java-blue`"
@@ -54,13 +52,6 @@
           </p-button>
         </form>
       </div>
-
-      <p class="new-member">
-        <span>Bạn là thành viên mới?</span>
-        <router-link class=" creatAcount" :to="{ name: 'sign-up' }"
-          >Tạo tài khoản
-        </router-link>
-      </p>
     </div>
   </div>
 </template>
@@ -68,6 +59,7 @@
 import { mapActions, mapState } from 'vuex'
 import VueRecaptcha from 'vue-recaptcha'
 import mixinRoute from '@core/mixins/route'
+import valider from '@core/valider'
 
 export default {
   components: { VueRecaptcha },
@@ -75,19 +67,24 @@ export default {
   name: 'SignIn',
   data() {
     return {
-      email: '',
-      password: '',
       isLoading: false,
-      result: { success: false, message: '' },
       form: {
         checkCaptcha: false,
+        email: '',
+        password: '',
       },
       count: 0,
       status: false,
-      requiredPassword: false,
       requiredEmail: false,
       check: true,
+      valider: null,
     }
+  },
+  created() {
+    this.valider = valider.schema((y) => ({
+      email: y.string().required('Email không để trống'),
+      password: y.string().required('Password không để trống'),
+    }))
   },
   computed: {
     ...mapState('auth', {
@@ -112,81 +109,46 @@ export default {
       return this.$router.push('/forgot')
     },
 
-    checkRequired() {
-      let result = true
-      if (this.password == '') {
-        this.requiredPassword = true
-        result = false
-      } else {
-        this.requiredPassword = false
-      }
-
-      if (this.email == '') {
-        this.requiredEmail = true
-        result = false
-      } else {
-        this.requiredEmail = false
-      }
-
-      return result
-    },
-
-    pushNoti() {
-      this.showNotificationMessage('This is message')
-    },
-
     async onSignIn() {
-      if (!this.checkRequired()) {
+      if (!this.valider.check(this.form)) {
         return
       }
 
       const data = {
-        password: this.password,
+        password: this.form.password,
       }
 
-      if (this.email.includes('@')) {
-        data.email = this.email.trim().toLowerCase()
+      if (this.form.email.includes('@')) {
+        data.email = this.form.email.trim().toLowerCase()
       } else {
-        data.phone_number = this.email.trim()
+        data.phone_number = this.form.email.trim()
       }
 
       if (this.count >= 1 && !this.form.checkCaptcha) {
         this.check = false
         return
       }
-      this.isLoading = true
-      this.result = await this.signIn(data)
-      setTimeout(() => {
-        this.isLoading = false
-      }, 1000)
 
-      if (this.result.number_incorrect >= 3) {
+      this.isLoading = true
+      const res = await this.signIn(data)
+      this.isLoading = false
+
+      if (res.number_incorrect >= 3) {
         this.count += 1
       }
 
-      if (this.result.success) {
-        if (this.result.user && this.result.user.email) {
-          // eslint-disable-next-line no-undef
-          // $crisp.push(['set', 'user:nickname', [this.result.user.username]])
-          // eslint-disable-next-line no-undef
-          // $crisp.push(['set', 'user:email', this.result.user.email])
-        }
-        setTimeout(() => {
-          let { path } = this.$route.query
-          if (!path) {
-            path = '/'
-          } else {
-            path = decodeURIComponent(path.replace(/\+/g, '%20'))
-          }
-          this.$router.push(path)
-        }, 1000)
-      } else {
+      if (!res.success) {
         this.$toast.open({
           type: 'error',
-          message: this.result.message,
+          message: res.message,
           duration: 3000,
         })
+        return
       }
+
+      let { path } = this.$route.query
+      path = !path ? '/' : decodeURIComponent(path.replace(/\+/g, '%20'))
+      this.$router.push(path)
     },
     onVerify: function(response) {
       if (response) this.form.checkCaptcha = true

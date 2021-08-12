@@ -34,6 +34,15 @@ const ToastProgrammatic = {
       propsData,
     })
   },
+  error(message) {
+    this.open({ type: 'error', message })
+  },
+  success(message) {
+    this.open({ type: 'success', message })
+  },
+  warning(message) {
+    this.open({ type: 'warning', message })
+  },
 }
 
 const Plugin = {

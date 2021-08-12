@@ -1,12 +1,13 @@
 <template>
   <div class="site-menubar">
+    <div class="site-menubar-header"> </div>
     <div class="site-menubar-body">
       <ul class="site-menu">
         <li
-          v-for="(menu, i) in menus"
+          v-for="(menu, i) in availableMenus"
           class="site-menu-item"
           :class="{
-            active: isActive(menu.route) || childrenNameRoute(menu.route.name),
+            active: isActive(menu.route) || childrenNameRoute(menu),
           }"
           :key="i"
         >
@@ -20,8 +21,8 @@
               <img
                 :class="{ 'is-active': menu.isOpen }"
                 class=""
-                v-if="menu.sub"
-                src="@/assets/img/dropdown.svg"
+                v-if="menu.sub.length"
+                src="@/assets/img/up-white.svg"
               />
             </div>
           </router-link>
@@ -34,16 +35,16 @@
           >
             <div
               class="site-menu-sub-item"
-              v-for="(sub, j) in menu.sub"
+              v-for="(sub, j) in availableMenuSub(menu.sub)"
               :key="j"
+              :class="{
+                active: isContainAlias(sub.alias),
+              }"
             >
               <router-link :to="sub.route" class="animsition-link">
                 <span
                   :class="{
-                    active:
-                      isActive(sub.route) ||
-                      isContainAlias(sub.alias) ||
-                      childrenNameRoute(sub.title),
+                    active: isContainAlias(sub.alias),
                   }"
                   class="site-menu-sub-title"
                   >{{ sub.title }}</span
@@ -100,67 +101,110 @@ export default {
       activeSubIndex: 0,
       isactive: false,
       activeItem: '',
-      menus: {
-        q1: {
-          title: 'Trang chủ',
-          icon: require('@assets/img/HomeInactive.svg'),
-          iconActive: require('@assets/img/Home.svg'),
-          route: '/',
-          class: '',
-        },
-        q2: {
-          title: 'Đơn hàng',
+      menus: [
+        {
+          title: 'Quản lý ',
           icon: require('@assets/img/OrderInactive.svg'),
-          iconActive: require('@assets/img/Order.svg'),
+          iconActive: require('@assets/img/OrderActive.svg'),
           route: { name: 'packages' },
           class: '',
           isOpen: false,
+          disable: this.$isWarehouse(),
           sub: [
             {
               route: '/packages',
-              title: 'Quản lý đơn hàng',
+              title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
             },
             {
-              route: '/packages/claims',
-              title: 'Đơn khiếu nại',
-              alias: ['/packages/claims', '/packages/claims/:id'],
+              route: '/bills',
+              title: 'Hóa đơn',
+              alias: ['/bills', '/bills/:id'],
+            },
+            {
+              route: '/transactions',
+              title: 'Lịch sử giao dịch',
+              alias: ['/transactions', '/transactions/:id'],
+            },
+            {
+              route: '/claims',
+              title: 'Khiếu nại',
+              alias: ['/claims', '/claims/:id'],
             },
           ],
         },
-        q3: {
-          title: 'Hóa đơn',
-          icon: require('@assets/img/BillInactive.svg'),
-          iconActive: require('@assets/img/Bill.svg'),
+        {
+          title: 'Vận chuyển',
+          icon: require('@assets/img/car.svg'),
+          iconActive: require('@assets/img/carActive.svg'),
+          route: { name: 'deliver' },
+          class: '',
+          sub: [],
+        },
+        {
+          title: 'Kho',
+          icon: require('@assets/img/warehouse.svg'),
+          iconActive: require('@assets/img/warehouseActive.svg'),
           route: '/bill',
           class: '',
+          isOpen: false,
+          disable: this.$isAccountant() || this.$isSupport(),
+          sub: [
+            {
+              route: '/warehouse',
+              title: 'Danh sách kho',
+              alias: ['/warehouse'],
+            },
+            {
+              route: '/warehouse/check-in',
+              title: 'Quét nhận hàng',
+              alias: ['/warehouse/check-in'],
+            },
+            {
+              route: '/warehouse/check-package',
+              title: 'Quét kiểm hàng',
+              alias: ['/warehouse/check-package'],
+            },
+            {
+              route: '/containers',
+              title: 'Kiện hàng',
+              alias: ['/containers', '/containers/:id'],
+            },
+            {
+              route: '/shipments',
+              title: 'Lô hàng',
+              alias: ['/shipments', '/shipments/:id'],
+            },
+          ],
         },
-        q4: {
-          title: 'Ví',
-          icon: require('@assets/img/WalletInactive.svg'),
-          iconActive: require('@assets/img/Wallet.svg'),
-          route: '/wallet',
-          class: '',
-        },
-        q5: {
-          title: 'Cài đặt tài khoản',
-          icon: require('@assets/img/SettingInactive.svg'),
-          iconActive: require('@assets/img/Setting.svg'),
+        {
+          title: 'Quản trị',
+          icon: require('@assets/img/Setting.svg'),
+          iconActive: require('@assets/img/SettingActive.svg'),
           route: { name: 'setting' },
           class: '',
           isOpen: false,
+          disable:
+            this.$isAccountant() || this.$isSupport() || this.$isWarehouse(),
           sub: [
             {
-              route: '/setting/account',
-              title: 'Thông tin tài khoản',
+              route: '/account',
+              title: 'Tài khoản',
+              alias: ['/account'],
             },
             {
               route: '',
-              title: 'Danh sách hàng hóa',
+              title: 'Truy cập',
+              alias: [],
+            },
+            {
+              route: '',
+              title: 'Bảng giá',
+              alias: [],
             },
           ],
         },
-      },
+      ],
     }
   },
 
@@ -187,14 +231,10 @@ export default {
     },
 
     childrenNameRoute(title) {
-      let fullPath = this.$route.fullPath
-      if (title != null) {
-        title = title.toLowerCase()
-        if (fullPath.includes(title)) {
-          return true
-        }
+      let path = this.$route.matched.map((element) => element.path).toString()
+      if (title.sub.length > 0) {
+        return title.sub.some((element) => element.alias.includes(path))
       }
-      return false
     },
     handelRouter(menu) {
       if (menu.sub) {
@@ -202,6 +242,24 @@ export default {
       }
       return menu.route
     },
+
+    availableMenuSub(sub) {
+      return sub.filter((item) => item.disable !== true)
+    },
   },
 }
 </script>
+<style lang="scss">
+.animsition-link {
+  position: relative;
+  &:before {
+    position: absolute;
+    content: '';
+    width: 210px;
+    height: 36px;
+    top: -7px;
+    left: 0;
+    margin-left: -18px;
+  }
+}
+</style>

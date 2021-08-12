@@ -10,29 +10,8 @@
         <a
           href="#"
           class="nav-link"
-          :class="{ active: item.value === value }"
+          :class="{ active: item.isActive }"
           @click.prevent="handleClick(item.value)"
-          v-if="i == 0"
-        >
-          {{ item.text }} ({{ caculateTotal }})
-        </a>
-        <a
-          href="#"
-          class="nav-link"
-          :class="{ active: item.value === value }"
-          @click.prevent="handleClick(item.value)"
-          v-else-if="mapCount.length != 0"
-        >
-          {{ item.text }} ({{
-            mapCount[i - 1].count != null ? mapCount[i - 1].count : 0
-          }})
-        </a>
-        <a
-          href="#"
-          class="nav-link"
-          :class="{ active: item.value === value }"
-          @click.prevent="handleClick(item.value)"
-          v-else
         >
           {{ item.text }}
         </a>
@@ -48,71 +27,85 @@ export default {
   name: 'StatusTab',
   props: {
     status: {
-      type: Object,
+      type: [Array, Object],
       default: () => {},
     },
     value: {
       type: String,
+      Number,
       default: '',
     },
     hasAll: {
       type: Boolean,
       default: true,
     },
-    count: {
-      type: Array,
-      default: () => [],
-    },
+    count: Array,
   },
   computed: {
     cleanStatus() {
-      const status = this.hasAll ? [{ value: '', text: 'Tất cả' }] : []
+      const status = []
 
-      const listStatus = Object.keys(this.status)
-      const listValues = Object.values(this.status)
+      if (this.hasAll) {
+        if (this.hasCount) {
+          const total = this.count.reduce(
+            (total, { count }) => total + count,
+            0
+          )
+          status.push({
+            value: '',
+            text: `Tất cả (${total})`,
+            isActive: !this.value,
+          })
+        } else {
+          status.push({ value: '', text: 'Tất cả', isActive: !this.value })
+        }
+      }
 
-      for (let i = 0; i < listStatus.length; i++) {
-        status.push({
-          value: String(listValues[i]),
-          text: capitalize(listStatus[i]),
-        })
+      for (const key in this.status) {
+        if (Object.hasOwnProperty.call(this.status, key)) {
+          const item = this.status[key]
+          let value = ''
+          let text = ''
+
+          if (typeof item === 'object') {
+            text = capitalize(item.text)
+            value = String(item.value)
+          } else {
+            text = capitalize(key)
+            value = String(item)
+          }
+
+          if (this.hasCount) {
+            text += ` (${this.mapCount[value] || 0})`
+          }
+
+          status.push({ value, text, isActive: value == this.value })
+        }
       }
 
       return status
     },
-    caculateTotal() {
-      const arr = this.count.map((ele) => ele.count)
-      const reducer = (accumulator, currentValue) => accumulator + currentValue
-      const total = arr.reduce(reducer, 0)
-      return total
-    },
-    mapCount() {
-      if (this.count.length < 1) {
-        return []
-      }
-      const listValuesOfStatus = Object.values(this.status)
 
-      const count = [...listValuesOfStatus]
-      for (let i = 0; i < listValuesOfStatus.length; i++) {
-        for (let j = 0; j < this.count.length; j++) {
-          if (listValuesOfStatus[i] == this.count[j].status) {
-            count[i] = this.count[j]
-            break
-          }
-        }
+    mapCount() {
+      if (!this.hasCount) return {}
+      const mapcount = {}
+      for (const item of this.count) {
+        mapcount[item.status] = item.count
       }
-      return count
+
+      return mapcount
+    },
+
+    hasCount() {
+      return this.count !== undefined && this.count.length > 0
     },
   },
   methods: {
     handleClick(item) {
-      if (this.$parent.$data.filter.page) {
-        this.$parent.$data.filter.page = 1
-      }
-      if (this.value !== item) {
-        this.$emit('input', item)
-        this.$emit('click', item)
-      }
+      if (this.value == item) return
+
+      this.$emit('input', item)
+      this.$emit('click', item)
     },
   },
 }

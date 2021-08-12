@@ -136,11 +136,45 @@ const getFormatStatus = (status) => {
     case 'resolved':
       statusClass = 'resolved'
       break
+    case 'Tạo mới':
+    case 'Kiểm hàng':
+      statusClass = 'default'
+      break
+    case 'Chờ lấy':
+      statusClass = 'await'
+      break
+    case 'Đã lấy':
+    case 'Đã dán nhãn':
+    case 'Đang giao':
+      statusClass = 'primary'
+      break
+    case 'Giao thành công':
+    case 'Thành công':
+    case 'Xuất kho':
+      statusClass = 'success'
+      break
+    case 'Trả hàng':
+      statusClass = 'info'
+      break
+    case 'Hủy':
+    case 'Đã hủy':
+    case 'Thất bại':
+      statusClass = 'danger'
+      break
     case 'Đang xử lý':
+    case 'Chờ xác nhận':
       statusClass = 'pending'
       break
     case 'Đã xử lý':
+    case 'Đóng lô':
       statusClass = 'done'
+      break
+    case 'Chưa thanh toán':
+    case 'Đóng kiện':
+      statusClass = 'unpaid'
+      break
+    case 'Hoàn tiền':
+      statusClass = 'refund'
       break
   }
 
