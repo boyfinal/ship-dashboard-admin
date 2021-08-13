@@ -286,7 +286,6 @@
                         :allow-empty="false"
                         @select="handleSelectService"
                         :custom-label="customLabel"
-                        :disabled="isDisable"
                       ></multiselect>
                     </div>
                   </div>
