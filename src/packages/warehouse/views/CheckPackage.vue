@@ -177,7 +177,11 @@
       </div>
     </div>
 
-    <ModalAccept :visible.sync="isVisibleModalAccept" @accept="acceptHandle" />
+    <ModalAccept
+      :service="service_detail"
+      :visible.sync="isVisibleModalAccept"
+      @accept="acceptHandle"
+    />
   </div>
 </template>
 <script>
@@ -197,6 +201,7 @@ import {
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
 import http from '@core/services/http'
+import { FETCH_SERVICE } from '../../shared/store'
 
 export default {
   name: 'CheckPackage',
@@ -205,6 +210,9 @@ export default {
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
+    }),
+    ...mapState('shared', {
+      service_detail: (state) => state.service_detail,
     }),
     messages() {
       if (!this.current.id) return []
@@ -315,7 +323,7 @@ export default {
     this.beforeLeaveHandle()
   },
   methods: {
-    ...mapActions('shared', ['loading']),
+    ...mapActions('shared', ['loading', FETCH_SERVICE]),
     ...mapActions('warehouse', {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
@@ -408,7 +416,12 @@ export default {
       this.showModalAcceptHandle()
     },
 
-    showModalAcceptHandle() {
+    async showModalAcceptHandle() {
+      let result = await this[FETCH_SERVICE](this.current.service_id)
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
       this.isVisibleModalAccept = true
     },
 
@@ -419,7 +432,11 @@ export default {
       })
     },
 
-    async acceptHandle() {
+    async acceptHandle(carrier) {
+      if (!carrier) {
+        return this.$toast.error('Vui lòng chọn Loại vận chuyển')
+      }
+
       if (
         this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
         this.isSubmitting
@@ -428,7 +445,7 @@ export default {
 
       this.loading(true)
       this.isSubmitting = true
-      const body = { id: this.current.id }
+      const body = { id: this.current.id, carrier: carrier }
 
       if (this.isChange) {
         body.weight = this.volume.weight || 0
