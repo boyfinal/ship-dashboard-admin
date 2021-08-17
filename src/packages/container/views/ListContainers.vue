@@ -34,6 +34,7 @@
                     <template>
                       <th>Mã kiện</th>
                       <th>Nhãn kiện</th>
+                      <th>Mã lô</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
@@ -70,6 +71,18 @@
                         @click="downloadLabel(item.label_url)"
                         >{{ item.tracking_number }}</a
                       >
+                    </td>
+                    <td>
+                      <router-link
+                        :to="{
+                          name: 'shipment-detail',
+                          params: {
+                            id: item.shipment_id,
+                          },
+                        }"
+                      >
+                        {{ item.shipment_id }}
+                      </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="isCloseContainer(item)">{{
