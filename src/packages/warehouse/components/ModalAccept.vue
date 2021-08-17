@@ -49,14 +49,6 @@ export default {
           id: this.service.domestic_carrier.id,
         })
       }
-
-      if (this.service && this.service.ww_carrier) {
-        optionAccept.push({
-          name: this.service.ww_carrier.name,
-          code: this.service.ww_carrier.code,
-          id: this.service.ww_carrier.id,
-        })
-      }
       return optionAccept
     },
   },
@@ -75,6 +67,16 @@ export default {
         return this.$toast.error('Vui lòng chọn Loại vận chuyển')
       }
       this.$emit('accept', this.carrier)
+    },
+  },
+  watch: {
+    options: {
+      immediate: true,
+      handler(val) {
+        if (val.length > 0) {
+          this.carrier = val[0].code
+        }
+      },
     },
   },
 }
