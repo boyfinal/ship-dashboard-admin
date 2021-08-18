@@ -32,4 +32,7 @@ export default {
   createShipment() {
     return http.post(`/shipments/create`)
   },
+  exportShipment(payload) {
+    return http.post('/shipments/export', payload)
+  },
 }
