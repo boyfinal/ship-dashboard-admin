@@ -160,12 +160,11 @@ export const CHANGE_PACKAGE_TYPE = [
 ]
 
 export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInTransit]: 'Đơn hàng trên đường vận chuyển',
+  [PackageStatusInTransit]: 'Đơn hàng đang vận chuyển',
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
   [PackageStatusPicked]: 'Đơn hàng được xác nhận đã giao cho nhân viên kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
-  [PackageStatusInTransit]: 'Đơn hàng xuất kho',
   [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
   [PackageStatusDelivered]: 'Đơn hàng đã được giao',
 }
