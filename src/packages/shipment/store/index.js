@@ -8,6 +8,7 @@ export const CLOSE_SHIPMENT = 'closeShipment'
 export const FETCH_LIST_SHIPMENT = 'fetchListShipments'
 export const COUNT_LIST_SHIPMENTS = 'countListShipments'
 export const CREATE_SHIPMENT = 'createShipment'
+export const EXPORT_SHIPMENT = 'exportShipment'
 
 export const state = {
   shipment: {},
@@ -132,6 +133,23 @@ export const actions = {
         message: response.errorMessage,
       }
     }
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [EXPORT_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.exportShipment(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.download
+    }
+
     return result
   },
 }
