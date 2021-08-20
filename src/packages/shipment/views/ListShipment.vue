@@ -39,6 +39,7 @@
                       <th>Ngày đóng</th>
                       <th>Số lượng kiện</th>
                       <th>Trạng thái</th>
+                      <th></th>
                     </template>
                   </tr>
                 </thead>
@@ -68,6 +69,14 @@
                         class="badge badge-round"
                         :class="mapStatus[item.status].class"
                         >{{ mapStatus[item.status].value }}</span
+                      >
+                    </td>
+                    <td width="150">
+                      <p-button
+                        type="info"
+                        v-if="item.status == ShipmentClosed"
+                        @click="handleExport(item)"
+                        >Xuất excel</p-button
                       >
                     </td>
                   </tr>
@@ -108,14 +117,15 @@ import { mapState, mapActions } from 'vuex'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT } from '../store'
+import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT, EXPORT_SHIPMENT } from '../store'
 import ShipmentStatusTab from '../components/ShipmentStatusTab'
 import ModalConfirm from '../../../components/shared/modal/ModalConfirm'
 import { cloneDeep } from '../../../core/utils'
+import mixinDownload from '@/packages/shared/mixins/download'
 
 export default {
   name: 'ListShipment',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
     ShipmentStatusTab,
@@ -150,7 +160,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('shipment', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
+    ...mapActions('shipment', [
+      FETCH_LIST_SHIPMENT,
+      CREATE_SHIPMENT,
+      EXPORT_SHIPMENT,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -173,6 +187,27 @@ export default {
       this.visibleConfirm = false
       this.init()
     },
+
+    async handleExport(item) {
+      const result = await this[EXPORT_SHIPMENT]({
+        id: item.id,
+      })
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadFile(
+        result.url,
+        'packages',
+        result.url.split('/'),
+        'danh_sach_don_hang_'
+      )
+    },
+
     visibleModal() {
       this.visibleConfirm = true
     },
