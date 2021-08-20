@@ -4,6 +4,7 @@ export const PackageStatusPicked = 10
 export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
 export const PackageStatusWareHouseInShipment = 13
+export const PackageStatusWareHouseExport = 14
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 31
 export const PackageStatusReturned = 40
@@ -167,6 +168,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
   [PackageStatusInTransit]: 'Đơn hàng xuất kho',
   [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
+  [PackageStatusWareHouseExport]: 'Đơn hàng đã xuất kho',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {
