@@ -2,9 +2,11 @@
   <p-modal :active="visible" @close="handleClose" title="Duyệt">
     <div class="form-group">
       <label class="form-label">Loại vận chuyển:</label>
-      <select type="text" class="form-control">
-        <option value="">USPS</option>
-      </select>
+      <p-select v-model="carrier">
+        <option v-for="(option, i) in options" :key="i" :value="option.code">{{
+          option.name
+        }}</option>
+      </p-select>
     </div>
     <div class="form-group">
       <label class="form-label">Địa chỉ kho:</label>
@@ -31,6 +33,29 @@ export default {
       type: Boolean,
       default: false,
     },
+    service: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  computed: {
+    options() {
+      let optionAccept = []
+
+      if (this.service && this.service.domestic_carrier) {
+        optionAccept.push({
+          name: this.service.domestic_carrier.name,
+          code: this.service.domestic_carrier.code,
+          id: this.service.domestic_carrier.id,
+        })
+      }
+      return optionAccept
+    },
+  },
+  data() {
+    return {
+      carrier: '',
+    }
   },
   methods: {
     handleClose() {
@@ -38,7 +63,20 @@ export default {
     },
 
     acceptHandle() {
-      this.$emit('accept')
+      if (!this.carrier) {
+        return this.$toast.error('Vui lòng chọn Loại vận chuyển')
+      }
+      this.$emit('accept', this.carrier)
+    },
+  },
+  watch: {
+    options: {
+      immediate: true,
+      handler(val) {
+        if (val.length > 0) {
+          this.carrier = val[0].code
+        }
+      },
     },
   },
 }

@@ -7,4 +7,12 @@ export default {
   fetchUsersByRole(payload) {
     return http.get(`/users/role?${buildQueryString(payload)}`)
   },
+  /**
+   * fetch list service
+   * @param payload
+   * @return {*}
+   */
+  fetchService(payload) {
+    return http.get(`/services/${payload}`)
+  },
 }
