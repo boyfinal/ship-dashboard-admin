@@ -1,5 +1,6 @@
 export const PackageStatusCreated = 1
 export const PackageStatusPendingPickup = 2
+export const PackageStatusRePendingPickup = 3
 export const PackageStatusPicked = 10
 export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
@@ -163,6 +164,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusInTransit]: 'Đơn hàng đang vận chuyển',
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
+  [PackageStatusRePendingPickup]: 'Đơn hàng đã được chuyển lại',
   [PackageStatusPicked]: 'Đơn hàng được xác nhận đã giao cho nhân viên kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
   [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
