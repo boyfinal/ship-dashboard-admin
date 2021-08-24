@@ -5,6 +5,7 @@ export const PackageStatusPicked = 10
 export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
 export const PackageStatusWareHouseInShipment = 13
+export const PackageStatusWareHouseExport = 14
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 60
 export const PackageStatusReturned = 40
@@ -168,6 +169,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusPicked]: 'Đơn hàng được xác nhận đã giao cho nhân viên kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
   [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
+  [PackageStatusWareHouseExport]: 'Đơn hàng đã xuất kho',
   [PackageStatusDelivered]: 'Đơn hàng đã được giao',
 }
 
