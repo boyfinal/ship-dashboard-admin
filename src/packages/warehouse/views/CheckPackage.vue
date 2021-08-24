@@ -194,8 +194,6 @@ import { mapActions, mapState, mapMutations } from 'vuex'
 import ModalAccept from '../components/ModalAccept'
 import {
   MAP_NAME_STATUS_PACKAGE,
-  PACKAGE_WAREHOUSE_STATUS_RETURN,
-  PACKAGE_WAREHOUSE_STATUS_CANCELLED,
   PACKAGE_WAREHOUSE_STATUS_PICK,
 } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
@@ -248,10 +246,7 @@ export default {
     },
     disReturn() {
       return (
-        !this.current.id ||
-        this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN ||
-        this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED ||
-        this.current.status < PACKAGE_WAREHOUSE_STATUS_PICK
+        !this.current.id || this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     disBtnReturn() {
