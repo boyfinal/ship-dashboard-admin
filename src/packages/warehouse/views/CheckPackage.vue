@@ -254,7 +254,7 @@ export default {
         !this.current.id ||
         this.note === '' ||
         this.isSubmitting ||
-        this.disReturn
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     disBtnAccept() {
