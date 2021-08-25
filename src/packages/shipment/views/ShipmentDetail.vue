@@ -25,6 +25,17 @@
                 shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
+            <div v-if="shipment.manifest && shipment.manifest.manifest_number">
+              <div>Manifest: </div>
+              <div>
+                <a
+                  class="text-no-underline"
+                  href="javascript:void(0)"
+                  @click="downloadLabel(shipment.manifest.manifest_url)"
+                  >{{ shipment.manifest.manifest_number }}</a
+                >
+              </div>
+            </div>
             <div>
               <div>Trạng thái lô: </div>
               <div>{{
