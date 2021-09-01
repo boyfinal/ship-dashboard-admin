@@ -202,4 +202,8 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Đã hủy',
     class: 'badge-success',
   },
+  [PackageStatusDelivered]: {
+    value: 'Xuất kho',
+    class: 'badge-success',
+  },
 }
