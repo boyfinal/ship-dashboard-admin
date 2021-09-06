@@ -162,7 +162,7 @@ export const CHANGE_PACKAGE_TYPE = [
 ]
 
 export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInTransit]: 'Đơn hàng đang vận chuyển',
+  [PackageStatusInTransit]: 'Đơn hàng đang giao',
   [PackageStatusCreated]: 'Đơn hàng được tạo mới',
   [PackageStatusPendingPickup]: 'Đơn hàng đang chờ lấy',
   [PackageStatusRePendingPickup]: 'Đơn hàng đã được chuyển lại',
@@ -200,6 +200,10 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   },
   [PackageStatusCancelled]: {
     value: 'Đã hủy',
+    class: 'badge-success',
+  },
+  [PackageStatusDelivered]: {
+    value: 'Xuất kho',
     class: 'badge-success',
   },
 }
