@@ -159,6 +159,7 @@ export const CHANGE_PACKAGE_TYPE = [
   'Sửa đơn',
   'Hoàn tiền',
   'Phí phát sinh khác',
+  'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
 ]
 
 export const DELIVER_LOG_PACKAGE = {
