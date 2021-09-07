@@ -72,6 +72,25 @@
                       >
                         {{ item.package_code.code }}
                       </router-link>
+                      <span
+                        v-if="!item.validate_address"
+                        @click="handleValidateAddress(item.id)"
+                        class="
+                            list-warning
+                            badge badge-round badge-warning-order
+                          "
+                      >
+                        <p-tooltip
+                          class="item_name"
+                          :label="`Địa chỉ không hợp lệ`"
+                          position="top"
+                          type="dark"
+                        >
+                          <i aria-hidden="true"
+                            ><img src="@assets/img/warning.svg" />
+                          </i>
+                        </p-tooltip>
+                      </span>
                     </td>
                     <td>{{ item.order_number }}</td>
                     <td>
@@ -227,3 +246,10 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+.p-tooltip::after {
+  width: auto !important;
+  white-space: pre;
+}
+</style>

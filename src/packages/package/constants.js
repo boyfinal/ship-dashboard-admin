@@ -159,6 +159,7 @@ export const CHANGE_PACKAGE_TYPE = [
   'Sửa đơn',
   'Hoàn tiền',
   'Phí phát sinh khác',
+  'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
 ]
 
 export const DELIVER_LOG_PACKAGE = {
@@ -200,6 +201,10 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   },
   [PackageStatusCancelled]: {
     value: 'Đã hủy',
+    class: 'badge-success',
+  },
+  [PackageStatusDelivered]: {
+    value: 'Xuất kho',
     class: 'badge-success',
   },
 }
