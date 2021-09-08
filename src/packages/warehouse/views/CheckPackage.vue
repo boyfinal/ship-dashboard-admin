@@ -28,7 +28,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label class="form-label">Trọng lượng gốc:</label>
+                    <label class="form-label">Trọng lượng gốc(gram):</label>
                     <p-input
                       :value="current.weight"
                       type="text"
@@ -36,7 +36,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều dài gốc:</label>
+                    <label class="form-label">Chiều dài gốc(cm):</label>
                     <p-input
                       type="text"
                       :value="current.length"
@@ -44,7 +44,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều rộng gốc:</label>
+                    <label class="form-label">Chiều rộng gốc(cm):</label>
                     <p-input
                       type="text"
                       :value="current.width"
@@ -52,7 +52,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều cao gốc:</label>
+                    <label class="form-label">Chiều cao gốc(cm):</label>
                     <p-input
                       type="text"
                       :value="current.height"
@@ -62,7 +62,7 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label class="form-label">Trọng lượng thực:</label>
+                    <label class="form-label">Trọng lượng thực(gram):</label>
                     <p-input
                       type="text"
                       v-model.number="volume.weight"
@@ -71,7 +71,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều dài thực:</label>
+                    <label class="form-label">Chiều dài thực(cm):</label>
                     <p-input
                       type="text"
                       v-model.number="volume.length"
@@ -80,7 +80,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều rộng thực:</label>
+                    <label class="form-label">Chiều rộng thực(cm):</label>
                     <p-input
                       type="text"
                       v-model.number="volume.width"
@@ -89,7 +89,7 @@
                     ></p-input>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Chiều cao thực:</label>
+                    <label class="form-label">Chiều cao thực(cm):</label>
                     <p-input
                       type="text"
                       v-model.number="volume.height"
