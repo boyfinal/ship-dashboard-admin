@@ -205,7 +205,7 @@ export default {
           type: 'danger',
         },
       },
-      number: 0,
+      numberFile: 0,
       errors: '',
     }
   },
@@ -224,7 +224,7 @@ export default {
       this.$emit('update:visible', false)
     },
     handleF(e) {
-      this.number += e
+      this.numberFile += e
     },
     handleAction() {
       this.$emit('action')
@@ -240,7 +240,7 @@ export default {
       }
 
       if (!this.validateTypeFile(file)) {
-        this.number = this.number - 1
+        this.numberFile = this.numberFile - 1
         this.fileErrors.push(
           `"${file.name}" định dạng không đúng.Tệp phải có định dạng:  *XLSX, *PNG, *JPG, *JPEG.`
         )
@@ -257,7 +257,7 @@ export default {
       const res = await this.ticketUpload(body)
 
       if (res.error) {
-        this.number = this.number - 1
+        this.numberFile = this.numberFile - 1
         this.isUploading = false
         this.fileErrors.push(res.message)
         return
@@ -268,7 +268,7 @@ export default {
         uid: file.uid,
         name: file.name,
       })
-      if (this.files.length == this.number) {
+      if (this.files.length == this.numberFile) {
         this.isUploading = false
       }
     },
@@ -295,7 +295,7 @@ export default {
       this.deleteFile = file
     },
     handleDeletefile(file) {
-      this.number = this.number - 1
+      this.numberFile = this.numberFile - 1
       this.isVisibleConfirmDelete = false
       this.files = this.files.filter(({ uid }) => uid != file.uid)
     },
@@ -352,7 +352,7 @@ export default {
     },
 
     errorMaximum({ name }) {
-      this.number = this.number - 1
+      this.numberFile = this.numberFile - 1
       this.validateSize = true
       this.name = name
     },
