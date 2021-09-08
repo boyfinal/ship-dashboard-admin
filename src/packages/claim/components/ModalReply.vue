@@ -257,6 +257,7 @@ export default {
       const res = await this.ticketUpload(body)
 
       if (res.error) {
+        this.number = this.number - 1
         this.isUploading = false
         this.fileErrors.push(res.message)
         return
