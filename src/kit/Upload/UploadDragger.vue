@@ -12,6 +12,7 @@
   </div>
 </template>
 <script>
+import evenBus from '../../core/utils/evenBus'
 export default {
   name: 'ElUploadDrag',
   props: {
@@ -37,6 +38,7 @@ export default {
       if (this.disabled || !this.uploader) return
       const accept = this.uploader.accept
       this.dragover = false
+      evenBus.$emit('my', e.dataTransfer.files.length)
       if (!accept) {
         this.$emit('file', e.dataTransfer.files)
         return
