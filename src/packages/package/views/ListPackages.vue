@@ -94,9 +94,17 @@
                       </span>
                     </td>
                     <td>{{ item.order_number }}</td>
-                    <td>{{
-                      item.tracking ? item.tracking.tracking_number : ''
-                    }}</td>
+                    <td>
+                      <a
+                        v-if="item.tracking"
+                        target="_blank"
+                        :href="
+                          `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
+                        "
+                      >
+                        {{ item.tracking.tracking_number }}
+                      </a>
+                    </td>
                     <td>
                       {{ item.recipient }}
                     </td>
