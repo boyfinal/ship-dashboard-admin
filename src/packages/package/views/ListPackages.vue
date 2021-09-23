@@ -60,7 +60,7 @@
                     :key="i"
                     :class="{ hover: isChecked(item) }"
                   >
-                    <td>
+                    <td class="text-nowrap">
                       <router-link
                         class="text-no-underline"
                         :to="{
@@ -94,7 +94,7 @@
                       </span>
                     </td>
                     <td>{{ item.order_number }}</td>
-                    <td>
+                    <td class="text-nowrap">
                       <a
                         v-if="item.tracking"
                         target="_blank"
