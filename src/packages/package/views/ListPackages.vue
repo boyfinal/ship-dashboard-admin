@@ -39,6 +39,7 @@
                     <template>
                       <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
+                      <th :class="{ hidden: hiddenClass }">Tracking</th>
                       <th :class="{ hidden: hiddenClass }">Người nhận</th>
                       <th :class="{ hidden: hiddenClass }"
                         >Chi tiết hàng hóa</th
@@ -93,6 +94,9 @@
                       </span>
                     </td>
                     <td>{{ item.order_number }}</td>
+                    <td>{{
+                      item.tracking ? item.tracking.tracking_number : ''
+                    }}</td>
                     <td>
                       {{ item.recipient }}
                     </td>
