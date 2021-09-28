@@ -79,7 +79,7 @@
                         :to="{
                           name: 'list-transaction',
                           query: {
-                            search_by: 'account_name',
+                            search_by: 'account',
                             search: item.email,
                           },
                         }"
