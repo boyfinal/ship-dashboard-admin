@@ -114,7 +114,6 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { ROLE_CUSTOMER } from '@core/constants'
 import { LIST_USER } from '../store/index'
-import { USER_STATUS_ACTIVE } from '../constants'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -129,7 +128,6 @@ export default {
     return {
       filter: {
         limit: 30,
-        status: USER_STATUS_ACTIVE,
         search: '',
         role: ROLE_CUSTOMER,
       },
