@@ -1,6 +1,9 @@
 export const TransactionLogTypeTopup = 1
 export const TransactionLogTypePay = 2
 export const TransactionLogTypeRefund = 4
+export const TransactionLogTypePayoneer = 5
+export const TransactionLogTypePingPong = 6
+
 export const TransactionStatusProcess = 1
 export const TransactionStatusSuccess = 2
 export const TransactionStatusFailure = 3
@@ -44,6 +47,8 @@ export const MAP_NAME_STATUS_TRANSACTION = {
 
 export const TRANSACTION_TYPE = {
   [TransactionLogTypeTopup]: 'Nạp tiền',
+  [TransactionLogTypePayoneer]: 'Nạp tiền',
+  [TransactionLogTypePingPong]: 'Nạp tiền',
   [TransactionLogTypePay]: 'Thanh toán',
   [TransactionLogTypeRefund]: 'Hoàn tiền',
 }
