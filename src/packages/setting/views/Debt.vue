@@ -161,5 +161,13 @@ export default {
       this.isFetching = false
     },
   },
+  watch: {
+    filter: {
+      handler: function() {
+        this.init()
+      },
+      deep: true,
+    },
+  },
 }
 </script>
