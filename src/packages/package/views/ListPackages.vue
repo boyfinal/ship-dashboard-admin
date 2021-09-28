@@ -4,7 +4,7 @@
       <div class="row mb-12 search-input">
         <div class="col-9 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
+            :placeholder="searchPlaceholder"
             prefixIcon="search"
             type="search"
             :clearable="true"
