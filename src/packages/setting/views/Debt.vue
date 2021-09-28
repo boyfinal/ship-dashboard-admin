@@ -63,8 +63,7 @@
                     }}</td>
                     <td class="d-flex" style="align-items:center">
                       <router-link
-                        type="button"
-                        class="btn-action mr-2"
+                        class="btn_action mr-2"
                         :to="{
                           name: 'bill-list',
                           query: {
@@ -76,7 +75,7 @@
                         Hóa đơn
                       </router-link>
                       <router-link
-                        class="btn-action"
+                        class="btn_action"
                         :to="{
                           name: 'list-transaction',
                           query: {
