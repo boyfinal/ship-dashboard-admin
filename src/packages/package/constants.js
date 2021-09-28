@@ -169,7 +169,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusRePendingPickup]: 'Đơn hàng đã được chuyển lại',
   [PackageStatusPicked]: 'Đơn hàng được xác nhận đã giao cho nhân viên kho',
   [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
-  [PackageStatusReturned]: 'Đơn hàng bị trả trong quá trình vận chuyển',
+  [PackageStatusReturned]: 'Đơn hàng bị trả lại',
   [PackageStatusWareHouseExport]: 'Đơn hàng đã xuất kho',
   [PackageStatusDelivered]: 'Đơn hàng đã được giao',
 }

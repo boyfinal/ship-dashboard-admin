@@ -4,7 +4,7 @@
       <div class="row mb-12 search-input">
         <div class="col-9 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
+            :placeholder="searchPlaceholder"
             prefixIcon="search"
             type="search"
             :clearable="true"
@@ -39,6 +39,7 @@
                     <template>
                       <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
+                      <th :class="{ hidden: hiddenClass }">Tracking</th>
                       <th :class="{ hidden: hiddenClass }">Người nhận</th>
                       <th :class="{ hidden: hiddenClass }"
                         >Chi tiết hàng hóa</th
@@ -59,7 +60,7 @@
                     :key="i"
                     :class="{ hover: isChecked(item) }"
                   >
-                    <td>
+                    <td class="text-nowrap">
                       <router-link
                         class="text-no-underline"
                         :to="{
@@ -93,6 +94,17 @@
                       </span>
                     </td>
                     <td>{{ item.order_number }}</td>
+                    <td class="text-nowrap">
+                      <a
+                        v-if="item.tracking"
+                        target="_blank"
+                        :href="
+                          `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
+                        "
+                      >
+                        {{ item.tracking.tracking_number }}
+                      </a>
+                    </td>
                     <td>
                       {{ item.recipient }}
                     </td>
@@ -186,7 +198,9 @@ export default {
         code: 'Mã vận đơn',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
-        account: 'Tài khoản khách',
+        account: 'Tài khoản khách hàng',
+        customer_full_name: 'Tên khách hàng',
+        tracking: 'Mã tracking',
       },
     }
   },
@@ -214,6 +228,20 @@ export default {
     },
     mapStatus() {
       return MAP_NAME_STATUS_STRING_PACKAGE
+    },
+    searchPlaceholder() {
+      const maptext = {
+        id: 'Tìm theo mã hoá đơn',
+        code: 'Tìm theo mã vận đơn',
+        recipient: 'Tìm theo tên người nhận',
+        account: 'Tìm theo email hoặc sđt của khách hàng',
+        order_number: 'Tìm theo mã đơn hàng',
+        customer: 'Tìm theo email hoặc sđt của khách hàng',
+        customer_full_name: 'Tìm theo tên khách hàng',
+        tracking: 'Tìm theo mã tracking',
+      }
+
+      return maptext[this.filter.search_by] || maptext['id']
     },
   },
   methods: {

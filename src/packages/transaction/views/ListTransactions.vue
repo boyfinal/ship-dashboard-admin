@@ -80,30 +80,48 @@
                         v-html="getDescription(item)"
                       ></span
                     ></td>
-                    <td
-                      :title="item.type === topupType ? 'Chuyển khoản' : 'N/A'"
-                    >
-                      <span class="tool-tip">{{
-                        item.type === topupType ? 'Chuyển khoản' : 'N/A'
-                      }}</span>
+                    <td :title="getTextType(item)">
+                      <span class="tool-tip">
+                        {{ getTextType(item) }}
+                      </span>
                     </td>
-                    <td width="120px">
-                      <span style="white-space: nowrap;"
-                        >{{ item.type == typePay ? '-' : '+' }}
+                    <td>
+                      <div
+                        :class="{ error: validateErrors[item.id] }"
+                        v-if="showInputMoney(item)"
+                      >
+                        <span class="tooltip-notice">
+                          <img
+                            src="~@/assets/img/notice.svg"
+                            style="vertical-align: top"
+                          />
+                          Vui lòng nhập số tiền!
+                        </span>
+                        <p-input
+                          v-model="money[item.id]"
+                          :ref="'money_' + item.id"
+                          placeholder="Nhập số tiền"
+                          class="input-money"
+                          type="text"
+                          @blur="resetErrors"
+                        />
+                      </div>
+                      <span v-else style="white-space: nowrap;"
+                        >{{ item.type === typePay ? '-' : '+' }}
                         {{ Math.abs(item.amount) | formatPrice }}</span
-                      ></td
-                    >
+                      >
+                    </td>
                     <td class="btn-action">
                       <div v-if="showBtn(item)" style="display: flex">
                         <p-button
-                          @click="handleConfirm(successStatus, item.id)"
+                          @click="handleConfirm(successStatus, item)"
                           class="mr-2"
                           type="info"
                         >
                           Xác nhận
                         </p-button>
                         <p-button
-                          @click="handleConfirm(failStatus, item.id)"
+                          @click="handleConfirm(failStatus, item)"
                           type="danger"
                         >
                           Từ chối
@@ -166,6 +184,8 @@ import {
   TransactionStatusFailure,
   MAP_NAME_STATUS_TRANSACTION,
   TransactionLogTypeRefund,
+  TransactionLogTypePayoneer,
+  TransactionLogTypePingPong,
 } from '../constants'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -191,14 +211,13 @@ export default {
         status: '',
         search: '',
         search_by: 'bill_id',
-        bill_id: '',
-        account_name: '',
         type: '',
       },
       isFetching: false,
       searchBy: {
         bill_id: 'Mã hoá đơn',
-        account_name: 'Tài khoản khách',
+        account: 'Tài khoản khách hàng',
+        account_full_name: 'Tên khách hàng',
       },
       optionType: {
         1: 'Nạp tiền',
@@ -208,8 +227,10 @@ export default {
       isChangingStatus: false,
       visibleConfirmSuccess: false,
       visibleConfirmFail: false,
-      actionID: '',
       typePay: TransactionLogTypePay,
+      selectedItem: null,
+      money: [],
+      validateErrors: [],
     }
   },
   created() {
@@ -243,8 +264,10 @@ export default {
       switch (this.filter.search_by) {
         case 'bill_id':
           return 'Tìm theo mã hóa đơn'
-        case 'account_name':
-          return 'Tìm theo tài khoản khách'
+        case 'account':
+          return 'Tìm theo email hoặc số điện thoại khách hàng'
+        case 'account_full_name':
+          return 'Tìm theo tên khách hàng'
         default:
           return ''
       }
@@ -262,26 +285,18 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
-      switch (this.filter.search_by) {
-        case 'bill_id':
-          payload.bill_id = this.filter.search
-          delete payload.account_name
-          break
-        case 'account_name':
-          payload.account_name = this.filter.search
-          delete payload.bill_id
-          break
-        default:
-          break
-      }
       const result = await this[FETCH_LIST_TRANSACTIONS](payload)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
-    handleConfirm(status, id) {
-      this.actionID = id
+    resetErrors() {
+      this.validateErrors = []
+    },
+    handleConfirm(status, item) {
+      this.selectedItem = item
+      this.resetErrors()
       switch (status) {
         case TransactionStatusSuccess:
           this.visibleConfirmSuccess = true
@@ -293,11 +308,41 @@ export default {
           break
       }
     },
+    checkValidateMoneyAmount() {
+      const transaction = this.selectedItem
+      this.resetErrors()
+      if (
+        transaction.type !== TransactionLogTypePayoneer &&
+        transaction.type !== TransactionLogTypePingPong
+      ) {
+        return true
+      }
+      if (!this.money[transaction.id]) {
+        this.validateErrors[transaction.id] = true
+        return false
+      }
+      return true
+    },
     async changeStatusTransactionHandle(status) {
+      if (status === TransactionStatusSuccess) {
+        const validAmount = this.checkValidateMoneyAmount()
+        if (!validAmount) {
+          this.$nextTick(function() {
+            this.$refs['money_' + this.selectedItem.id][0].focus()
+          })
+          this.visibleConfirmSuccess = false
+          this.visibleConfirmFail = false
+          return false
+        }
+      }
+
       this.isChangingStatus = true
       const payload = {
-        id: this.actionID,
+        id: this.selectedItem.id,
         status: status,
+        amount: this.money[this.selectedItem.id]
+          ? parseFloat(this.money[this.selectedItem.id])
+          : 0,
       }
       const result = await this[CHANGE_STATUS_TRANSACTION](payload)
       this.isChangingStatus = false
@@ -323,7 +368,9 @@ export default {
     },
     showBtn(transaction) {
       return (
-        transaction.type === TransactionLogTypeTopup &&
+        (transaction.type === TransactionLogTypeTopup ||
+          transaction.type === TransactionLogTypePayoneer ||
+          transaction.type === TransactionLogTypePingPong) &&
         transaction.status === TransactionStatusProcess &&
         (this.user.role == ROLE_ADMIN || this.user.role == ROLE_ACCOUNTANT)
       )
@@ -357,8 +404,29 @@ export default {
             params: { id: transaction.bill_id },
           }).href
           return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+        case TransactionLogTypePayoneer || TransactionLogTypePingPong:
+          return `#${transaction.description}`
         default:
           return null
+      }
+    },
+    showInputMoney(transaction) {
+      return (
+        (transaction.type === TransactionLogTypePayoneer ||
+          transaction.type === TransactionLogTypePingPong) &&
+        transaction.status === TransactionStatusProcess
+      )
+    },
+    getTextType(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return 'Chuyển khoản'
+        case TransactionLogTypePayoneer:
+          return `Payoneer`
+        case TransactionLogTypePingPong:
+          return `PingPong`
+        default:
+          return 'N/A'
       }
     },
   },
@@ -390,5 +458,49 @@ export default {
     display: -webkit-box;
     overflow: hidden;
   }
+}
+.input-money {
+  max-width: 200px;
+}
+.input-money .form-control {
+  height: 32px;
+  border-radius: 4px !important;
+  border: 1px solid #cfd0d0;
+  padding: 3px 12px 7px;
+}
+.tooltip-notice {
+  z-index: 9999;
+  position: absolute;
+  top: -48px;
+  color: red;
+  padding: 12px 17px 14px;
+  box-shadow: 0 2px 4px rgba(40, 41, 61, 0.04),
+    0 8px 16px rgba(96, 97, 112, 0.16);
+  border: 1px solid #edeeee;
+  background-color: #fff;
+  visibility: hidden;
+}
+.error .tooltip-notice {
+  visibility: visible;
+}
+
+.error .tooltip-notice::after {
+  visibility: visible;
+}
+
+.error .input-money .form-control {
+  border-color: #f5222d;
+}
+.tooltip-notice::after {
+  border-top: 6px solid #fff;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  bottom: -6px;
+  left: 12px;
+  position: absolute;
+  content: '';
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 999;
 }
 </style>
