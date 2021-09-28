@@ -34,6 +34,7 @@
 
 <script>
 import { capitalize } from '@core/utils/string'
+import { numFormatter } from '@core/utils/formatter'
 
 export default {
   name: 'PackageStatusTab',
@@ -74,9 +75,9 @@ export default {
             }
           })
 
-          let countText = count ? ' (' + count + ')' : ' (0)'
+          let countText = count ? ' (' + numFormatter(count) + ')' : ' (0)'
           if (item.value === '') {
-            countText = ' (' + total + ')'
+            countText = ' (' + numFormatter(total) + ')'
           }
 
           status.push({
