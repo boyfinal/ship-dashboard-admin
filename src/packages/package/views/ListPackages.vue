@@ -4,7 +4,7 @@
       <div class="row mb-12 search-input">
         <div class="col-9 pl-0">
           <p-input
-            placeholder="Tìm kiếm ..."
+            :placeholder="searchPlaceholder"
             prefixIcon="search"
             type="search"
             :clearable="true"
@@ -198,7 +198,9 @@ export default {
         code: 'Mã vận đơn',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
-        account: 'Tài khoản khách',
+        account: 'Tài khoản khách hàng',
+        customer_full_name: 'Tên khách hàng',
+        tracking: 'Mã tracking',
       },
     }
   },
@@ -226,6 +228,20 @@ export default {
     },
     mapStatus() {
       return MAP_NAME_STATUS_STRING_PACKAGE
+    },
+    searchPlaceholder() {
+      const maptext = {
+        id: 'Tìm theo mã hoá đơn',
+        code: 'Tìm theo mã vận đơn',
+        recipient: 'Tìm theo tên người nhận',
+        account: 'Tìm theo email hoặc sđt của khách hàng',
+        order_number: 'Tìm theo mã đơn hàng',
+        customer: 'Tìm theo email hoặc sđt của khách hàng',
+        customer_full_name: 'Tìm theo tên khách hàng',
+        tracking: 'Tìm theo mã tracking',
+      }
+
+      return maptext[this.filter.search_by] || maptext['id']
     },
   },
   methods: {
