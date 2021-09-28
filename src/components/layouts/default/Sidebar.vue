@@ -193,6 +193,11 @@ export default {
               alias: ['/account'],
             },
             {
+              route: '/debt',
+              title: 'Công nợ',
+              alias: ['/debt'],
+            },
+            {
               route: '',
               title: 'Truy cập',
               alias: [],

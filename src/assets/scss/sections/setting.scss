@@ -71,6 +71,21 @@
                 color: #FFD591;
             }
         }
+        //debt page 
+        .btn-action {
+            border-radius: 4px;
+            padding: 0.4rem 1rem;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 22px;
+            background: #00b4c3;
+            color: #FFFFFF;
+            height: 32px;
+            width: 76px;
+            &:hover {
+                background: #138496;
+            }
+        }
     }
 }
 
