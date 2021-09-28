@@ -127,6 +127,11 @@ export default {
               alias: ['/transactions', '/transactions/:id'],
             },
             {
+              route: '/debt',
+              title: 'Công nợ',
+              alias: ['/debt'],
+            },
+            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
@@ -191,11 +196,6 @@ export default {
               route: '/account',
               title: 'Tài khoản',
               alias: ['/account'],
-            },
-            {
-              route: '/debt',
-              title: 'Công nợ',
-              alias: ['/debt'],
             },
             {
               route: '',
