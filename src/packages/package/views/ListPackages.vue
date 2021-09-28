@@ -200,6 +200,7 @@ export default {
         recipient: 'Người nhận',
         account: 'Tài khoản khách hàng',
         customer_full_name: 'Tên khách hàng',
+        tracking: 'Mã tracking',
       },
     }
   },
@@ -237,6 +238,7 @@ export default {
         order_number: 'Tìm theo mã đơn hàng',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
+        tracking: 'Tìm theo mã tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']

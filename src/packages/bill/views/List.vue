@@ -20,6 +20,7 @@
             <option value="code">Mã vận đơn</option>
             <option value="customer">Tài khoản Khách hàng</option>
             <option value="customer_full_name">Tên Khách hàng</option>
+            <option value="tracking">Mã tracking</option>
           </select>
         </div>
         <div
@@ -174,6 +175,7 @@ export default {
         code: 'Tìm theo mã vận đơn',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
+        tracking: 'Tìm theo mã tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']
