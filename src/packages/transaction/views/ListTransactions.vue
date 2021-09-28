@@ -191,14 +191,13 @@ export default {
         status: '',
         search: '',
         search_by: 'bill_id',
-        bill_id: '',
-        account_name: '',
         type: '',
       },
       isFetching: false,
       searchBy: {
         bill_id: 'Mã hoá đơn',
-        account_name: 'Tài khoản khách',
+        account: 'Tài khoản khách hàng',
+        account_full_name: 'Tên khách hàng',
       },
       optionType: {
         1: 'Nạp tiền',
@@ -243,8 +242,10 @@ export default {
       switch (this.filter.search_by) {
         case 'bill_id':
           return 'Tìm theo mã hóa đơn'
-        case 'account_name':
-          return 'Tìm theo tài khoản khách'
+        case 'account':
+          return 'Tìm theo email hoặc số điện thoại khách hàng'
+        case 'account_full_name':
+          return 'Tìm theo tên khách hàng'
         default:
           return ''
       }
@@ -262,18 +263,6 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
-      switch (this.filter.search_by) {
-        case 'bill_id':
-          payload.bill_id = this.filter.search
-          delete payload.account_name
-          break
-        case 'account_name':
-          payload.account_name = this.filter.search
-          delete payload.bill_id
-          break
-        default:
-          break
-      }
       const result = await this[FETCH_LIST_TRANSACTIONS](payload)
       this.isFetching = false
       if (!result.success) {
