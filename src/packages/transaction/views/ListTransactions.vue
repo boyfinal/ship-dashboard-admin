@@ -400,7 +400,9 @@ export default {
             params: { id: transaction.bill_id },
           }).href
           return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
-        case TransactionLogTypePayoneer || TransactionLogTypePingPong:
+        case TransactionLogTypePayoneer:
+          return `#${transaction.description}`
+        case TransactionLogTypePingPong:
           return `#${transaction.description}`
         default:
           return null
