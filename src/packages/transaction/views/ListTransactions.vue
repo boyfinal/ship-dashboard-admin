@@ -104,6 +104,7 @@
                           class="input-money"
                           type="text"
                           @blur="resetErrors"
+                          @input="onChangeAmount($event, item)"
                         />
                       </div>
                       <span v-else style="white-space: nowrap;"
@@ -315,6 +316,12 @@ export default {
         default:
           break
       }
+    },
+    onChangeAmount(e, transaction) {
+      let value = e.trim().replace(/[^\d.-]/g, '')
+      value = value.replace(/,/g, '').replace(/^0+/, '')
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      this.money[transaction.id] = value
     },
     checkValidateMoneyAmount() {
       const transaction = this.selectedItem
