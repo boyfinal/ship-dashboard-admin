@@ -297,8 +297,16 @@ export default {
     handleConfirm(status, item) {
       this.selectedItem = item
       this.resetErrors()
+      let validAmount
       switch (status) {
         case TransactionStatusSuccess:
+          validAmount = this.checkValidateMoneyAmount()
+          if (!validAmount) {
+            this.$nextTick(function() {
+              this.$refs['money_' + this.selectedItem.id][0].focus()
+            })
+            break
+          }
           this.visibleConfirmSuccess = true
           break
         case TransactionStatusFailure:
@@ -324,18 +332,6 @@ export default {
       return true
     },
     async changeStatusTransactionHandle(status) {
-      if (status === TransactionStatusSuccess) {
-        const validAmount = this.checkValidateMoneyAmount()
-        if (!validAmount) {
-          this.$nextTick(function() {
-            this.$refs['money_' + this.selectedItem.id][0].focus()
-          })
-          this.visibleConfirmSuccess = false
-          this.visibleConfirmFail = false
-          return false
-        }
-      }
-
       this.isChangingStatus = true
       const payload = {
         id: this.selectedItem.id,
