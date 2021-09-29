@@ -100,7 +100,7 @@
                         <p-input
                           v-model="money[item.id]"
                           :ref="'money_' + item.id"
-                          placeholder="Nhập số tiền"
+                          placeholder="Nhập số tiền ($)"
                           class="input-money"
                           type="text"
                           @blur="resetErrors"
@@ -319,6 +319,18 @@ export default {
     },
     onChangeAmount(e, transaction) {
       let value = e.trim().replace(/[^\d.-]/g, '')
+
+      let lastCharacter = value.substr(-1)
+      if (lastCharacter === '.') {
+        if (value.length === 1 || value.split('.').length > 2) {
+          value = value.slice(0, -1)
+        }
+      } else {
+        let valid = /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(value)
+        if (!valid) {
+          value = value.slice(0, -1)
+        }
+      }
       value = value.replace(/,/g, '').replace(/^0+/, '')
       value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       this.money[transaction.id] = value
@@ -344,7 +356,7 @@ export default {
         id: this.selectedItem.id,
         status: status,
         amount: this.money[this.selectedItem.id]
-          ? parseFloat(this.money[this.selectedItem.id])
+          ? parseFloat(this.money[this.selectedItem.id].replaceAll(',', ''))
           : 0,
       }
       const result = await this[CHANGE_STATUS_TRANSACTION](payload)
