@@ -15,4 +15,22 @@ export default {
   fetchService(payload) {
     return http.get(`/services/${payload}`)
   },
+
+  /**
+   * fetch estimate cost
+   * @param payload
+   * @return {*}
+   */
+  fetchEstimateCost(payload) {
+    return http.get(`/warehouses/estimate-cost-warehouses/${payload}`)
+  },
+
+  /**
+   * fetch warehouses
+   * @param payload
+   * @return {*}
+   */
+  fetchWareHouses() {
+    return http.get(`/warehouses/warehouses`)
+  },
 }

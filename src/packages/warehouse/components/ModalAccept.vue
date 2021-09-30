@@ -3,16 +3,24 @@
     <div class="form-group">
       <label class="form-label">Loại vận chuyển:</label>
       <p-select v-model="carrier">
-        <option v-for="(option, i) in options" :key="i" :value="option.code">{{
-          option.name
-        }}</option>
+        <option
+          v-for="(option, i) in optionsTransport"
+          :key="i"
+          :value="option.code"
+          >{{ option.name }}</option
+        >
       </p-select>
     </div>
     <div class="form-group">
       <label class="form-label">Địa chỉ kho:</label>
-      <select type="text" class="form-control">
-        <option value="">Lionnix Default</option>
-      </select>
+      <p-select v-model="warehouse">
+        <option
+          v-for="(option, i) in optionsWareHouse"
+          :key="i"
+          :value="option.id"
+          >{{ option.name }}</option
+        >
+      </p-select>
     </div>
     <template slot="footer">
       <div></div>
@@ -37,9 +45,17 @@ export default {
       type: Object,
       default: () => {},
     },
+    estimateCost: {
+      type: Array,
+      default: () => [],
+    },
+    warehouses: {
+      type: Array,
+      default: () => [],
+    },
   },
   computed: {
-    options() {
+    optionsTransport() {
       let optionAccept = []
 
       if (this.service && this.service.domestic_carrier) {
@@ -51,10 +67,34 @@ export default {
       }
       return optionAccept
     },
+    optionsWareHouse() {
+      let optionAccept = []
+
+      this.warehouses.forEach((warehouse) => {
+        let exist = this.estimateCost.find(
+          (cost) => cost.warehouse_id == warehouse.id
+        )
+        let label = warehouse.name
+        let cost = 0
+        if (exist) {
+          label = label + ' - Giá ước tính: ' + exist.cost + '$'
+          cost = exist.cost
+        }
+
+        optionAccept.push({
+          name: label,
+          id: warehouse.id,
+          cost: cost,
+        })
+      })
+
+      return optionAccept
+    },
   },
   data() {
     return {
       carrier: '',
+      warehouse: '',
     }
   },
   methods: {
@@ -66,15 +106,26 @@ export default {
       if (!this.carrier) {
         return this.$toast.error('Vui lòng chọn Loại vận chuyển')
       }
-      this.$emit('accept', this.carrier)
+      this.$emit('accept', this.carrier, this.warehouse)
     },
   },
   watch: {
-    options: {
+    optionsTransport: {
       immediate: true,
       handler(val) {
         if (val.length > 0) {
           this.carrier = val[0].code
+        }
+      },
+    },
+    optionsWareHouse: {
+      immediate: true,
+      handler(val) {
+        if (val.length > 0) {
+          let minOb = val.reduce(function(prev, curr) {
+            return prev.cost < curr.cost ? prev : curr
+          })
+          this.warehouse = minOb.id
         }
       },
     },

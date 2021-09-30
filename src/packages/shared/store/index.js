@@ -4,6 +4,8 @@ export const GET_USER = 'getUser'
 export const FETCH_ADDRESSES = 'fetchAddresses'
 export const LOADING = 'loading'
 export const FETCH_SERVICE = 'fetchService'
+export const FETCH_ESTIMATE_COST = 'fetchEstimateCost'
+export const FETCH_WAREHOUSE = 'fetchWareHouses'
 
 import addresses from '../../../assets/json/address.json'
 
@@ -12,6 +14,8 @@ export const state = {
   addresses: [],
   isLoading: false,
   service_detail: {},
+  estimateCost: [],
+  wareHouses: [],
 }
 
 export const getters = {}
@@ -28,6 +32,12 @@ export const mutations = {
   },
   [FETCH_SERVICE]: (state, payload) => {
     state.service_detail = payload
+  },
+  [FETCH_ESTIMATE_COST]: (state, payload) => {
+    state.estimateCost = payload
+  },
+  [FETCH_WAREHOUSE]: (state, payload) => {
+    state.wareHouses = payload
   },
 }
 
@@ -76,6 +86,38 @@ export const actions = {
       return result
     }
     commit(FETCH_SERVICE, res.service)
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async fetchEstimateCost({ commit }, payload) {
+    let result = { success: true }
+    const res = await api.fetchEstimateCost(payload)
+
+    if (!res.costs) {
+      result = {
+        success: false,
+        message: res.errorMessage || '',
+      }
+      return result
+    }
+    commit(FETCH_ESTIMATE_COST, res.costs)
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async fetchWareHouses({ commit }, payload) {
+    let result = { success: true }
+    const res = await api.fetchWareHouses(payload)
+
+    if (!res.warehouses) {
+      result = {
+        success: false,
+        message: res.errorMessage || '',
+      }
+      return result
+    }
+    commit(FETCH_WAREHOUSE, res.warehouses)
     return result
   },
 }
