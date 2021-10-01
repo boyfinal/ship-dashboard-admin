@@ -77,7 +77,7 @@ export default {
         let label = warehouse.name
         let cost = 0
         if (exist) {
-          label = label + ' - Giá ước tính: ' + exist.cost + '$'
+          label = label + ` - Giá ước tính: $${exist.cost}`
           cost = exist.cost
         }
 
@@ -88,6 +88,7 @@ export default {
         })
       })
 
+      debugger
       return optionAccept
     },
   },
