@@ -425,7 +425,7 @@ export default {
     },
 
     async showModalAcceptHandle() {
-      let req = { type: 1 }
+      let req = { type: 1, status: 1 }
       let [result, result2, result3] = await Promise.all([
         this[FETCH_SERVICE](this.current.service_id),
         this[FETCH_ESTIMATE_COST](this.keyword),
