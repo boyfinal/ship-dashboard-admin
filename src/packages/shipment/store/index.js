@@ -126,7 +126,7 @@ export const actions = {
   async createShipment({ commit }, payload) {
     let result = { success: true }
 
-    let response = await api.createShipment()
+    let response = await api.createShipment(payload)
     if (!response || !response.shipment) {
       result = {
         success: false,

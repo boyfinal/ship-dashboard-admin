@@ -121,6 +121,7 @@
     </div>
     <modal-choice-shipping-box
       :boxes="boxes"
+      :warehouses="wareHouses"
       @save="createContainerSubmit"
       :visible.sync="visibleModalChoiceBox"
     >
@@ -142,6 +143,7 @@ import {
   CONTAINER_CLOSE,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
+import { FETCH_WAREHOUSE } from '../../shared/store'
 import Browser from '@core/helpers/browser'
 import api from '../api'
 import { printImage } from '@core/utils/print'
@@ -178,6 +180,10 @@ export default {
       statusTab() {
         return CONTAINER_STATUS_TAB
       },
+
+      ...mapState('shared', {
+        wareHouses: (state) => state.wareHouses,
+      }),
       mapStatus() {
         return MAP_NAME_STATUS_CONTAINER
       },
@@ -189,15 +195,23 @@ export default {
       CREATE_CONTAINER,
       GET_LABEL,
     ]),
+    ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
       payload.search = payload.search.toUpperCase()
-      const result = await this[FETCH_LIST_CONTAINERS](payload)
+      const [result, result_1] = await Promise.all([
+        this[FETCH_LIST_CONTAINERS](payload),
+        this[FETCH_WAREHOUSE](),
+      ])
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
+      }
+      if (!result_1.success) {
+        this.$toast.open({ message: result_1.message, type: 'error' })
+        return
       }
     },
     isCloseContainer(container) {
@@ -258,6 +272,13 @@ export default {
         this.$toast.open({
           type: 'error',
           message: 'Box type is required',
+        })
+        return
+      }
+      if (body.warehouse_id == 0) {
+        this.$toast.open({
+          type: 'error',
+          message: 'Warehouse id is required',
         })
         return
       }

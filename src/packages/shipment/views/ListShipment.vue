@@ -98,7 +98,7 @@
         </div>
       </div>
     </div>
-    <modal-confirm
+    <!-- <modal-confirm
       :visible.sync="visibleConfirm"
       :actionConfirm="`Có`"
       :cancel="`Không`"
@@ -106,7 +106,13 @@
       :title="`Xác nhận`"
       @action="handleCreate"
       :size="`sm`"
-    ></modal-confirm>
+    ></modal-confirm> -->
+    <modal-choice-warehouse
+      :warehouses="wareHouses"
+      @save="handleCreate"
+      :visible.sync="visibleConfirm"
+    >
+    </modal-choice-warehouse>
   </div>
 </template>
 <script>
@@ -119,9 +125,10 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT, EXPORT_SHIPMENT } from '../store'
 import ShipmentStatusTab from '../components/ShipmentStatusTab'
-import ModalConfirm from '../../../components/shared/modal/ModalConfirm'
+import ModalChoiceWarehouse from '../components/ModalChoiceWarehouse'
 import { cloneDeep } from '../../../core/utils'
 import mixinDownload from '@/packages/shared/mixins/download'
+import { FETCH_WAREHOUSE } from '../../shared/store'
 
 export default {
   name: 'ListShipment',
@@ -129,7 +136,7 @@ export default {
   components: {
     EmptySearchResult,
     ShipmentStatusTab,
-    ModalConfirm,
+    ModalChoiceWarehouse,
   },
   data() {
     return {
@@ -154,6 +161,9 @@ export default {
       statusTab() {
         return SHIPMENT_STATUS_TAB
       },
+      ...mapState('shared', {
+        wareHouses: (state) => state.wareHouses,
+      }),
       mapStatus() {
         return MAP_NAME_STATUS_SHIPMENT
       },
@@ -165,20 +175,35 @@ export default {
       CREATE_SHIPMENT,
       EXPORT_SHIPMENT,
     ]),
+    ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
       payload.search = payload.search.toUpperCase()
-      const result = await this[FETCH_LIST_SHIPMENT](payload)
+      const [result, result_1] = await Promise.all([
+        this[FETCH_LIST_SHIPMENT](payload),
+        this[FETCH_WAREHOUSE](),
+      ])
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+      if (!result_1.success) {
+        this.$toast.open({ message: result_1.message, type: 'error' })
+        return
+      }
     },
-    async handleCreate() {
-      const result = await this[CREATE_SHIPMENT]()
+    async handleCreate(body) {
+      if (body.warehouse_id == 0) {
+        this.$toast.open({
+          type: 'error',
+          message: 'Warehouse id is required',
+        })
+        return
+      }
+      const result = await this[CREATE_SHIPMENT](body)
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return

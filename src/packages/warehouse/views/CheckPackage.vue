@@ -461,8 +461,6 @@ export default {
         return this.$toast.error('Vui lòng chọn Kho')
       }
 
-      debugger
-
       if (
         this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
         this.isSubmitting

@@ -88,7 +88,6 @@ export default {
         })
       })
 
-      debugger
       return optionAccept
     },
   },
