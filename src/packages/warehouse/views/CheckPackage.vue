@@ -425,10 +425,11 @@ export default {
     },
 
     async showModalAcceptHandle() {
+      let req = { type: 1 }
       let [result, result2, result3] = await Promise.all([
         this[FETCH_SERVICE](this.current.service_id),
         this[FETCH_ESTIMATE_COST](this.keyword),
-        this[FETCH_WAREHOUSE](),
+        this[FETCH_WAREHOUSE](req),
       ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
