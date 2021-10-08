@@ -200,7 +200,7 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
-      let req = { type: 1 }
+      let req = { type: 1, status: 1 }
       payload.search = payload.search.toUpperCase()
       const [result, result_1] = await Promise.all([
         this[FETCH_LIST_CONTAINERS](payload),
