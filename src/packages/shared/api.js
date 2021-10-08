@@ -30,7 +30,7 @@ export default {
    * @param payload
    * @return {*}
    */
-  fetchWareHouses() {
-    return http.get(`/warehouses/warehouses`)
+  fetchWareHouses(payload) {
+    return http.get(`/warehouses/warehouses?${buildQueryString(payload)}`)
   },
 }
