@@ -38,6 +38,7 @@
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
+                      <th>Kho</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -92,6 +93,7 @@
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
+                    <td>{{ item.warehouse ? item.warehouse.name : '' }}</td>
                     <td>
                       <span
                         class="badge badge-round"

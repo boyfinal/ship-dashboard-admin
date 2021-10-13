@@ -38,6 +38,7 @@
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th>Số lượng kiện</th>
+                      <th>Kho</th>
                       <th>Trạng thái</th>
                       <th></th>
                     </template>
@@ -64,6 +65,7 @@
                     <td>
                       {{ item.quantity }}
                     </td>
+                    <td>{{ item.warehouse ? item.warehouse.name : '' }}</td>
                     <td>
                       <span
                         class="badge badge-round"
