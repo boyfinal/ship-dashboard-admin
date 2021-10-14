@@ -34,7 +34,6 @@
         <br />
         <p-datepicker
           class="date"
-          :maxDate="end_date"
           :format="'dd/mm/yyyy'"
           :label="labelStart"
           :value="{
@@ -142,6 +141,7 @@ export default {
 
     selectStartDate(v) {
       this.start_date = v.startDate
+      this.end_date = this.start_date
     },
     selectEndDate(v) {
       this.end_date = v.endDate
