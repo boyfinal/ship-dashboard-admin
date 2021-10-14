@@ -129,12 +129,19 @@ export default {
         return false
       }
 
+      if (this.start_date != '' && this.end_date == '') {
+        this.$toast.open({
+          type: 'error',
+          message: 'Chưa chọn ngày kết thúc !',
+        })
+        return false
+      }
+
       return true
     },
 
     selectStartDate(v) {
       this.start_date = v.startDate
-      this.end_date = this.start_date
     },
     selectEndDate(v) {
       this.end_date = v.endDate
