@@ -14,6 +14,7 @@
         <button
           @click="handleShowModalExport"
           class="btn btn-info ml-3 text-nowrap"
+          v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
           >Export</button
         >
       </div>
@@ -132,6 +133,7 @@ import mixinTable from '@core/mixins/table'
 import ModalExport from '../components/ModalExport'
 import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
+import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 
 export default {
   name: 'Debt',
@@ -150,6 +152,8 @@ export default {
       isFetching: false,
       visibleExportModal: false,
       isExporting: false,
+      ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
     }
   },
   created() {
@@ -162,6 +166,9 @@ export default {
     ...mapState('setting', {
       users: (state) => state.users,
       count: (state) => state.count_user,
+    }),
+    ...mapState('shared', {
+      user: (state) => state.user,
     }),
     statusPackage() {
       return PACKAGE_STATUS_TAB
