@@ -8,6 +8,8 @@ export const COUNT_USER = 'countUser'
 export const CREATE_USER = 'createUser'
 export const UPDATE_STATUS_USER = 'updateStatusUser'
 export const UPDATE_ROLE_USER = 'updateRoleUser'
+export const EXPORT_PACKAGE = 'exportPackage'
+
 /**
  * State
  */
@@ -90,5 +92,22 @@ export const actions = {
       success: false,
       message: response.errors || '',
     }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [EXPORT_PACKAGE]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.exportPackage(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.download
+    }
+
+    return result
   },
 }

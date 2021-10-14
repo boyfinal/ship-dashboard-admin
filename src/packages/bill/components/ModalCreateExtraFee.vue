@@ -1,9 +1,5 @@
 <template>
-  <p-modal
-    :active.sync="visible"
-    :title="`Tạo phí phát sinh`"
-    @close="handleClose"
-  >
+  <p-modal :active="visible" :title="`Tạo phí phát sinh`" @close="handleClose">
     <div class="row mb-16">
       <div class="col-12">
         <label for=""><b>Khách hàng</b></label>
@@ -68,10 +64,9 @@
 
 <script>
 import UserResource from '@/components/shared/resource/User'
-import PInput from '../../../../uikit/components/input/Input'
 export default {
   name: 'ModalCreateExtraFee',
-  components: { PInput, UserResource },
+  components: { UserResource },
   props: {
     visible: {
       type: Boolean,
