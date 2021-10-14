@@ -22,7 +22,11 @@
             :placeHolder="'Quyền'"
           />
         </div>
-        <a href="#" class="btn btn-info ml-8" @click="visibleModalAddUser">
+        <a
+          href="#"
+          class="btn btn-info ml-8 add-user"
+          @click="visibleModalAddUser"
+        >
           <span><i class="fa fa-plus"></i>Thêm quản lý</span>
         </a>
       </div>

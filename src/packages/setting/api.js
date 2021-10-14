@@ -45,4 +45,7 @@ export default {
   updateRoleUser(payload) {
     return http.put('/users/update-role', payload)
   },
+  exportPackage(payload) {
+    return http.post('/packages/export', payload)
+  },
 }
