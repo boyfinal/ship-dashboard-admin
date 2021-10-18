@@ -179,6 +179,8 @@
 
     <ModalAccept
       :service="service_detail"
+      :estimate-cost="estimateCost"
+      :warehouses="wareHouses"
       :visible.sync="isVisibleModalAccept"
       @accept="acceptHandle"
     />
@@ -199,7 +201,11 @@ import {
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
 import http from '@core/services/http'
-import { FETCH_SERVICE } from '../../shared/store'
+import {
+  FETCH_SERVICE,
+  FETCH_ESTIMATE_COST,
+  FETCH_WAREHOUSE,
+} from '../../shared/store'
 
 export default {
   name: 'CheckPackage',
@@ -211,6 +217,8 @@ export default {
     }),
     ...mapState('shared', {
       service_detail: (state) => state.service_detail,
+      estimateCost: (state) => state.estimateCost,
+      wareHouses: (state) => state.wareHouses,
     }),
     messages() {
       if (!this.current.id) return []
@@ -318,7 +326,12 @@ export default {
     this.beforeLeaveHandle()
   },
   methods: {
-    ...mapActions('shared', ['loading', FETCH_SERVICE]),
+    ...mapActions('shared', [
+      'loading',
+      FETCH_SERVICE,
+      FETCH_ESTIMATE_COST,
+      FETCH_WAREHOUSE,
+    ]),
     ...mapActions('warehouse', {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
@@ -412,9 +425,22 @@ export default {
     },
 
     async showModalAcceptHandle() {
-      let result = await this[FETCH_SERVICE](this.current.service_id)
+      let req = { type: 1, status: 1 }
+      let [result, result2, result3] = await Promise.all([
+        this[FETCH_SERVICE](this.current.service_id),
+        this[FETCH_ESTIMATE_COST](this.keyword),
+        this[FETCH_WAREHOUSE](req),
+      ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      if (!result2.success) {
+        this.$toast.open({ message: result2.message, type: 'error' })
+        return
+      }
+      if (!result3.success) {
+        this.$toast.open({ message: result3.message, type: 'error' })
         return
       }
       this.isVisibleModalAccept = true
@@ -427,9 +453,13 @@ export default {
       })
     },
 
-    async acceptHandle(carrier) {
+    async acceptHandle(carrier, warehouse) {
       if (!carrier) {
         return this.$toast.error('Vui lòng chọn Loại vận chuyển')
+      }
+
+      if (!warehouse) {
+        return this.$toast.error('Vui lòng chọn Kho')
       }
 
       if (
@@ -440,7 +470,11 @@ export default {
 
       this.loading(true)
       this.isSubmitting = true
-      const body = { id: this.current.id, carrier: carrier }
+      const body = {
+        id: this.current.id,
+        carrier: carrier,
+        warehouse: warehouse,
+      }
 
       if (this.isChange) {
         body.weight = this.volume.weight || 0

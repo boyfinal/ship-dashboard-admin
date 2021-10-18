@@ -29,8 +29,8 @@ export default {
   countListShipments(payload) {
     return http.get(`/shipments/count?${buildQueryString(payload)}`)
   },
-  createShipment() {
-    return http.post(`/shipments/create`)
+  createShipment(payload) {
+    return http.post(`/shipments/create`, payload)
   },
   exportShipment(payload) {
     return http.post('/shipments/export', payload)

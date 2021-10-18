@@ -11,6 +11,12 @@
           @keyup.enter="handleSearch"
         >
         </p-input>
+        <button
+          @click="handleShowModalExport"
+          class="btn btn-info ml-3 text-nowrap"
+          v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+          >Export</button
+        >
       </div>
       <div class="card">
         <div class="card-body">
@@ -107,22 +113,34 @@
         </div>
       </div>
     </div>
+    <modal-export
+      :options="statusPackage"
+      :visible.sync="visibleExportModal"
+      :loading="isExporting"
+      @save="handleExport"
+    >
+    </modal-export>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { ROLE_CUSTOMER } from '@core/constants'
-import { LIST_USER } from '../store/index'
+import { LIST_USER, EXPORT_PACKAGE } from '../store/index'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import ModalExport from '../components/ModalExport'
+import { PACKAGE_STATUS_TAB } from '../../package/constants'
+import mixinDownload from '@/packages/shared/mixins/download'
+import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 
 export default {
   name: 'Debt',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
+    ModalExport,
   },
   data() {
     return {
@@ -132,6 +150,10 @@ export default {
         role: ROLE_CUSTOMER,
       },
       isFetching: false,
+      visibleExportModal: false,
+      isExporting: false,
+      ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
     }
   },
   created() {
@@ -145,10 +167,17 @@ export default {
       users: (state) => state.users,
       count: (state) => state.count_user,
     }),
+    ...mapState('shared', {
+      user: (state) => state.user,
+    }),
+    statusPackage() {
+      return PACKAGE_STATUS_TAB
+    },
   },
   methods: {
     truncate,
-    ...mapActions('setting', [LIST_USER]),
+    ...mapActions('setting', [LIST_USER, EXPORT_PACKAGE]),
+
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -157,6 +186,26 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
       this.isFetching = false
+    },
+
+    handleShowModalExport() {
+      this.visibleExportModal = true
+    },
+
+    async handleExport(payload) {
+      this.isExporting = true
+      const result = await this[EXPORT_PACKAGE](payload)
+      this.isExporting = false
+
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
     },
   },
   watch: {

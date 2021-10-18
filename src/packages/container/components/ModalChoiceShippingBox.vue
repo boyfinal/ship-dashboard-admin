@@ -61,13 +61,14 @@
       </div>
       <div class="col-4">
         <label for=""><b>Kho:</b></label>
-        <p-select
-          :disabled="true"
-          class="floating"
-          v-model="store"
-          name="store"
-        >
-          <option value="1">Hà nội</option>
+        <p-select class="floating" v-model="warehouseID" name="warehouseID">
+          <option value="0">Chọn kho</option>
+          <option
+            v-for="warehouse in warehouses"
+            :key="warehouse.id"
+            :value="warehouse.id"
+            >{{ warehouse.name }}</option
+          >
         </p-select>
       </div>
     </div>
@@ -105,6 +106,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    warehouses: {
+      type: Array,
+      default: () => [],
+    },
   },
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
@@ -113,7 +118,9 @@ export default {
     return {
       isShow: this.visible,
       box: {},
+      warehouse: {},
       type: 0,
+      warehouseID: 0,
       store: 1,
     }
   },
@@ -124,6 +131,7 @@ export default {
     async handleSave() {
       const payload = {
         box_type_id: +this.type,
+        warehouse_id: this.warehouseID,
       }
       this.$emit('save', payload)
     },

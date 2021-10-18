@@ -26,7 +26,7 @@
             width: 15%
         }
     }
-    .btn {
+    .add-user {
         width: 159px;
         .fa-plus {
             margin-right: 5px;
@@ -96,5 +96,38 @@
     }
     .btn-primary {
         width: 80px;
+    }
+}
+
+// modal-export
+.modal-export {
+    .modal-lg {
+        width: 700px;
+        overflow: revert;
+        .modal-body {
+            overflow-y: unset;
+        }
+    }
+    .date {
+        width: 100%;
+        // .reportrange-text {
+        //     min-width: 180px;
+        // }
+        img {
+            margin-top: 4px !important;
+        }
+        .label-date-picker {
+            color: #adadad
+        }
+        span {
+            display: block;
+            margin-top: 2px;
+        }
+    }
+    .multiselect__tags {
+        padding-top: 8px;
+        .multiselect__tag {
+            background-color: $color-java-blue-6;
+        }
     }
 }
