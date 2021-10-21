@@ -120,32 +120,47 @@ export default {
       this.isloading = false
     },
 
-    switchTypeHandle(type) {
+    switchTypeHandle(value) {
+      if (value == this.filter.user_class) return
+
       if (!this.hasChangePrice) {
-        this.switchType(type)
+        this.delayLoadHandle()
+        this.switchType(value)
         return
       }
 
       this.$dialog.confirm({
         title: `Thông tin chưa được lưu, bạn có muốn chuyển tab khác?`,
         onConfirm: () => {
-          this.switchType(type)
+          this.delayLoadHandle()
+          this.switchType(value)
         },
       })
     },
 
-    switchServiceHandle(type) {
+    switchServiceHandle(value) {
+      if (value == this.filter.service) return
+
       if (!this.hasChangePrice) {
-        this.switchService(type)
+        this.delayLoadHandle()
+        this.switchService(value)
         return
       }
 
       this.$dialog.confirm({
         title: `Thông tin chưa được lưu, bạn có muốn chuyển tab khác?`,
         onConfirm: () => {
-          this.switchService(type)
+          this.delayLoadHandle()
+          this.switchService(value)
         },
       })
+    },
+
+    delayLoadHandle() {
+      this.isloading = true
+      setTimeout(() => {
+        this.isloading = false
+      }, 300)
     },
 
     async saveHandle() {
