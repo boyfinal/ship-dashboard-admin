@@ -2,7 +2,7 @@
   <div class="list-packages pages">
     <div class="page-content">
       <div class="row mb-12 search-input">
-        <div class="col-12 pl-0">
+        <div class="col-9 pl-0">
           <p-input
             placeholder="Tìm theo mã vận đơn ..."
             prefixIcon="search"
@@ -13,6 +13,34 @@
             @clear="clearSearch"
           >
           </p-input>
+        </div>
+        <div class="col-3 pr-0">
+          <p-datepicker
+            class="filter-date"
+            :format="'dd/mm/yyyy'"
+            :label="label"
+            :value="{
+              startDate: this.export.start_date,
+              endDate: this.export.end_date,
+            }"
+            @update="selectDate"
+          >
+          </p-datepicker>
+          <p-button
+            class="close ml-2"
+            type="default"
+            icon="close"
+            v-if="this.export.start_date && this.export.end_date"
+            @click="clearDate"
+          />
+          <p-button
+            id="export-btn"
+            :loading="isExporting"
+            :disabled="disableExport"
+            @click="handleExport"
+            class="btn btn-info ml-3 text-nowrap"
+            >Export</p-button
+          >
         </div>
       </div>
       <div class="card">
@@ -163,21 +191,25 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
 import api from '../api'
-
+import { date } from '@core/utils/datetime'
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
   MAP_NAME_STATUS_PACKAGE,
   PACKAGE_WAREHOUSE_STATUS_PICK,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
-import { FETCH_LIST_PACKAGES_IN_WAREHOUSE } from '../store'
+import {
+  FETCH_LIST_PACKAGES_IN_WAREHOUSE,
+  EXPORT_WAREHOUSE_PACKAGES,
+} from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 
 export default {
   name: 'ListPackageInWarehouse',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
     PackageStatusTab,
@@ -190,8 +222,14 @@ export default {
         search: '',
         code: '',
       },
-      labelDate: `Tìm theo ngày`,
+      export: {
+        start_date: '',
+        end_date: '',
+      },
+      label: `Date`,
       isUploading: false,
+      isExporting: false,
+      disableExport: true,
       resultImport: {},
       keywordSearch: '',
       allowSearch: true,
@@ -240,7 +278,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions('warehouse', [FETCH_LIST_PACKAGES_IN_WAREHOUSE]),
+    ...mapActions('warehouse', [
+      FETCH_LIST_PACKAGES_IN_WAREHOUSE,
+      EXPORT_WAREHOUSE_PACKAGES,
+    ]),
     truncate,
     async init() {
       this.isFetching = true
@@ -255,7 +296,45 @@ export default {
     acceptHandle(code) {
       this.$router.push({ name: 'check-package', query: { keyword: code } })
     },
+    selectDate(v) {
+      if (v.startDate !== null && v.endDate !== null) {
+        const time = v.endDate.getTime() - v.startDate.getTime()
+        const diff_days = Math.floor(time / (1000 * 3600 * 24))
+        if (diff_days > 6) {
+          this.$toast.error('Khoảng tìm kiếm chỉ trong vòng 7 ngày')
+          this.disableExport = true
+          return
+        }
+      }
+      this.export.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.export.end_date = date(v.endDate, 'yyyy-MM-dd')
+      this.disableExport = false
+    },
+    clearDate() {
+      this.export.end_date = ''
+      this.export.start_date = ''
+      this.label = 'Date'
+      this.disableExport = true
+    },
+    async handleExport() {
+      this.isExporting = true
+      const payload = {
+        start_date: date(this.export.start_date, 'yyyy-MM-dd'),
+        end_date: date(this.export.end_date, 'yyyy-MM-dd'),
+      }
+      const result = await this[EXPORT_WAREHOUSE_PACKAGES](payload)
+      this.isExporting = false
 
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
+    },
     async showLabel(label) {
       document.activeElement && document.activeElement.blur()
       if (this.blob && this.isImage) {
@@ -294,4 +373,24 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.filter-date {
+  float: left;
+  min-width: 212px !important;
+}
+.filter-date > div {
+  line-height: 28px;
+}
+.filter-date + button.close {
+  width: 40px;
+  height: 40px;
+  float: left;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+#export-btn {
+  border-color: inherit;
+  float: right;
+}
+</style>
