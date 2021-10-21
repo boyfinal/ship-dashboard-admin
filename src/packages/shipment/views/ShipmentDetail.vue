@@ -95,6 +95,14 @@
               Hủy lô hàng
             </p-button>
           </div>
+          <div
+            class="page-header__action col-6 text-right"
+            v-if="isClosedShipment"
+          >
+            <p-button type="info" @click="handleExport()" :class="`mr-3`">
+              Xuất excel
+            </p-button>
+          </div>
         </div>
       </div>
       <div class="page-content">
@@ -191,10 +199,12 @@ import {
   CANCEL_SHIPMENT,
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
+  EXPORT_SHIPMENT,
 } from '../store'
 import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+import mixinDownload from '@/packages/shared/mixins/download'
 import {
   ShipmentClosed,
   ShipmentCanceled,
@@ -203,7 +213,7 @@ import {
 import Browser from '@core/helpers/browser'
 export default {
   name: 'ShipmentDetail',
-  mixins: [mixinRoute, mixinTable, mixinBarcode],
+  mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
   components: {
     EmptySearchResult,
   },
@@ -218,6 +228,7 @@ export default {
       code: '',
       isStartScan: false,
       loading: false,
+      ShipmentClosed: ShipmentClosed,
     }
   },
   computed: {
@@ -249,6 +260,7 @@ export default {
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
+      EXPORT_SHIPMENT,
     ]),
     ...mapActions('container', [GET_LABEL]),
     async init() {
@@ -402,6 +414,26 @@ export default {
         type: 'success',
       })
       this.init()
+    },
+    async handleExport() {
+      let item_id = this.$route.params.id
+      const result = await this[EXPORT_SHIPMENT]({
+        id: +item_id,
+      })
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadFile(
+        result.url,
+        'packages',
+        result.url.split('/'),
+        'danh_sach_don_hang_'
+      )
     },
   },
   watch: {
