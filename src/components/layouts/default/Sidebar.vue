@@ -203,9 +203,9 @@ export default {
               alias: [],
             },
             {
-              route: '',
+              route: '/prices',
               title: 'Bảng giá',
-              alias: [],
+              alias: ['/prices'],
             },
           ],
         },

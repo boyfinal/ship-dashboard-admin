@@ -17,4 +17,13 @@ export const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/Debt.vue'),
   },
+  {
+    path: '/prices',
+    name: 'prices',
+    meta: {
+      title: 'Quản lý bảng giá',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/Prices.vue'),
+  },
 ]
