@@ -37,14 +37,19 @@ export default {
     }),
 
     updateHandle(e) {
-      const value = e.target.value
-
-      if (/^\d+(?:.\d{0,2}){0,1}$/gm.test(value)) {
-        this.price_value = parseFloat(value)
-        this.updatePrice({ id: this.current.id, price: value })
-      } else {
-        e.target.value = this.price_value
+      let value = e.target.value.toString().trim()
+      if (value == '') {
+        e.target.value = 0
+        return
       }
+
+      value = value.replace(/^0*/, '')
+      if (/^\d+\.?\d{0,2}$/gm.test(value)) {
+        this.price_value = value
+        this.updatePrice({ id: this.current.id, price: value })
+      }
+
+      e.target.value = this.price_value
     },
   },
   watch: {

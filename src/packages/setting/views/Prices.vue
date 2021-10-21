@@ -226,6 +226,7 @@ export default {
       color: #fff;
       background: #00b4c3;
       border-color: #00b4c3;
+      cursor: initial;
     }
   }
 }
@@ -241,6 +242,7 @@ export default {
       color: #fff;
       background: #00b4c3;
       border-color: #00b4c3;
+      cursor: initial;
     }
   }
 }
