@@ -85,9 +85,8 @@ export default {
       types: (state) => state.types,
       filter: (state) => state.filter,
       services: (state) => state.services,
-      prices: (state) => state.prices,
     }),
-    ...mapGetters('setting', ['hasChangePrice']),
+    ...mapGetters('setting', ['prices', 'hasChangePrice']),
   },
   data() {
     return {

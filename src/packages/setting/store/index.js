@@ -31,7 +31,7 @@ export const state = {
   users: [],
   count_user: 0,
   services: [],
-  prices: [],
+  allPrices: [],
   types: [
     {
       text: 'Public',
@@ -55,39 +55,6 @@ export const state = {
   },
 }
 
-const updatePrices = (state) => {
-  if (!state.filter.service || !state.services.length) return []
-
-  const service = state.services.find(({ id }) => id == state.filter.service)
-  if (!service || !service.prices) return []
-
-  const prices = service.prices.filter(
-    ({ user_class }) => state.filter.user_class == user_class
-  )
-  prices.sort((a, b) => a.weight < b.weight)
-
-  const display = []
-  for (const key in prices) {
-    if (!Object.hasOwnProperty.call(prices, key)) continue
-
-    const { id, user_class, weight, price } = prices[key]
-    let preweight = key > 0 ? prices[key - 1].weight || 0 : 0
-
-    display.push({
-      id,
-      price,
-      new_price: price,
-      weight,
-      user_class,
-      service_name: service.name,
-      type_name: MAP_USER_CLASS_TEXT[parseInt(user_class)],
-      weight_text: preweight == 0 ? `<${weight}` : `${preweight}-${weight}`,
-    })
-  }
-
-  return display
-}
-
 /**
  * Mutation
  */
@@ -106,8 +73,17 @@ export const mutations = {
         continue
       }
 
-      for (const price of service.prices) {
-        state.allPrices.push(price)
+      for (const { id, user_class, weight, price } of service.prices) {
+        state.allPrices.push({
+          id,
+          price,
+          new_price: price,
+          weight,
+          user_class,
+          service_id: service.id,
+          service_name: service.name,
+          type_name: MAP_USER_CLASS_TEXT[parseInt(user_class)],
+        })
       }
     }
 
@@ -117,7 +93,6 @@ export const mutations = {
     })
 
     state.filter.service = state.services.length ? state.services[0].id : 0
-    state.prices = updatePrices(state)
   },
   [SWICTH_TYPE]: (state, payload) => {
     state.filter.user_class = payload
@@ -125,14 +100,12 @@ export const mutations = {
       item.active = item.value == payload
       return item
     })
-    state.prices = updatePrices(state)
   },
   [SWICTH_SERVICE]: (state, payload) => {
     state.filter.service = payload
-    state.prices = updatePrices(state)
   },
   [UPDATE_PRICE]: (state, { id, price }) => {
-    const item = state.prices.find((v) => v.id == id)
+    const item = state.allPrices.find((v) => v.id == id)
     if (!item) return
 
     if (item.price != price && item.new_price != price) {
@@ -140,7 +113,7 @@ export const mutations = {
     }
   },
   [DISCARD_UPDATE_PRICE]: (state) => {
-    state.prices = state.prices.map((item) => {
+    state.allPrices = state.allPrices.map((item) => {
       if (item.price != item.new_price) {
         item.new_price = item.price
       }
@@ -149,7 +122,7 @@ export const mutations = {
     })
   },
   [UPDATE_PRICES]: (state) => {
-    state.prices = state.prices.map((item) => {
+    state.allPrices = state.allPrices.map((item) => {
       if (item.price != item.new_price) {
         item.price = item.new_price
       }
@@ -161,7 +134,31 @@ export const mutations = {
 
 export const getters = {
   hasChangePrice: (state) => {
-    return state.prices.some(({ price, new_price }) => price != new_price)
+    return state.allPrices.some(({ price, new_price }) => price != new_price)
+  },
+  prices: (state) => {
+    const prices = state.allPrices.filter(
+      ({ user_class, service_id }) =>
+        state.filter.user_class == user_class &&
+        state.filter.service == service_id
+    )
+
+    prices.sort((a, b) => a.weight < b.weight)
+
+    const display = []
+    for (const key in prices) {
+      if (!Object.hasOwnProperty.call(prices, key)) continue
+
+      const item = Object.assign({}, prices[key])
+
+      let preweight = key > 0 ? prices[key - 1].weight || 0 : 0
+      item.weight_text =
+        preweight == 0 ? `<${item.weight}` : `${preweight}-${item.weight}`
+
+      display.push(item)
+    }
+
+    return display
   },
 }
 
@@ -259,7 +256,7 @@ export const actions = {
     return { error: false }
   },
   async [UPDATE_PRICES]({ commit, state }) {
-    const prices = state.prices
+    const prices = state.allPrices
       .filter(({ price, new_price }) => price != new_price)
       .map(({ id, new_price }) => ({
         price_id: id,
