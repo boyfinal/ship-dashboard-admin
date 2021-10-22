@@ -67,7 +67,7 @@ export const mutations = {
   },
   [FETCH_SERVICES]: (state, payload) => {
     state.services = payload
-    state.allPrices = []
+    state.allPrices.length = 0
     for (const service of state.services) {
       if (!service.prices) {
         continue
@@ -108,7 +108,7 @@ export const mutations = {
     const item = state.allPrices.find((v) => v.id == id)
     if (!item) return
 
-    if (item.price != price && item.new_price != price) {
+    if (item.new_price != price) {
       item.new_price = price
     }
   },

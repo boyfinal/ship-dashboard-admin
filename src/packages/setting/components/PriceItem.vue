@@ -31,6 +31,9 @@ export default {
       price_value: 0,
     }
   },
+  mounted() {
+    this.price_value = this.current.price
+  },
   methods: {
     ...mapMutations('setting', {
       updatePrice: UPDATE_PRICE,
@@ -46,19 +49,17 @@ export default {
       value = value.replace(/^0*/, '')
       if (/^\d+\.?\d{0,2}$/gm.test(value)) {
         this.price_value = value
-        this.updatePrice({ id: this.current.id, price: value })
+        this.updatePrice({ id: this.current.id, price: parseFloat(value) })
       }
 
       e.target.value = this.price_value
     },
   },
   watch: {
-    current: {
+    'current.new_price': {
       handler: function(val) {
-        this.price_value = val.new_price
+        this.price_value = val
       },
-      deep: true,
-      immediate: true,
     },
   },
 }
