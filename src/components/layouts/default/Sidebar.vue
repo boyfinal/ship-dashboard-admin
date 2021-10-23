@@ -1,6 +1,8 @@
 <template>
   <div class="site-menubar">
-    <div class="site-menubar-header"> </div>
+    <div class="site-menubar-header">
+      <img src="~@/assets/img/logo.svg" alt="lionbay" class="logo-header" />
+    </div>
     <div class="site-menubar-body">
       <ul class="site-menu">
         <li
