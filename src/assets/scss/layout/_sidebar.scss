@@ -6,7 +6,7 @@ $width-sidebar: 240px;
 
 .site-menubar-header {
     height: 56px;
-    padding: 12px;
+    padding: 20px 12px;
     position: relative;
     &:after {
         content: "";
@@ -14,9 +14,12 @@ $width-sidebar: 240px;
         left: 0;
         bottom: 0;
         width: 90%;
-        border-bottom: 1px solid $color-java-blue-10;
+        border-bottom: 1px solid $color-java-blue-1;
         transform: translateX(-50%);
         left: 50%;
+    }
+    .logo-header{
+        margin-bottom: 10px;
     }
 }
 
