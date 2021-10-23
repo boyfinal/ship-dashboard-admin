@@ -5,6 +5,7 @@ $modal-background-background-color: rgba($black, 0.86) !default;
 $modal-content-width: 640px !default;
 $modal-content-width-xl: 1140px !default;
 $modal-content-width-lg: 600px !default;
+$modal-content-width-sm: 300px !default;
 $modal-content-margin-mobile: 20px !default;
 $modal-content-spacing-mobile: 160px !default;
 $modal-content-spacing-tablet: 40px !default;
@@ -103,10 +104,13 @@ $modal-card-body-padding: 20px !default;
   }
   @include desktop {
     &.modal-lg {
-      width: $modal-content-width-lg;
+      width: $modal-content-width-lg !important;
     }
     &.modal-xl {
       width: $modal-content-width-xl;
+    }
+    &.modal-sm {
+      width: $modal-content-width-sm !important;
     }
   }
 }

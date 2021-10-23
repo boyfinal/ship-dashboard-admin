@@ -1,5 +1,10 @@
 <template>
-  <p-modal :active.sync="isShow" :title="`Tạo lô hàng`" @close="handleClose">
+  <p-modal
+    :size="`sm`"
+    :active.sync="isShow"
+    :title="`Tạo lô hàng`"
+    @close="handleClose"
+  >
     <div class="col">
       <label for=""><b>Kho:</b></label>
       <p-select class="floating" v-model="warehouseID" name="warehouseID">
