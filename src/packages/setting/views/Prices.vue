@@ -131,6 +131,7 @@ export default {
       this.$dialog.confirm({
         title: `Thông tin chưa được lưu, bạn có muốn chuyển tab khác?`,
         onConfirm: () => {
+          this.discardHandle()
           this.delayLoadHandle()
           this.switchType(value)
         },
@@ -149,6 +150,7 @@ export default {
       this.$dialog.confirm({
         title: `Thông tin chưa được lưu, bạn có muốn chuyển tab khác?`,
         onConfirm: () => {
+          this.discardHandle()
           this.delayLoadHandle()
           this.switchService(value)
         },
