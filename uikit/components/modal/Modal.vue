@@ -9,7 +9,7 @@
         { 'is-full-height': fullHeight },
       ]"
     >
-      <div class="p-modal-background" @click="cancel('outside')"></div>
+      <div class="p-modal-background" @click="cancelOutSide()"></div>
       <div
         class="p-animation-content"
         :class="[{ 'p-modal-content': !hasModalCard }, classSize, typeClass]"
@@ -79,6 +79,10 @@ export default {
       default: 'zoom-out',
     },
     disableClose: {
+      type: Boolean,
+      default: false,
+    },
+    closeOutside: {
       type: Boolean,
       default: false,
     },
@@ -192,6 +196,12 @@ export default {
         return
       }
       this.onCancel.apply(null, arguments)
+      this.close()
+    },
+    cancelOutSide() {
+      if (this.closeOutside) {
+        return
+      }
       this.close()
     },
 
