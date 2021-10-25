@@ -1,15 +1,15 @@
 .tb {
-  display: table;
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  //border-collapse: collapse;
+    display: table;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    //border-collapse: collapse;
 }
 
 .tb-cell {
-  display: table-cell;
-  vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 //table {
@@ -148,47 +148,51 @@
 //        padding: 5px 10px;
 //    }
 //}
-.table-hover{
-  tbody{
-    //td:first-child{
-    //  border-left: 1px solid $color-neutral-3;
-    //}
-    //td:last-child{
-    //  border-right: 1px solid $color-neutral-3;
-    //}
-
-    tr:hover{
-      td:first-child{
-        border-radius: unset;
-      }
-      td:last-child{
-        border-radius: unset;
-      }
-    }
-    tr:last-child{
-      td{
-        border-bottom: 1px solid $color-neutral-3;
-      }
-      td:first-child{
-        border-bottom-left-radius: 4px;
-      }
-      td:last-child{
-        border-bottom-right-radius: 4px;
-      }
-      &:hover{
-        td:first-child{
-          border-bottom-left-radius: 4px;
+.table-hover {
+    tbody {
+        //td:first-child{
+        //  border-left: 1px solid $color-neutral-3;
+        //}
+        //td:last-child{
+        //  border-right: 1px solid $color-neutral-3;
+        //}
+        tr:hover {
+            td:first-child {
+                border-radius: unset;
+            }
+            td:last-child {
+                border-radius: unset;
+            }
         }
-        td:last-child{
-          border-bottom-right-radius: 4px;
+        tr:last-child {
+            td {
+                border-bottom: 1px solid $color-neutral-3;
+            }
+            td:first-child {
+                border-bottom-left-radius: 4px;
+            }
+            td:last-child {
+                border-bottom-right-radius: 4px;
+            }
+            &:hover {
+                td:first-child {
+                    border-bottom-left-radius: 4px;
+                }
+                td:last-child {
+                    border-bottom-right-radius: 4px;
+                }
+            }
         }
-      }
+        tr:first-child {
+            td {
+                border-top: 2px solid $color-neutral-3;
+            }
+        }
     }
-
-    tr:first-child{
-      td{
-        border-top: 2px solid $color-neutral-3;
-      }
+    .btn {
+        border-radius: 4px;
+        height: 32px;
+        padding-left: 8px;
+        padding-right: 8px;
     }
-  }
 }

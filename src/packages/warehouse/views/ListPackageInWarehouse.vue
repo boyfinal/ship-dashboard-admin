@@ -1,45 +1,23 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12 search-input">
-        <div class="col-11 pl-0">
-          <p-input
-            placeholder="Tìm theo mã vận đơn ..."
-            prefixIcon="search"
-            type="search"
-            clearable
-            v-model="keywordSearch"
-            @keyup.enter="handleSearch"
-            @clear="clearSearch"
-          >
-          </p-input>
-        </div>
-        <div class="col-1 pr-0">
-          <!--          <p-datepicker-->
-          <!--            class="filter-date"-->
-          <!--            :format="'dd/mm/yyyy'"-->
-          <!--            :label="label"-->
-          <!--            :value="{-->
-          <!--              startDate: this.export.start_date,-->
-          <!--              endDate: this.export.end_date,-->
-          <!--            }"-->
-          <!--            @update="selectDate"-->
-          <!--          >-->
-          <!--          </p-datepicker>-->
-          <!--          <p-button-->
-          <!--            class="close ml-2"-->
-          <!--            type="default"-->
-          <!--            icon="close"-->
-          <!--            v-if="this.export.start_date && this.export.end_date"-->
-          <!--            @click="clearDate"-->
-          <!--          />-->
-          <p-button
-            id="export-btn"
-            @click="handleShowModalExport"
-            class="btn btn-info ml-3 text-nowrap"
-            >Export</p-button
-          >
-        </div>
+      <div class="d-flex jc-sb mb-12 search-input">
+        <p-input
+          placeholder="Tìm theo mã vận đơn ..."
+          prefixIcon="search"
+          type="search"
+          clearable
+          v-model="keywordSearch"
+          @keyup.enter="handleSearch"
+          @clear="clearSearch"
+        >
+        </p-input>
+        <p-button
+          id="export-btn"
+          @click="handleShowModalExport"
+          class="btn btn-info ml-3 text-nowrap"
+          >Export</p-button
+        >
       </div>
       <div class="card">
         <div class="card-body">

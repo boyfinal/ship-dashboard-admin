@@ -5,7 +5,7 @@
     :title="`Tạo lô hàng`"
     @close="handleClose"
   >
-    <div class="col">
+    <div>
       <label for=""><b>Kho:</b></label>
       <p-select class="floating" v-model="warehouseID" name="warehouseID">
         <option value="0">Chọn kho</option>
