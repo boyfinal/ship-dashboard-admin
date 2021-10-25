@@ -50,6 +50,7 @@
       </div>
     </div>
     <template slot="footer">
+      <div></div>
       <div class="group-button modal-confirm">
         <p-button type="default" @click="handleClose">
           Bỏ qua
@@ -193,9 +194,6 @@ export default {
 }
 </script>
 <style>
-.modal-footer {
-  justify-content: flex-end !important;
-}
 .p-modal-content label {
   margin-bottom: 0.4rem;
 }

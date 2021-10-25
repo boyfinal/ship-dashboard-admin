@@ -1,8 +1,8 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12">
-        <div class="col-12" id="search-box">
+      <div class="mb-12">
+        <div class="d-flex jc-sb" id="search-box">
           <p-input
             placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
             prefixIcon="search"
@@ -314,8 +314,7 @@ export default {
 </script>
 <style>
 #search-box .input-group {
-  width: calc(100% - 166px);
-  float: left;
   margin-right: 10px;
+  width: 85%;
 }
 </style>

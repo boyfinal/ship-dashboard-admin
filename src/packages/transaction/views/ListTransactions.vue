@@ -1,8 +1,8 @@
 <template>
   <div class="list-transactions pages">
     <div class="page-content">
-      <div class="row mb-12" id="search-bar">
-        <div class="col-8">
+      <div class="d-flex jc-sb mb-12" id="search-bar">
+        <div class="col-9 pl-0">
           <p-input
             :placeholder="getPlaceHolder"
             prefixIcon="search"
@@ -12,15 +12,17 @@
           >
           </p-input>
         </div>
-        <div class="col-2">
+        <div class="filter-group d-flex">
           <p-select placeholder="Please select" v-model="filter.search_by">
             <option :value="key" v-for="(value, key) in searchBy" :key="key">
               {{ value }}
             </option>
           </p-select>
-        </div>
-        <div class="col-2">
-          <p-select placeholder="Please select" v-model="filter.type">
+          <p-select
+            class="ml-8"
+            placeholder="Please select"
+            v-model="filter.type"
+          >
             <option value="">Tất cả</option>
             <option :value="key" v-for="(value, key) in optionType" :key="key">
               {{ value }}
@@ -460,10 +462,6 @@ export default {
 
 <style>
 @media screen and (max-width: 1400px) {
-  .btn-action .btn {
-    padding: 0.4rem 1rem !important;
-    white-space: nowrap;
-  }
   .btn-action {
     min-width: 180px;
   }

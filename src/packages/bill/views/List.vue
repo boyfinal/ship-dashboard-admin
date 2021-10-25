@@ -1,8 +1,13 @@
 <template>
   <div class="pages list__claim">
     <div class="page-content">
-      <div class="d-flex mb-12">
-        <div class="flex-grow-1">
+      <div class="d-flex jc-sb mb-12">
+        <div
+          class="d-flex"
+          style="
+    width: 84%;
+"
+        >
           <p-input
             :placeholder="searchPlaceholder"
             prefixIcon="search"
@@ -13,19 +18,20 @@
             @clear="handleSearch"
           >
           </p-input>
+          <div class="ml-8">
+            <select v-model="filter.search_by" class="form-control">
+              <option value="id">Mã hoá đơn</option>
+              <option value="code">Mã vận đơn</option>
+              <option value="customer">Tài khoản Khách hàng</option>
+              <option value="customer_full_name">Tên Khách hàng</option>
+              <option value="tracking">Mã tracking</option>
+            </select>
+          </div>
         </div>
-        <div class="ml-5">
-          <select v-model="filter.search_by" class="form-control">
-            <option value="id">Mã hoá đơn</option>
-            <option value="code">Mã vận đơn</option>
-            <option value="customer">Tài khoản Khách hàng</option>
-            <option value="customer_full_name">Tên Khách hàng</option>
-            <option value="tracking">Mã tracking</option>
-          </select>
-        </div>
+
         <div
           v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
-          class="ml-5"
+          class="ml-8"
         >
           <p-button type="info" @click="handleShowModalCreateExtraFee">
             <img src="~@/assets/img/plus.svg" />
