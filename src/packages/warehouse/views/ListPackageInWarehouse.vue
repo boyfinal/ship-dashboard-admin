@@ -153,7 +153,7 @@
                         <p-button
                           v-if="item.status == PackageWareHouseStatusPick"
                           @click="acceptHandle(item.code)"
-                          class="mr-2"
+                          class="mr-2 btn-check"
                           type="info"
                         >
                           Kiểm hàng
@@ -398,5 +398,8 @@ export default {
 #export-btn {
   border-color: inherit;
   float: right;
+}
+.btn-check {
+  white-space: nowrap;
 }
 </style>

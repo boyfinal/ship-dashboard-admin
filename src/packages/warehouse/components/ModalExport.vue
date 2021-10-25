@@ -4,6 +4,7 @@
     :active="visible"
     :title="`Export file`"
     @close="handleClose"
+    :close-outside="true"
   >
     <div class="row mb-16">
       <div class="col-6 jc-sb">
