@@ -15,6 +15,9 @@
                 }
             }
         }
+        .btn-info{
+            white-space: nowrap;
+        }
     }
 }
 
@@ -79,6 +82,7 @@
             background: #00b4c3;
             color: #FFFFFF;
             height: 32px;
+            white-space: nowrap;
             &:hover {
                 background: #138496;
             }

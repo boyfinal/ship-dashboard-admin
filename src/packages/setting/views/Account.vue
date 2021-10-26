@@ -27,7 +27,8 @@
           class="ml-8 add-user"
           @click="visibleModalAddUser"
         >
-          <i class="fa fa-plus"></i>Thêm quản lý
+          <p-icon name="plus"></p-icon>
+          Thêm quản lý
         </p-button>
       </div>
       <div class="card">
