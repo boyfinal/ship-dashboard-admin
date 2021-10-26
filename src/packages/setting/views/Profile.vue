@@ -4,15 +4,15 @@
       <div class="card">
         <div class="card-body">
           <div class="mb-16">
-            <label class="font-weight-bold mb-4">Tên hiện thị:</label>
+            <label class="font-weight-bold mb-4">Tên hiển thị:</label>
             <p-input
               class="mb-20"
               type="text"
               name="full_name"
               v-model.trim="full_name"
-              placeholder="Nhập tên hiện thị"
+              placeholder="Nhập tên hiển thị"
               :error="valider.full_name"
-              @input="clearErrors"
+              @input="clearErrors('full_name')"
             />
           </div>
           <div class="mb-16">
@@ -24,7 +24,7 @@
               v-model.trim="currentPassword"
               placeholder="Nhập mật khẩu hiện tại"
               :error="valider.currentPassword"
-              @input="clearErrors"
+              @input="clearErrors('currentPassword')"
               autocomplete="new-password"
             />
           </div>
@@ -37,7 +37,7 @@
               v-model.trim="newPassword"
               placeholder="Nhập mật khẩu mới"
               :error="valider.newPassword"
-              @input="clearErrors"
+              @input="clearErrors('newPassword')"
               autocomplete="new-password"
             />
           </div>
@@ -93,12 +93,16 @@ export default {
         return
       }
 
-      this.$toast.success('Cập nhậ thông tin thành công!')
+      this.$toast.success('Cập nhật thông tin thành công!')
       this.reset()
     },
 
-    clearErrors() {
-      this.valider = {}
+    clearErrors(key) {
+      if (key) {
+        this.$set(this.valider, key, '')
+      } else {
+        this.valider = {}
+      }
     },
 
     reset() {
@@ -113,7 +117,7 @@ export default {
       this.valider = {}
 
       if (this.full_name == '') {
-        this.valider.full_name = 'Tên hiện thị là bắt buộc'
+        this.valider.full_name = 'Tên hiển thị là bắt buộc'
         isValid = false
       }
 
