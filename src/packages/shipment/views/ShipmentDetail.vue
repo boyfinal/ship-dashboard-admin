@@ -495,7 +495,7 @@ export default {
   background-color: #fff;
 }
 .page-header__info > div {
-  margin-right: 50px;
+  /* margin-right: 50px; */
 }
 .page-header__info > div div:last-child {
   font-size: 16px;
