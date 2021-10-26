@@ -645,7 +645,7 @@ export default {
           let text = ''
           switch (log.type) {
             case PackageStatusCancelled:
-              text = `${DELIVER_LOG_PACKAGE[log.type]} bởi <strong>${
+              text = `${DELIVER_LOG_PACKAGE[log.type]} by <strong>${
                 log.updated_user_name
               }</strong>`
               break
