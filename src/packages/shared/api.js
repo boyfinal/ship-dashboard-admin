@@ -4,6 +4,9 @@ export default {
   getUser() {
     return http.get(`/users`)
   },
+  updateProfile(payload) {
+    return http.post('/users/profile', payload)
+  },
   fetchUsersByRole(payload) {
     return http.get(`/users/role?${buildQueryString(payload)}`)
   },
