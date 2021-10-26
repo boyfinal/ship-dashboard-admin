@@ -1,7 +1,7 @@
 <template>
   <div class="setting setting-account pages">
     <div class="page-content">
-      <div class="d-flex mb-16">
+      <div class="d-flex jc-sb mb-16">
         <div class="search-input d-flex">
           <p-input
             placeholder="Tìm theo tên/email"
@@ -22,13 +22,14 @@
             :placeHolder="'Quyền'"
           />
         </div>
-        <a
-          href="#"
-          class="btn btn-info ml-8 add-user"
+        <p-button
+          type="info"
+          class="ml-8 add-user"
           @click="visibleModalAddUser"
         >
-          <span><i class="fa fa-plus"></i>Thêm quản lý</span>
-        </a>
+          <p-icon name="plus"></p-icon>
+          Thêm quản lý
+        </p-button>
       </div>
       <div class="card">
         <div class="card-body">

@@ -48,4 +48,10 @@ export default {
   exportPackage(payload) {
     return http.post('/packages/export', payload)
   },
+  fetchServices(payload) {
+    return http.get(`/services?${buildQueryString(payload)}`)
+  },
+  updatePrices(payload) {
+    return http.post(`/services/prices`, payload)
+  },
 }

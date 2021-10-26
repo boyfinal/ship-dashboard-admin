@@ -1,47 +1,23 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12 search-input">
-        <div class="col-9 pl-0">
-          <p-input
-            placeholder="Tìm theo mã vận đơn ..."
-            prefixIcon="search"
-            type="search"
-            clearable
-            v-model="keywordSearch"
-            @keyup.enter="handleSearch"
-            @clear="clearSearch"
-          >
-          </p-input>
-        </div>
-        <div class="col-3 pr-0">
-          <p-datepicker
-            class="filter-date"
-            :format="'dd/mm/yyyy'"
-            :label="label"
-            :value="{
-              startDate: this.export.start_date,
-              endDate: this.export.end_date,
-            }"
-            @update="selectDate"
-          >
-          </p-datepicker>
-          <p-button
-            class="close ml-2"
-            type="default"
-            icon="close"
-            v-if="this.export.start_date && this.export.end_date"
-            @click="clearDate"
-          />
-          <p-button
-            id="export-btn"
-            :loading="isExporting"
-            :disabled="disableExport"
-            @click="handleExport"
-            class="btn btn-info ml-3 text-nowrap"
-            >Export</p-button
-          >
-        </div>
+      <div class="d-flex jc-sb mb-12 search-input">
+        <p-input
+          placeholder="Tìm theo mã vận đơn ..."
+          prefixIcon="search"
+          type="search"
+          clearable
+          v-model="keywordSearch"
+          @keyup.enter="handleSearch"
+          @clear="clearSearch"
+        >
+        </p-input>
+        <p-button
+          id="export-btn"
+          @click="handleShowModalExport"
+          class="btn btn-info ml-3 text-nowrap"
+          >Export</p-button
+        >
       </div>
       <div class="card">
         <div class="card-body">
@@ -155,7 +131,7 @@
                         <p-button
                           v-if="item.status == PackageWareHouseStatusPick"
                           @click="acceptHandle(item.code)"
-                          class="mr-2"
+                          class="mr-2 btn-check"
                           type="info"
                         >
                           Kiểm hàng
@@ -183,6 +159,12 @@
         </div>
       </div>
     </div>
+    <modal-export
+      :visible.sync="visibleExportModal"
+      :loading="isExporting"
+      @save="handleExport"
+    >
+    </modal-export>
   </div>
 </template>
 <script>
@@ -190,6 +172,7 @@ import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
+import ModalExport from '../components/ModalExport'
 import api from '../api'
 import { date } from '@core/utils/datetime'
 import {
@@ -213,6 +196,7 @@ export default {
   components: {
     EmptySearchResult,
     PackageStatusTab,
+    ModalExport,
   },
   data() {
     return {
@@ -245,6 +229,7 @@ export default {
       },
       PackageWareHouseStatusPick: PACKAGE_WAREHOUSE_STATUS_PICK,
       PackageWareHouseStatusReturn: PACKAGE_WAREHOUSE_STATUS_RETURN,
+      visibleExportModal: false,
     }
   },
   created() {
@@ -296,6 +281,9 @@ export default {
     acceptHandle(code) {
       this.$router.push({ name: 'check-package', query: { keyword: code } })
     },
+    handleShowModalExport() {
+      this.visibleExportModal = true
+    },
     selectDate(v) {
       if (v.startDate !== null && v.endDate !== null) {
         const time = v.endDate.getTime() - v.startDate.getTime()
@@ -316,12 +304,8 @@ export default {
       this.label = 'Date'
       this.disableExport = true
     },
-    async handleExport() {
+    async handleExport(payload) {
       this.isExporting = true
-      const payload = {
-        start_date: date(this.export.start_date, 'yyyy-MM-dd'),
-        end_date: date(this.export.end_date, 'yyyy-MM-dd'),
-      }
       const result = await this[EXPORT_WAREHOUSE_PACKAGES](payload)
       this.isExporting = false
 
@@ -392,5 +376,8 @@ export default {
 #export-btn {
   border-color: inherit;
   float: right;
+}
+.btn-check {
+  white-space: nowrap;
 }
 </style>

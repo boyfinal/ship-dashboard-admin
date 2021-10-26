@@ -1,26 +1,27 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12 search-input">
-        <div class="col-9 pl-0">
-          <p-input
-            :placeholder="searchPlaceholder"
-            prefixIcon="search"
-            type="search"
-            :clearable="true"
-            :value.sync="keywordSearch"
-            @keyup.enter="handleSearch"
-            @clear="clearSearch"
-          >
-          </p-input>
-        </div>
-        <div class="col-3">
-          <p-select placeholder="Please select" v-model="filter.search_by">
-            <option :value="key" v-for="(value, key) in searchBy" :key="key">
-              {{ value }}
-            </option>
-          </p-select>
-        </div>
+      <div class="d-flex jc-sb mb-12 search-input">
+        <p-input
+          :placeholder="searchPlaceholder"
+          prefixIcon="search"
+          type="search"
+          :clearable="true"
+          :value.sync="keywordSearch"
+          @keyup.enter="handleSearch"
+          @clear="clearSearch"
+        >
+        </p-input>
+        <p-select
+          class="ml-8"
+          style="width:20%"
+          placeholder="Please select"
+          v-model="filter.search_by"
+        >
+          <option :value="key" v-for="(value, key) in searchBy" :key="key">
+            {{ value }}
+          </option>
+        </p-select>
       </div>
       <div class="card">
         <div class="card-body">

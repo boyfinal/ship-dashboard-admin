@@ -49,8 +49,8 @@
             </div>
           </div>
           <div class="page-header__action">
-            <a
-              href="#"
+            <p-button
+              type="danger"
               class="btn btn-danger"
               @click="handleCancelPackage"
               v-if="
@@ -60,11 +60,11 @@
               "
             >
               <span>Hủy đơn</span>
-            </a>
-            <a
+            </p-button>
+            <p-button
+              type="info"
               @click="handleModal"
-              href="#"
-              class="btn btn-primary-custom ml-7"
+              class="btn-primary-custom ml-7"
               v-if="
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
@@ -72,8 +72,8 @@
                   !package_detail.package.tracking
               "
             >
-              <span>Sửa đơn</span>
-            </a>
+              Sửa đơn
+            </p-button>
           </div>
         </div>
       </div>

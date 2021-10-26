@@ -18,6 +18,11 @@
             color: $color-neutral-5 !important;
         }
     }
+    .page-content{
+        .btn-info{
+            white-space: nowrap;
+        }
+    }
 }
 
 .modal__add-claim {
