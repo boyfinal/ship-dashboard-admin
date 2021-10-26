@@ -224,10 +224,8 @@ export default {
     margin-right: 10px;
     width: 87%;
   }
-  #search-box {
-    .btn-info {
-      white-space: nowrap;
-    }
+  .btn-info {
+    white-space: nowrap;
   }
 }
 </style>

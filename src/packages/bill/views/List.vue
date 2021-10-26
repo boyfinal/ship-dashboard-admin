@@ -34,7 +34,7 @@
           class="ml-8"
         >
           <p-button type="info" @click="handleShowModalCreateExtraFee">
-            <img src="~@/assets/img/plus.svg" />
+            <p-icon name="plus"></p-icon>
             Tạo phí phát sinh
           </p-button>
         </div>
