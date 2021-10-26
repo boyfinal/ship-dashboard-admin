@@ -166,10 +166,10 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusInTransit]: 'Đơn hàng đang giao',
   [PackageStatusCreated]: ' Label created',
   [PackageStatusPendingPickup]: 'Label confirmed',
-  [PackageStatusRePendingPickup]: 'Đơn hàng đã được chuyển lại',
+  [PackageStatusRePendingPickup]: 'Label confirmed',
   [PackageStatusPicked]: 'Your package has been received by LionBay',
-  [PackageStatusCancelled]: 'Đơn hàng đã bị hủy',
-  [PackageStatusReturned]: 'Đơn hàng bị trả lại',
+  [PackageStatusCancelled]: 'Label canceled',
+  [PackageStatusReturned]: ' Package returned',
   [PackageStatusDelivered]: 'Đơn hàng đã được giao',
   [PackageStatusWareHouseExport]:
     'Your package is on the way to international airport',
