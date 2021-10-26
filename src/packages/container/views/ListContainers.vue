@@ -12,7 +12,7 @@
           >
           </p-input>
           <p-button type="info" @click="CreateContainerHandle">
-            <img src="~@/assets/img/plus.svg" alt="" />
+            <p-icon name="plus"></p-icon>
             Tạo kiện hàng
           </p-button>
         </div>
