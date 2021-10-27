@@ -163,14 +163,14 @@ export const CHANGE_PACKAGE_TYPE = [
 ]
 
 export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInTransit]: 'Đơn hàng đang giao',
+  [PackageStatusInTransit]: 'In transit',
   [PackageStatusCreated]: ' Label created',
   [PackageStatusPendingPickup]: 'Label confirmed',
   [PackageStatusRePendingPickup]: 'Label confirmed',
   [PackageStatusPicked]: 'Your package has been received by LionBay',
   [PackageStatusCancelled]: 'Label canceled',
   [PackageStatusReturned]: ' Package returned',
-  [PackageStatusDelivered]: 'Đơn hàng đã được giao',
+  [PackageStatusDelivered]: 'Delivered',
   [PackageStatusWareHouseExport]:
     'Your package is on the way to international airport',
 }
