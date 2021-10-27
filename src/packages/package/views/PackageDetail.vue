@@ -658,8 +658,7 @@ export default {
               text = DELIVER_LOG_PACKAGE[log.type]
           }
 
-          text = text || log.description
-
+          text = log.description || text
           return { ship_time: log.ship_time, text, location: log.location }
         })
     },
