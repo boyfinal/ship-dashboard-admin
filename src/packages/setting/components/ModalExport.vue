@@ -113,14 +113,6 @@ export default {
       this.$emit('update:visible', false)
     },
     validateParams() {
-      if (this.user_id === 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Chưa chọn khách hàng !',
-        })
-        return false
-      }
-
       if (this.status.length == 0) {
         this.$toast.open({
           type: 'error',
