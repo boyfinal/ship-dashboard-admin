@@ -126,6 +126,7 @@
       :warehouses="wareHouses"
       @save="createContainerSubmit"
       :visible.sync="visibleModalChoiceBox"
+      :loading="loadingCreateContainer"
     >
     </modal-choice-shipping-box>
   </div>
@@ -168,6 +169,7 @@ export default {
       },
       isFetching: false,
       visibleModalChoiceBox: false,
+      loadingCreateContainer: false,
     }
   },
   created() {
@@ -285,7 +287,9 @@ export default {
         })
         return
       }
+      this.loadingCreateContainer = true
       const result = await this[CREATE_CONTAINER](body)
+      this.loadingCreateContainer = false
       this.visibleModalChoiceBox = false
       if (!result.success) {
         this.$toast.open({
