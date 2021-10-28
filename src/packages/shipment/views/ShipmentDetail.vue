@@ -15,17 +15,20 @@
 
         <div class="page-header__subtitle">
           <div class="page-header__info">
-            <div>
+            <div class="info">
               <div>Mã lô:</div>
               <div class="package-code">{{ shipment.id }} </div>
             </div>
-            <div>
+            <div class="info">
               <div>Ngày tạo: </div>
               <div>{{
                 shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
-            <div v-if="shipment.manifest && shipment.manifest.manifest_number">
+            <div
+              class="info"
+              v-if="shipment.manifest && shipment.manifest.manifest_number"
+            >
               <div>Manifest: </div>
               <div>
                 <a
@@ -36,7 +39,7 @@
                 >
               </div>
             </div>
-            <div>
+            <div class="info">
               <div>Trạng thái lô: </div>
               <div>{{
                 shipment.status ? shipmentStatus[shipment.status].text : '-'
@@ -494,8 +497,8 @@ export default {
   color: red;
   background-color: #fff;
 }
-.page-header__info > div {
-  /* margin-right: 50px; */
+.page-header__info > .info {
+  margin-right: 50px;
 }
 .page-header__info > div div:last-child {
   font-size: 16px;
