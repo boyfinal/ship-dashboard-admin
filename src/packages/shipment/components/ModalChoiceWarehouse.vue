@@ -69,6 +69,7 @@ export default {
   watch: {
     visible(value) {
       this.isShow = value
+      this.warehouseID = 0
     },
   },
 }

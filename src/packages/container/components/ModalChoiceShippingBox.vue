@@ -115,7 +115,6 @@ export default {
   },
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
-    console.log(this.loading)
   },
   data() {
     return {
@@ -145,6 +144,8 @@ export default {
   watch: {
     visible(value) {
       this.isShow = value
+      this.type = 0
+      this.warehouseID = 0
     },
   },
 }
