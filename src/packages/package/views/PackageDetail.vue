@@ -193,9 +193,7 @@
                     <div class="row">
                       <div class="col-4">Trạng thái khiếu nại:</div>
                       <div class="col-8">
-                        <div v-if="package_detail.status_ticket">
-                          Có
-                        </div>
+                        <div v-if="package_detail.status_ticket"> Có </div>
                         <div v-if="!package_detail.status_ticket">
                           Không
                         </div></div
@@ -235,33 +233,61 @@
                     <div class="row">
                       <div class="col-4 mb-8">Trọng lượng:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.weight')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.weight')
+                          }}<span v-if="isOverThanOld('weight')">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.weight'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Dài:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.length')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.length')
+                          }}<span v-if="isOverThanOld('length')">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.length'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Rộng:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.width')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.width')
+                          }}<span v-if="isOverThanOld('width')">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.width'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Cao:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.height')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.height')
+                          }}<span v-if="isOverThanOld('height')">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.height'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                   </div>
@@ -270,7 +296,7 @@
               <div
                 v-if="!displayDeliverDetail"
                 class="col-6"
-                style="padding:0 30px 0 30px"
+                style="padding: 0 30px 0 30px"
               >
                 <div class="row">
                   <div class="col-12 p-0">
@@ -338,7 +364,7 @@
               <div
                 v-if="displayDeliverDetail"
                 class="col-6"
-                style="padding:0 30px 0 30px"
+                style="padding: 0 30px 0 30px"
               >
                 <div class="row">
                   <div class="col-12 p-0">
@@ -843,6 +869,19 @@ export default {
       } catch (error) {
         this.$toast.error('File error !!!')
       }
+    },
+
+    isOverThanOld(prop) {
+      if (
+        !this.package_detail.package ||
+        !this.package_detail.package.tracking
+      ) {
+        return false
+      }
+      return (
+        this.package_detail.package.tracking[prop] >
+        this.package_detail.package[prop]
+      )
     },
   },
 
