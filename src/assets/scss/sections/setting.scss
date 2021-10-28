@@ -15,7 +15,7 @@
                 }
             }
         }
-        .btn-info{
+        .btn-info {
             white-space: nowrap;
         }
     }
@@ -86,6 +86,9 @@
             &:hover {
                 background: #138496;
             }
+        }
+        .p-tooltip::after {
+            width: fit-content
         }
     }
 }

@@ -23,7 +23,7 @@
         <p-button type="default" @click="handleClose">
           Bỏ qua
         </p-button>
-        <p-button type="info" @click="handleSave">
+        <p-button type="info" :loading="loading" @click="handleSave">
           Tạo
         </p-button>
       </div>
@@ -69,6 +69,7 @@ export default {
   watch: {
     visible(value) {
       this.isShow = value
+      this.warehouseID = 0
     },
   },
 }
