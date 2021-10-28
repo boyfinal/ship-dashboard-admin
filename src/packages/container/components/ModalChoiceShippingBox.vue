@@ -82,7 +82,8 @@
         <p-button
           type="info"
           @click="handleSave"
-          :disabled="loading || type < 1"
+          :loading="loading"
+          :disabled="type < 1"
         >
           Tạo
         </p-button>
@@ -114,6 +115,7 @@ export default {
   },
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
+    console.log(this.loading)
   },
   data() {
     return {

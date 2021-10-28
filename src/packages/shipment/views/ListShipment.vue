@@ -104,6 +104,7 @@
       :warehouses="wareHouses"
       @save="handleCreate"
       :visible.sync="visibleConfirm"
+      :loading="loadingCreateWarehouse"
     >
     </modal-choice-warehouse>
   </div>
@@ -142,6 +143,7 @@ export default {
       isFetching: false,
       visibleConfirm: false,
       ShipmentClosed: ShipmentClosed,
+      loadingCreateWarehouse: false,
     }
   },
   created() {
@@ -194,7 +196,9 @@ export default {
         })
         return
       }
+      this.loadingCreateWarehouse = true
       const result = await this[CREATE_SHIPMENT](body)
+      this.loadingCreateWarehouse = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return
