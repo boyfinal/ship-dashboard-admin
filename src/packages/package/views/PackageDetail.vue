@@ -642,7 +642,7 @@ export default {
       return this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
         .map((log) => {
-          let text = ''
+          let text = log.description
           switch (log.type) {
             case PackageStatusCancelled:
               text = `${DELIVER_LOG_PACKAGE[log.type]} by <strong>${
@@ -655,10 +655,9 @@ export default {
               }</p>`
               break
             default:
-              text = DELIVER_LOG_PACKAGE[log.type]
+              text = log.description || DELIVER_LOG_PACKAGE[log.type]
           }
 
-          text = log.description || text
           return { ship_time: log.ship_time, text, location: log.location }
         })
     },
