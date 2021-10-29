@@ -1,6 +1,11 @@
 <template>
-  <p-modal :active.sync="isShow" :title="`Tạo lô hàng`" @close="handleClose">
-    <div class="col">
+  <p-modal
+    :size="`sm`"
+    :active.sync="isShow"
+    :title="`Tạo lô hàng`"
+    @close="handleClose"
+  >
+    <div>
       <label for=""><b>Kho:</b></label>
       <p-select class="floating" v-model="warehouseID" name="warehouseID">
         <option value="0">Chọn kho</option>
@@ -18,7 +23,7 @@
         <p-button type="default" @click="handleClose">
           Bỏ qua
         </p-button>
-        <p-button type="info" @click="handleSave">
+        <p-button type="info" :loading="loading" @click="handleSave">
           Tạo
         </p-button>
       </div>
@@ -64,6 +69,7 @@ export default {
   watch: {
     visible(value) {
       this.isShow = value
+      this.warehouseID = 0
     },
   },
 }

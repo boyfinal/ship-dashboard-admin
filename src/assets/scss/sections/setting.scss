@@ -15,19 +15,21 @@
                 }
             }
         }
+        .btn-info {
+            white-space: nowrap;
+        }
     }
 }
 
 //setting-account
 .setting-account {
     .search-input {
-        width: 85%;
+        width: 86%;
         .search-type {
             width: 15%
         }
     }
     .add-user {
-        width: 159px;
         .fa-plus {
             margin-right: 5px;
         }
@@ -36,7 +38,6 @@
         .btn {
             width: 67px;
             border-radius: 4px;
-            padding: 8px 10px;
             font-weight: 600;
             font-size: 14px;
             line-height: 22px;
@@ -73,18 +74,21 @@
         }
         //debt page 
         .btn_action {
-            border-radius: 4px;
-            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            padding: 0.4rem 8px;
             font-weight: 600;
             font-size: 14px;
             line-height: 22px;
             background: #00b4c3;
             color: #FFFFFF;
             height: 32px;
-            width: 76px;
+            white-space: nowrap;
             &:hover {
                 background: #138496;
             }
+        }
+        .p-tooltip::after {
+            width: fit-content
         }
     }
 }

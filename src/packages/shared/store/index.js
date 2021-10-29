@@ -6,6 +6,7 @@ export const LOADING = 'loading'
 export const FETCH_SERVICE = 'fetchService'
 export const FETCH_ESTIMATE_COST = 'fetchEstimateCost'
 export const FETCH_WAREHOUSE = 'fetchWareHouses'
+export const UPDATE_PROFILE = 'updateProfile'
 
 import addresses from '../../../assets/json/address.json'
 
@@ -38,6 +39,9 @@ export const mutations = {
   },
   [FETCH_WAREHOUSE]: (state, payload) => {
     state.wareHouses = payload
+  },
+  [UPDATE_PROFILE]: (state, { full_name }) => {
+    state.user.full_name = full_name
   },
 }
 
@@ -119,5 +123,16 @@ export const actions = {
     }
     commit(FETCH_WAREHOUSE, res.warehouses)
     return result
+  },
+
+  async [UPDATE_PROFILE]({ commit }, payload) {
+    const res = await api.updateProfile(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(UPDATE_PROFILE, payload)
+    return { error: false }
   },
 }

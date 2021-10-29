@@ -1,8 +1,8 @@
 <template>
   <div class="list-packages pages">
     <div class="page-content">
-      <div class="row mb-12">
-        <div class="col-12" id="search-box">
+      <div class="mb-12">
+        <div class="d-flex jc-sb" id="search-box">
           <p-input
             placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
             prefixIcon="search"
@@ -12,7 +12,7 @@
           >
           </p-input>
           <p-button type="info" @click="CreateContainerHandle">
-            <img src="~@/assets/img/plus.svg" alt="" />
+            <p-icon name="plus"></p-icon>
             Tạo kiện hàng
           </p-button>
         </div>
@@ -126,6 +126,7 @@
       :warehouses="wareHouses"
       @save="createContainerSubmit"
       :visible.sync="visibleModalChoiceBox"
+      :loading="loadingCreateContainer"
     >
     </modal-choice-shipping-box>
   </div>
@@ -168,6 +169,7 @@ export default {
       },
       isFetching: false,
       visibleModalChoiceBox: false,
+      loadingCreateContainer: false,
     }
   },
   created() {
@@ -285,7 +287,9 @@ export default {
         })
         return
       }
+      this.loadingCreateContainer = true
       const result = await this[CREATE_CONTAINER](body)
+      this.loadingCreateContainer = false
       this.visibleModalChoiceBox = false
       if (!result.success) {
         this.$toast.open({
@@ -314,8 +318,7 @@ export default {
 </script>
 <style>
 #search-box .input-group {
-  width: calc(100% - 166px);
-  float: left;
   margin-right: 10px;
+  width: 85%;
 }
 </style>

@@ -78,4 +78,7 @@ export default {
   checkIn(code) {
     return http.get(`/warehouses/packages/${code}/check-in`)
   },
+  exportWarehousePackage(payload) {
+    return http.post('/warehouses/export', payload)
+  },
 }

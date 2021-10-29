@@ -15,17 +15,20 @@
 
         <div class="page-header__subtitle">
           <div class="page-header__info">
-            <div>
+            <div class="info">
               <div>Mã lô:</div>
               <div class="package-code">{{ shipment.id }} </div>
             </div>
-            <div>
+            <div class="info">
               <div>Ngày tạo: </div>
               <div>{{
                 shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
-            <div v-if="shipment.manifest && shipment.manifest.manifest_number">
+            <div
+              class="info"
+              v-if="shipment.manifest && shipment.manifest.manifest_number"
+            >
               <div>Manifest: </div>
               <div>
                 <a
@@ -36,7 +39,7 @@
                 >
               </div>
             </div>
-            <div>
+            <div class="info">
               <div>Trạng thái lô: </div>
               <div>{{
                 shipment.status ? shipmentStatus[shipment.status].text : '-'
@@ -69,15 +72,16 @@
             class="page-header__action col-6 text-right"
             v-if="!isClosedShipment && !isCanceledShipment"
           >
-            <a
-              class="p-button btn btn-info mr-3"
+            <p-button
+              type="info"
+              class="mr-3"
               v-if="!isStartScan"
               @click="handleStartScan"
             >
               Bắt đầu quét
-            </a>
-            <a class="p-button btn btn-info mr-3" v-else @click="handleStopScan"
-              >Dừng quét</a
+            </p-button>
+            <p-button type="info" class="mr-3" v-else @click="handleStopScan"
+              >Dừng quét</p-button
             >
             <p-button
               type="info"
@@ -93,6 +97,14 @@
               @click="handleCancelShipment"
             >
               Hủy lô hàng
+            </p-button>
+          </div>
+          <div
+            class="page-header__action col-6 text-right"
+            v-if="isClosedShipment"
+          >
+            <p-button type="info" @click="handleExport()" :class="`mr-3`">
+              Xuất excel
             </p-button>
           </div>
         </div>
@@ -191,10 +203,12 @@ import {
   CANCEL_SHIPMENT,
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
+  EXPORT_SHIPMENT,
 } from '../store'
 import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+import mixinDownload from '@/packages/shared/mixins/download'
 import {
   ShipmentClosed,
   ShipmentCanceled,
@@ -203,7 +217,7 @@ import {
 import Browser from '@core/helpers/browser'
 export default {
   name: 'ShipmentDetail',
-  mixins: [mixinRoute, mixinTable, mixinBarcode],
+  mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
   components: {
     EmptySearchResult,
   },
@@ -218,6 +232,7 @@ export default {
       code: '',
       isStartScan: false,
       loading: false,
+      ShipmentClosed: ShipmentClosed,
     }
   },
   computed: {
@@ -249,6 +264,7 @@ export default {
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
+      EXPORT_SHIPMENT,
     ]),
     ...mapActions('container', [GET_LABEL]),
     async init() {
@@ -403,6 +419,26 @@ export default {
       })
       this.init()
     },
+    async handleExport() {
+      let item_id = this.$route.params.id
+      const result = await this[EXPORT_SHIPMENT]({
+        id: +item_id,
+      })
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadFile(
+        result.url,
+        'packages',
+        result.url.split('/'),
+        'danh_sach_don_hang_'
+      )
+    },
   },
   watch: {
     filter: {
@@ -461,7 +497,7 @@ export default {
   color: red;
   background-color: #fff;
 }
-.page-header__info > div {
+.page-header__info > .info {
   margin-right: 50px;
 }
 .page-header__info > div div:last-child {

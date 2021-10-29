@@ -7,29 +7,6 @@
     :close-outside="true"
   >
     <div class="row mb-16">
-      <div class="col-6">
-        <label for=""><b>Khách hàng:</b></label>
-        <user-resource
-          v-model="user_id"
-          class="user-resource is-fullwidth"
-          :filter="{ role: 'customer' }"
-          :label="`Tìm khách hàng`"
-        />
-      </div>
-      <div class="col-6">
-        <label for=""><b>Trạng thái đơn hàng:</b></label>
-        <multiselect
-          placeholder="Chọn trạng thái"
-          v-model="status"
-          label="text"
-          track-by="value"
-          :options="options"
-          :multiple="true"
-          :allow-empty="true"
-        ></multiselect>
-      </div>
-    </div>
-    <div class="row mb-16">
       <div class="col-6 jc-sb">
         <label for=""><b>Từ ngày:</b></label>
         <br />
@@ -78,12 +55,10 @@
 </template>
 
 <script>
-import UserResource from '@/components/shared/resource/User'
 import { date } from '@core/utils/datetime'
 
 export default {
   name: 'ModalExport',
-  components: { UserResource },
   props: {
     visible: {
       type: Boolean,
@@ -113,18 +88,19 @@ export default {
       this.$emit('update:visible', false)
     },
     validateParams() {
-      if (this.status.length == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Chưa chọn trạng thái !',
-        })
-        return false
+      if (this.start_date != '' && this.end_date != '') {
+        const time = this.end_date.getTime() - this.start_date.getTime()
+        const diff_days = Math.floor(time / (1000 * 3600 * 24))
+        if (diff_days > 6) {
+          this.$toast.error('Khoảng tìm kiếm chỉ trong vòng 7 ngày')
+          return false
+        }
       }
 
-      if (this.start_date != '' && this.end_date == '') {
+      if (this.start_date == '' || this.end_date == '') {
         this.$toast.open({
           type: 'error',
-          message: 'Chưa chọn ngày kết thúc !',
+          message: 'Chưa chọn ngày !',
         })
         return false
       }
@@ -148,8 +124,6 @@ export default {
       }
 
       const payload = {
-        user_id: this.user_id,
-        status: this.status.map((x) => x.value),
         start_date: date(this.start_date, 'yyyy-MM-dd'),
         end_date: date(this.end_date, 'yyyy-MM-dd'),
       }

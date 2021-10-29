@@ -49,8 +49,8 @@
             </div>
           </div>
           <div class="page-header__action">
-            <a
-              href="#"
+            <p-button
+              type="danger"
               class="btn btn-danger"
               @click="handleCancelPackage"
               v-if="
@@ -60,11 +60,11 @@
               "
             >
               <span>Hủy đơn</span>
-            </a>
-            <a
+            </p-button>
+            <p-button
+              type="info"
               @click="handleModal"
-              href="#"
-              class="btn btn-primary-custom ml-7"
+              class="btn-primary-custom ml-7"
               v-if="
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
@@ -72,8 +72,8 @@
                   !package_detail.package.tracking
               "
             >
-              <span>Sửa đơn</span>
-            </a>
+              Sửa đơn
+            </p-button>
           </div>
         </div>
       </div>
@@ -193,9 +193,7 @@
                     <div class="row">
                       <div class="col-4">Trạng thái khiếu nại:</div>
                       <div class="col-8">
-                        <div v-if="package_detail.status_ticket">
-                          Có
-                        </div>
+                        <div v-if="package_detail.status_ticket"> Có </div>
                         <div v-if="!package_detail.status_ticket">
                           Không
                         </div></div
@@ -235,33 +233,61 @@
                     <div class="row">
                       <div class="col-4 mb-8">Trọng lượng:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.weight')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.weight')
+                          }}<span v-if="isOverThanOld('weight')">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.weight'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Dài:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.length')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.length')
+                          }}<span v-if="isOverThanOld()">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.length'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Rộng:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.width')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.width')
+                          }}<span v-if="isOverThanOld()">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.width'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                     <div class="row">
                       <div class="col-4 mb-8">Cao:</div>
                       <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.height')
-                        }}</div></div
+                        ><div
+                          >{{ $evaluate('package_detail.package.height')
+                          }}<span v-if="isOverThanOld()">
+                            ({{
+                              $evaluate(
+                                'package_detail.package.tracking.height'
+                              )
+                            }})
+                          </span></div
+                        ></div
                       >
                     </div>
                   </div>
@@ -270,7 +296,7 @@
               <div
                 v-if="!displayDeliverDetail"
                 class="col-6"
-                style="padding:0 30px 0 30px"
+                style="padding: 0 30px 0 30px"
               >
                 <div class="row">
                   <div class="col-12 p-0">
@@ -338,7 +364,7 @@
               <div
                 v-if="displayDeliverDetail"
                 class="col-6"
-                style="padding:0 30px 0 30px"
+                style="padding: 0 30px 0 30px"
               >
                 <div class="row">
                   <div class="col-12 p-0">
@@ -642,10 +668,10 @@ export default {
       return this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
         .map((log) => {
-          let text = ''
+          let text = log.description
           switch (log.type) {
             case PackageStatusCancelled:
-              text = `${DELIVER_LOG_PACKAGE[log.type]} bởi <strong>${
+              text = `${DELIVER_LOG_PACKAGE[log.type]} by <strong>${
                 log.updated_user_name
               }</strong>`
               break
@@ -655,10 +681,8 @@ export default {
               }</p>`
               break
             default:
-              text = DELIVER_LOG_PACKAGE[log.type]
+              text = log.description || DELIVER_LOG_PACKAGE[log.type]
           }
-
-          text = text || log.description
 
           return { ship_time: log.ship_time, text, location: log.location }
         })
@@ -845,6 +869,30 @@ export default {
       } catch (error) {
         this.$toast.error('File error !!!')
       }
+    },
+
+    isOverThanOld(prop) {
+      if (
+        !this.package_detail.package ||
+        !this.package_detail.package.tracking
+      ) {
+        return false
+      }
+
+      if (prop == 'weight') {
+        return (
+          this.package_detail.package.tracking[prop] >
+          this.package_detail.package[prop]
+        )
+      }
+      return (
+        this.package_detail.package.tracking.height *
+          this.package_detail.package.tracking.width *
+          this.package_detail.package.tracking.length >
+        this.package_detail.package.height *
+          this.package_detail.package.width *
+          this.package_detail.package.length
+      )
     },
   },
 

@@ -6,6 +6,7 @@ export const FETCH_PACKAGE_DETAIL = 'fetchPackageDetail'
 export const RETURN_PACKAGE = 'returnPackage'
 export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
+export const EXPORT_WAREHOUSE_PACKAGES = 'exportWarehousePackages'
 
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -129,5 +130,22 @@ export const actions = {
 
     commit(WAREHOUSE_CHECK_IN, res.package)
     return { error: false }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [EXPORT_WAREHOUSE_PACKAGES]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.exportWarehousePackage(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.download
+    }
+
+    return result
   },
 }

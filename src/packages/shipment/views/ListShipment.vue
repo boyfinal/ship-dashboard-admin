@@ -1,8 +1,8 @@
 <template>
   <div class="list__shipment pages">
     <div class="page-content">
-      <div class="row mb-12">
-        <div class="col-12" id="search-box">
+      <div class="mb-12">
+        <div class="d-flex jc-sb" id="search-box">
           <p-input
             placeholder="Tìm theo mã lô hoặc mã kiện"
             prefixIcon="search"
@@ -14,7 +14,7 @@
           >
           </p-input>
           <p-button @click="visibleModal" type="info">
-            <img src="~@/assets/img/plus.svg" alt="" />
+            <p-icon name="plus"></p-icon>
             Tạo lô hàng
           </p-button>
         </div>
@@ -40,7 +40,6 @@
                       <th>Số lượng kiện</th>
                       <th>Kho</th>
                       <th>Trạng thái</th>
-                      <th></th>
                     </template>
                   </tr>
                 </thead>
@@ -71,14 +70,6 @@
                         class="badge badge-round"
                         :class="mapStatus[item.status].class"
                         >{{ mapStatus[item.status].value }}</span
-                      >
-                    </td>
-                    <td width="150">
-                      <p-button
-                        type="info"
-                        v-if="item.status == ShipmentClosed"
-                        @click="handleExport(item)"
-                        >Xuất excel</p-button
                       >
                     </td>
                   </tr>
@@ -113,6 +104,7 @@
       :warehouses="wareHouses"
       @save="handleCreate"
       :visible.sync="visibleConfirm"
+      :loading="loadingCreateWarehouse"
     >
     </modal-choice-warehouse>
   </div>
@@ -125,17 +117,18 @@ import { mapState, mapActions } from 'vuex'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT, EXPORT_SHIPMENT } from '../store'
+import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT } from '../store'
 import ShipmentStatusTab from '../components/ShipmentStatusTab'
 import ModalChoiceWarehouse from '../components/ModalChoiceWarehouse'
 import { cloneDeep } from '../../../core/utils'
-import mixinDownload from '@/packages/shared/mixins/download'
 import { FETCH_WAREHOUSE } from '../../shared/store'
+import PIcon from '../../../../uikit/components/icon/Icon'
 
 export default {
   name: 'ListShipment',
-  mixins: [mixinRoute, mixinTable, mixinDownload],
+  mixins: [mixinRoute, mixinTable],
   components: {
+    PIcon,
     EmptySearchResult,
     ShipmentStatusTab,
     ModalChoiceWarehouse,
@@ -150,6 +143,7 @@ export default {
       isFetching: false,
       visibleConfirm: false,
       ShipmentClosed: ShipmentClosed,
+      loadingCreateWarehouse: false,
     }
   },
   created() {
@@ -172,11 +166,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('shipment', [
-      FETCH_LIST_SHIPMENT,
-      CREATE_SHIPMENT,
-      EXPORT_SHIPMENT,
-    ]),
+    ...mapActions('shipment', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
       this.isFetching = true
@@ -206,7 +196,9 @@ export default {
         })
         return
       }
+      this.loadingCreateWarehouse = true
       const result = await this[CREATE_SHIPMENT](body)
+      this.loadingCreateWarehouse = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return
@@ -214,26 +206,6 @@ export default {
       this.$toast.open({ message: 'Tạo lô thành công', type: 'success' })
       this.visibleConfirm = false
       this.init()
-    },
-
-    async handleExport(item) {
-      const result = await this[EXPORT_SHIPMENT]({
-        id: item.id,
-      })
-      if (!result.success) {
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
-        return
-      }
-      this.downloadFile(
-        result.url,
-        'packages',
-        result.url.split('/'),
-        'danh_sach_don_hang_'
-      )
     },
 
     visibleModal() {
@@ -250,10 +222,14 @@ export default {
   },
 }
 </script>
-<style>
-#search-box .input-group {
-  width: calc(100% - 166px);
-  float: left;
-  margin-right: 10px;
+<style lang="scss">
+.list__shipment {
+  #search-box .input-group {
+    margin-right: 10px;
+    width: 87%;
+  }
+  .btn-info {
+    white-space: nowrap;
+  }
 }
 </style>

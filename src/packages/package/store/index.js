@@ -50,9 +50,7 @@ export const getters = {
 export const mutations = {
   [FETCH_PACKAGE_DETAIL]: (state, payload) => {
     state.package_detail = payload
-    state.package_detail.deliver_logs = (payload.deliver_logs || []).filter(
-      ({ status, type }) => status != 'LI' && type != 30
-    )
+    state.package_detail.deliver_logs = payload.deliver_logs || []
   },
   [FETCH_LIST_PACKAGES]: (state, payload) => {
     state.packages = payload

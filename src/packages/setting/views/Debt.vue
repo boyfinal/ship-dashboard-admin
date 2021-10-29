@@ -27,11 +27,11 @@
                 <thead>
                   <tr>
                     <th width="200">Họ tên</th>
-                    <th width="150">Email</th>
-                    <th width="200">Số điện thoại</th>
+                    <th width="200">Email</th>
+                    <th width="150">Số điện thoại</th>
                     <th width="100">Số dư</th>
-                    <th width="150">Số nợ</th>
-                    <th width="100">Action</th>
+                    <th width="100">Số nợ</th>
+                    <th width="150">Action</th>
                   </tr>
                 </thead>
                 <tbody>
