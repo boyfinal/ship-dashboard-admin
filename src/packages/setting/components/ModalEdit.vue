@@ -115,7 +115,7 @@ export default {
   },
   computed: {
     title() {
-      return `Chinh sửa thông tin khách hàng: ${this.current.full_name}`
+      return `Chỉnh sửa thông tin khách hàng: ${this.current.full_name}`
     },
   },
   data() {
