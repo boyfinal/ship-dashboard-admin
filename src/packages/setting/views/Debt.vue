@@ -225,7 +225,7 @@ export default {
           email_short: emailShort,
           debt_max_amount: debtMaxAmount,
           is_debt: debtMaxAmount > 0,
-          debt_max_day: debtMaxDay ? `${debtMaxDay} ngày` : '-',
+          debt_max_day: debtMaxAmount > 0 ? `${debtMaxDay} ngày` : '-',
           payment_type: debtMaxAmount > 0 ? 'Trả sau' : 'Trả trước',
           debt: balance > 0 ? 0 : Math.abs(balance),
           balance: balance > 0 ? balance : 0,
