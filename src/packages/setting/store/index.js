@@ -15,6 +15,7 @@ export const SWICTH_SERVICE = 'swicthService'
 export const UPDATE_PRICES = 'updatePrices'
 export const UPDATE_PRICE = 'updatePrice'
 export const DISCARD_UPDATE_PRICE = 'discard_update_price'
+export const UPDATE_USER_INFO = 'updateUserInfo'
 
 import {
   USER_CLASS_PUBLIC,
@@ -274,6 +275,16 @@ export const actions = {
     }
 
     commit(UPDATE_PRICES)
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [UPDATE_USER_INFO]({ commit }, payload) {
+    const res = await api.updateUserInfo(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
     return { error: false }
   },
 }
