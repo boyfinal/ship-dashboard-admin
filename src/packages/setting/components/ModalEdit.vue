@@ -105,11 +105,11 @@ export default {
         .number()
         .typeError('Thời gian công nợ không hợp lệ')
         .integer('Thời gian công nợ không hợp lệ')
-        .min(0, 'Thời gian công nợ không hợp lệ 0'),
+        .min(0, 'Thời gian công nợ không hợp lệ'),
       debt_max_amount: y
         .number()
         .typeError('Hạn mức công nợ không hợp lệ')
-        .min(0, 'Hạn mức công nợ không hợp lệ 0'),
+        .min(0, 'Hạn mức công nợ không hợp lệ'),
     }))
     this.valider.reset()
   },
