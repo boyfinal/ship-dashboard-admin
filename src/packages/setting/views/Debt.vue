@@ -73,7 +73,7 @@
                       }}</span>
                     </td>
                     <td>{{ item.balance | formatPrice }}</td>
-                    <td>{{ Math.abs(item.balance) | formatPrice }}</td>
+                    <td>{{ item.debt | formatPrice }}</td>
                     <td>{{ item.debt_max_amount | formatPrice }}</td>
                     <td>{{ item.debt_max_day }}</td>
                     <td>
@@ -214,6 +214,7 @@ export default {
         const info = item.user_info || {}
         const debtMaxAmount = parseFloat(info.debt_max_amount) || 0
         const debtMaxDay = parseInt(info.debt_max_day) || 0
+        const balance = parseFloat(item.balance || 0)
 
         return {
           id: item.id,
@@ -226,7 +227,8 @@ export default {
           is_debt: debtMaxAmount > 0,
           debt_max_day: debtMaxDay ? `${debtMaxDay} ngày` : '-',
           payment_type: debtMaxAmount > 0 ? 'Trả sau' : 'Trả trước',
-          balance: parseFloat(item.balance) || 0,
+          debt: balance > 0 ? 0 : Math.abs(balance),
+          balance: balance > 0 ? balance : 0,
         }
       })
     },
