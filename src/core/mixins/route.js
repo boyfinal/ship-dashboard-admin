@@ -73,5 +73,20 @@ export default {
         this.filter = filters
       }
     },
+    'filter.status': function() {
+      if (this.filter.page > 1) {
+        this.filter.page = 1
+      }
+    },
+    'filter.search': function() {
+      if (this.filter.page > 1) {
+        this.filter.page = 1
+      }
+    },
+    'filter.search_by': function() {
+      if (this.filter.page > 1) {
+        this.filter.page = 1
+      }
+    },
   },
 }
