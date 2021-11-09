@@ -56,6 +56,20 @@
               />
             </div>
           </div>
+          <div class="row mb-8">
+            <div class="col-6">
+              <label for=""><b>Hạng:</b></label>
+              <p-select class="floating" v-model="type" name="class">
+                <option
+                  v-for="type in types"
+                  :key="type.value"
+                  :value="type.value"
+                >
+                  {{ type.text }}
+                </option>
+              </p-select>
+            </div>
+          </div>
         </form>
       </template>
 
@@ -85,6 +99,11 @@
 import { parseInt } from 'lodash'
 import { mapActions } from 'vuex'
 import { UPDATE_USER_INFO } from '../store/index'
+import {
+  USER_CLASS_PUBLIC,
+  USER_CLASS_PRIORITY,
+  USER_CLASS_PARTNER,
+} from '../constants'
 import valider from '@core/valider'
 
 export default {
@@ -127,6 +146,24 @@ export default {
       },
       loading: false,
       valider: null,
+      type: this.current.class,
+      types: [
+        {
+          text: 'Public',
+          value: USER_CLASS_PUBLIC,
+          active: true,
+        },
+        {
+          text: 'Priority',
+          value: USER_CLASS_PRIORITY,
+          active: false,
+        },
+        {
+          text: 'Partner',
+          value: USER_CLASS_PARTNER,
+          active: false,
+        },
+      ],
     }
   },
   methods: {
@@ -143,6 +180,7 @@ export default {
         id: this.current.id,
         debt_max_amount: parseFloat(this.user.debt_max_amount),
         debt_max_day: parseInt(this.user.debt_max_day),
+        class: parseInt(this.type),
       }
 
       this.loading = true
