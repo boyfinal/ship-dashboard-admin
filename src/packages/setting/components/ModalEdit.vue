@@ -59,15 +59,14 @@
           <div class="row mb-8">
             <div class="col-6">
               <label for=""><b>Hạng:</b></label>
-              <p-select class="floating" v-model="type" name="class">
-                <option
-                  v-for="type in types"
-                  :key="type.value"
-                  :value="type.value"
-                >
-                  {{ type.text }}
-                </option>
-              </p-select>
+              <multiselect
+                placeholder="Chọn hạng"
+                v-model="type"
+                label="text"
+                track-by="value"
+                :options="types"
+              >
+              </multiselect>
             </div>
           </div>
         </form>
@@ -146,22 +145,34 @@ export default {
       },
       loading: false,
       valider: null,
-      type: this.current.class,
-      types: [
+      type: [
         {
           text: 'Public',
           value: USER_CLASS_PUBLIC,
-          active: true,
         },
         {
           text: 'Priority',
           value: USER_CLASS_PRIORITY,
-          active: false,
         },
         {
           text: 'Partner',
           value: USER_CLASS_PARTNER,
-          active: false,
+        },
+      ].find((i) => {
+        return i.value == this.current.class
+      }),
+      types: [
+        {
+          text: 'Public',
+          value: USER_CLASS_PUBLIC,
+        },
+        {
+          text: 'Priority',
+          value: USER_CLASS_PRIORITY,
+        },
+        {
+          text: 'Partner',
+          value: USER_CLASS_PARTNER,
         },
       ],
     }
@@ -175,12 +186,11 @@ export default {
       if (!this.valider.check(this.user)) {
         return
       }
-
       const payload = {
         id: this.current.id,
         debt_max_amount: parseFloat(this.user.debt_max_amount),
         debt_max_day: parseInt(this.user.debt_max_day),
-        class: parseInt(this.type),
+        class: parseInt(this.type.value),
       }
 
       this.loading = true

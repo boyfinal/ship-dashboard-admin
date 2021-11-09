@@ -26,7 +26,8 @@
               <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
-                    <th>Khách hàng</th>
+                    <th width="400">Khách hàng</th>
+                    <th>Hạng</th>
                     <th width="150">Kiểu thanh toán</th>
                     <th width="100">Số dư</th>
                     <th width="100">Số nợ</th>
@@ -61,6 +62,14 @@
                         </p-tooltip>
                       </p>
                       <p class="mb-0">{{ item.phone_number }}</p>
+                    </td>
+                    <td>
+                      <span
+                        class="badge badge-round"
+                        :class="typesClass[item.class]"
+                      >
+                        {{ types[item.class] }}
+                      </span>
                     </td>
                     <td>
                       <span
@@ -105,6 +114,7 @@
                         <a
                           href="#"
                           class="btn btn_action ml-2"
+                          v-if="$isAdmin()"
                           @click.prevent="editUser(item.id)"
                         >
                           <i class="fa fa-cog"></i>
@@ -161,6 +171,7 @@ import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 import ModalEditUser from '../components/ModalEdit'
+import { MAP_USER_CLASS_TEXT, MAP_USER_CLASS_ICON } from '../constants'
 
 export default {
   name: 'Debt',
@@ -202,7 +213,12 @@ export default {
     statusPackage() {
       return PACKAGE_STATUS_TAB
     },
-
+    types() {
+      return MAP_USER_CLASS_TEXT
+    },
+    typesClass() {
+      return MAP_USER_CLASS_ICON
+    },
     displayUsers() {
       return this.users.map((item) => {
         const nameShort =
@@ -229,6 +245,7 @@ export default {
           payment_type: debtMaxAmount > 0 ? 'Trả sau' : 'Trả trước',
           debt: balance > 0 ? 0 : Math.abs(balance),
           balance: balance > 0 ? balance : 0,
+          class: item.class,
         }
       })
     },
