@@ -7,6 +7,7 @@ export const RETURN_PACKAGE = 'returnPackage'
 export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 export const EXPORT_WAREHOUSE_PACKAGES = 'exportWarehousePackages'
+export const IMPORT_CREATE_LABEL_PDF = 'importCreateLabelPdf'
 
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -147,5 +148,16 @@ export const actions = {
     }
 
     return result
+  },
+
+  // eslint-disable-next-line
+  async [IMPORT_CREATE_LABEL_PDF]({ commit }, payload) {
+    const res = await api.createLabelsPdf(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    return { error: false }
   },
 }

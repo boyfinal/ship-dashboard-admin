@@ -18,6 +18,12 @@
           class="btn btn-info ml-3 text-nowrap"
           >Export</p-button
         >
+        <p-button
+          id="export-btn"
+          @click="handleShowModalCreateLabelPdf"
+          class="btn btn-info ml-3 text-nowrap"
+          >Create Labels PDF</p-button
+        >
       </div>
       <div class="card">
         <div class="card-body">
@@ -165,6 +171,7 @@
       @save="handleExport"
     >
     </modal-export>
+    <modal-label :visible.sync="isVisibleModalCreateLabelPdf"> </modal-label>
   </div>
 </template>
 <script>
@@ -173,6 +180,7 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
 import ModalExport from '../components/ModalExport'
+import ModalLabel from '../components/ModalLabel'
 import api from '../api'
 import { date } from '@core/utils/datetime'
 import {
@@ -197,6 +205,7 @@ export default {
     EmptySearchResult,
     PackageStatusTab,
     ModalExport,
+    ModalLabel,
   },
   data() {
     return {
@@ -220,6 +229,7 @@ export default {
       isFetching: false,
       isVisibleConfirmWayBill: false,
       visibleConfirmCancel: false,
+      isVisibleModalCreateLabelPdf: false,
       selected: [],
       searchBy: {
         code: 'Mã vận đơn',
@@ -344,6 +354,9 @@ export default {
       } catch (error) {
         this.$toast.error('File error !!!')
       }
+    },
+    handleShowModalCreateLabelPdf() {
+      this.isVisibleModalCreateLabelPdf = true
     },
   },
   watch: {

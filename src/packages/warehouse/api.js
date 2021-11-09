@@ -81,4 +81,9 @@ export default {
   exportWarehousePackage(payload) {
     return http.post('/warehouses/export', payload)
   },
+  createLabelsPdf(payload) {
+    const formdata = new FormData()
+    formdata.append('file', payload.file)
+    return http.post('/warehouses/pdf-labels', formdata)
+  },
 }
