@@ -1,15 +1,19 @@
 <template>
-  <div class="modal-add-user">
+  <div class="modal-edit-user">
     <p-modal :active="visible" @close="handleClose" :title="title">
       <template>
+        <p>
+          Khách hàng: <b>{{ current.full_name }}</b>
+        </p>
         <form @submit.prevent="handleUpdate">
           <div class="row mb-20">
             <div class="col-6">
-              <label class="color-newtral-10 font-weight-600 mb-5"
-                >Kiểu thanh toán:</label
-              >
+              <label class="color-newtral-10 mb-5">Kiểu thanh toán:</label>
               <div>
-                <label class="mr-5">
+                <label
+                  class="mr-5 font-weight-600"
+                  :class="{ disabled: paymentType == 1 }"
+                >
                   <input
                     type="radio"
                     name="payment_type"
@@ -18,7 +22,10 @@
                   />
                   Trả trước
                 </label>
-                <label>
+                <label
+                  class="font-weight-600"
+                  :class="{ disabled: paymentType == 0 }"
+                >
                   <input
                     type="radio"
                     name="payment_type"
@@ -36,9 +43,10 @@
                 >Hạn mức nợ tối đa ($):</label
               >
               <p-input
-                type="number"
+                type="text"
                 name="debt_max_amount"
-                v-model.number="user.debt_max_amount"
+                @input="onChangeAmount"
+                :value="user.debt_max_amount"
                 min="0"
                 :error="valider.error('debt_max_amount')"
               />
@@ -131,13 +139,9 @@ export default {
     }))
     this.valider.reset()
   },
-  computed: {
-    title() {
-      return `Chỉnh sửa thông tin khách hàng: ${this.current.full_name}`
-    },
-  },
   data() {
     return {
+      title: 'Chỉnh sửa thông tin khách hàng',
       paymentType: 0,
       user: {
         debt_max_day: 0,
@@ -183,9 +187,12 @@ export default {
     async handleUpdate() {
       if (this.loading || !this.current.id) return
 
+      this.user.debt_max_amount = this.user.debt_max_amount.replaceAll(',', '')
+
       if (!this.valider.check(this.user)) {
         return
       }
+
       const payload = {
         id: this.current.id,
         debt_max_amount: parseFloat(this.user.debt_max_amount),
@@ -206,6 +213,14 @@ export default {
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
 
+    onChangeAmount(e) {
+      this.user.debt_max_amount = 0
+      let value = e.trim()
+      value = value.replace(/,/g, '').replace(/^0+/, '')
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      this.user.debt_max_amount = value
+    },
+
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close', true)
@@ -222,7 +237,10 @@ export default {
       handler: function(val) {
         const info = val.user_info || {}
         this.user.debt_max_day = parseInt(info.debt_max_day || 0)
-        this.user.debt_max_amount = parseFloat(info.debt_max_amount || 0)
+        this.user.debt_max_amount =
+          info.debt_max_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0
         this.paymentType = this.user.debt_max_amount > 0 ? 1 : 0
       },
       deep: true,
@@ -238,8 +256,16 @@ export default {
 }
 </script>
 <style lang="scss">
-div.disabled {
-  pointer-events: none;
-  opacity: 0.4;
+.modal-edit-user {
+  div.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  label.disabled {
+    color: #898a8a;
+  }
+  input {
+    font-weight: 600;
+  }
 }
 </style>
