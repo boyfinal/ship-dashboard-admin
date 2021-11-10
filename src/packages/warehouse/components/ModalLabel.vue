@@ -10,7 +10,7 @@
       <div class="form-group" v-if="!importting">
         <p-upload v-model="file" :accept="accept">
           <div class="btn btn-primary">
-            <div class="btn-upload">
+            <div class="upload">
               <p-icon name="upload"></p-icon>
               <span class="ml-10">Chọn file</span>
             </div>
@@ -91,7 +91,11 @@ export default {
 .p-modal-content label {
   margin-bottom: 0.4rem;
 }
-.btn-upload {
+.upload {
   margin-top: 4px;
+}
+.btn-primary {
+  background-color: #00b4c3 !important;
+  border: 1px solid transparent !important;
 }
 </style>
