@@ -114,7 +114,7 @@
                         <a
                           href="#"
                           class="btn btn_action ml-2"
-                          v-if="$isAdmin()"
+                          v-if="!$isSupport()"
                           @click.prevent="editUser(item.id)"
                         >
                           <i class="fa fa-cog"></i>
