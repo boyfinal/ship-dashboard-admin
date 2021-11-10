@@ -60,7 +60,7 @@
               >
               <multiselect
                 placeholder="Chọn hạn mức"
-                v-model="user.debt_max_amount"
+                v-model="debt_max_amount"
                 label="value"
                 track-by="value"
                 :options="debtLimit"
@@ -81,7 +81,7 @@
               >
               <multiselect
                 placeholder="Chọn thời gian"
-                v-model="user.debt_max_day"
+                v-model="debt_max_day"
                 label="value"
                 track-by="value"
                 :options="dayLimit"
@@ -163,10 +163,6 @@ export default {
     return {
       title: 'Chỉnh sửa thông tin khách hàng',
       paymentType: 0,
-      user: {
-        debt_max_day: 0,
-        debt_max_amount: 0,
-      },
       loading: false,
       valider: null,
       type: [
@@ -201,6 +197,8 @@ export default {
       ],
       debtLimit: DEBT_LIMIT,
       dayLimit: DAY_LIMIT,
+      debt_max_amount: 0,
+      debt_max_day: 0,
     }
   },
   methods: {
@@ -209,14 +207,10 @@ export default {
     async handleUpdate() {
       if (this.loading || !this.current.id) return
 
-      // if (!this.valider.check(this.user)) {
-      //   return
-      // }
-
       const payload = {
         id: this.current.id,
-        debt_max_amount: parseFloat(this.user.debt_max_amount.value),
-        debt_max_day: parseInt(this.user.debt_max_day.value),
+        debt_max_amount: parseFloat(this.debt_max_amount.value),
+        debt_max_day: parseInt(this.debt_max_day.value),
         class: parseInt(this.type.value),
       }
 
@@ -233,14 +227,6 @@ export default {
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
 
-    // onChangeAmount(e) {
-    //   this.user.debt_max_amount = 0
-    //   let value = e.trim()
-    //   value = value.replace(/,/g, '').replace(/^0+/, '')
-    //   value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    //   this.user.debt_max_amount = value
-    // },
-
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close', true)
@@ -256,21 +242,42 @@ export default {
     current: {
       handler: function(val) {
         const info = val.user_info || {}
-        this.debtLimit.find((i) => {
-          return i.value == info.debt_max_amount
-        })
-        this.user.debt_max_day = parseInt(info.debt_max_day || 0)
-        this.user.debt_max_amount = info.debt_max_amount || 0
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
-        console.log(this.paymentType)
+
+        if (this.paymentType == 1) {
+          this.debt_max_amount = info.debt_max_amount
+            ? this.debtLimit.find((i) => {
+                return i.value == info.debt_max_amount
+              })
+            : this.debtLimit[0]
+          this.debt_max_day = info.debt_max_day
+            ? this.dayLimit.find((i) => {
+                return i.value == info.debt_max_day
+              })
+            : this.dayLimit[0]
+        }
       },
       deep: true,
       immediate: true,
     },
     paymentType(val) {
       if (val == 0) {
-        this.user.debt_max_day = 0
-        this.user.debt_max_amount = 0
+        this.debt_max_day = 0
+        this.debt_max_amount = 0
+      }
+      if (val == 1) {
+        const info = val.user_info || {}
+
+        this.debt_max_amount = info.debt_max_amount
+          ? this.debtLimit.find((i) => {
+              return i.value == info.debt_max_amount
+            })
+          : this.debtLimit[0]
+        this.debt_max_day = info.debt_max_day
+          ? this.dayLimit.find((i) => {
+              return i.value == info.debt_max_day
+            })
+          : this.dayLimit[0]
       }
     },
   },
