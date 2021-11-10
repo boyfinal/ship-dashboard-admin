@@ -3,30 +3,71 @@
     <div class="row">
       <div class="col-4">
         <label for=""><b>Chiều cao:</b> (cm)</label>
+        <p-select
+          :disabled="true"
+          class="floating"
+          v-model="type"
+          name="high"
+          v-if="type < 4"
+        >
+          <option value="0">Chọn chiều cao</option>
+          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
+            box.height
+          }}</option>
+        </p-select>
         <p-input
+          v-else
           type="number"
-          disabled="true"
           min="0"
           name="height"
           v-model.number="box.height"
+          :error="valider.error('height')"
         />
       </div>
       <div class="col-4">
         <label for=""><b>Chiều rộng:</b> (cm)</label>
+        <p-select
+          :disabled="true"
+          class="floating"
+          v-model="type"
+          name="width"
+          v-if="type < 4"
+        >
+          <option value="0">Chọn chiều rộng</option>
+          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
+            box.width
+          }}</option>
+        </p-select>
         <p-input
+          v-else
           type="number"
           min="0"
           name="width"
           v-model.number="box.width"
+          :error="valider.error('width')"
         />
       </div>
       <div class="col-4">
         <label for=""><b>Chiều dài:</b> (cm)</label>
+        <p-select
+          :disabled="true"
+          class="floating"
+          v-model="type"
+          name="length"
+          v-if="type < 4"
+        >
+          <option value="0">Chọn chiều dài</option>
+          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
+            box.length
+          }}</option>
+        </p-select>
         <p-input
+          v-else
           type="number"
           min="0"
           name="length"
           v-model.number="box.length"
+          :error="valider.error('length')"
         />
       </div>
     </div>
@@ -34,11 +75,25 @@
     <div class="row">
       <div class="col-4">
         <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
+        <p-select
+          :disabled="true"
+          class="floating"
+          v-model="type"
+          name="weight"
+          v-if="type < 4"
+        >
+          <option value="0">Chọn cân nặng tối đa</option>
+          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
+            box.max_weight
+          }}</option>
+        </p-select>
         <p-input
+          v-else
           type="number"
           min="0"
           name="max_weight"
           v-model.number="box.max_weight"
+          :error="valider.error('max_weight')"
         />
       </div>
       <div class="col-4">
@@ -48,6 +103,7 @@
           <option v-for="box in boxes" :key="box.id" :value="box.id"
             >Loại {{ box.id }}</option
           >
+          <option value="4">Khác</option>
         </p-select>
       </div>
       <div class="col-4">
@@ -82,6 +138,8 @@
 </template>
 
 <script>
+import valider from '@core/valider'
+
 export default {
   name: 'ModalChoiceShippingBox',
   props: {
@@ -102,23 +160,44 @@ export default {
       default: () => [],
     },
   },
+  created() {
+    this.valider = valider.schema((y) => ({
+      height: y
+        .number()
+        .typeError('Chiều cao không hợp lệ')
+        .min(0.1, 'Chiều cao không hợp lệ'),
+      length: y
+        .number()
+        .typeError('Chiều dài không hợp lệ')
+        .min(0.1, 'Chiều dài không hợp lệ'),
+      width: y
+        .number()
+        .typeError('Chiều rộng không hợp lệ')
+        .min(0.1, 'Chiều rộng không hợp lệ'),
+      max_weight: y
+        .number()
+        .typeError('Cân nặng tối đa không hợp lệ')
+        .min(0.1, 'Cân nặng tối đa không hợp lệ'),
+    }))
+    this.valider.reset()
+  },
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
-    console.log(this.type)
-    this.box = this.boxes[0] ? this.boxes[0] : {}
   },
   data() {
     return {
       isShow: this.visible,
-      box: {},
+      box: {
+        height: 0,
+        length: 0,
+        width: 0,
+        max_weight: 0,
+      },
       warehouse: {},
       type: 0,
       warehouseID: 0,
       store: 1,
-      height: 0,
-      width: 0,
-      length: 0,
-      maxWeight: 0,
+      valider: null,
     }
   },
   methods: {
@@ -126,10 +205,19 @@ export default {
       this.$emit('update:visible', false)
     },
     async handleSave() {
+      // if (this.type < 3) {
+      // }
+      if (!this.valider.check(this.box)) {
+        return
+      }
       const payload = {
-        box_type_id: +this.type,
+        width: this.box.width,
+        height: this.box.height,
+        length: this.box.length,
+        max_weight: this.box.max_weight,
         warehouse_id: this.warehouseID,
       }
+      // return console.log(payload)
       this.$emit('save', payload)
     },
     handleUpdateType(value) {
