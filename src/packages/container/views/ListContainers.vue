@@ -35,6 +35,7 @@
                       <th>Mã kiện</th>
                       <th>Nhãn kiện</th>
                       <th>Mã lô</th>
+                      <th>Kích thước</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
@@ -85,6 +86,10 @@
                         {{ item.shipment_id }}
                       </router-link>
                     </td>
+                    <td
+                      >{{ item.length }} x {{ item.width }} x
+                      {{ item.height }}</td
+                    >
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="isCloseContainer(item)">{{
                       item.updated_at | date('dd/MM/yyyy')

@@ -205,8 +205,9 @@ export default {
       this.$emit('update:visible', false)
     },
     async handleSave() {
-      // if (this.type < 3) {
-      // }
+      if (this.type < 4) {
+        this.box = this.boxes.find((i) => i.id == this.type)
+      }
       if (!this.valider.check(this.box)) {
         return
       }
@@ -217,7 +218,6 @@ export default {
         max_weight: this.box.max_weight,
         warehouse_id: this.warehouseID,
       }
-      // return console.log(payload)
       this.$emit('save', payload)
     },
     handleUpdateType(value) {
@@ -229,6 +229,14 @@ export default {
       this.isShow = value
       this.type = 0
       this.warehouseID = 0
+    },
+    type(val) {
+      if (val == 4) {
+        this.box.height = 0
+        this.box.length = 0
+        this.box.width = 0
+        this.box.max_weight = 0
+      }
     },
   },
 }

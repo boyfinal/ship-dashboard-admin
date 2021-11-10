@@ -206,6 +206,15 @@ export default {
 
     async handleUpdate() {
       if (this.loading || !this.current.id) return
+      if (this.debt_max_amount == null) {
+        this.$toast.error('Hạn mức không được để trống')
+        return
+      }
+
+      if (this.debt_max_day == null) {
+        this.$toast.error('Thời gian nợ không được để trống')
+        return
+      }
 
       const payload = {
         id: this.current.id,
