@@ -26,14 +26,14 @@
               <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
-                    <th width="400">Khách hàng</th>
-                    <th>Hạng</th>
+                    <th width="350">Khách hàng</th>
+                    <!-- <th>Hạng</th> -->
                     <th width="150">Kiểu thanh toán</th>
                     <th width="100">Số dư</th>
                     <th width="100">Số nợ</th>
-                    <th>Giới hạn nợ</th>
-                    <th>Thời gian nợ</th>
-                    <th width="150">Action</th>
+                    <th width="100">Giới hạn nợ</th>
+                    <th width="100">Thời gian nợ</th>
+                    <th width="100">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -47,10 +47,16 @@
                           type="dark"
                           :active="item.full_name.length > 25"
                         >
-                          {{ item.full_name_short }}
+                          <b>{{ item.full_name_short }}</b>
+                          <span
+                            class="badge badge-round ml-8"
+                            :class="typesClass[item.class]"
+                          >
+                            {{ types[item.class] }}
+                          </span>
                         </p-tooltip>
                       </p>
-                      <p class="mb-0">
+                      <p class="mb-0" style="font-style: italic">
                         <p-tooltip
                           :label="item.email"
                           size="large"
@@ -60,24 +66,25 @@
                         >
                           {{ item.email_short }}
                         </p-tooltip>
+                        /
+                        <span>{{ item.phone_number }}</span>
                       </p>
-                      <p class="mb-0">{{ item.phone_number }}</p>
                     </td>
-                    <td>
+                    <!-- <td>
                       <span
                         class="badge badge-round"
                         :class="typesClass[item.class]"
                       >
                         {{ types[item.class] }}
                       </span>
-                    </td>
+                    </td> -->
                     <td>
                       <span
                         v-if="item.is_debt"
-                        class="badge badge-round badge-await"
+                        class="badge badge-round badge-primary"
                         >{{ item.payment_type }}</span
                       >
-                      <span v-else class="badge badge-round badge-info">{{
+                      <span v-else class="badge badge-round badge-default">{{
                         item.payment_type
                       }}</span>
                     </td>
@@ -86,7 +93,7 @@
                     <td>{{ item.debt_max_amount | formatPrice }}</td>
                     <td>{{ item.debt_max_day }}</td>
                     <td>
-                      <div class="d-flex" style="align-items:center">
+                      <div class="d-flex" style="align-items: center">
                         <router-link
                           class="btn_action mr-2"
                           :to="{
@@ -315,7 +322,7 @@ export default {
 .table-cumtomers {
   tbody tr td {
     padding: 10px 5px;
-    vertical-align: top;
+    // vertical-align: top;
   }
 }
 </style>
