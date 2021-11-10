@@ -3,52 +3,43 @@
     <div class="row">
       <div class="col-4">
         <label for=""><b>Chiều cao:</b> (cm)</label>
-        <p-select :disabled="true" class="floating" v-model="type" name="high">
-          <option value="0">Chọn chiều cao</option>
-          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
-            box.height
-          }}</option>
-        </p-select>
+        <p-input
+          type="number"
+          disabled="true"
+          min="0"
+          name="height"
+          v-model.number="box.height"
+        />
       </div>
       <div class="col-4">
         <label for=""><b>Chiều rộng:</b> (cm)</label>
-        <p-select :disabled="true" class="floating" v-model="type" name="width">
-          <option value="0">Chọn chiều rộng</option>
-          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
-            box.width
-          }}</option>
-        </p-select>
+        <p-input
+          type="number"
+          min="0"
+          name="width"
+          v-model.number="box.width"
+        />
       </div>
       <div class="col-4">
         <label for=""><b>Chiều dài:</b> (cm)</label>
-        <p-select
-          :disabled="true"
-          class="floating"
-          v-model="type"
+        <p-input
+          type="number"
+          min="0"
           name="length"
-        >
-          <option value="0">Chọn chiều dài</option>
-          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
-            box.length
-          }}</option>
-        </p-select>
+          v-model.number="box.length"
+        />
       </div>
     </div>
     <br />
     <div class="row">
       <div class="col-4">
         <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
-        <p-select
-          :disabled="true"
-          class="floating"
-          v-model="type"
-          name="weight"
-        >
-          <option value="0">Chọn cân nặng tối đa</option>
-          <option v-for="box in boxes" :key="box.id" :value="box.id">{{
-            box.max_weight
-          }}</option>
-        </p-select>
+        <p-input
+          type="number"
+          min="0"
+          name="max_weight"
+          v-model.number="box.max_weight"
+        />
       </div>
       <div class="col-4">
         <label for=""><b>Loại:</b></label>
@@ -76,9 +67,7 @@
     <template slot="footer">
       <div></div>
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleClose">
-          Bỏ qua
-        </p-button>
+        <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button
           type="info"
           @click="handleSave"
@@ -115,6 +104,8 @@ export default {
   },
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
+    console.log(this.type)
+    this.box = this.boxes[0] ? this.boxes[0] : {}
   },
   data() {
     return {
@@ -124,6 +115,10 @@ export default {
       type: 0,
       warehouseID: 0,
       store: 1,
+      height: 0,
+      width: 0,
+      length: 0,
+      maxWeight: 0,
     }
   },
   methods: {
