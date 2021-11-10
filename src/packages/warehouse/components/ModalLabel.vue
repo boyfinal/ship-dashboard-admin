@@ -67,8 +67,8 @@ export default {
       const playload = { file: this.file }
       const res = await this.import(playload)
       this.importting = false
-
       if (!res || res.error) {
+        this.file = null
         this.$toast.error(res.message)
         return
       }
