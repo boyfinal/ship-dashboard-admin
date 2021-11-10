@@ -47,7 +47,7 @@ export default {
     return {
       file: null,
       importting: false,
-      accept: '.csv',
+      accept: '.xlsx',
       errorMessages: [],
     }
   },
