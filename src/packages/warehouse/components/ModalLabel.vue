@@ -10,12 +10,14 @@
       <div class="form-group" v-if="!importting">
         <p-upload v-model="file" :accept="accept">
           <div class="btn btn-primary">
-            <p-icon name="upload"></p-icon>
-            <span class="ml-10">Chọn file</span>
+            <div class="btn-upload">
+              <p-icon name="upload"></p-icon>
+              <span class="ml-10">Chọn file</span>
+            </div>
           </div>
         </p-upload>
         <span class="ml-10" v-if="!file">
-          không có tập tin nào được chọn
+          Không có tập tin nào được chọn
         </span>
         <span class="ml-10" v-else>{{ file.name }}</span>
       </div>
@@ -47,7 +49,7 @@ export default {
     return {
       file: null,
       importting: false,
-      accept: '.csv',
+      accept: '.xlsx',
       errorMessages: [],
     }
   },
@@ -67,8 +69,8 @@ export default {
       const playload = { file: this.file }
       const res = await this.import(playload)
       this.importting = false
-
       if (!res || res.error) {
+        this.file = null
         this.$toast.error(res.message)
         return
       }
@@ -88,5 +90,8 @@ export default {
 }
 .p-modal-content label {
   margin-bottom: 0.4rem;
+}
+.btn-upload {
+  margin-top: 4px;
 }
 </style>
