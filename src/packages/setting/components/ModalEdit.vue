@@ -2,10 +2,26 @@
   <div class="modal-edit-user">
     <p-modal :active="visible" @close="handleClose" :title="title">
       <template>
-        <p>
-          Khách hàng: <b>{{ current.full_name }}</b>
-        </p>
         <form @submit.prevent="handleUpdate">
+          <div class="row mb-20">
+            <div class="col-6">
+              <label class="color-newtral-10 mb-5">Khách hàng:</label>
+
+              <p-input :disabled="true" :value="current.full_name" />
+            </div>
+            <div class="col-6">
+              <label class="color-newtral-10 mb-5">Hạng:</label>
+
+              <multiselect
+                placeholder="Chọn hạng"
+                v-model="type"
+                label="text"
+                track-by="value"
+                :options="types"
+              >
+              </multiselect>
+            </div>
+          </div>
           <div class="row mb-20">
             <div class="col-6">
               <label class="color-newtral-10 mb-5">Kiểu thanh toán:</label>
@@ -39,42 +55,45 @@
           </div>
           <div class="row mb-8" :class="{ disabled: paymentType == 0 }">
             <div class="col-6">
-              <label class="color-newtral-10 font-weight-600 mb-5"
+              <label class="color-newtral-10 mb-5"
                 >Hạn mức nợ tối đa ($):</label
               >
-              <p-input
+              <multiselect
+                placeholder="Chọn hạn mức"
+                v-model="user.debt_max_amount"
+                label="value"
+                track-by="value"
+                :options="debtLimit"
+              >
+              </multiselect>
+              <!-- <p-input
                 type="text"
                 name="debt_max_amount"
                 @input="onChangeAmount"
                 :value="user.debt_max_amount"
                 min="0"
                 :error="valider.error('debt_max_amount')"
-              />
+              /> -->
             </div>
             <div class="col-6">
-              <label class="color-newtral-10 font-weight-600 mb-5"
+              <label class="color-newtral-10 mb-5"
                 >Thời gian nợ tối đa (ngày):</label
               >
-              <p-input
+              <multiselect
+                placeholder="Chọn thời gian"
+                v-model="user.debt_max_day"
+                label="value"
+                track-by="value"
+                :options="dayLimit"
+              >
+              </multiselect>
+              <!-- <p-input
                 type="number"
                 min="0"
                 name="debt_max_day"
                 v-model.number="user.debt_max_day"
                 :error="valider.error('debt_max_day')"
-              />
-            </div>
-          </div>
-          <div class="row mb-8">
-            <div class="col-6">
-              <label for=""><b>Hạng:</b></label>
-              <multiselect
-                placeholder="Chọn hạng"
-                v-model="type"
-                label="text"
-                track-by="value"
-                :options="types"
-              >
-              </multiselect>
+              /> -->
             </div>
           </div>
         </form>
@@ -110,8 +129,9 @@ import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
   USER_CLASS_PARTNER,
+  DEBT_LIMIT,
+  DAY_LIMIT,
 } from '../constants'
-import valider from '@core/valider'
 
 export default {
   name: 'ModalEditUser',
@@ -126,18 +146,18 @@ export default {
     },
   },
   created() {
-    this.valider = valider.schema((y) => ({
-      debt_max_day: y
-        .number()
-        .typeError('Thời gian công nợ không hợp lệ')
-        .integer('Thời gian công nợ không hợp lệ')
-        .min(0, 'Thời gian công nợ không hợp lệ'),
-      debt_max_amount: y
-        .number()
-        .typeError('Hạn mức công nợ không hợp lệ')
-        .min(0, 'Hạn mức công nợ không hợp lệ'),
-    }))
-    this.valider.reset()
+    // this.valider = valider.schema((y) => ({
+    //   debt_max_day: y
+    //     .number()
+    //     .typeError('Thời gian công nợ không hợp lệ')
+    //     .integer('Thời gian công nợ không hợp lệ')
+    //     .min(0, 'Thời gian công nợ không hợp lệ'),
+    //   debt_max_amount: y
+    //     .number()
+    //     .typeError('Hạn mức công nợ không hợp lệ')
+    //     .min(0, 'Hạn mức công nợ không hợp lệ'),
+    // }))
+    // this.valider.reset()
   },
   data() {
     return {
@@ -179,6 +199,8 @@ export default {
           value: USER_CLASS_PARTNER,
         },
       ],
+      debtLimit: DEBT_LIMIT,
+      dayLimit: DAY_LIMIT,
     }
   },
   methods: {
@@ -187,16 +209,14 @@ export default {
     async handleUpdate() {
       if (this.loading || !this.current.id) return
 
-      this.user.debt_max_amount = this.user.debt_max_amount.replaceAll(',', '')
-
-      if (!this.valider.check(this.user)) {
-        return
-      }
+      // if (!this.valider.check(this.user)) {
+      //   return
+      // }
 
       const payload = {
         id: this.current.id,
-        debt_max_amount: parseFloat(this.user.debt_max_amount),
-        debt_max_day: parseInt(this.user.debt_max_day),
+        debt_max_amount: parseFloat(this.user.debt_max_amount.value),
+        debt_max_day: parseInt(this.user.debt_max_day.value),
         class: parseInt(this.type.value),
       }
 
@@ -213,13 +233,13 @@ export default {
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
 
-    onChangeAmount(e) {
-      this.user.debt_max_amount = 0
-      let value = e.trim()
-      value = value.replace(/,/g, '').replace(/^0+/, '')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      this.user.debt_max_amount = value
-    },
+    // onChangeAmount(e) {
+    //   this.user.debt_max_amount = 0
+    //   let value = e.trim()
+    //   value = value.replace(/,/g, '').replace(/^0+/, '')
+    //   value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //   this.user.debt_max_amount = value
+    // },
 
     handleClose() {
       this.$emit('update:visible', false)
@@ -236,12 +256,13 @@ export default {
     current: {
       handler: function(val) {
         const info = val.user_info || {}
+        this.debtLimit.find((i) => {
+          return i.value == info.debt_max_amount
+        })
         this.user.debt_max_day = parseInt(info.debt_max_day || 0)
-        this.user.debt_max_amount =
-          info.debt_max_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0
-        this.paymentType = this.user.debt_max_amount > 0 ? 1 : 0
+        this.user.debt_max_amount = info.debt_max_amount || 0
+        this.paymentType = info.debt_max_amount > 0 ? 1 : 0
+        console.log(this.paymentType)
       },
       deep: true,
       immediate: true,
@@ -264,7 +285,8 @@ export default {
   label.disabled {
     color: #898a8a;
   }
-  input {
+  input,
+  .multiselect__single {
     font-weight: 600;
   }
 }

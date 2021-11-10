@@ -40,3 +40,17 @@ export const MAP_USER_CLASS_TEXT = {
   [USER_CLASS_PRIORITY]: 'Priority',
   [USER_CLASS_PARTNER]: 'Partner',
 }
+
+export const DEBT_LIMIT = [
+  { id: 1, value: 2000 },
+  { id: 2, value: 4000 },
+  { id: 3, value: 5000 },
+  { id: 4, value: 8000 },
+  { id: 5, value: 10000 },
+]
+export const DAY_LIMIT = [
+  { id: 1, value: 7 },
+  { id: 2, value: 30 },
+  { id: 3, value: 90 },
+  { id: 4, value: 180 },
+]
