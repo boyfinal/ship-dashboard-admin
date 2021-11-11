@@ -206,6 +206,12 @@ export default {
 
     async handleUpdate() {
       if (this.loading || !this.current.id) return
+
+      if (this.type == null) {
+        this.$toast.error('Hạng không được để trống')
+        return
+      }
+
       if (this.debt_max_amount == null) {
         this.$toast.error('Hạn mức không được để trống')
         return
