@@ -147,7 +147,11 @@
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
-                      <td>{{ $evaluate('item?.tracking?.weight') }}</td>
+                      <td
+                        ><span v-if="item.tracking && item.tracking.weight">{{
+                          item.tracking.weight
+                        }}</span></td
+                      >
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
