@@ -4,8 +4,12 @@ import { NOT_STAFF_GET_LIMIT } from '@core/constants'
 export default {
   data() {
     return {
+      firstload: false,
       filter: {},
     }
+  },
+  updated() {
+    this.firstload = true
   },
   methods: {
     toBack() {
@@ -64,6 +68,12 @@ export default {
         })
         .catch(() => {}) // ko xoa. loi thi chay yarn upgrade
     },
+    updatePageNumber() {
+      if (!this.firstload) return
+      if (this.filter.page > 1) {
+        this.filter.page = 1
+      }
+    },
   },
   watch: {
     $route: function() {
@@ -72,6 +82,15 @@ export default {
       if (isObjectDiff(filters, this.filter)) {
         this.filter = filters
       }
+    },
+    'filter.status': function() {
+      this.updatePageNumber()
+    },
+    'filter.search': function() {
+      this.updatePageNumber()
+    },
+    'filter.search_by': function() {
+      this.updatePageNumber()
     },
   },
 }
