@@ -18,6 +18,12 @@ Vue.use(MainPlugin)
 Vue.component('VclTable', VclTable)
 initGlobalDirectives()
 
+Vue.mixin({
+  methods: {
+    $evaluate: (param) => eval('this.' + param),
+  },
+})
+
 new Vue({
   router,
   store,
