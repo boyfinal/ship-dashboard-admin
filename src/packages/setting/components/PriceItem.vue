@@ -9,14 +9,16 @@
         class="form-control"
         :value="price_value"
         @input="updateHandle"
+        :disabled="user.role != ROLE_ADMIN"
       />
     </td>
   </tr>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { UPDATE_PRICE } from '../store'
+import { ROLE_ADMIN } from '@core/constants'
 
 export default {
   name: 'PriceItem',
@@ -29,7 +31,13 @@ export default {
   data() {
     return {
       price_value: 0,
+      ROLE_ADMIN: ROLE_ADMIN,
     }
+  },
+  computed: {
+    ...mapState('shared', {
+      user: (state) => state.user,
+    }),
   },
   mounted() {
     this.price_value = this.current.price
