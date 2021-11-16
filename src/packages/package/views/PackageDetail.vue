@@ -603,6 +603,7 @@ import {
   PackageStatusDelivered,
   PackageStatusInTransit,
   PackageStatusReturned,
+  PackageStatusWareHouseInContainer,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -819,6 +820,16 @@ export default {
     },
 
     async cancelPackageAction() {
+      if (
+        this.package_detail.package.status == PackageStatusWareHouseInContainer
+      ) {
+        this.visibleConfirmCancel = false
+        return this.$toast.open({
+          type: 'error',
+          message: 'Đơn hàng không thể hủy vì đang nằm trong kiện',
+          duration: 3000,
+        })
+      }
       let id = this.packageID
 
       let payload = {
