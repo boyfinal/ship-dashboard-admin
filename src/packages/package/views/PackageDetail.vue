@@ -604,6 +604,7 @@ import {
   PackageStatusInTransit,
   PackageStatusReturned,
   PackageStatusWareHouseInContainer,
+  PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -821,7 +822,9 @@ export default {
 
     async cancelPackageAction() {
       if (
-        this.package_detail.package.status == PackageStatusWareHouseInContainer
+        this.package_detail.package.status ==
+          PackageStatusWareHouseInContainer ||
+        this.package_detail.package.status == PackageStatusWareHouseInShipment
       ) {
         this.visibleConfirmCancel = false
         return this.$toast.open({
