@@ -164,10 +164,12 @@ export const CHANGE_PACKAGE_TYPE = [
 
 export const DELIVER_LOG_PACKAGE = {
   [PackageStatusInTransit]: 'In transit',
-  [PackageStatusCreated]: ' Label created',
-  [PackageStatusPendingPickup]: 'Label confirmed',
-  [PackageStatusRePendingPickup]: 'Label confirmed',
-  [PackageStatusPicked]: 'Your package has been received by LionBay',
+  [PackageStatusCreated]: ' Shipping label created, LionBay awaiting item',
+  [PackageStatusPendingPickup]:
+    'Shipping label confirmed, LionBay awaiting item',
+  [PackageStatusRePendingPickup]:
+    'Shipping label confirmed, LionBay awaiting item',
+  [PackageStatusPicked]: 'Accepted at LionBay Origin Facility',
   [PackageStatusCancelled]: 'Label canceled',
   [PackageStatusReturned]: ' Package returned',
   [PackageStatusDelivered]: 'Delivered',
