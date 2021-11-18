@@ -22,6 +22,12 @@
               </div>
             </div>
             <div>
+              <div>Khách hàng </div>
+              <div>{{
+                $evaluate('package_detail.package.user.full_name')
+              }}</div>
+            </div>
+            <div>
               <div>Dịch vụ </div>
               <div>{{ $evaluate('package_detail.package.service?.name') }}</div>
             </div>
@@ -603,6 +609,8 @@ import {
   PackageStatusDelivered,
   PackageStatusInTransit,
   PackageStatusReturned,
+  PackageStatusWareHouseInContainer,
+  PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -819,6 +827,18 @@ export default {
     },
 
     async cancelPackageAction() {
+      if (
+        this.package_detail.package.status ==
+          PackageStatusWareHouseInContainer ||
+        this.package_detail.package.status == PackageStatusWareHouseInShipment
+      ) {
+        this.visibleConfirmCancel = false
+        return this.$toast.open({
+          type: 'error',
+          message: 'Đơn hàng không thể hủy vì đang nằm trong kiện',
+          duration: 3000,
+        })
+      }
       let id = this.packageID
 
       let payload = {

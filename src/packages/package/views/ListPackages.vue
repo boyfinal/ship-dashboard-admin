@@ -41,7 +41,7 @@
                       <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
                       <th :class="{ hidden: hiddenClass }">Tracking</th>
-                      <th :class="{ hidden: hiddenClass }">Người nhận</th>
+                      <th :class="{ hidden: hiddenClass }">Khách hàng</th>
                       <th :class="{ hidden: hiddenClass }"
                         >Chi tiết hàng hóa</th
                       >
@@ -107,7 +107,7 @@
                       </a>
                     </td>
                     <td>
-                      {{ item.recipient }}
+                      {{ item.user.full_name }}
                     </td>
                     <td>
                       <p-tooltip
