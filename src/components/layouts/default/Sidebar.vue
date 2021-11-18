@@ -191,18 +191,19 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable:
-            this.$isAccountant() || this.$isSupport() || this.$isWarehouse(),
+          disable: this.$isSupport() || this.$isWarehouse(),
           sub: [
             {
               route: '/account',
               title: 'Tài khoản',
               alias: ['/account'],
+              disable: this.$isAccountant(),
             },
             {
               route: '',
               title: 'Truy cập',
               alias: [],
+              disable: this.$isAccountant(),
             },
             {
               route: '/prices',

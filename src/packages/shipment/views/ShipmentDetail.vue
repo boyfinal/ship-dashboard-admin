@@ -279,9 +279,7 @@ export default {
       }
     },
     getBoxInfo(container) {
-      return container.box
-        ? `${container.box.length} x ${container.box.width}  x ${container.box.height}`
-        : null
+      return `${container.length} x ${container.width}  x ${container.height}`
     },
     async downloadLabel(labelUrl) {
       if (labelUrl == '') {

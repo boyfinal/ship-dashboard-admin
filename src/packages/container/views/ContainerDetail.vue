@@ -147,7 +147,11 @@
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
-                      <td>{{ item.tracking.weight }}</td>
+                      <td
+                        ><span v-if="item.tracking && item.tracking.weight">{{
+                          item.tracking.weight
+                        }}</span></td
+                      >
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
@@ -293,7 +297,9 @@ export default {
       }
     },
     getBoxInfo(packageDetail) {
-      return `${packageDetail.tracking.length} x ${packageDetail.tracking.width}  x ${packageDetail.tracking.height}`
+      if (packageDetail && packageDetail.tracking) {
+        return `${packageDetail.tracking.length} x ${packageDetail.tracking.width}  x ${packageDetail.tracking.height}`
+      }
     },
     async handleAppend() {
       this.code = this.code.trim()

@@ -88,6 +88,10 @@ export default {
         })
       })
 
+      optionAccept.sort((a, b) => {
+        return a.id - b.id
+      })
+
       return optionAccept
     },
   },
@@ -123,7 +127,7 @@ export default {
       handler(val) {
         if (val.length > 0) {
           let minOb = val.reduce(function(prev, curr) {
-            return prev.cost < curr.cost ? prev : curr
+            return prev.cost <= curr.cost ? prev : curr
           })
           this.warehouse = minOb.id
         }

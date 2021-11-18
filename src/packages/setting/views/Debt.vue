@@ -23,75 +23,110 @@
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="users.length">
             <div class="table-responsive">
-              <table class="table table-hover">
+              <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
-                    <th width="200">Họ tên</th>
-                    <th width="200">Email</th>
-                    <th width="150">Số điện thoại</th>
+                    <th width="350">Khách hàng</th>
+                    <!-- <th>Hạng</th> -->
+                    <th width="150">Kiểu thanh toán</th>
                     <th width="100">Số dư</th>
                     <th width="100">Số nợ</th>
-                    <th width="150">Action</th>
+                    <th width="100">Giới hạn nợ</th>
+                    <th width="100">Thời gian nợ</th>
+                    <th width="100">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in users" :key="i">
+                  <tr v-for="(item, i) in displayUsers" :key="i">
                     <td>
-                      <p-tooltip
-                        :label="item.full_name"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.full_name.length > 25"
-                      >
-                        {{ truncate(item.full_name, 25) }}
-                      </p-tooltip>
+                      <p class="mb-0">
+                        <p-tooltip
+                          :label="item.full_name"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.full_name.length > 25"
+                        >
+                          <b>{{ item.full_name_short }}</b>
+                          <span
+                            class="badge badge-round ml-8"
+                            :class="typesClass[item.class]"
+                          >
+                            {{ types[item.class] }}
+                          </span>
+                        </p-tooltip>
+                      </p>
+                      <p class="mb-0" style="font-style: italic">
+                        <p-tooltip
+                          :label="item.email"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.email.length > 25"
+                        >
+                          {{ item.email_short }}
+                        </p-tooltip>
+                        /
+                        <span>{{ item.phone_number }}</span>
+                      </p>
                     </td>
+                    <!-- <td>
+                      <span
+                        class="badge badge-round"
+                        :class="typesClass[item.class]"
+                      >
+                        {{ types[item.class] }}
+                      </span>
+                    </td> -->
                     <td>
-                      <p-tooltip
-                        :label="item.email"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.email.length > 25"
+                      <span
+                        v-if="item.is_debt"
+                        class="badge badge-round badge-primary"
+                        >{{ item.payment_type }}</span
                       >
-                        {{ truncate(item.email, 25) }}
-                      </p-tooltip>
+                      <span v-else class="badge badge-round badge-default">{{
+                        item.payment_type
+                      }}</span>
                     </td>
-                    <td>{{ item.phone_number }}</td>
-                    <td>{{
-                      item.balance > 0 ? item.balance : 0 | formatPrice
-                    }}</td>
-                    <td>{{
-                      item.balance > 0
-                        ? 0
-                        : Math.abs(item.balance) | formatPrice
-                    }}</td>
-                    <td class="d-flex" style="align-items:center">
-                      <router-link
-                        class="btn_action mr-2"
-                        :to="{
-                          name: 'bill-list',
-                          query: {
-                            search_by: 'customer',
-                            search: item.email,
-                          },
-                        }"
-                      >
-                        Hóa đơn
-                      </router-link>
-                      <router-link
-                        class="btn_action"
-                        :to="{
-                          name: 'list-transaction',
-                          query: {
-                            search_by: 'account',
-                            search: item.email,
-                          },
-                        }"
-                      >
-                        Lịch sử
-                      </router-link>
+                    <td>{{ item.balance | formatPrice }}</td>
+                    <td>{{ item.debt | formatPrice }}</td>
+                    <td>{{ item.debt_max_amount | formatPrice }}</td>
+                    <td>{{ item.debt_max_day }}</td>
+                    <td>
+                      <div class="d-flex" style="align-items: center">
+                        <router-link
+                          class="btn_action mr-2"
+                          :to="{
+                            name: 'bill-list',
+                            query: {
+                              search_by: 'customer',
+                              search: item.email,
+                            },
+                          }"
+                        >
+                          Hóa đơn
+                        </router-link>
+                        <router-link
+                          class="btn_action"
+                          :to="{
+                            name: 'list-transaction',
+                            query: {
+                              search_by: 'account',
+                              search: item.email,
+                            },
+                          }"
+                        >
+                          Lịch sử
+                        </router-link>
+                        <a
+                          href="#"
+                          class="btn btn_action ml-2"
+                          v-if="!$isSupport()"
+                          @click.prevent="editUser(item.id)"
+                        >
+                          <i class="fa fa-cog"></i>
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -120,6 +155,14 @@
       @save="handleExport"
     >
     </modal-export>
+    <modal-edit-user
+      v-if="isVisibleEditUser"
+      :visible.sync="isVisibleEditUser"
+      :current="userSelected"
+      @success="updateSuccess"
+      @close="closeEdit"
+    >
+    </modal-edit-user>
   </div>
 </template>
 <script>
@@ -134,6 +177,8 @@ import ModalExport from '../components/ModalExport'
 import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import ModalEditUser from '../components/ModalEdit'
+import { MAP_USER_CLASS_TEXT, MAP_USER_CLASS_ICON } from '../constants'
 
 export default {
   name: 'Debt',
@@ -141,19 +186,21 @@ export default {
   components: {
     EmptySearchResult,
     ModalExport,
+    ModalEditUser,
   },
   data() {
     return {
       filter: {
         limit: 30,
         search: '',
-        role: ROLE_CUSTOMER,
       },
       isFetching: false,
       visibleExportModal: false,
       isExporting: false,
       ROLE_ADMIN: ROLE_ADMIN,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
+      userSelected: {},
+      isVisibleEditUser: false,
     }
   },
   created() {
@@ -173,6 +220,42 @@ export default {
     statusPackage() {
       return PACKAGE_STATUS_TAB
     },
+    types() {
+      return MAP_USER_CLASS_TEXT
+    },
+    typesClass() {
+      return MAP_USER_CLASS_ICON
+    },
+    displayUsers() {
+      return this.users.map((item) => {
+        const nameShort =
+          item.full_name.length > 25
+            ? truncate(item.full_name, 25)
+            : item.full_name
+        const email = item.email || item.phone_number
+        const emailShort = email.length > 25 ? truncate(email, 25) : email
+        const info = item.user_info || {}
+        const debtMaxAmount = parseFloat(info.debt_max_amount) || 0
+        const debtMaxDay = parseInt(info.debt_max_day) || 0
+        const balance = parseFloat(item.balance || 0)
+
+        return {
+          id: item.id,
+          full_name: item.full_name,
+          full_name_short: nameShort,
+          phone_number: item.phone_number,
+          email,
+          email_short: emailShort,
+          debt_max_amount: debtMaxAmount,
+          is_debt: debtMaxAmount > 0,
+          debt_max_day: debtMaxAmount > 0 ? `${debtMaxDay} ngày` : '-',
+          payment_type: debtMaxAmount > 0 ? 'Trả sau' : 'Trả trước',
+          debt: balance > 0 ? 0 : Math.abs(balance),
+          balance: balance > 0 ? balance : 0,
+          class: item.class,
+        }
+      })
+    },
   },
   methods: {
     truncate,
@@ -181,9 +264,10 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this.listUser(this.filter)
+      const filter = Object.assign({ role: ROLE_CUSTOMER }, this.filter)
+      const result = await this.listUser(filter)
       if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
+        this.$toast.error(result.message)
       }
       this.isFetching = false
     },
@@ -207,6 +291,22 @@ export default {
       }
       this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
     },
+
+    editUser(userId) {
+      const user = this.users.find(({ id }) => id == userId)
+      if (!user) return
+
+      this.userSelected = user
+      this.isVisibleEditUser = true
+    },
+    updateSuccess() {
+      this.closeEdit()
+      this.init()
+    },
+    closeEdit() {
+      this.userSelected = {}
+      this.isVisibleEditUser = false
+    },
   },
   watch: {
     filter: {
@@ -218,3 +318,11 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.table-cumtomers {
+  tbody tr td {
+    padding: 10px 5px;
+    // vertical-align: top;
+  }
+}
+</style>

@@ -54,4 +54,7 @@ export default {
   updatePrices(payload) {
     return http.post(`/services/prices`, payload)
   },
+  updateUserInfo(payload) {
+    return http.put(`/users/${payload.id}/info`, payload)
+  },
 }
