@@ -281,14 +281,14 @@ export default {
       if (body.box_type_id == 0) {
         this.$toast.open({
           type: 'error',
-          message: 'Box type is required',
+          message: 'Chưa chọn loại',
         })
         return
       }
       if (body.warehouse_id == 0) {
         this.$toast.open({
           type: 'error',
-          message: 'Warehouse id is required',
+          message: 'Chưa chọn kho',
         })
         return
       }
