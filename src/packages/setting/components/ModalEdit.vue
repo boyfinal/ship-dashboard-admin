@@ -312,6 +312,9 @@ export default {
     font-weight: 600;
   }
   .modal-body {
+    overflow-y: unset;
+  }
+  .modal-lg {
     overflow: revert;
   }
 }

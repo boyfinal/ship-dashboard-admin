@@ -241,7 +241,7 @@ export default {
       this.warehouseID = 0
     },
     type(val) {
-      if (val == 4) {
+      if (val == this.maxIDBox + 1) {
         this.box.height = 0
         this.box.length = 0
         this.box.width = 0
