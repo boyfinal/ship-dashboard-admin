@@ -42,6 +42,10 @@
                   : '-'
               }}</div>
             </div>
+            <div>
+              <div>Số lượng đơn: </div>
+              <div>{{ count }}</div>
+            </div>
           </div>
         </div>
 
