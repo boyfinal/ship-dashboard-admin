@@ -35,4 +35,7 @@ export default {
   createExtraFee(payload) {
     return http.post(`/bills/extra-fee`, payload)
   },
+  exportBill(payload) {
+    return http.post('/export/bills', payload)
+  },
 }

@@ -26,7 +26,15 @@
           }}</div>
           <div class="bill__detail-status">{{ total_fee | formatPrice }}</div>
         </div>
-        <div class="bill__detail-action"> </div>
+        <div class="bill__detail-action">
+          <p-button
+            @click="handleExportBill"
+            class="btn btn-info ml-3 text-nowrap"
+            v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+            :loading="loading"
+            >Export</p-button
+          >
+        </div>
       </div>
     </div>
     <div class="page-content">
@@ -202,15 +210,21 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { FETCH_BILL_DETAIL, FETCH_BILL_EXTRA, CANCEL_EXTRA_FEE } from '../store'
+import {
+  FETCH_BILL_DETAIL,
+  FETCH_BILL_EXTRA,
+  CANCEL_EXTRA_FEE,
+  EXPORT_BILL,
+} from '../store'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import mixinDownload from '@/packages/shared/mixins/download'
 
 export default {
   name: 'BillDetail',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: { ModalConfirm },
   data() {
     return {
@@ -228,6 +242,7 @@ export default {
       idExtra: 0,
       ROLE_ADMIN: ROLE_ADMIN,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
+      loading: false,
     }
   },
   computed: {
@@ -261,6 +276,7 @@ export default {
       FETCH_BILL_DETAIL,
       FETCH_BILL_EXTRA,
       CANCEL_EXTRA_FEE,
+      EXPORT_BILL,
     ]),
     async init() {
       this.isFetching = true
@@ -338,6 +354,25 @@ export default {
       }
       this.visibleConfirmFail = false
       this.init()
+    },
+
+    async handleExportBill() {
+      const payload = {
+        bill_id: this.bill.id,
+      }
+      this.loading = true
+      const result = await this[EXPORT_BILL](payload)
+      this.loading = false
+
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
     },
   },
   watch: {
