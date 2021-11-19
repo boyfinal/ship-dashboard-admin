@@ -8,7 +8,7 @@
           class="floating"
           v-model="type"
           name="high"
-          v-if="type < 4"
+          v-if="type < maxIDBox + 1"
         >
           <option value="0">Chọn chiều cao</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -31,7 +31,7 @@
           class="floating"
           v-model="type"
           name="width"
-          v-if="type < 4"
+          v-if="type < maxIDBox + 1"
         >
           <option value="0">Chọn chiều rộng</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -54,7 +54,7 @@
           class="floating"
           v-model="type"
           name="length"
-          v-if="type < 4"
+          v-if="type < maxIDBox + 1"
         >
           <option value="0">Chọn chiều dài</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -80,7 +80,7 @@
           class="floating"
           v-model="type"
           name="weight"
-          v-if="type < 4"
+          v-if="type < maxIDBox + 1"
         >
           <option value="0">Chọn cân nặng tối đa</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id">{{
@@ -103,7 +103,7 @@
           <option v-for="box in boxes" :key="box.id" :value="box.id"
             >Loại {{ box.id }}</option
           >
-          <option value="4">Khác</option>
+          <option :value="maxIDBox + 1">Khác</option>
         </p-select>
       </div>
       <div class="col-4">
@@ -184,6 +184,16 @@ export default {
   mounted() {
     this.type = this.boxes[0] ? this.boxes[0].id : 0
   },
+  computed: {
+    maxIDBox() {
+      return Math.max.apply(
+        Math,
+        this.boxes.map(function(x) {
+          return x.id
+        })
+      )
+    },
+  },
   data() {
     return {
       isShow: this.visible,
@@ -205,7 +215,7 @@ export default {
       this.$emit('update:visible', false)
     },
     async handleSave() {
-      if (this.type < 4) {
+      if (this.type < this.maxIDBox + 1) {
         this.box = this.boxes.find((i) => i.id == this.type)
       }
       if (!this.valider.check(this.box)) {
