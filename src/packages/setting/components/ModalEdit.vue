@@ -311,5 +311,8 @@ export default {
   .multiselect__single {
     font-weight: 600;
   }
+  .modal-body {
+    overflow: revert;
+  }
 }
 </style>
