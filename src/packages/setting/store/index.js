@@ -245,6 +245,9 @@ export const actions = {
   [SWICTH_TYPE]({ commit }, payload) {
     commit(SWICTH_TYPE, payload)
   },
+  [SWICTH_SERVICE]({ commit }, payload) {
+    commit(SWICTH_SERVICE, payload)
+  },
   async [FETCH_SERVICES]({ commit }) {
     commit(FETCH_SERVICES, [])
 
