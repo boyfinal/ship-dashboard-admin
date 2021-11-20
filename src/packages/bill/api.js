@@ -36,6 +36,6 @@ export default {
     return http.post(`/bills/extra-fee`, payload)
   },
   exportBill(payload) {
-    return http.post('/export/bills', payload)
+    return http.post('/bills', payload, { base_path: '/v1/export/shipment' })
   },
 }
