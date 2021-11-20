@@ -36,7 +36,32 @@
             <div class="table-responsive">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
+                  <div
+                    class="bulk-actions d-flex align-items-center"
+                    v-if="totalSelected > 0"
+                  >
+                    <div class="bulk-actions__main-bar">
+                      <span class="bulk-actions__selection-count">{{
+                        selectionCountText
+                      }}</span>
+                      <p-button
+                        class="bulk-actions__selection-status"
+                        @click="handleExport"
+                        >Xuất Excel</p-button
+                      >
+                    </div>
+                  </div>
                   <tr>
+                    <th width="40">
+                      <p-checkbox
+                        class="order-select-checkbox"
+                        :class="{ checkAll: totalSelected > 0 }"
+                        :style="totalSelected > 0 && { width: 0 }"
+                        :value="isAllChecked"
+                        @change.native="toggleSelectAll"
+                        :indeterminate="isIndeterminate"
+                      ></p-checkbox>
+                    </th>
                     <template>
                       <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
@@ -61,6 +86,13 @@
                     :key="i"
                     :class="{ hover: isChecked(item) }"
                   >
+                    <td width="40">
+                      <p-checkbox
+                        v-model="action.selected"
+                        :native-value="item"
+                        @input="handleValue($event)"
+                      ></p-checkbox>
+                    </td>
                     <td class="text-nowrap">
                       <router-link
                         class="text-no-underline"
@@ -147,12 +179,15 @@
         </div>
       </div>
     </div>
+    <modal-export :visible="isVisibleExport"> </modal-export>
   </div>
 </template>
 <script>
 import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
+import mixinDownload from '@/packages/shared/mixins/download'
+import ModalExport from '../components/ModalExport'
 
 import {
   PACKAGE_STATUS_TAB,
@@ -172,10 +207,11 @@ import mixinTable from '@core/mixins/table'
 
 export default {
   name: 'ListPackages',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
     PackageStatusTab,
+    ModalExport,
   },
   data() {
     return {
@@ -194,6 +230,7 @@ export default {
       isFetching: false,
       isVisibleConfirmWayBill: false,
       visibleConfirmCancel: false,
+      isVisibleExport: false,
       selected: [],
       searchBy: {
         code: 'Mã vận đơn',
@@ -263,6 +300,31 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    handleValue(e) {
+      this.selected = JSON.parse(JSON.stringify(e))
+    },
+    async handleExport() {
+      this.isVisibleExport = true
+      const result = await this[EXPORT_PACKAGE]({
+        ids: this.selectedIds,
+      })
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        this.isVisibleExport = false
+        return
+      }
+      this.downloadFile(
+        result.url,
+        'packages',
+        result.url.split('/'),
+        'danh_sach_van_don_'
+      )
+      this.isVisibleExport = false
     },
   },
   watch: {
