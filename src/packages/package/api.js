@@ -41,7 +41,9 @@ export default {
     return http.post('/packages/import', formData)
   },
   exportPackage(payload) {
-    return http.post('/packages', payload, { base_path: '/v1/export/shipment' })
+    return http.post('/packages/list', payload, {
+      base_path: '/v1/export/shipment',
+    })
   },
   updatePackage(payload) {
     return http.put(`/packages/${payload.id}`, payload)

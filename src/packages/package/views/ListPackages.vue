@@ -179,6 +179,7 @@
         </div>
       </div>
     </div>
+    <modal-export :visible="isVisibleExport"> </modal-export>
   </div>
 </template>
 <script>
@@ -186,6 +187,7 @@ import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
+import ModalExport from '../components/ModalExport'
 
 import {
   PACKAGE_STATUS_TAB,
@@ -209,6 +211,7 @@ export default {
   components: {
     EmptySearchResult,
     PackageStatusTab,
+    ModalExport,
   },
   data() {
     return {
@@ -227,6 +230,7 @@ export default {
       isFetching: false,
       isVisibleConfirmWayBill: false,
       visibleConfirmCancel: false,
+      isVisibleExport: false,
       selected: [],
       searchBy: {
         code: 'Mã vận đơn',

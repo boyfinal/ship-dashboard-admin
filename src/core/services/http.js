@@ -17,7 +17,7 @@ export const http = {
   async request(method, url, data, options = {}) {
     try {
       let baseURL = process.env.VUE_APP_BASE_API_ENDPOINT
-      if (options.base_path != '') {
+      if (options.base_path != '' && typeof options.base_path !== 'undefined') {
         baseURL = `${process.env.VUE_APP_BASE_API}/${options.base_path}`
       }
 
