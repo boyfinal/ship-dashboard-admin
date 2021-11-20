@@ -39,7 +39,7 @@ export default {
     isAllChecked() {
       return (
         this.action.selected &&
-        this.items.length === this.action.selected.length &&
+        this.items.length == this.action.selected.length &&
         this.totalSelected > 0
       )
     },
@@ -55,8 +55,8 @@ export default {
     isChecked() {
       return function(value) {
         return (
-          this.action.selected.includes(value) &&
-          this.action.selected &&
+          this.action.selected.some((e) => e.id == value.id) &&
+          this.action.selected.length &&
           this.totalSelected > 0
         )
       }
@@ -136,7 +136,6 @@ export default {
     onActionConfirm() {
       this.handleActionItem()
     },
-
     /**
      * Toggle select all
      */
