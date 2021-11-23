@@ -84,7 +84,11 @@
                   <tr
                     v-for="(item, i) in packages"
                     :key="i"
-                    :class="{ hover: isChecked(item) }"
+                    :class="{
+                      hover: isChecked(item),
+                      deactive:
+                        item.package_code.status == PackageStatusDeactive,
+                    }"
                   >
                     <td width="40">
                       <p-checkbox
@@ -193,6 +197,7 @@ import {
   PACKAGE_STATUS_TAB,
   PackageStatusCreatedText,
   MAP_NAME_STATUS_STRING_PACKAGE,
+  PackageStatusDeactive,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -240,6 +245,7 @@ export default {
         customer_full_name: 'Tên khách hàng',
         tracking: 'Mã tracking',
       },
+      PackageStatusDeactive: PackageStatusDeactive,
     }
   },
   created() {
@@ -342,5 +348,10 @@ export default {
 .p-tooltip::after {
   width: auto !important;
   white-space: pre;
+}
+.deactive {
+  td {
+    opacity: 0.6;
+  }
 }
 </style>

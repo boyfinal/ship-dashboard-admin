@@ -1,3 +1,4 @@
+export const PackageStatusDeactive = 0
 export const PackageStatusCreated = 1
 export const PackageStatusPendingPickup = 2
 export const PackageStatusRePendingPickup = 3
