@@ -101,7 +101,7 @@
         <p-select class="floating" v-model="type" name="type">
           <option value="0">Chọn một loại</option>
           <option v-for="box in boxes" :key="box.id" :value="box.id"
-            >Loại {{ box.id }}</option
+            >Loại {{ `${box.length}x${box.width}x${box.height}` }}</option
           >
           <option :value="maxIDBox + 1">Khác</option>
         </p-select>
@@ -161,6 +161,7 @@ export default {
     },
   },
   created() {
+    console.log(this.boxes)
     this.valider = valider.schema((y) => ({
       height: y
         .number()
