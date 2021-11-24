@@ -161,7 +161,6 @@ export default {
     },
   },
   created() {
-    console.log(this.boxes)
     this.valider = valider.schema((y) => ({
       height: y
         .number()
