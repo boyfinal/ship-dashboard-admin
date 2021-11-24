@@ -13,6 +13,13 @@ export function formatNumber(val) {
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
+export function formatNumberV2(val) {
+  if (!val) {
+    return 0
+  }
+
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
 
 /**
  * Two digital

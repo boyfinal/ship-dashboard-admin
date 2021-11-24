@@ -1,15 +1,22 @@
 <template>
   <div class="pages setting">
-    <div class="d-flex t-types mb-20">
-      <button
-        v-for="item in types"
-        :key="item.value"
-        class="btn"
-        :class="{ active: item.active }"
-        @click="switchTypeHandle(item.value)"
-        >{{ item.text }}</button
-      >
+    <div class="d-flex rate-action">
+      <div class="d-flex t-types mb-20">
+        <button
+          v-for="item in types"
+          :key="item.value"
+          class="btn"
+          :class="{ active: item.active }"
+          @click="switchTypeHandle(item.value)"
+          >{{ item.text }}</button
+        >
+      </div>
+      <div class="d-flex">
+        <div class="rate_value">Tỷ giá : {{ currencyRate }}</div>
+        <div class="rate-btn" @click="visibleModalEdit()">Sửa tỷ giá</div>
+      </div>
     </div>
+
     <div class="d-flex t-services mb-20">
       <button
         class="btn"
@@ -64,33 +71,49 @@
         </div>
       </div>
     </div>
+    <edit-rate
+      @save="handleEditRate"
+      :visible.sync="visibleEdit"
+      :loading="loadingEdit"
+    >
+    </edit-rate>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import PriceItem from '../components/PriceItem.vue'
+import EditRate from '../components/ModalEditRate.vue'
+import { formatNumberV2 } from '@core/utils/formatter'
 import {
   SWICTH_TYPE,
   SWICTH_SERVICE,
   FETCH_SERVICES,
   UPDATE_PRICES,
   DISCARD_UPDATE_PRICE,
+  FETCH_RATE_EXCHANGE,
+  UPDATE_RATE_EXCHANGE,
 } from '../store'
 
 export default {
   name: 'Prices',
-  components: { PriceItem },
+  components: { PriceItem, EditRate },
   computed: {
     ...mapState('setting', {
       types: (state) => state.types,
       filter: (state) => state.filter,
       services: (state) => state.services,
+      rate: (state) => state.rate_exchange,
     }),
     ...mapGetters('setting', ['prices', 'hasChangePrice']),
+    currencyRate() {
+      return formatNumberV2(this.rate)
+    },
   },
   data() {
     return {
       isloading: false,
+      visibleEdit: false,
+      loadingEdit: false,
     }
   },
   mounted() {
@@ -103,6 +126,8 @@ export default {
       switchService: SWICTH_SERVICE,
       fetchServices: FETCH_SERVICES,
       updatePrices: UPDATE_PRICES,
+      fetchRate: FETCH_RATE_EXCHANGE,
+      updateRate: UPDATE_RATE_EXCHANGE,
     }),
 
     ...mapMutations('setting', {
@@ -111,7 +136,7 @@ export default {
 
     async init() {
       this.isloading = true
-      const res = await this.fetchServices()
+      const res = await Promise.all([this.fetchServices(), this.fetchRate()])
       if (res.error) {
         this.$toast.error(res.message)
       }
@@ -137,7 +162,28 @@ export default {
         },
       })
     },
-
+    async handleEditRate(body) {
+      this.loadingEdit = true
+      const payload = {
+        price: body.price,
+      }
+      const res = await this.updateRate(payload)
+      this.loadingEdit = false
+      this.visibleEdit = false
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+      this.$toast.open({
+        type: 'success',
+        message: 'Thành công',
+        duration: 3000,
+      })
+      this.init()
+    },
+    visibleModalEdit() {
+      this.visibleEdit = true
+    },
     switchServiceHandle(value) {
       if (value == this.filter.service) return
 
@@ -246,5 +292,27 @@ export default {
       cursor: initial;
     }
   }
+}
+.rate-action {
+  justify-content: space-between;
+  align-items: center;
+}
+.rate-btn,
+.rate_value {
+  height: 40px;
+  line-height: 38px;
+}
+.rate_value {
+  margin-right: 20px;
+  font-weight: 600;
+}
+.rate-btn {
+  border: 1px solid #ddd;
+  padding: 0 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #00b4c3;
+  color: white;
+  font-weight: 700;
 }
 </style>
