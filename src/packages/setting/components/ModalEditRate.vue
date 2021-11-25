@@ -8,7 +8,13 @@
     >
       <div>
         <label for=""><b>Tỷ giá:</b></label>
-        <p-input type="number" min="0" v-model.number="price" :error="err" />
+        <p-input
+          type="number"
+          min="0"
+          :value="rate"
+          v-model.number="price"
+          :error="err"
+        />
       </div>
       <template slot="footer">
         <div class="group-button modal-confirm">
@@ -36,10 +42,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    rate: {
+      type: Number,
+    },
   },
   data() {
     return {
-      price: 0,
+      price: this.rate,
       isShow: this.visible,
       err: '',
     }
@@ -68,7 +77,6 @@ export default {
   watch: {
     visible(value) {
       this.isShow = value
-      this.price = 0
       this.err = ''
     },
   },
