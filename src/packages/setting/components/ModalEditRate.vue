@@ -59,7 +59,8 @@ export default {
       this.$emit('update:visible', false)
     },
     async handleSave() {
-      if (!/^\d+$/gm.test(this.price)) {
+      // eslint-disable-next-line no-useless-escape
+      if (!/^\d+[^\.]$/gm.test(this.price)) {
         this.err = 'Giá trị nhập vào không hợp lệ'
         return
       }
@@ -78,6 +79,7 @@ export default {
     visible(value) {
       this.isShow = value
       this.err = ''
+      this.price = this.rate
     },
     rate(value) {
       this.price = value
