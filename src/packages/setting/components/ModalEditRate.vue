@@ -59,7 +59,7 @@ export default {
       this.$emit('update:visible', false)
     },
     async handleSave() {
-      if (!/^\d+\.?\d{0,2}$/gm.test(this.price)) {
+      if (!/^\d+$/gm.test(this.price)) {
         this.err = 'Giá trị nhập vào không hợp lệ'
         return
       }
