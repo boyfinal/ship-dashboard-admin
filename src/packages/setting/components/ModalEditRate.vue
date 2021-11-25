@@ -60,7 +60,7 @@ export default {
     },
     async handleSave() {
       // eslint-disable-next-line no-useless-escape
-      if (!/^\d+[^\.]$/gm.test(this.price)) {
+      if (!/^\d+$/gm.test(this.price)) {
         this.err = 'Giá trị nhập vào không hợp lệ'
         return
       }
