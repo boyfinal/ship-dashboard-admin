@@ -79,6 +79,9 @@ export default {
       this.isShow = value
       this.err = ''
     },
+    rate(value) {
+      this.price = value
+    },
   },
 }
 </script>
