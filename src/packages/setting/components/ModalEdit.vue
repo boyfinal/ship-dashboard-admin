@@ -311,5 +311,11 @@ export default {
   .multiselect__single {
     font-weight: 600;
   }
+  .modal-body {
+    overflow-y: unset;
+  }
+  .modal-lg {
+    overflow: revert;
+  }
 }
 </style>

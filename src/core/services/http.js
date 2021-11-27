@@ -16,10 +16,14 @@ export const http = {
   // eslint-disable-next-line
   async request(method, url, data, options = {}) {
     try {
-      const apiUrl =
-        url.indexOf('http') === 0
-          ? url
-          : `${process.env.VUE_APP_BASE_API_ENDPOINT}${url}`
+      let baseURL = process.env.VUE_APP_BASE_API_ENDPOINT
+
+      if (typeof options.base_path !== 'undefined') {
+        baseURL = `${process.env.VUE_APP_BASE_API}/${options.base_path}`
+      }
+
+      const apiUrl = url.indexOf('http') === 0 ? url : `${baseURL}${url}`
+
       const type = isString(options)
         ? options
         : options.type || RESPONSE_TYPE_JSON

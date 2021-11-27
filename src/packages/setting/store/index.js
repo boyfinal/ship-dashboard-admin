@@ -10,6 +10,8 @@ export const UPDATE_STATUS_USER = 'updateStatusUser'
 export const UPDATE_ROLE_USER = 'updateRoleUser'
 export const EXPORT_PACKAGE = 'exportPackage'
 export const FETCH_SERVICES = 'fetchServicers'
+export const FETCH_RATE_EXCHANGE = 'fetchRateExchange'
+export const UPDATE_RATE_EXCHANGE = 'updateRateExchange'
 export const SWICTH_TYPE = 'swicthType'
 export const SWICTH_SERVICE = 'swicthService'
 export const UPDATE_PRICES = 'updatePrices'
@@ -54,6 +56,7 @@ export const state = {
     user_class: USER_CLASS_PUBLIC,
     service: 0,
   },
+  rate_exchange: 0,
 }
 
 /**
@@ -65,6 +68,9 @@ export const mutations = {
   },
   [COUNT_USER]: (state, payload) => {
     state.count_user = payload
+  },
+  [FETCH_RATE_EXCHANGE]: (state, payload) => {
+    state.rate_exchange = payload
   },
   [FETCH_SERVICES]: (state, payload) => {
     state.services = payload
@@ -245,6 +251,9 @@ export const actions = {
   [SWICTH_TYPE]({ commit }, payload) {
     commit(SWICTH_TYPE, payload)
   },
+  [SWICTH_SERVICE]({ commit }, payload) {
+    commit(SWICTH_SERVICE, payload)
+  },
   async [FETCH_SERVICES]({ commit }) {
     commit(FETCH_SERVICES, [])
 
@@ -281,6 +290,24 @@ export const actions = {
   // eslint-disable-next-line
   async [UPDATE_USER_INFO]({ commit }, payload) {
     const res = await api.updateUserInfo(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false }
+  },
+
+  async [FETCH_RATE_EXCHANGE]({ commit }) {
+    const res = await api.fetchRateExchange()
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+    commit(FETCH_RATE_EXCHANGE, res.rate_exchange.price)
+    return { error: false }
+  },
+  // eslint-disable-next-line
+  async [UPDATE_RATE_EXCHANGE]({ commit }, payload) {
+    const res = await api.updateRateExchange(payload)
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }

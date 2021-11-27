@@ -33,6 +33,8 @@ export default {
     return http.post(`/shipments/create`, payload)
   },
   exportShipment(payload) {
-    return http.post('/shipments/export', payload)
+    return http.post('/shipments', payload, {
+      base_path: '/v1/export/shipment',
+    })
   },
 }

@@ -10,6 +10,8 @@ export const BILL_FETCH = 'billFetch'
 export const BILL_COUNT = 'billCount'
 export const CANCEL_EXTRA_FEE = 'cancelExtraFee'
 export const CREATE_EXTRA_FEE = 'createExtraFee'
+export const EXPORT_BILL = 'exportBill'
+
 export const state = {
   bill: {},
   feeEdit: [],
@@ -126,5 +128,22 @@ export const actions = {
     }
 
     return { success: true }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [EXPORT_BILL]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.exportBill(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.download
+    }
+
+    return result
   },
 }

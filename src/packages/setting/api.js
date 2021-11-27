@@ -46,10 +46,16 @@ export default {
     return http.put('/users/update-role', payload)
   },
   exportPackage(payload) {
-    return http.post('/packages/export', payload)
+    return http.post('/packages', payload, { base_path: '/v1/export/shipment' })
   },
   fetchServices(payload) {
     return http.get(`/services?${buildQueryString(payload)}`)
+  },
+  fetchRateExchange() {
+    return http.get(`/services/rate`)
+  },
+  updateRateExchange(payload) {
+    return http.put(`/services/rate`, payload)
   },
   updatePrices(payload) {
     return http.post(`/services/prices`, payload)
