@@ -98,7 +98,11 @@
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
-                    <td>{{ item.warehouse ? item.warehouse.name : '' }}</td>
+                    <td
+                      >{{ item.warehouse ? item.warehouse.name : '' }} ({{
+                        item.warehouse ? item.warehouse.state : ''
+                      }})</td
+                    >
                     <td>
                       <span
                         class="badge badge-round"

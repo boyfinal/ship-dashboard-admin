@@ -6,26 +6,6 @@
     <div class="app container-fluid">
       <div class="row">
         <div class="content ">
-          <!-- logo tablet -->
-          <div class="logo_tablet">
-            <img
-              src="~@/assets/img/logo_dark 2.svg"
-              alt=""
-              class="logo_tablet-img"
-            />
-          </div>
-          <!-- end logo tablet -->
-
-          <!-- logo mobile -->
-          <div class="logo_mobile">
-            <img
-              src="~@/assets/img/logo_dark 1.svg"
-              alt=""
-              class="logo_mobile-img"
-            />
-          </div>
-          <!-- end logo mobile -->
-
           <div class="form">
             <router-view :key="$route.fullPath" />
           </div>
