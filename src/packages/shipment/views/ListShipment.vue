@@ -64,7 +64,11 @@
                     <td>
                       {{ item.quantity }}
                     </td>
-                    <td>{{ item.warehouse ? item.warehouse.name : '' }}</td>
+                    <td
+                      >{{ item.warehouse ? item.warehouse.name : '' }}({{
+                        item.warehouse ? item.warehouse.state : ''
+                      }})</td
+                    >
                     <td>
                       <span
                         class="badge badge-round"
