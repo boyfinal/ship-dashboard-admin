@@ -75,6 +75,7 @@
       @save="handleEditRate"
       :visible.sync="visibleEdit"
       :loading="loadingEdit"
+      :rate="rate"
     >
     </edit-rate>
   </div>

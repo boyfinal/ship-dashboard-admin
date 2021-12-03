@@ -227,7 +227,7 @@ import {
   GET_LABEL,
 } from '../store'
 
-import { CONTAINER_STATUS_TAB, CONTAINER_WAITING_CLOSE } from '../contants'
+import { CONTAINER_WAITING_CLOSE, MAP_TEXT_STATUS_CONTAINER } from '../contants'
 
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -270,7 +270,7 @@ export default {
       })
     },
     statusContainer() {
-      return CONTAINER_STATUS_TAB
+      return MAP_TEXT_STATUS_CONTAINER
     },
     isAdmin() {
       return this.$isAdmin()
