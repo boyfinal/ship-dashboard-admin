@@ -13,7 +13,7 @@ export default {
     return http.get(`/containers/box`)
   },
   createContainer(payload) {
-    return http.post(`/containers/`, payload)
+    return http.post(`/containers`, payload)
   },
   detailContainer(payload) {
     return http.get(`/containers/${payload.id}?${buildQueryString(payload)}`)
