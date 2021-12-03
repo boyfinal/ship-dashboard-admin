@@ -65,7 +65,7 @@
                       {{ item.quantity }}
                     </td>
                     <td
-                      >{{ item.warehouse ? item.warehouse.name : '' }}({{
+                      >{{ item.warehouse ? item.warehouse.name : '' }} ({{
                         item.warehouse ? item.warehouse.state : ''
                       }})</td
                     >

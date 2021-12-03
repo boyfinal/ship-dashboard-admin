@@ -99,7 +99,7 @@
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
                     <td
-                      >{{ item.warehouse ? item.warehouse.name : '' }}({{
+                      >{{ item.warehouse ? item.warehouse.name : '' }} ({{
                         item.warehouse ? item.warehouse.state : ''
                       }})</td
                     >
