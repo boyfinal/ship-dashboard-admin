@@ -15,6 +15,7 @@
       <label class="form-label">Địa chỉ kho:</label>
       <p-select v-model="warehouse">
         <option
+          disabled
           v-for="(option, i) in optionsWareHouse"
           :key="i"
           :value="option.id"
@@ -89,7 +90,7 @@ export default {
       })
 
       optionAccept.sort((a, b) => {
-        return a.id - b.id
+        return a.cost - b.cost
       })
 
       return optionAccept
