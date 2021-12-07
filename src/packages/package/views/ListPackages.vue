@@ -136,6 +136,7 @@
                       <a
                         v-if="item.tracking"
                         target="_blank"
+                        class="on-hover"
                         :href="
                           `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
                         "

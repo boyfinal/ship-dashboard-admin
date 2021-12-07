@@ -52,6 +52,11 @@
             line-height: 160%;
             color: $color-java-blue-10 !important
         }
+        .on-hover{
+            &:hover{
+                color:#37393E !important;
+            }
+        }
         .order-list {
             box-shadow: 0px 4px 32px -14px rgba(0, 0, 0, 0.12);
             border-radius: 20px;

@@ -67,7 +67,7 @@
                     </td>
                     <td>
                       <a
-                        class="text-no-underline"
+                        class="text-no-underline on-hover"
                         v-if="item.tracking_number"
                         href="javascript:void(0)"
                         @click="downloadLabel(item.label_url)"
