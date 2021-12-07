@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
-          placeholder="Tìm theo mã vận đơn ..."
+          placeholder="Tìm theo mã vận đơn,tracking number ..."
           prefixIcon="search"
           type="search"
           clearable
