@@ -67,9 +67,7 @@
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
                       <th :class="{ hidden: hiddenClass }">Tracking</th>
                       <th :class="{ hidden: hiddenClass }">Khách hàng</th>
-                      <th
-                        :class="{ hidden: hiddenClass }"
-                        v-if="showDetailPackage"
+                      <th :class="{ hidden: hiddenClass }"
                         >Chi tiết hàng hóa</th
                       >
                       <th width="100" :class="{ hidden: hiddenClass }"
@@ -132,7 +130,7 @@
                           </i>
                         </p-tooltip>
                       </span>
-                      <span class="svg" v-if="!showDetailPackage">
+                      <span class="svg">
                         <p-tooltip
                           class="item_name"
                           :label="` Track `"
@@ -194,7 +192,7 @@
                     <td>
                       {{ item.user.full_name }}
                     </td>
-                    <td v-if="showDetailPackage">
+                    <td>
                       <p-tooltip
                         :label="item.detail"
                         size="large"
