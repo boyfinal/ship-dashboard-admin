@@ -150,7 +150,7 @@
                           >{{ item.tracking_number }}</a
                         >
 
-                        <span class="svg">
+                        <span class="svg" v-if="item.tracking_number">
                           <p-tooltip
                             class="item_name"
                             :label="` Download `"
@@ -180,7 +180,7 @@
                           </p-tooltip>
                         </span>
 
-                        <span class="svg">
+                        <span class="svg" v-if="item.tracking_number">
                           <p-tooltip
                             class="item_name"
                             :label="` Track `"
