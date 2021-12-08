@@ -67,9 +67,6 @@
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
                       <th :class="{ hidden: hiddenClass }">Tracking</th>
                       <th :class="{ hidden: hiddenClass }">Khách hàng</th>
-                      <th :class="{ hidden: hiddenClass }"
-                        >Chi tiết hàng hóa</th
-                      >
                       <th width="100" :class="{ hidden: hiddenClass }"
                         >Ngày tạo
                       </th>
@@ -191,17 +188,6 @@
                     </td>
                     <td>
                       {{ item.user.full_name }}
-                    </td>
-                    <td>
-                      <p-tooltip
-                        :label="item.detail"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.detail.length > 15"
-                      >
-                        {{ truncate(item.detail, 15) }}
-                      </p-tooltip>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
