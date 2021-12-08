@@ -70,6 +70,7 @@
                   <thead>
                     <tr>
                       <th>Mã vận đơn</th>
+                      <th>Tracking USPS</th>
                       <th>Phí giao</th>
                     </tr>
                   </thead>
@@ -92,6 +93,9 @@
                           />
                         </router-link>
                       </td>
+                      <td>{{
+                        item.tracking ? item.tracking.tracking_number : ``
+                      }}</td>
                       <td>{{ item.shipping_fee | formatPrice }}</td>
                     </tr>
                   </tbody>

@@ -144,9 +144,12 @@
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
                         <a
+                          target="_blank"
                           class="text-no-underline"
                           v-if="item.tracking_number"
-                          href="javascript:void(0)"
+                          :href="
+                            `https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`
+                          "
                           @click="downloadLabel(item.label_url)"
                           >{{ item.tracking_number }}</a
                         >
