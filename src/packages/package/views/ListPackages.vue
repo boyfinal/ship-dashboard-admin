@@ -95,38 +95,41 @@
                         @input="handleValue($event)"
                       ></p-checkbox>
                     </td>
-                    <td class="text-nowrap">
-                      <router-link
-                        class="text-no-underline"
-                        :to="{
-                          name: 'package-detail',
-                          params: {
-                            id: item.id,
-                          },
-                        }"
-                        v-if="item.package_code"
-                      >
-                        {{ item.package_code.code }}
-                      </router-link>
-                      <span
-                        v-if="!item.validate_address"
-                        @click="handleValidateAddress(item.id)"
-                        class="
+                    <td class="text-nowrap code">
+                      <span class="">
+                        <router-link
+                          class="text-no-underline"
+                          :to="{
+                            name: 'package-detail',
+                            params: {
+                              id: item.id,
+                            },
+                          }"
+                          v-if="item.package_code"
+                        >
+                          {{ item.package_code.code }}
+                        </router-link>
+                        <span
+                          v-if="!item.validate_address"
+                          @click="handleValidateAddress(item.id)"
+                          class="
                             list-warning
                             badge badge-round badge-warning-order
                           "
-                      >
-                        <p-tooltip
-                          class="item_name"
-                          :label="`Địa chỉ không hợp lệ`"
-                          position="top"
-                          type="dark"
                         >
-                          <i aria-hidden="true"
-                            ><img src="@assets/img/warning.svg" />
-                          </i>
-                        </p-tooltip>
+                          <p-tooltip
+                            class="item_name"
+                            :label="`Địa chỉ không hợp lệ`"
+                            position="top"
+                            type="dark"
+                          >
+                            <i aria-hidden="true"
+                              ><img src="@assets/img/warning.svg" />
+                            </i>
+                          </p-tooltip>
+                        </span>
                       </span>
+
                       <span class="svg">
                         <p-tooltip
                           class="item_name"
@@ -389,5 +392,9 @@ export default {
   td {
     opacity: 0.6;
   }
+}
+.code {
+  display: flex;
+  align-items: center;
 }
 </style>
