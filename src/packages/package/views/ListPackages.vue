@@ -96,7 +96,7 @@
                       ></p-checkbox>
                     </td>
                     <td class="text-nowrap code">
-                      <span class="">
+                      <span class="link-code">
                         <router-link
                           class="text-no-underline"
                           :to="{
@@ -393,8 +393,12 @@ export default {
     opacity: 0.6;
   }
 }
-.code {
-  display: flex;
-  align-items: center;
+td.code {
+  max-width: 20vw !important;
+  span.link-code,
+  span.svg {
+    position: relative;
+    top: 3px;
+  }
 }
 </style>
