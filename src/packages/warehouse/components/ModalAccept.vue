@@ -19,7 +19,8 @@
           v-for="(option, i) in optionsWareHouse"
           :key="i"
           :value="option.id"
-          >{{ option.name }}</option
+        >
+          HUB {{ warehouse.state }}</option
         >
       </p-select>
     </div>
