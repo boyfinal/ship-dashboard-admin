@@ -87,6 +87,7 @@ export default {
           name: label,
           id: warehouse.id,
           cost: cost,
+          state: warehouse.state,
         })
       })
 
