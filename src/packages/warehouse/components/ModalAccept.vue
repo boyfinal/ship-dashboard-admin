@@ -20,7 +20,7 @@
           :key="i"
           :value="option.id"
         >
-          HUB {{ option.state }}</option
+          HUB {{ option.name }}</option
         >
       </p-select>
     </div>
@@ -75,7 +75,7 @@ export default {
         let exist = this.estimateCost.find(
           (cost) => cost.warehouse_id == warehouse.id
         )
-        let label = warehouse.name
+        let label = warehouse.state
         let cost = 0
         if (exist) {
           label = label + ` - Giá ước tính: $${exist.cost}`
@@ -86,7 +86,6 @@ export default {
           name: label,
           id: warehouse.id,
           cost: cost,
-          state: warehouse.state,
         })
       })
 
