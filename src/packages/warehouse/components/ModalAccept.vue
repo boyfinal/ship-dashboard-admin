@@ -20,7 +20,7 @@
           :key="i"
           :value="option.id"
         >
-          HUB {{ warehouse.state }}</option
+          HUB {{ option.state }}</option
         >
       </p-select>
     </div>
@@ -71,7 +71,6 @@ export default {
     },
     optionsWareHouse() {
       let optionAccept = []
-
       this.warehouses.forEach((warehouse) => {
         let exist = this.estimateCost.find(
           (cost) => cost.warehouse_id == warehouse.id
