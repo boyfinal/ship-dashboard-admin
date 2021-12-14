@@ -114,7 +114,7 @@
             v-for="warehouse in warehouses"
             :key="warehouse.id"
             :value="warehouse.id"
-            >{{ warehouse.name }}</option
+            >HUB {{ warehouse.state }}</option
           >
         </p-select>
       </div>
