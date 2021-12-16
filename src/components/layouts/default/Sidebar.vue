@@ -125,7 +125,7 @@ export default {
             },
             {
               route: '/transactions',
-              title: 'Lịch sử giao dịch',
+              title: 'Thanh toán ',
               alias: ['/transactions', '/transactions/:id'],
             },
             {

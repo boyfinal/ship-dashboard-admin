@@ -23,7 +23,7 @@ export const TRANSACTION_STATUS_TAB = [
   },
   {
     value: TransactionStatusFailure,
-    text: 'Thất bại',
+    text: 'Từ chối',
   },
 ]
 export const MAP_NAME_STATUS_TRANSACTION = {
@@ -36,7 +36,7 @@ export const MAP_NAME_STATUS_TRANSACTION = {
     class: 'badge-success',
   },
   [TransactionStatusFailure]: {
-    value: 'Thất bại',
+    value: 'Từ chối',
     class: 'badge-danger',
   },
   [TransactionStatusReFund]: {
