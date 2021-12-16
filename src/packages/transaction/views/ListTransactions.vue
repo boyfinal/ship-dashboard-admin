@@ -214,7 +214,7 @@ export default {
         status: '',
         search: '',
         search_by: 'bill_id',
-        type: 2,
+        type: 1,
       },
       isFetching: false,
       searchBy: {
