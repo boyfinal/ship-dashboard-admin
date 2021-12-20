@@ -279,14 +279,22 @@ export default {
     ]),
     truncate,
     async init() {
-      this.isFetching = true
-      this.handleUpdateRouteQuery()
-      this.keywordSearch = this.filter.search.trim()
-      const result = await this[FETCH_LIST_PACKAGES_IN_WAREHOUSE](this.filter)
-      this.isFetching = false
-      if (!result || !result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
+      if (this.filter.search) {
+        this.isFetching = true
+        this.handleUpdateRouteQuery()
+        this.keywordSearch = this.filter.search.trim()
+        const result = await this[FETCH_LIST_PACKAGES_IN_WAREHOUSE](this.filter)
+        this.isFetching = false
+        if (!result || !result.success) {
+          this.$toast.open({ message: result.message, type: 'error' })
+        }
+        return
       }
+      this.$store.commit('warehouse/fetchPackageInWareHouse', [])
+      this.$store.commit('warehouse/countPackagesInWareHouse', {
+        count: 0,
+        status_count: [{ status: 0, count: 0 }],
+      })
     },
     acceptHandle(code) {
       this.$router.push({ name: 'check-package', query: { keyword: code } })

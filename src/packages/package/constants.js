@@ -15,10 +15,10 @@ export const PackageStatusCancelled = 50
 export const PackageStatusCreatedText = 'created'
 export const PackageStatusPendingPickupText = 'pending-pickup'
 export const PackageStatusProcessingText = 'processing'
-export const PackageStatusInTransitText = 'in-transit'
+export const PackageStatusInTransitText = 'in-Transit'
 export const PackageStatusDeliveredText = 'delivered'
 export const PackageStatusReturnText = 'return'
-export const PackageStatusCancelledText = 'cancelled'
+export const PackageStatusCancelledText = 'canceled'
 
 export const PACKAGE_STATUS_TAB = [
   {
