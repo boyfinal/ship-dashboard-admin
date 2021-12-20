@@ -159,7 +159,7 @@ export default {
           sub: [
             {
               route: '/warehouse',
-              title: 'Danh sách kho',
+              title: 'Tra cứu kho',
               alias: ['/warehouse'],
             },
             {
