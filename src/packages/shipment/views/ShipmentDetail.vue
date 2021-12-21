@@ -595,7 +595,7 @@ export default {
   display: flex;
 }
 .shipment-detail .page-header__info .input-group {
-  width: calc(100% - 195px);
+  width: calc(100% - 200px);
 }
 .shipment-detail .btn-cancel-container {
   padding: 6px 16px;

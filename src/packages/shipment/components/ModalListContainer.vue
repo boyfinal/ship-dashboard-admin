@@ -3,7 +3,7 @@
     <div class="mb-12">
       <div class="d-flex jc-sb" id="search-box">
         <p-input
-          placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
+          placeholder="Tìm theo mã kiện hoặc mã vận đơn"
           prefixIcon="search"
           type="search"
           :value="filter.search"
