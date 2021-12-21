@@ -155,6 +155,9 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+      if (this.count > 0 && this.containers.length == 0) {
+        this.filter.page--
+      }
       this.action.selected = []
       this.selected = []
     },
