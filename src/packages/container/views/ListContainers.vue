@@ -52,8 +52,7 @@
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
-                      <th>Cân nặng</th>
-                      <th>Kho</th>
+                      <th class="text-center">Tổng cân nặng</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -112,10 +111,7 @@
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
-                    <td>{{ item.weight }}</td>
-                    <td
-                      >HUB {{ item.warehouse ? item.warehouse.state : '' }}</td
-                    >
+                    <td class="text-center">{{ item.weight }}</td>
                     <td>
                       <span
                         class="badge badge-round"
@@ -188,7 +184,7 @@ export default {
         page: 1,
         status: '',
         search: '',
-        warehouse: '',
+        warehouse: 1,
       },
       isFetching: false,
       visibleModalChoiceBox: false,
@@ -330,10 +326,6 @@ export default {
     },
     handleFilter(id) {
       this.filter.page = 1
-      if (this.filter.warehouse == id) {
-        this.filter.warehouse = ''
-        return
-      }
       this.filter.warehouse = id
     },
   },
