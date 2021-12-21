@@ -148,6 +148,7 @@ export default {
       let payload = cloneDeep(this.filter)
       payload.not_in_shipment = true
       payload.warehouse = this.warehouse
+      payload.limit = 10
       payload.search = payload.search.toUpperCase()
       const result = await this[FETCH_LIST_CONTAINERS_NO_BOX](payload)
       this.isFetching = false
