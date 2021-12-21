@@ -98,18 +98,19 @@
   }
 
   table{
-    .table-responsive{
-      overflow: revert;
-    }
     tr:last-child{
       td{
         border-bottom: 1px solid $color-neutral-3 ;
       }
     }
   }
+  .table-responsive{
+    overflow: revert;
+  }
   .p-tooltip:after{
     height: auto;
     word-break: break-word;
+    width: 250%;
   }
 
 }
