@@ -1,6 +1,7 @@
 import api from '../api'
 
 export const FETCH_LIST_CONTAINERS = 'fetchListContainers'
+export const FETCH_LIST_CONTAINERS_NO_BOX = 'fetchListContainersNoBox'
 export const COUNT_LIST_CONTAINERS = 'countListContainers'
 export const FETCH_LIST_CONTAINER_BOXES = 'fetchListContainerBoxes'
 export const CREATE_CONTAINER = 'createContainer'
@@ -64,6 +65,30 @@ export const actions = {
     commit(COUNT_LIST_CONTAINERS, count)
     return result
   },
+
+  // eslint-disable-next-line no-unused-vars
+  async [FETCH_LIST_CONTAINERS_NO_BOX]({ commit }, payload) {
+    let result = { success: true }
+
+    let [list, count] = await Promise.all([
+      api.fetchListContainers(payload),
+      api.countListContainers(payload),
+    ])
+
+    if (!list.containers || !count) {
+      count = { count: 0 }
+      result = {
+        success: false,
+        message: list.errorMessage || '',
+      }
+
+      return result
+    }
+    commit(FETCH_LIST_CONTAINERS, list.containers)
+    commit(COUNT_LIST_CONTAINERS, count)
+    return result
+  },
+
   // eslint-disable-next-line no-unused-vars
   async [CREATE_CONTAINER]({ commit }, payload) {
     let result = { success: true }

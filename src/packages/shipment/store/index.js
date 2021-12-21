@@ -2,6 +2,7 @@ import api from '../api'
 
 export const FETCH_SHIPMENT_DETAIL = 'fetchShipmentDetail'
 export const APPEND_SHIPMENT = 'appendShipment'
+export const APPEND_CONTAINERS_SHIPMENT = 'appendContainersShipment'
 export const CANCEL_CONTAINER = 'cancelContainer'
 export const CANCEL_SHIPMENT = 'cancelShipment'
 export const CLOSE_SHIPMENT = 'closeShipment'
@@ -62,7 +63,19 @@ export const actions = {
     result.container = response.container
     return result
   },
-
+  // eslint-disable-next-line no-unused-vars
+  async [APPEND_CONTAINERS_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.appendContainersShipment(payload)
+    if (!response.success || response.errorMessage) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+      return result
+    }
+    return result
+  },
   // eslint-disable-next-line no-unused-vars
   async [CANCEL_CONTAINER]({ commit }, payload) {
     let result = { success: true }
