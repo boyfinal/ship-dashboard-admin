@@ -329,6 +329,7 @@ export default {
       this.init()
     },
     handleFilter(id) {
+      this.filter.page = 1
       if (this.filter.warehouse == id) {
         this.filter.warehouse = ''
         return
