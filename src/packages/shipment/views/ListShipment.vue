@@ -4,7 +4,7 @@
       <div class="mb-12 row">
         <div class="warehouse col-6">
           <button
-            class="btn btn-warehouse"
+            class="btn btn-warehouse mb-8"
             v-for="(item, i) in wareHouses"
             :key="i"
             :class="{ active: filter.warehouseID == item.id }"
@@ -236,6 +236,7 @@ export default {
     },
 
     selectWarehouse(id) {
+      this.filter.page = 1
       if (this.filter.warehouseID == id) return
       this.filter.warehouseID = id
     },
@@ -264,6 +265,9 @@ export default {
   #search-box .input-group {
     margin-right: 8px;
   }
+  .p-input-search {
+    padding-left: 18px;
+  }
   .btn-info {
     white-space: nowrap;
   }
@@ -274,6 +278,7 @@ export default {
     font-weight: 600;
 
     border: 1px solid #edeeee;
+    &:hover,
     &.active {
       border: 1px solid #00b4c3;
       color: #00b4c3;
