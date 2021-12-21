@@ -1,20 +1,33 @@
 <template>
-  <div class="list-packages pages">
+  <div class="list-packages pages page__container">
     <div class="page-content">
-      <div class="mb-12">
-        <div class="d-flex jc-sb" id="search-box">
-          <p-input
-            placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
-            prefixIcon="search"
-            type="search"
-            :value="filter.search"
-            @keyup.enter="handleSearch"
-          >
-          </p-input>
-          <p-button type="info" @click="CreateContainerHandle">
-            <p-icon name="plus"></p-icon>
-            Tạo kiện hàng
-          </p-button>
+      <div class="mb-12 ">
+        <div class="d-flex jc-sb row" id="search-box">
+          <div class="page__container-warehouses col-6">
+            <button
+              v-for="(warehouse, i) in wareHouses"
+              :key="i"
+              :class="{ active: warehouse.id == filter.warehouse }"
+              @click="handleFilter(warehouse.id)"
+              class="choose-warehouse btn btn-default mr-8 mb-8"
+              >{{ warehouse.name }}</button
+            >
+          </div>
+          <div class="page__container-search d-flex jc-sb col-6 ">
+            <p-input
+              placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
+              suffixIcon="search"
+              type="search"
+              class="mr-8"
+              :value="filter.search"
+              @keyup.enter="handleSearch"
+            >
+            </p-input>
+            <p-button type="info" @click="CreateContainerHandle">
+              <p-icon name="plus"></p-icon>
+              Tạo kiện hàng
+            </p-button>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -39,6 +52,7 @@
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
+                      <th>Cân nặng</th>
                       <th>Kho</th>
                       <th>Trạng thái</th>
                     </template>
@@ -98,6 +112,7 @@
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
+                    <td>{{ item.weight }}</td>
                     <td
                       >HUB {{ item.warehouse ? item.warehouse.state : '' }}</td
                     >
@@ -173,6 +188,7 @@ export default {
         page: 1,
         status: '',
         search: '',
+        warehouse: '',
       },
       isFetching: false,
       visibleModalChoiceBox: false,
@@ -312,6 +328,13 @@ export default {
       })
       this.init()
     },
+    handleFilter(id) {
+      if (this.filter.warehouse == id) {
+        this.filter.warehouse = ''
+        return
+      }
+      this.filter.warehouse = id
+    },
   },
   watch: {
     filter: {
@@ -323,9 +346,4 @@ export default {
   },
 }
 </script>
-<style>
-#search-box .input-group {
-  margin-right: 10px;
-  width: 85%;
-}
-</style>
+<style></style>

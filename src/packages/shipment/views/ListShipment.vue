@@ -1,11 +1,21 @@
 <template>
   <div class="list__shipment pages">
     <div class="page-content">
-      <div class="mb-12">
-        <div class="d-flex jc-sb" id="search-box">
+      <div class="mb-12 row">
+        <div class="warehouse col-6">
+          <button
+            class="btn btn-warehouse"
+            v-for="(item, i) in wareHouses"
+            :key="i"
+            :class="{ active: filter.warehouseID == item.id }"
+            @click="selectWarehouse(item.id)"
+            >{{ item.name }}</button
+          >
+        </div>
+        <div class="d-flex jc-sb col-6" id="search-box">
           <p-input
             placeholder="Tìm theo mã lô hoặc mã kiện"
-            prefixIcon="search"
+            suffixIcon="search"
             type="search"
             clearable
             @keyup.enter="handleSearch"
@@ -34,11 +44,15 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>Mã lô</th>
+                      <th width="200">Mã lô</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
-                      <th>Số lượng kiện</th>
-                      <th>Kho</th>
+                      <th width="150" style="text-align: center"
+                        >Tổng cân nặng</th
+                      >
+                      <th width="150" style="text-align: center"
+                        >Số lượng kiện</th
+                      >
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -61,12 +75,12 @@
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="item.status != ShipmentClosed">-</td>
                     <td v-else>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
-                    <td>
+                    <td style="text-align: center">{{
+                      item.quantity > 0 ? sumWeight(item.containers) : 0
+                    }}</td>
+                    <td style="text-align: center">
                       {{ item.quantity }}
                     </td>
-                    <td
-                      >HUB {{ item.warehouse ? item.warehouse.state : '' }}</td
-                    >
                     <td>
                       <span
                         class="badge badge-round"
@@ -112,7 +126,12 @@
   </div>
 </template>
 <script>
-import { SHIPMENT_STATUS_TAB, ShipmentClosed } from '../constants'
+import {
+  SHIPMENT_STATUS_TAB,
+  ShipmentClosed,
+  WareHouseStatusActive,
+  WareHouseTypeInternational,
+} from '../constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
 
@@ -141,11 +160,14 @@ export default {
         limit: 30,
         search: '',
         status: '',
+        warehouseID: 0,
       },
       isFetching: false,
       visibleConfirm: false,
       ShipmentClosed: ShipmentClosed,
       loadingCreateWarehouse: false,
+      WareHouseStatusActive,
+      WareHouseTypeInternational,
     }
   },
   created() {
@@ -174,7 +196,10 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
-      let req = { type: 1, status: 1 }
+      let req = {
+        type: this.WareHouseTypeInternational,
+        status: this.WareHouseStatusActive,
+      }
       payload.search = payload.search.toUpperCase()
       const [result, result_1] = await Promise.all([
         this[FETCH_LIST_SHIPMENT](payload),
@@ -210,6 +235,16 @@ export default {
       this.init()
     },
 
+    selectWarehouse(id) {
+      if (this.filter.warehouseID == id) return
+      this.filter.warehouseID = id
+    },
+    sumWeight(containers) {
+      return containers
+        .map((item) => item.weight)
+        .reduce((prev, curr) => prev + curr, 0)
+    },
+
     visibleModal() {
       this.visibleConfirm = true
     },
@@ -227,11 +262,25 @@ export default {
 <style lang="scss">
 .list__shipment {
   #search-box .input-group {
-    margin-right: 10px;
-    width: 87%;
+    margin-right: 8px;
   }
   .btn-info {
     white-space: nowrap;
+  }
+  .btn-warehouse {
+    background: #ffffff;
+    margin-right: 8px;
+    color: #626363;
+    font-weight: 600;
+
+    border: 1px solid #edeeee;
+    &.active {
+      border: 1px solid #00b4c3;
+      color: #00b4c3;
+    }
+    &:focus {
+      box-shadow: unset;
+    }
   }
 }
 </style>
