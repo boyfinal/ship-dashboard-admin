@@ -67,6 +67,14 @@
               <img src="@/assets/img/plus_blue.svg" />
               Thêm
             </p-button>
+            <p-button
+              type="info"
+              v-if="!isClosedShipment && !isCanceledShipment"
+              :class="'btn-add-container ml-3'"
+              @click="handleShowModalListContainer"
+            >
+              Danh sách
+            </p-button>
           </div>
           <div
             class="page-header__action col-6 text-right"
@@ -262,6 +270,13 @@
         </div>
       </div>
     </div>
+    <modal-list-container
+      :visible.sync="isShowModalListContainer"
+      :warehouse="shipment.warehouse_id"
+      :loading="loading"
+      @save="handleAddContainer"
+    >
+    </modal-list-container>
   </div>
 </template>
 
@@ -277,7 +292,9 @@ import {
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
   EXPORT_SHIPMENT,
+  APPEND_CONTAINERS_SHIPMENT,
 } from '../store'
+import ModalListContainer from '../components/ModalListContainer'
 import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -293,6 +310,7 @@ export default {
   mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
   components: {
     EmptySearchResult,
+    ModalListContainer,
   },
   data() {
     return {
@@ -306,6 +324,7 @@ export default {
       isStartScan: false,
       loading: false,
       ShipmentClosed: ShipmentClosed,
+      isShowModalListContainer: false,
     }
   },
   computed: {
@@ -334,6 +353,7 @@ export default {
     ...mapActions('shipment', [
       FETCH_SHIPMENT_DETAIL,
       APPEND_SHIPMENT,
+      APPEND_CONTAINERS_SHIPMENT,
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
@@ -510,6 +530,27 @@ export default {
         'danh_sach_don_hang_'
       )
     },
+    handleShowModalListContainer() {
+      this.isShowModalListContainer = true
+    },
+    async handleAddContainer(ids) {
+      this.loading = true
+      const payload = {
+        container_ids: ids,
+        shipment_id: parseInt(this.$route.params.id),
+      }
+      const result = await this[APPEND_CONTAINERS_SHIPMENT](payload)
+      this.loading = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      this.$toast.open({
+        message: `Thêm kiện hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
   },
   watch: {
     filter: {
@@ -554,7 +595,7 @@ export default {
   display: flex;
 }
 .shipment-detail .page-header__info .input-group {
-  width: calc(100% - 100px);
+  width: calc(100% - 195px);
 }
 .shipment-detail .btn-cancel-container {
   padding: 6px 16px;

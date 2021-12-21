@@ -564,7 +564,7 @@ export default {
   //margin-left: 34px;
 }
 
-.page-header__info > {
+.container-detail .page-header__info > {
   div {
     margin-right: 50px;
     div:last-child {
