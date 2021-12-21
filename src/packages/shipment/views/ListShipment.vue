@@ -160,7 +160,7 @@ export default {
         limit: 30,
         search: '',
         status: '',
-        warehouseID: 0,
+        warehouseID: 1,
       },
       isFetching: false,
       visibleConfirm: false,
