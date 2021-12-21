@@ -98,8 +98,8 @@ export default {
   methods: {
     handleClick(item) {
       if (this.value !== item) {
-        this.$emit('input', item.toLowerCase())
-        this.$emit('click', item.toLowerCase())
+        this.$emit('input', item)
+        this.$emit('click', item)
       }
     },
     getClass(i) {
