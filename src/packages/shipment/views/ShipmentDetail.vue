@@ -49,7 +49,7 @@
         </div>
 
         <div class="page-header__subtitle row">
-          <div class="page-header__info col-7">
+          <div class="page-header__info col-6">
             <p-input
               placeholder="Tìm theo mã kiện hàng"
               prefixIcon="search"
@@ -77,7 +77,7 @@
             </p-button>
           </div>
           <div
-            class="page-header__action col-5 text-right"
+            class="page-header__action col-6 text-right"
             v-if="!isClosedShipment && !isCanceledShipment"
           >
             <p-button
