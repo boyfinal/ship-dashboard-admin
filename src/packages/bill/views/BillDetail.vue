@@ -176,7 +176,17 @@
                       >
                       <td v-else>{{ item.amount | formatPrice }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
-                      <td>{{ item.description }}</td>
+                      <td>
+                        <p-tooltip
+                          :label="item.description"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.description.length > 15"
+                        >
+                          {{ truncate(item.description, 15) }}
+                        </p-tooltip>
+                      </td>
                       <td
                         v-if="
                           user.role == ROLE_ADMIN ||
@@ -214,6 +224,8 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { truncate } from '@core/utils/string'
+
 import {
   FETCH_BILL_DETAIL,
   FETCH_BILL_EXTRA,
@@ -282,6 +294,7 @@ export default {
       CANCEL_EXTRA_FEE,
       EXPORT_BILL,
     ]),
+    truncate,
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()

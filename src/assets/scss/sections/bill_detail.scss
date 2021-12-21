@@ -104,4 +104,9 @@
       }
     }
   }
+  .p-tooltip:after{
+    height: auto;
+    word-break: break-all;
+    width: 290%;
+  }
 }
