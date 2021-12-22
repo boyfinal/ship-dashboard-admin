@@ -9,16 +9,18 @@ export const PackageStatusWareHouseInShipment = 13
 export const PackageStatusWareHouseExport = 14
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 60
-export const PackageStatusReturned = 40
+export const PackageStatusAlert = 40
 export const PackageStatusCancelled = 50
+export const PackageStatusExpired = 70
 
 export const PackageStatusCreatedText = 'created'
 export const PackageStatusPendingPickupText = 'pending-pickup'
 export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-Transit'
 export const PackageStatusDeliveredText = 'delivered'
-export const PackageStatusReturnText = 'return'
+export const PackageStatusAlertText = 'alert'
 export const PackageStatusCancelledText = 'canceled'
+export const PackageStatusExpiredText = 'expired'
 
 export const PACKAGE_STATUS_TAB = [
   {
@@ -46,12 +48,16 @@ export const PACKAGE_STATUS_TAB = [
     text: 'Giao thành công',
   },
   {
-    value: PackageStatusReturnText,
+    value: PackageStatusAlertText,
     text: 'Trả hàng',
   },
   {
     value: PackageStatusCancelledText,
     text: 'Đã huỷ',
+  },
+  {
+    value: PackageStatusExpiredText,
+    text: 'Hết hạn',
   },
 ]
 
@@ -92,12 +98,16 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Giao thành công',
     class: 'badge-success',
   },
-  [PackageStatusReturned]: {
+  [PackageStatusAlert]: {
     value: 'Trả hàng',
     class: 'badge-success',
   },
   [PackageStatusCancelled]: {
     value: 'Đã hủy',
+    class: 'badge-success',
+  },
+  [PackageStatusExpired]: {
+    value: 'Hết hạn',
     class: 'badge-success',
   },
 }
@@ -127,12 +137,16 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
     value: 'Giao thành công',
     class: 'badge-success',
   },
-  [PackageStatusReturnText]: {
+  [PackageStatusAlertText]: {
     value: 'Trả hàng',
     class: 'badge-success',
   },
   [PackageStatusCancelledText]: {
     value: 'Đã hủy',
+    class: 'badge-success',
+  },
+  [PackageStatusExpiredText]: {
+    value: 'Hết hạn',
     class: 'badge-success',
   },
 }
@@ -172,7 +186,7 @@ export const DELIVER_LOG_PACKAGE = {
     'Shipping label confirmed, LionBay awaiting item',
   [PackageStatusPicked]: 'Accepted at LionBay Origin Facility',
   [PackageStatusCancelled]: 'Label canceled',
-  [PackageStatusReturned]: ' Package returned',
+  [PackageStatusAlert]: ' Package returned',
   [PackageStatusDelivered]: 'Delivered',
   [PackageStatusWareHouseExport]:
     'Your package is on the way to international airport',
@@ -199,7 +213,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Xuất kho',
     class: 'badge-success',
   },
-  [PackageStatusReturned]: {
+  [PackageStatusAlert]: {
     value: 'Trả hàng',
     class: 'badge-success',
   },

@@ -608,7 +608,7 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
-  PackageStatusReturned,
+  PackageStatusAlert,
   PackageStatusWareHouseInContainer,
   PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
@@ -683,7 +683,7 @@ export default {
                 log.updated_user_name
               }</strong>`
               break
-            case PackageStatusReturned:
+            case PackageStatusAlert:
               text = `${DELIVER_LOG_PACKAGE[log.type]} <p>Lí do: ${
                 log.description
               }</p>`
