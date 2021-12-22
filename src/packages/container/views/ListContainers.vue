@@ -10,8 +10,9 @@
               :class="{ active: warehouse.id == filter.warehouse }"
               @click="handleFilter(warehouse.id)"
               class="choose-warehouse btn btn-default mr-8 mb-8"
-              >{{ warehouse.name }}</button
             >
+              HUB {{ warehouse ? warehouse.state : '' }}
+            </button>
           </div>
           <div class="page__container-search d-flex jc-sb col-6 ">
             <p-input
