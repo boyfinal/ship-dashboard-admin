@@ -9,7 +9,7 @@
             :key="i"
             :class="{ active: filter.warehouseID == item.id }"
             @click="selectWarehouse(item.id)"
-            >{{ item.name }}</button
+            >HUB {{ item ? item.state : '' }}</button
           >
         </div>
         <div class="d-flex jc-sb col-6" id="search-box">
