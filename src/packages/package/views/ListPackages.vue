@@ -63,8 +63,8 @@
                       ></p-checkbox>
                     </th>
                     <template>
-                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
+                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
                       <th :class="{ hidden: hiddenClass }">Tracking</th>
                       <th :class="{ hidden: hiddenClass }">Khách hàng</th>
                       <th width="100" :class="{ hidden: hiddenClass }"
@@ -95,42 +95,44 @@
                         @input="handleValue($event)"
                       ></p-checkbox>
                     </td>
-                    <td class="text-nowrap code">
-                      <span class="link-code">
-                        <router-link
-                          class="text-no-underline"
-                          :to="{
-                            name: 'package-detail',
-                            params: {
-                              id: item.id,
-                            },
-                          }"
-                          v-if="item.package_code"
-                        >
-                          {{ item.package_code.code }}
-                        </router-link>
-                        <span
-                          v-if="!item.validate_address"
-                          @click="handleValidateAddress(item.id)"
-                          class="
+                    <td>
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'package-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                        v-if="item.package_code"
+                      >
+                        {{ item.order_number }}
+                      </router-link>
+                      <span
+                        v-if="!item.validate_address"
+                        @click="handleValidateAddress(item.id)"
+                        class="
                             list-warning
                             badge badge-round badge-warning-order
                           "
+                      >
+                        <p-tooltip
+                          class="item_name"
+                          :label="`Địa chỉ không hợp lệ`"
+                          position="top"
+                          type="dark"
                         >
-                          <p-tooltip
-                            class="item_name"
-                            :label="`Địa chỉ không hợp lệ`"
-                            position="top"
-                            type="dark"
-                          >
-                            <i aria-hidden="true"
-                              ><img src="@assets/img/warning.svg" />
-                            </i>
-                          </p-tooltip>
-                        </span>
+                          <i aria-hidden="true"
+                            ><img src="@assets/img/warning.svg" />
+                          </i>
+                        </p-tooltip>
                       </span>
-
-                      <span class="svg">
+                    </td>
+                    <td class="text-nowrap code">
+                      <span class="link-code">
+                        {{ item.package_code ? item.package_code.code : '' }}
+                      </span>
+                      <span class="svg" v-if="item.package_code">
                         <p-tooltip
                           class="item_name"
                           :label="` Track `"
@@ -176,7 +178,6 @@
                         </p-tooltip>
                       </span>
                     </td>
-                    <td>{{ item.order_number }}</td>
                     <td class="text-nowrap">
                       <a
                         v-if="item.tracking"
