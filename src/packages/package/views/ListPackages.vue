@@ -104,7 +104,6 @@
                             id: item.id,
                           },
                         }"
-                        v-if="item.package_code"
                       >
                         {{ item.order_number }}
                       </router-link>
