@@ -191,6 +191,21 @@
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label">
+                      Mã đơn hàng : <span>*</span>
+                    </label>
+                    <div class="card__w-input">
+                      <p-input
+                        placeholder="Nhập mã đơn hàng"
+                        type="text"
+                        v-model="form.order_number"
+                        :input="form.order_number"
+                        name="order_number"
+                        :error="valider.error('order_number')"
+                      />
+                    </div>
+                  </div>
+                  <div class="card__w-item">
+                    <label class="card__w-label">
                       Chi tiết hàng hóa : <span>*</span>
                     </label>
                     <div class="card__w-input">
@@ -375,6 +390,7 @@ export default {
         width: '',
         height: '',
         countrycode: '',
+        order_number: '',
         detail: '',
         address: '',
         address2: '',
@@ -484,6 +500,7 @@ export default {
       }
       this.form.address = this.package_detail.package.address_1
       this.form.address2 = this.package_detail.package.address_2
+      this.form.order_number = this.package_detail.package.order_number
       this.form.detail = this.package_detail.package.detail
       this.service = this.form.service
     },
@@ -541,6 +558,7 @@ export default {
         state_code: this.form.state,
         zipcode: this.form.postcode,
         country_code: this.form.countrycode,
+        sku: this.form.order_number,
         detail: this.form.detail,
         weight: +this.form.weight,
         width: +this.form.width,
