@@ -110,6 +110,9 @@ const getFormatStatus = (status) => {
     case 'closed':
       statusClass = 'dark'
       break
+    case 'Hết hạn':
+      statusClass = 'expired'
+      break
     case 'confirm payment':
     case 'pending':
     case 'unpaid':
