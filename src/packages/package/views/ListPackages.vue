@@ -63,17 +63,19 @@
                       ></p-checkbox>
                     </th>
                     <template>
-                      <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
-                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
-                      <th :class="{ hidden: hiddenClass }">Tracking</th>
-                      <th :class="{ hidden: hiddenClass }">Khách hàng</th>
+                      <th :class="{ hidden: hiddenClass }">order no.</th>
+                      <th :class="{ hidden: hiddenClass }">lionbay tracking</th>
+                      <th :class="{ hidden: hiddenClass }"
+                        >last mile tracking</th
+                      >
+                      <th :class="{ hidden: hiddenClass }">customer</th>
                       <th width="100" :class="{ hidden: hiddenClass }"
-                        >Ngày tạo
+                        >created date
                       </th>
                       <th width="100" :class="{ hidden: hiddenClass }"
-                        >Trạng thái</th
+                        >status</th
                       >
-                      <th :class="{ hidden: hiddenClass }">Tổng cước</th>
+                      <th :class="{ hidden: hiddenClass }">Total fee</th>
                     </template>
                   </tr>
                 </thead>
@@ -84,8 +86,9 @@
                     :class="{
                       hover: isChecked(item),
                       deactive:
-                        item.package_code &&
-                        item.package_code.status == PackageStatusDeactive,
+                        (item.package_code &&
+                          item.package_code.status == PackageStatusDeactive) ||
+                        item.status_string == PackageStatusExpiredText,
                     }"
                   >
                     <td width="40">
@@ -234,6 +237,7 @@ import {
   PackageStatusCreatedText,
   MAP_NAME_STATUS_STRING_PACKAGE,
   PackageStatusDeactive,
+  PackageStatusExpiredText,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -282,6 +286,7 @@ export default {
         tracking: 'Mã tracking',
       },
       PackageStatusDeactive: PackageStatusDeactive,
+      PackageStatusExpiredText,
     }
   },
   created() {

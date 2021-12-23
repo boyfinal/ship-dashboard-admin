@@ -9,49 +9,55 @@ export const PackageStatusWareHouseInShipment = 13
 export const PackageStatusWareHouseExport = 14
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 60
-export const PackageStatusReturned = 40
+export const PackageStatusAlert = 40
 export const PackageStatusCancelled = 50
+export const PackageStatusExpired = 70
 
-export const PackageStatusCreatedText = 'created'
-export const PackageStatusPendingPickupText = 'pending-pickup'
+export const PackageStatusCreatedText = 'pending'
+export const PackageStatusPendingPickupText = 'pre-transit'
 export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-Transit'
 export const PackageStatusDeliveredText = 'delivered'
-export const PackageStatusReturnText = 'return'
+export const PackageStatusAlertText = 'alert'
 export const PackageStatusCancelledText = 'canceled'
+export const PackageStatusExpiredText = 'expired'
 
 export const PACKAGE_STATUS_TAB = [
   {
     value: '',
-    text: 'Tất cả',
+    text: 'All',
   },
   {
     value: PackageStatusCreatedText,
-    text: 'Tạo mới',
+    text: 'Pending',
   },
   {
     value: PackageStatusPendingPickupText,
-    text: 'Chờ lấy',
+    text: 'Pre-Transit',
   },
   {
     value: PackageStatusProcessingText,
-    text: 'Đang xử lý',
+    text: 'Processing',
   },
   {
     value: PackageStatusInTransitText,
-    text: 'Đang giao',
+    text: 'In-Transit',
   },
   {
     value: PackageStatusDeliveredText,
-    text: 'Giao thành công',
+    text: 'Delivered',
   },
   {
-    value: PackageStatusReturnText,
-    text: 'Trả hàng',
+    value: PackageStatusAlertText,
+    text: 'Alert',
   },
   {
     value: PackageStatusCancelledText,
-    text: 'Đã huỷ',
+    text: 'Canceled',
+  },
+  {
+    value: PackageStatusExpiredText,
+    text: 'Expired',
   },
 ]
 
@@ -61,43 +67,47 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: '',
   },
   [PackageStatusCreated]: {
-    value: 'Tạo mới',
+    value: 'Pending',
     class: 'badge-primary',
   },
   [PackageStatusPendingPickup]: {
-    value: 'Chờ lấy',
+    value: 'Pre-Transit',
     class: 'badge-success',
   },
   [PackageStatusPicked]: {
-    value: 'Đang xử lý',
+    value: 'Processing',
     class: 'badge-success',
   },
   [PackageStatusWareHouseLabeled]: {
-    value: 'Đang xử lý',
+    value: 'Processing',
     class: 'badge-success',
   },
   [PackageStatusWareHouseInContainer]: {
-    value: 'Đang xử lý',
+    value: 'Processing',
     class: 'badge-success',
   },
   [PackageStatusWareHouseInShipment]: {
-    value: 'Đang xử lý',
+    value: 'Processing',
     class: 'badge-success',
   },
   [PackageStatusInTransit]: {
-    value: 'Đang giao',
+    value: 'In-Transit',
     class: 'badge-success',
   },
   [PackageStatusDelivered]: {
-    value: 'Giao thành công',
+    value: 'Delivered',
     class: 'badge-success',
   },
-  [PackageStatusReturned]: {
-    value: 'Trả hàng',
+  [PackageStatusAlert]: {
+    value: 'Alert',
     class: 'badge-success',
   },
   [PackageStatusCancelled]: {
-    value: 'Đã hủy',
+    value: 'Canceled',
+    class: 'badge-success',
+  },
+  [PackageStatusExpired]: {
+    value: 'Expired',
     class: 'badge-success',
   },
 }
@@ -108,31 +118,35 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
     class: '',
   },
   [PackageStatusCreatedText]: {
-    value: 'Tạo mới',
+    value: 'pending',
     class: 'badge-primary',
   },
   [PackageStatusPendingPickupText]: {
-    value: 'Chờ lấy',
+    value: 'Pre-Transit',
     class: 'badge-success',
   },
   [PackageStatusProcessingText]: {
-    value: 'Đang xử lý',
+    value: 'processing',
     class: 'badge-success',
   },
   [PackageStatusInTransitText]: {
-    value: 'Đang giao',
+    value: 'in-Transit',
     class: 'badge-success',
   },
   [PackageStatusDeliveredText]: {
-    value: 'Giao thành công',
+    value: 'delivered',
     class: 'badge-success',
   },
-  [PackageStatusReturnText]: {
-    value: 'Trả hàng',
+  [PackageStatusAlertText]: {
+    value: 'alert',
     class: 'badge-success',
   },
   [PackageStatusCancelledText]: {
-    value: 'Đã hủy',
+    value: 'canceled',
+    class: 'badge-success',
+  },
+  [PackageStatusExpiredText]: {
+    value: 'expired',
     class: 'badge-success',
   },
 }
@@ -173,7 +187,7 @@ export const DELIVER_LOG_PACKAGE = {
     'Shipping label confirmed, LionBay awaiting item',
   [PackageStatusPicked]: 'Accepted at LionBay Origin Facility',
   [PackageStatusCancelled]: 'Label canceled',
-  [PackageStatusReturned]: ' Package returned',
+  [PackageStatusAlert]: ' Package returned',
   [PackageStatusDelivered]: 'Delivered',
   [PackageStatusWareHouseExport]:
     'Your package is on the way to international airport',
@@ -200,7 +214,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Xuất kho',
     class: 'badge-success',
   },
-  [PackageStatusReturned]: {
+  [PackageStatusAlert]: {
     value: 'Trả hàng',
     class: 'badge-success',
   },
