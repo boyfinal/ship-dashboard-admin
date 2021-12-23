@@ -14,7 +14,7 @@ export const PackageStatusCancelled = 50
 export const PackageStatusExpired = 70
 
 export const PackageStatusCreatedText = 'pending'
-export const PackageStatusPendingPickupText = 'pending-pickup'
+export const PackageStatusPendingPickupText = 'pre-transit'
 export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-Transit'
 export const PackageStatusDeliveredText = 'delivered'
