@@ -23,9 +23,8 @@
 }
 
 .badge-await {
-    background: #E6FBFF;
-    color: #00ABFB;
-    border: 1px solid #7AE2FF;
+    background: #F9F0FF;
+    color: #722ED1;
 }
 
 .badge-primary {
@@ -83,6 +82,7 @@
     background: #FFF1F0;
     color: #820014;
 }
+
 .badge-cancel {
     background: #FFF3E0;
     color: #FFB74D;
@@ -108,4 +108,9 @@
 .badge-priority {
     background: #EF6A77;
     color: #FFFFFF;
+}
+
+.badge-alert {
+    background: #FFF1F0;
+    color: #FA8C16;
 }

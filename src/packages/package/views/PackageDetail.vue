@@ -24,7 +24,7 @@
             <div>
               <div>Khách hàng </div>
               <div>{{
-                $evaluate('package_detail.package.user.full_name')
+                $evaluate('package_detail.package.user ?.full_name')
               }}</div>
             </div>
             <div>
