@@ -17,7 +17,7 @@
           <div class="page__container-search d-flex jc-sb col-6 ">
             <p-input
               placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
-              suffixIcon="search"
+              prefixIcon="search"
               type="search"
               class="mr-8"
               :value="filter.search"

@@ -241,9 +241,7 @@
                           >{{ $evaluate('package_detail.package.weight')
                           }}<span v-if="isOverThanOld('weight')">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.weight'
-                              )
+                              $evaluate('package_detail.package.actual_weight')
                             }})
                           </span></div
                         ></div
@@ -256,9 +254,7 @@
                           >{{ $evaluate('package_detail.package.length')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.length'
-                              )
+                              $evaluate('package_detail.package.actual_length')
                             }})
                           </span></div
                         ></div
@@ -271,9 +267,7 @@
                           >{{ $evaluate('package_detail.package.width')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.width'
-                              )
+                              $evaluate('package_detail.package.actual_width')
                             }})
                           </span></div
                         ></div
@@ -286,9 +280,7 @@
                           >{{ $evaluate('package_detail.package.height')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.height'
-                              )
+                              $evaluate('package_detail.package.actual_height')
                             }})
                           </span></div
                         ></div
@@ -899,14 +891,14 @@ export default {
 
       if (prop == 'weight') {
         return (
-          this.package_detail.package.tracking[prop] >
+          this.package_detail.package.actual_weight >
           this.package_detail.package[prop]
         )
       }
       return (
-        this.package_detail.package.tracking.height *
-          this.package_detail.package.tracking.width *
-          this.package_detail.package.tracking.length >
+        this.package_detail.package.actual_height *
+          this.package_detail.package.actual_width *
+          this.package_detail.package.actual_length >
         this.package_detail.package.height *
           this.package_detail.package.width *
           this.package_detail.package.length
