@@ -17,6 +17,12 @@
                   class="btn btn-info ml-3 text-nowrap"
                   >In label</button
                 >
+                <button
+                  v-if="tracking.id"
+                  @click="cancelLabelHandler"
+                  class="btn btn-danger ml-3 text-nowrap"
+                  >Hủy label</button
+                >
               </div>
             </div>
           </div>
@@ -122,14 +128,6 @@
         </div>
       </div>
     </div>
-
-    <ModalAccept
-      :service="service_detail"
-      :estimate-cost="estimateCost"
-      :warehouses="wareHouses"
-      :visible.sync="isVisibleModalAccept"
-      @accept="acceptHandle"
-    />
   </div>
 </template>
 <script>
@@ -137,9 +135,9 @@ import {
   FETCH_PACKAGE_DETAIL,
   ACCEPT_PACKAGE_LABEL,
   RETURN_PACKAGE,
+  CANCEL_LABEL,
 } from '../store'
 import { mapActions, mapState, mapMutations } from 'vuex'
-import ModalAccept from '../components/ModalAccept'
 import {
   MAP_NAME_STATUS_PACKAGE,
   PACKAGE_WAREHOUSE_STATUS_PICK,
@@ -155,7 +153,6 @@ import {
 
 export default {
   name: 'CheckPackage',
-  components: { ModalAccept },
   mixins: [mixinBarcode],
   computed: {
     ...mapState('warehouse', {
@@ -277,11 +274,26 @@ export default {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
       returnPackageSubmit: RETURN_PACKAGE,
+      cancelLabel: CANCEL_LABEL,
     }),
     ...mapMutations('warehouse', {
       setPackage: FETCH_PACKAGE_DETAIL,
     }),
+    async cancelLabelHandler() {
+      this.loading(true)
+      this.isSubmitting = true
+      const body = { tracking_number: this.tracking.tracking_number }
+      const res = await this.cancelLabel(body)
+      this.isSubmitting = false
+      this.loading(false)
 
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+      this.$toast.success('Hủy label thành công')
+      this.fetchPackageSubmit()
+    },
     searchHandle(e) {
       this.beforeFetchPackge(e.target.value || '')
     },

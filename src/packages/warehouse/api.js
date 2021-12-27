@@ -88,4 +88,7 @@ export default {
     formdata.append('file', payload.file)
     return http.post('/warehouses/pdf-labels', formdata)
   },
+  cancelLabel(payload) {
+    return http.put(`/warehouses/cancel-label`, payload)
+  },
 }

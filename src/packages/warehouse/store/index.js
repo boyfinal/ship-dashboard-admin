@@ -8,6 +8,7 @@ export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 export const EXPORT_WAREHOUSE_PACKAGES = 'exportWarehousePackages'
 export const IMPORT_CREATE_LABEL_PDF = 'importCreateLabelPdf'
+export const CANCEL_LABEL = 'cancelLabel'
 
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -145,6 +146,21 @@ export const actions = {
       }
     } else {
       result.url = response.download
+    }
+
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [CANCEL_LABEL]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.cancelLabel(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
     }
 
     return result
