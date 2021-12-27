@@ -33,7 +33,7 @@
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow:unset">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <div
@@ -99,22 +99,32 @@
                       ></p-checkbox>
                     </td>
                     <td>
-                      <router-link
-                        class="text-no-underline"
-                        :to="{
-                          name: 'package-detail',
-                          params: {
-                            id: item.id,
-                          },
-                        }"
+                      <p-tooltip
+                        :label="item.order_number"
+                        v-if="item.order_number"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.order_number.length > 20"
                       >
-                        {{ item.order_number }}
-                      </router-link>
+                        <router-link
+                          class="text-no-underline"
+                          :to="{
+                            name: 'package-detail',
+                            params: {
+                              id: item.id,
+                            },
+                          }"
+                        >
+                          {{ truncate(item.order_number, 20) }}
+                        </router-link>
+                      </p-tooltip>
                       <span
                         v-if="!item.validate_address"
                         @click="handleValidateAddress(item.id)"
                         class="
                             list-warning
+                            pull-right
                             badge badge-round badge-warning-order
                           "
                       >
@@ -231,7 +241,6 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
-
 import {
   PACKAGE_STATUS_TAB,
   PackageStatusCreatedText,
