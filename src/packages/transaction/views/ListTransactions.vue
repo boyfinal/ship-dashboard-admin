@@ -93,10 +93,10 @@
                         v-if="showInputMoney(item)"
                       >
                         <span class="tooltip-notice">
-                          <img
-                            src="~@/assets/img/notice.svg"
+                          <p-svg
                             style="vertical-align: top"
-                          />
+                            name="notice"
+                          ></p-svg>
                           Vui lòng nhập số tiền!
                         </span>
                         <p-input

@@ -93,11 +93,9 @@
                             params: { id: item.id },
                           }"
                         >
-                          <img
-                            src="@assets/img/messenger.svg"
-                            alt=""
-                          /> </router-link
-                      ></td>
+                          <p-svg name="messenger"></p-svg>
+                        </router-link>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

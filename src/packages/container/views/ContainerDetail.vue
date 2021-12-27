@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-container' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Danh sách kiện hàng</span>
           </router-link>
         </div>
@@ -24,7 +22,7 @@
                   style="vertical-align: bottom;"
                   @click="printBarcode"
                 >
-                  <img src="@/assets/img/barcode.svg" alt="barcode" />
+                  <p-svg name="barcode"></p-svg>
                 </span>
               </div>
             </div>
@@ -65,7 +63,7 @@
               :class="'btn-add-container ml-3'"
               @click="handleAppend"
             >
-              <img src="@/assets/img/plus_blue.svg" />
+              <p-svg name="plus_blue"></p-svg>
               Thêm
             </p-button>
           </div>

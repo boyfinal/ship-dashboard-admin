@@ -13,8 +13,8 @@
           @click.prevent="selectpage = !selectpage"
           :class="{ icon_select: selectpage == true }"
           >{{ this.perPage }}
-          <img src="@assets/img/Frame.svg" style="margin-top: 10px;"
-        /></span>
+          <p-svg name="Frame" style="margin-top: 10px;"></p-svg>
+        </span>
         <nav>
           <ul v-if="selectpage && !fixedLimit">
             <li

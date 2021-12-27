@@ -134,8 +134,8 @@
                           position="top"
                           type="dark"
                         >
-                          <i aria-hidden="true"
-                            ><img src="@assets/img/warning.svg" />
+                          <i aria-hidden="true">
+                            <p-svg name="warning"></p-svg>
                           </i>
                         </p-tooltip>
                       </span>
