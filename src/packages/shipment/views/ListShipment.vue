@@ -15,7 +15,7 @@
         <div class="d-flex jc-sb col-6" id="search-box">
           <p-input
             placeholder="Tìm theo mã lô hoặc mã kiện"
-            suffixIcon="search"
+            prefixIcon="search"
             type="search"
             clearable
             @keyup.enter="handleSearch"
