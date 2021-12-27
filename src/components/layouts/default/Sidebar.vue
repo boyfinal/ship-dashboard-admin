@@ -155,22 +155,25 @@ export default {
           route: '/bill',
           class: '',
           isOpen: false,
-          disable: this.$isAccountant() || this.$isSupport(),
+          disable: this.$isSupport(),
           sub: [
             {
               route: '/warehouse',
               title: 'Tra cứu kho',
               alias: ['/warehouse'],
+              disable: this.$isAccountant(),
             },
             {
               route: '/warehouse/check-in',
               title: 'Quét nhận hàng',
               alias: ['/warehouse/check-in'],
+              disable: this.$isAccountant(),
             },
             {
               route: '/warehouse/check-package',
               title: 'Quét kiểm hàng',
               alias: ['/warehouse/check-package'],
+              disable: this.$isAccountant(),
             },
             {
               route: '/containers',
