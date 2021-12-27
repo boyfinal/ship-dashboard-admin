@@ -169,7 +169,7 @@ export default {
             },
             {
               route: '/warehouse/check-package',
-              title: 'Quét kiểm hàng',
+              title: 'Dán nhãn',
               alias: ['/warehouse/check-package'],
             },
             {

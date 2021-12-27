@@ -14,7 +14,7 @@ export const routes = [
     path: '/warehouse/check-package',
     name: 'check-package',
     meta: {
-      title: 'Quét kiểm hàng',
+      title: 'Quét in label',
     },
     component: () =>
       import(/* webpackChunkName: "warehouse" */ './views/CheckPackage'),

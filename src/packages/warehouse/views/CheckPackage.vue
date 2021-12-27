@@ -2,7 +2,7 @@
   <div class="pages check-package">
     <div class="page-content">
       <div class="row">
-        <div class="col-8">
+        <div class="col-12">
           <div class="card">
             <div class="card-body">
               <div class="d-flex">
@@ -17,6 +17,24 @@
                   class="btn btn-info ml-3 text-nowrap"
                   >In label</button
                 >
+              </div>
+            </div>
+          </div>
+          <div class="card mt-5">
+            <div class="card-body">
+              <div class="row">
+                <p class="col-6"
+                  >Mã vận đơn:
+                  {{ current.package_code ? current.package_code.code : '' }}</p
+                >
+                <p class="col-6"
+                  >Người gửi:
+                  {{ current.user ? current.user.full_name : '' }}</p
+                >
+              </div>
+              <div class="row">
+                <p class="col-6">Thông tin đơn: {{ current.detail }}</p>
+                <p class="col-6">Yêu cầu: {{ current.note }}</p>
               </div>
             </div>
           </div>
@@ -98,78 +116,6 @@
                     ></p-input>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="card-footer pt-4">
-              <div class="d-flex" style="align-self: flex-start;">
-                <span>Kết quả:</span>
-                <div class="messages pl-5">
-                  <p v-if="disBtnIncurred" class="mb-0 text-success">Phù hợp</p>
-                  <p
-                    v-else
-                    v-for="(message, i) in messages"
-                    :key="i"
-                    class="mb-0 text-danger"
-                    >{{ message }}</p
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Kiểm tra loại hàng</div>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <p class="col-5">Mã vận đơn:</p>
-                <p class="col-7">{{
-                  current.package_code ? current.package_code.code : ''
-                }}</p>
-              </div>
-              <div class="row">
-                <p class="col-5">Chi tiết hàng hóa:</p>
-                <p class="col-7">{{ current.detail }}</p>
-              </div>
-              <div class="row">
-                <p class="col-5">Trạng thái:</p>
-                <p class="col-7" v-if="statusText"
-                  ><span class="badge badge-round" :class="statusClass">{{
-                    statusText
-                  }}</span></p
-                >
-              </div>
-              <div class="d-flex" v-if="tracking.id">
-                <p style="width: 130px;">Tracking:</p>
-                <p
-                  ><a href="#" @click.prevent="printLabel">{{
-                    tracking.tracking_number
-                  }}</a></p
-                >
-              </div>
-            </div>
-            <div class="card-footer d-block">
-              <div class="mt-4">
-                <div class="d-flex justify-content-between">
-                  <label class="form-label">Lý do trả hàng:</label>
-                  <i class="text-danger" style="font-size: 12px;">*Bắt buộc</i>
-                </div>
-                <textarea
-                  class="p-input form-control"
-                  v-model.trim="note"
-                  rows="3"
-                  :disabled="disReturn"
-                ></textarea>
-              </div>
-              <div class="text-right mt-4">
-                <button
-                  :disabled="disBtnReturn"
-                  @click.prevent="returnHandle"
-                  class="btn btn-danger"
-                  >Trả hàng</button
-                >
               </div>
             </div>
           </div>
@@ -266,12 +212,7 @@ export default {
       )
     },
     disBtnAccept() {
-      return (
-        !this.current.id ||
-        this.isSubmitting ||
-        this.isFetching ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
-      )
+      return !this.current.id || this.isSubmitting || this.isFetching
     },
     disBtnIncurred() {
       return (
@@ -404,6 +345,11 @@ export default {
     },
 
     quickAcceptHandle() {
+      if (this.tracking.id) {
+        this.printLabel()
+        return
+      }
+
       this.isChange = false
 
       if (
@@ -443,7 +389,26 @@ export default {
         this.$toast.open({ message: result3.message, type: 'error' })
         return
       }
-      this.isVisibleModalAccept = true
+      let warehouseOptions = []
+      this.wareHouses.forEach((warehouse) => {
+        let exist = this.estimateCost.find(
+          (cost) => cost.warehouse_id === warehouse.id
+        )
+        let cost = 0
+        if (exist) {
+          cost = exist.cost
+        }
+        warehouseOptions.push({
+          id: warehouse.id,
+          cost: cost,
+        })
+      })
+
+      let minOb = warehouseOptions.reduce(function(prev, curr) {
+        return prev.cost <= curr.cost ? prev : curr
+      })
+
+      this.acceptHandle(this.service_detail.domestic_carrier.code, minOb.id)
     },
 
     extraHandle() {
@@ -454,6 +419,10 @@ export default {
     },
 
     async acceptHandle(carrier, warehouse) {
+      if (this.tracking.id) {
+        this.printLabel()
+        return
+      }
       if (!carrier) {
         return this.$toast.error('Vui lòng chọn Loại vận chuyển')
       }
@@ -462,11 +431,7 @@ export default {
         return this.$toast.error('Vui lòng chọn Kho')
       }
 
-      if (
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
-        this.isSubmitting
-      )
-        return
+      if (this.isSubmitting) return
 
       this.loading(true)
       this.isSubmitting = true
