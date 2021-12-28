@@ -16,7 +16,7 @@
             <div>
               <div>Mã kiện:</div>
               <div class="package-code"
-                >C{{ container_detail.id }}
+                >{{ container_detail.code ? container_detail.code : '' }}
                 <span
                   class="page-header__barcode"
                   style="vertical-align: bottom;"
@@ -291,7 +291,7 @@ export default {
       this.handleUpdateRouteQuery()
       this.filter.search = this.code
       let payload = cloneDeep(this.filter)
-      payload = { ...payload, ...{ id: parseInt(this.$route.params.id) } }
+      payload = { ...payload, ...{ code: this.$route.params.code } }
       const result = await this[FETCH_CONTAINER_DETAIL](payload)
       this.isFetching = false
       if (!result.success) {

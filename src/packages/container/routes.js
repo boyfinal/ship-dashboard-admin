@@ -11,7 +11,7 @@ export const routes = [
       ),
   },
   {
-    path: '/containers/:id',
+    path: '/containers/:code',
     name: 'container-detail',
     meta: {
       title: 'Chi tiết kiện hàng',
