@@ -61,7 +61,7 @@
                           class="text-no-underline"
                           :to="{
                             name: 'bill-detail',
-                            params: { id: item.code },
+                            params: { code: item.code },
                           }"
                         >
                           {{ item.code }}
@@ -168,7 +168,7 @@ export default {
         }
 
         return {
-          id: item.id,
+          code: item.code,
           customer: user,
           created_at: item.created_at,
           total_amount: item.shipping_fee + item.extra_fee,
