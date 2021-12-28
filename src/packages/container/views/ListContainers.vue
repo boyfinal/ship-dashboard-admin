@@ -66,11 +66,11 @@
                         :to="{
                           name: 'container-detail',
                           params: {
-                            id: item.id,
+                            code: item.code ? item.code : '',
                           },
                         }"
                       >
-                        C{{ item.id }}
+                        {{ item.code ? item.code : '' }}
                       </router-link>
                       <span
                         class="page-header__barcode"
