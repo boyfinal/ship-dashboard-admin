@@ -314,7 +314,7 @@ export default {
       }
       const payload = {
         search: this.code,
-        container_id: +this.$route.params.id,
+        container_id: +this.container_detail.id,
       }
       const result = await this[APPEND_PACKAGE_TO_CONTAINER](payload)
       if (!result.success) {
@@ -330,7 +330,7 @@ export default {
     },
     async handlerRemovePackage(package_id) {
       const payload = {
-        container_id: parseInt(this.$route.params.id),
+        container_id: parseInt(this.container_detail.id),
         package_ids: [package_id],
       }
       const result = await this[REMOVE_PACKAGE_FROM_CONTAINER](payload)
@@ -350,7 +350,7 @@ export default {
     async handleCancelContainer() {
       this.visibleConfirm = false
       const payload = {
-        id: parseInt(this.$route.params.id),
+        id: parseInt(this.container_detail.id),
       }
       const result = await this[CANCEL_CONTAINER](payload)
       if (!result.success) {
@@ -381,7 +381,7 @@ export default {
       this.visibleModalClose = false
 
       const payload = {
-        id: parseInt(this.$route.params.id),
+        id: parseInt(this.container_detail.id),
         weight: +weight,
       }
       const result = await this[CLOSE_CONTAINER](payload)
@@ -418,7 +418,7 @@ export default {
 
       const payload = {
         tracking_number: keyword,
-        container_id: +this.$route.params.id,
+        container_id: +this.container_detail.id,
       }
       const result = await this[APPEND_PACKAGE_TO_CONTAINER](payload)
       if (!result.success) {
