@@ -46,7 +46,7 @@
                   @input="handleValue($event)"
                 ></p-checkbox>
               </td>
-              <td> C{{ item.id }} </td>
+              <td> {{ item.code }} </td>
               <td>
                 {{ item.container_items ? item.container_items.length : '0' }}
               </td>
