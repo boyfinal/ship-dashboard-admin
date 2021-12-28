@@ -112,10 +112,14 @@
                         v-if="item.container_id"
                         :to="{
                           name: 'container-detail',
-                          params: { id: item.container_id },
+                          params: {
+                            code: item.container_code
+                              ? item.container_code
+                              : '',
+                          },
                         }"
                       >
-                        C{{ item.container_id }}
+                        {{ item.container_code ? item.container_code : '' }}
                       </router-link>
                       <span v-else>-</span>
                     </td>
