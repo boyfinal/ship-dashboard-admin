@@ -281,8 +281,8 @@ export default {
     },
   },
   created() {
-    this.filterExtra.id = this.$route.params.id
-    this.filter.id = this.$route.params.id
+    this.filterExtra.code = this.$route.params.code
+    this.filter.code = this.$route.params.code
     this.init()
   },
   methods: {
