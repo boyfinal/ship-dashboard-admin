@@ -61,10 +61,10 @@
                           class="text-no-underline"
                           :to="{
                             name: 'bill-detail',
-                            params: { id: item.id },
+                            params: { id: item.code },
                           }"
                         >
-                          {{ item.id }}
+                          {{ item.code }}
                         </router-link>
                       </td>
                       <td>{{ item.customer }}</td>
