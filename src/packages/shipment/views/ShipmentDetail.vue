@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-shipment' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Lô hàng</span>
           </router-link>
         </div>
@@ -64,7 +62,7 @@
               @click="handleAppendShipment"
               v-if="!isClosedShipment && !isCanceledShipment"
             >
-              <img src="@/assets/img/plus_blue.svg" />
+              <p-svg name="plus_blue"></p-svg>
               Thêm
             </p-button>
             <p-button

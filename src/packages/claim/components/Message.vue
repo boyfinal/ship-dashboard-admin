@@ -3,11 +3,9 @@
     <div class="user-content card">
       <div class="user-title d-flex justify-content-between align-items-center">
         <div class="info-user">
-          <img
-            src="~@/assets/img/avatar-dark.svg"
-            alt="avatar"
-            class="avatar-user"
-          />
+          <span class="avatar-user">
+            <p-svg name="avatar-dark"></p-svg>
+          </span>
           <span class="user-name">{{ displayName }}</span>
           <span class="role-user" v-show="roleName">{{ roleName }}</span>
         </div>

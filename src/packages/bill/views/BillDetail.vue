@@ -87,10 +87,9 @@
                           }"
                         >
                           {{ item.package_code.code }}
-                          <img
-                            class="link-icon"
-                            src="@/assets/img/external.svg"
-                          />
+                          <span class="link-icon">
+                            <p-svg name="external"></p-svg>
+                          </span>
                         </router-link>
                       </td>
                       <td>{{
@@ -162,10 +161,9 @@
                           }"
                         >
                           {{ item.package.package_code.code }}
-                          <img
-                            class="link-icon"
-                            src="@/assets/img/external.svg"
-                          />
+                          <span class="link-icon">
+                            <p-svg name="external"></p-svg>
+                          </span>
                         </router-link>
                       </td>
                       <td>{{

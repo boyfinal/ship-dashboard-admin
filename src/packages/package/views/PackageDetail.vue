@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-package' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Quản lý vận đơn</span>
           </router-link>
         </div>

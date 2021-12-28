@@ -34,7 +34,7 @@
                   @click="cancel('x')"
                 >
                   <span aria-hidden="true" :disabled="disableClose">
-                    <img src="~@/assets/img/x.svg" alt="close" />
+                    <p-svg name="x"></p-svg>
                   </span>
                 </button>
               </slot>

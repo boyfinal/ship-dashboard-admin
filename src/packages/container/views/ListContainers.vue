@@ -76,7 +76,7 @@
                         class="page-header__barcode"
                         @click="printBarcode(item.barcode)"
                       >
-                        <img src="@/assets/img/barcode.svg" alt="barcode" />
+                        <p-svg name="barcode"></p-svg>
                       </span>
                     </td>
                     <td>

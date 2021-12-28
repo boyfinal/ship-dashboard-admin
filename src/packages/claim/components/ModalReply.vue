@@ -52,11 +52,9 @@
             <div class="row mb-20">
               <div v-if="fileErrors.length > 0" class="ticket__error">
                 <div class="ticket__error-title">
-                  <img
-                    src="~@/assets/img/alert.svg"
-                    alt=""
-                    class="ticket__error-icon"
-                  />
+                  <span class="ticket__error-icon">
+                    <p-svg name="alert"></p-svg>
+                  </span>
                   <span>Tệp tin chưa được thêm vào:</span>
                 </div>
                 <ul class="ticket__error-list">
@@ -72,11 +70,9 @@
 
               <div v-if="this.validateSize" class="ticket__error">
                 <div class="ticket__error-title">
-                  <img
-                    src="~@/assets/img/alert.svg"
-                    alt=""
-                    class="ticket__error-icon"
-                  />
+                  <span class="ticket__error-icon">
+                    <p-svg name="alert"></p-svg>
+                  </span>
                   <span>Tệp tin chưa được thêm vào:</span>
                 </div>
                 <ul class="ticket__error-list">
@@ -95,12 +91,12 @@
                 >
                   <div class="filename mr-3">{{ item.name }}</div>
                   <div :class="{ isUpload: isUploading }" class="remove-file">
-                    <img
-                      src="~@/assets/img/x-sm.svg"
-                      alt=""
+                    <span
                       class="icon-remove"
                       @click.prevent="actionDeletefile(item)"
-                    />
+                    >
+                      <p-svg name="x-sm"></p-svg>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -116,11 +112,9 @@
     </div>
     <template slot="footer">
       <div>
-        <img
-          style="margin-bottom: 2px"
-          src="~@/assets/img/InfoCircle.svg"
-          alt=""
-        />
+        <span style="margin-bottom: 2px">
+          <p-svg name="InfoCircle"></p-svg>
+        </span>
         <b>Lưu ý:</b> (<span style="color: red">*</span>)
         <i>Là các trường bắt buộc nhập.</i>
       </div>

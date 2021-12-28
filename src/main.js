@@ -9,6 +9,7 @@ import initGlobalDirectives from '@core/vue/directives'
 import router from './core/router'
 import store from './core/store'
 import '../uikit'
+import './core/icons'
 import { VclTable } from 'vue-content-loading'
 
 Vue.use(VueClipboard)

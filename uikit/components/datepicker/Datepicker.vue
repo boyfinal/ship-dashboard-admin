@@ -21,10 +21,10 @@
     :ranges="false"
   >
     <div slot="input" slot-scope="picker" style="width: 100%;">
-      <img
-        src="@assets/img/calendar.svg"
+      <p-svg
+        name="calendar"
         style="float: right; margin-left: 2px; margin-top: 6px;"
-      />
+      ></p-svg>
       <span
         class="label-date-picker"
         v-if="
