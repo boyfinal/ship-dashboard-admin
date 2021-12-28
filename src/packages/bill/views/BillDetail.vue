@@ -17,7 +17,7 @@
           <div class="bill__detail-title">Ngày tạo:</div>
           <div class="bill__detail-title">Tên khách hàng</div>
           <div class="bill__detail-title">Tổng hóa đơn</div>
-          <div class="bill__detail-code">{{ bill.id }}</div>
+          <div class="bill__detail-code">{{ bill.code }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
