@@ -25,7 +25,7 @@
             >
             </p-input>
             <p-button type="info" @click="CreateContainerHandle">
-              <p-icon name="plus"></p-icon>
+              <svgicon name="plus" class="text-white add_container" />
               Tạo kiện hàng
             </p-button>
           </div>

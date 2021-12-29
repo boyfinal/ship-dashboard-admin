@@ -1,4 +1,9 @@
 .page__container{
+  .add_container{
+    svg{
+      margin-top: 0;
+    }
+  }
   &-search{
     width: 55%;
 

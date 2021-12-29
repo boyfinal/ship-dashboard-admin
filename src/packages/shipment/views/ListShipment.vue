@@ -24,7 +24,7 @@
           >
           </p-input>
           <p-button @click="visibleModal" type="info">
-            <p-icon name="plus"></p-icon>
+            <svgicon name="plus" class="text-white" />
             Tạo lô hàng
           </p-button>
         </div>
@@ -143,13 +143,11 @@ import ShipmentStatusTab from '../components/ShipmentStatusTab'
 import ModalChoiceWarehouse from '../components/ModalChoiceWarehouse'
 import { cloneDeep } from '../../../core/utils'
 import { FETCH_WAREHOUSE } from '../../shared/store'
-import PIcon from '../../../../uikit/components/icon/Icon'
 
 export default {
   name: 'ListShipment',
   mixins: [mixinRoute, mixinTable],
   components: {
-    PIcon,
     EmptySearchResult,
     ShipmentStatusTab,
     ModalChoiceWarehouse,
