@@ -86,7 +86,7 @@
                             },
                           }"
                         >
-                          {{ item.package_code.code }}
+                          {{ item.package_code ? item.package_code.code : '' }}
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
                           </span>
@@ -160,7 +160,11 @@
                             },
                           }"
                         >
-                          {{ item.package.package_code.code }}
+                          {{
+                            item.package.package_code
+                              ? item.package.package_code.code
+                              : ''
+                          }}
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
                           </span>
