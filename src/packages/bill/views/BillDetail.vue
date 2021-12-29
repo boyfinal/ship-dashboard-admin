@@ -357,10 +357,9 @@ export default {
       this.idExtra = id
     },
     async handleCancel() {
-      let { code } = this.$route.params
       let params = {
         id_extra: this.idExtra,
-        code: code,
+        id: this.bill.id,
       }
       let res = await this[CANCEL_EXTRA_FEE](params)
       if (!res.success) {
