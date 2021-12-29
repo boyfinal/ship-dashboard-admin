@@ -22,7 +22,7 @@
                 <p-input
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
-                  placeholder="Nhập mã vận đơn"
+                  placeholder="Nhập LionBay tracking"
                 ></p-input>
                 <button
                   @click.prevent="searchHandle"
@@ -207,7 +207,7 @@
                       <div class="table-responsive">
                         <table class="table table-hover">
                           <tr>
-                            <th>LionBay</th>
+                            <th>LionBay tracking</th>
                             <th>Trạng thái</th>
                           </tr>
                           <tbody>
