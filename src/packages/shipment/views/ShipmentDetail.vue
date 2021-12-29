@@ -82,12 +82,15 @@
               type="info"
               class="mr-3"
               v-if="!isStartScan"
-              @click="handleStartScan"
+              @click.prevent="handleStartScan"
             >
               Bắt đầu quét
             </p-button>
-            <p-button type="info" class="mr-3" v-else @click="handleStopScan"
-              >Dừng quét</p-button
+            <button
+              class="btn-info btn mr-3"
+              v-else
+              @click.prevent="handleStopScan"
+              >Dừng quét</button
             >
             <p-button
               type="info"

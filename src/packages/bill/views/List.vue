@@ -21,10 +21,10 @@
           <div class="ml-8">
             <select v-model="filter.search_by" class="form-control">
               <option value="bill_code">Mã hoá đơn</option>
-              <option value="code">Mã vận đơn</option>
+              <option value="code">Lionbay tracking</option>
               <option value="customer">Tài khoản Khách hàng</option>
               <option value="customer_full_name">Tên Khách hàng</option>
-              <option value="tracking">Mã tracking</option>
+              <option value="tracking">Last mile tracking</option>
             </select>
           </div>
         </div>
@@ -178,10 +178,10 @@ export default {
     searchPlaceholder() {
       const maptext = {
         bill_code: 'Tìm theo mã hoá đơn',
-        code: 'Tìm theo mã vận đơn',
+        code: 'Tìm theo LionBay tracking',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
-        tracking: 'Tìm theo mã tracking',
+        tracking: 'Tìm theo last mile tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']

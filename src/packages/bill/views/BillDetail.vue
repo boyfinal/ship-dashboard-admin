@@ -69,8 +69,8 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
-                      <th>Tracking USPS</th>
+                      <th>LionBay tracking</th>
+                      <th>Last mile tracking</th>
                       <th>Phí giao</th>
                     </tr>
                   </thead>
@@ -133,7 +133,7 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Thời gian</th>
                       <th>Phí phát sinh</th>
                       <th>Loại phí</th>

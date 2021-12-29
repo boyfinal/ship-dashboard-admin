@@ -23,7 +23,7 @@
     </div>
     <div class="row mb-16">
       <div class="col-6">
-        <label for=""><b>Mã vận đơn</b></label>
+        <label for=""><b>LionBay tracking</b></label>
         <p-input type="text" v-model="package_code"> </p-input>
       </div>
       <div class="col-6">

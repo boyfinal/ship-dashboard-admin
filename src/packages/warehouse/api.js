@@ -117,4 +117,11 @@ export default {
   closeCheckin(payload) {
     return http.put(`/checkins/close`, payload)
   },
+  // duyet don va tao label
+  acceptAndLabel(payload) {
+    return http.post(`/warehouses/packages/${payload.id}/accept`, payload)
+  },
+  checkIn(code) {
+    return http.get(`/warehouses/packages/${code}/check-in`)
+  },
 }
