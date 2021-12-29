@@ -1,10 +1,14 @@
 <template>
   <div id="nav_container" class="p-tabs nav-tabs-horizontal mt-24">
     <button class="icon-nav next" @click="clickLeftNav">
-      <i class="left-nav"></i>
+      <div class="left-nav">
+        <p-svg name="left_nav"></p-svg>
+      </div>
     </button>
     <button class="icon-nav prev active" @click="clickRightNav">
-      <i class="right-nav"></i>
+      <div class="right-nav">
+        <p-svg name="right_nav"></p-svg>
+      </div>
     </button>
     <ul
       role="tablist"

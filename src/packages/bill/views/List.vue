@@ -20,7 +20,7 @@
           </p-input>
           <div class="ml-8">
             <select v-model="filter.search_by" class="form-control">
-              <option value="id">Mã hoá đơn</option>
+              <option value="bill_code">Mã hoá đơn</option>
               <option value="code">Mã vận đơn</option>
               <option value="customer">Tài khoản Khách hàng</option>
               <option value="customer_full_name">Tên Khách hàng</option>
@@ -61,7 +61,7 @@
                           class="text-no-underline"
                           :to="{
                             name: 'bill-detail',
-                            params: { id: item.code },
+                            params: { code: item.code },
                           }"
                         >
                           {{ item.code }}
@@ -128,7 +128,7 @@ export default {
         page: 1,
         limit: 30,
         search: '',
-        search_by: 'id',
+        search_by: 'bill_code',
         status: '',
       },
       isSubmitting: false,
@@ -168,7 +168,7 @@ export default {
         }
 
         return {
-          id: item.id,
+          code: item.code,
           customer: user,
           created_at: item.created_at,
           total_amount: item.shipping_fee + item.extra_fee,
@@ -177,7 +177,7 @@ export default {
     },
     searchPlaceholder() {
       const maptext = {
-        id: 'Tìm theo mã hoá đơn',
+        bill_code: 'Tìm theo mã hoá đơn',
         code: 'Tìm theo mã vận đơn',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',

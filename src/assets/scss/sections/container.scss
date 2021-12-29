@@ -1,4 +1,9 @@
 .page__container{
+  .add_container{
+    svg{
+      margin-top: 0;
+    }
+  }
   &-search{
     width: 55%;
 
@@ -6,9 +11,7 @@
       margin-right: 8px;
       border-color: $color-neutral-4;
     }
-    .p-input-search{
-      padding-left : 18px;
-    }
+
   }
 
   .choose-warehouse{

@@ -20,12 +20,14 @@
               prefixIcon="search"
               type="search"
               class="mr-8"
+              clearable
               :value="filter.search"
               @keyup.enter="handleSearch"
+              @clear="clearSearch"
             >
             </p-input>
             <p-button type="info" @click="CreateContainerHandle">
-              <p-icon name="plus"></p-icon>
+              <svgicon name="plus" class="text-white add_container" />
               Tạo kiện hàng
             </p-button>
           </div>
@@ -66,11 +68,11 @@
                         :to="{
                           name: 'container-detail',
                           params: {
-                            id: item.id,
+                            code: item.code ? item.code : '',
                           },
                         }"
                       >
-                        C{{ item.id }}
+                        {{ item.code ? item.code : '' }}
                       </router-link>
                       <span
                         class="page-header__barcode"

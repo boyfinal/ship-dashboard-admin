@@ -140,7 +140,7 @@
                           :to="{
                             name: 'container-detail',
                             params: {
-                              id: item.id,
+                              code: item.code,
                             },
                           }"
                         >

@@ -120,7 +120,7 @@ export default {
             {
               route: '/bills',
               title: 'Hóa đơn',
-              alias: ['/bills', '/bills/:id'],
+              alias: ['/bills', '/bills/:code'],
             },
             {
               route: '/transactions',

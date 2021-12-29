@@ -8,7 +8,7 @@ export default {
    * @return {*}
    */
   fetchBillDetail(payload) {
-    return http.get(`/bills/${payload.id}?${buildQueryString(payload)}`)
+    return http.get(`/bills/${payload.code}?${buildQueryString(payload)}`)
   },
 
   /**
@@ -17,7 +17,7 @@ export default {
    * @return {*}
    */
   fetchExtraFee(payload) {
-    return http.get(`/bills/fee/${payload.id}?${buildQueryString(payload)}`)
+    return http.get(`/bills/fee/${payload.code}?${buildQueryString(payload)}`)
   },
   billList(payload) {
     return http.get(`/bills?${buildQueryString(payload)}`)

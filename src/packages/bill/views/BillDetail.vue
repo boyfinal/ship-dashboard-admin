@@ -17,7 +17,7 @@
           <div class="bill__detail-title">Ngày tạo:</div>
           <div class="bill__detail-title">Tên khách hàng</div>
           <div class="bill__detail-title">Tổng hóa đơn</div>
-          <div class="bill__detail-code">{{ bill.id }}</div>
+          <div class="bill__detail-code">{{ bill.code }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
@@ -86,7 +86,7 @@
                             },
                           }"
                         >
-                          {{ item.package_code.code }}
+                          {{ item.package_code ? item.package_code.code : '' }}
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
                           </span>
@@ -160,7 +160,11 @@
                             },
                           }"
                         >
-                          {{ item.package.package_code.code }}
+                          {{
+                            item.package.package_code
+                              ? item.package.package_code.code
+                              : ''
+                          }}
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
                           </span>
@@ -281,8 +285,8 @@ export default {
     },
   },
   created() {
-    this.filterExtra.id = this.$route.params.id
-    this.filter.id = this.$route.params.id
+    this.filterExtra.code = this.$route.params.code
+    this.filter.code = this.$route.params.code
     this.init()
   },
   methods: {
@@ -357,10 +361,9 @@ export default {
       this.idExtra = id
     },
     async handleCancel() {
-      let { id } = this.$route.params
       let params = {
         id_extra: this.idExtra,
-        id: id,
+        id: this.bill.id,
       }
       let res = await this[CANCEL_EXTRA_FEE](params)
       if (!res.success) {

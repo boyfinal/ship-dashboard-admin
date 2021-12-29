@@ -8,7 +8,7 @@ export const routes = [
     component: () => import(/* webpackChunkName: "bills" */ './views/List.vue'),
   },
   {
-    path: '/bills/:id',
+    path: '/bills/:code',
     name: 'bill-detail',
     meta: {
       title: 'Chi tiết hóa đơn',

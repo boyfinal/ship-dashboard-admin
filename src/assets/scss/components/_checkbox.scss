@@ -83,7 +83,7 @@ $cursor-disabled: not-allowed !default;
     &:checked + label::after,
     &:checked + input[type='hidden'] + label::after {
       content: '';
-      background-image: url('!vue-svg-loader~@/assets/img/Vector.svg');
+      background-image: url('~@/assets/img/Vector.png');
       background-repeat: no-repeat;
       background-position: center;
     }
@@ -269,7 +269,7 @@ $cursor-disabled: not-allowed !default;
   label::before {
     background-color: $color-java-blue-10;
     border-color: $color-java-blue-10;
-    background-image: url('~@/assets/img/minus.svg');
+    background-image: url('~@/assets/img/minus.png');
     background-position: center;
   }
 }

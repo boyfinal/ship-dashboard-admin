@@ -39,8 +39,12 @@
                 >
               </div>
               <div class="row">
-                <p class="col-6">Thông tin đơn: {{ current.detail }}</p>
-                <p class="col-6">Yêu cầu: {{ current.note }}</p>
+                <p class="col-6"
+                  >Thông tin đơn:
+                  {{
+                    current.tracking ? current.tracking.tracking_number : 'N/A'
+                  }}</p
+                >
               </div>
             </div>
           </div>
