@@ -9,6 +9,10 @@ export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 export const EXPORT_WAREHOUSE_PACKAGES = 'exportWarehousePackages'
 export const IMPORT_CREATE_LABEL_PDF = 'importCreateLabelPdf'
 export const CANCEL_LABEL = 'cancelLabel'
+export const GET_PACKAGE_BY_CODE = 'getPackage'
+export const PACKAGE_CREATE_LABEL = 'createLabel'
+export const GET_CHECKIN_REQUEST = 'getCheckinRequest'
+export const CLOSE_CHECKIN_REQUEST = 'closeCheckinRequest'
 
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -60,6 +64,24 @@ export const mutations = {
   },
   [WAREHOUSE_CHECK_IN]: (state, payload) => {
     state.package = payload
+  },
+  [GET_PACKAGE_BY_CODE]: (state, payload) => {
+    state.package = payload
+
+    if (state.package.actual_height <= 0) {
+      state.package.actual_height = state.package.height
+    }
+    if (state.package.actual_length <= 0) {
+      state.package.actual_length = state.package.length
+    }
+
+    if (state.package.actual_weight <= 0) {
+      state.package.actual_weight = state.package.weight
+    }
+
+    if (state.package.actual_width <= 0) {
+      state.package.actual_width = state.package.width
+    }
   },
 }
 
@@ -169,6 +191,52 @@ export const actions = {
   // eslint-disable-next-line
   async [IMPORT_CREATE_LABEL_PDF]({ commit }, payload) {
     const res = await api.createLabelsPdf(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    return { error: false }
+  },
+
+  async [GET_PACKAGE_BY_CODE]({ commit }, payload) {
+    const res = await api.getPackage(payload)
+
+    commit(GET_PACKAGE_BY_CODE, {})
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    commit(GET_PACKAGE_BY_CODE, res.package || {})
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [PACKAGE_CREATE_LABEL]({ commit }, payload) {
+    const res = await api.createLabel(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [GET_CHECKIN_REQUEST]({ commit }) {
+    const res = await api.getCheckin()
+
+    if (!res || res.error) {
+      return { id: 0, error: true, message: res.errorMessage }
+    }
+
+    return { checkin: res.check_in, error: false }
+  },
+
+  // eslint-disable-next-line
+  async [CLOSE_CHECKIN_REQUEST]({ commit }, payload) {
+    const res = await api.closeCheckin(payload)
 
     if (!res || res.error) {
       return { error: true, message: res.errorMessage }

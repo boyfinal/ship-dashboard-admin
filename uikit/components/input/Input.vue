@@ -16,10 +16,11 @@
         :class="`wb-${suffixIcon}`"
       ></i>
       <i
-        class="form-control-icon form-control-icon-right wb-close"
+        class="form-control-icon form-control-icon-right "
         v-else-if="isShowClear"
         @click="clear"
       >
+        <p-svg name="x-sm"> </p-svg>
       </i>
       <input
         :class="formControlClasses"
@@ -108,10 +109,11 @@
       ></p-svg>
 
       <i
-        class="form-control-icon form-control-icon-right wb-close"
+        class="form-control-icon form-control-icon-right "
         v-else-if="isShowClear"
         @click="clear"
       >
+        <p-svg name="x-sm"> </p-svg>
       </i>
 
       <input
@@ -140,8 +142,10 @@
 </template>
 <script>
 import FormElementMixin from '../../mixins/FormElement'
+import PSvg from '../svg/svg'
 export default {
   name: 'PInput',
+  components: { PSvg },
   inheritAttrs: false,
   mixins: [FormElementMixin],
   props: {

@@ -1,57 +1,76 @@
 <template>
   <div class="pages scan-in">
     <div class="page-content">
-      <div class="row">
-        <div class="col-12">
-          <div class="actions">
-            <button class="btn btn-info">
-              <svgicon name="play" class="text-white" /> Bắt đầu quét
-            </button>
-            <button class="btn btn-danger">Dừng quét</button>
-          </div>
+      <div class="mb-24">
+        <div class="actions">
+          <button class="btn btn-info" v-if="!iscan" @click="startHandle">
+            <svgicon name="play" width="20" height="20" /> Bắt đầu quét
+          </button>
+          <button class="btn btn-danger" v-if="iscan" @click="stopHandle">
+            <svgicon name="pause" width="20" height="20" />Dừng quét
+          </button>
+          <button class="btn btn-white ml-20" v-if="iscan">
+            Số lượng đã quét: <b>{{ total }}</b>
+          </button>
         </div>
+      </div>
+      <div class="row">
         <div class="col-8">
-          <div class="card">
+          <div class="card mb-16">
             <div class="card-body">
               <div class="d-flex">
                 <p-input
-                  :value="keyword"
+                  v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập mã vận đơn"
                 ></p-input>
                 <button
-                  :disabled="disBtnAccept"
-                  @click="quickAcceptHandle"
-                  class="btn btn-info ml-3 text-nowrap"
-                  >In label</button
+                  @click.prevent="searchHandle"
+                  :disabled="disableBtnScan"
+                  class="btn btn-inline-info ml-3 text-nowrap"
+                  >Quét</button
+                >
+                <button
+                  class="btn btn-inline-info ml-3 text-nowrap"
+                  :disabled="disableBtnAccept"
+                  @click.prevent="acceptHandle"
+                  >Xác nhận</button
+                >
+                <button
+                  class="btn btn-inline-danger ml-3 text-nowrap"
+                  :disabled="disableBtnReturn"
+                  @click="showModalReturnHandle"
+                  >Trả hàng</button
                 >
               </div>
             </div>
           </div>
-          <div class="card mt-5">
+          <div class="card mb-16">
             <div class="card-header">
               <div class="card-title">Kiểm tra loại hàng</div>
             </div>
             <div class="card-body">
-              <div class="d-flex">
-                <span>Mã vận đơn:</span>
-                <span>LB6969696996</span>
-              </div>
-              <div class="d-flex">
-                <span>Người gửi:</span>
-                <span>ID khach hang</span>
-              </div>
-              <div class="d-flex">
-                <span>Chi tiết hàng hoá:</span>
-                <span>cut metal sign</span>
-              </div>
-              <div class="d-flex">
-                <span>Yêu cầu:</span>
-                <span>N/A</span>
+              <div class="package-info">
+                <div class="d-flex">
+                  <span>Mã vận đơn:</span>
+                  <span>{{ codecurrent }}</span>
+                </div>
+                <div class="d-flex">
+                  <span>Người gửi:</span>
+                  <span>{{ customer }}</span>
+                </div>
+                <div class="d-flex">
+                  <span>Chi tiết hàng hoá:</span>
+                  <span>{{ current.detail }}</span>
+                </div>
+                <div class="d-flex">
+                  <span>Yêu cầu:</span>
+                  <span>{{ current.note || 'N/A' }}</span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card mt-5">
+          <div class="card">
             <div class="card-header">
               <div class="card-title">Kiểm tra số đo</div>
             </div>
@@ -96,36 +115,36 @@
                     <label class="form-label">Trọng lượng thực(gram):</label>
                     <p-input
                       type="text"
-                      v-model.number="volume.weight"
+                      v-model.number="form.weight"
                       placeholder="eg: 69 (đơn vị grams)"
-                      :disabled="disInput"
+                      :disabled="!isHasUpdate"
                     ></p-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Chiều dài thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="volume.length"
+                      v-model.number="form.length"
                       placeholder="eg: 15 (đơn vị cm)"
-                      :disabled="disInput"
+                      :disabled="!isHasUpdate"
                     ></p-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Chiều rộng thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="volume.width"
+                      v-model.number="form.width"
                       placeholder="eg: 10 (đơn vị cm)"
-                      :disabled="disInput"
+                      :disabled="!isHasUpdate"
                     ></p-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Chiều cao thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="volume.height"
+                      v-model.number="form.height"
                       placeholder="eg: 3 (đơn vị cm)"
-                      :disabled="disInput"
+                      :disabled="!isHasUpdate"
                     ></p-input>
                   </div>
                 </div>
@@ -135,7 +154,9 @@
               <div class="d-flex" style="align-self: flex-start;">
                 <span>Kết quả:</span>
                 <div class="messages pl-5">
-                  <p v-if="disBtnIncurred" class="mb-0 text-success">Phù hợp</p>
+                  <p v-if="!messages.length" class="mb-0 text-success"
+                    >Phù hợp</p
+                  >
                   <p
                     v-else
                     v-for="(message, i) in messages"
@@ -148,469 +169,686 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <div class="card">
+        <div class="col-4" style="min-height: 100%">
+          <div class="card" style="min-height: 100%">
             <div class="card-header">
               <div class="card-title">Danh sách</div>
             </div>
             <div class="card-body">
-              <div class="row">
-                <p class="col-5">Mã vận đơn:</p>
-                <p class="col-7">{{
-                  current.package_code ? current.package_code.code : ''
-                }}</p>
+              <div class="empty" v-if="!groups.length">
+                <p-svg name="empty"></p-svg>
+                <p>Chư có đơn hàng được quét!</p>
               </div>
-              <div class="row">
-                <p class="col-5">Chi tiết hàng hóa:</p>
-                <p class="col-7">{{ current.detail }}</p>
-              </div>
-              <div class="row">
-                <p class="col-5">Trạng thái:</p>
-                <p class="col-7" v-if="statusText"
-                  ><span class="badge badge-round" :class="statusClass">{{
-                    statusText
-                  }}</span></p
-                >
-              </div>
-              <div class="d-flex" v-if="tracking.id">
-                <p style="width: 130px;">Tracking:</p>
-                <p
-                  ><a href="#" @click.prevent="printLabel">{{
-                    tracking.tracking_number
-                  }}</a></p
-                >
-              </div>
-            </div>
-            <div class="card-footer d-block">
-              <div class="mt-4">
-                <div class="d-flex justify-content-between">
-                  <label class="form-label">Lý do trả hàng:</label>
-                  <i class="text-danger" style="font-size: 12px;">*Bắt buộc</i>
+              <div v-else class="accordion" id="scanin-list">
+                <div class="card" v-for="group in groups" :key="group.id">
+                  <div class="card-header">
+                    <a
+                      href="#"
+                      :class="{ collapsed: !group.show }"
+                      @click.prevent="collapseToggle(group.id)"
+                    >
+                      <p-svg name="up-white"></p-svg>
+                    </a>
+                    <div class="head">
+                      <span
+                        >Người gửi: <b>{{ group.name }}</b></span
+                      >
+                      <span
+                        >Số lượng: <b>{{ group.count }}</b></span
+                      >
+                    </div>
+                  </div>
+
+                  <div
+                    class="accordion-collapse collapse"
+                    :class="{ show: group.show }"
+                  >
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <tr>
+                            <th>Mã vận đơn</th>
+                            <th>Trạng thái</th>
+                          </tr>
+                          <tbody>
+                            <tr v-for="item in group.items" :key="item.id">
+                              <td>{{ item.code }}</td>
+                              <td v-html="item.statusHTML"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <textarea
-                  class="p-input form-control"
-                  v-model.trim="note"
-                  rows="3"
-                  :disabled="disReturn"
-                ></textarea>
-              </div>
-              <div class="text-right mt-4">
-                <button
-                  :disabled="disBtnReturn"
-                  @click.prevent="returnHandle"
-                  class="btn btn-danger"
-                  >Trả hàng</button
-                >
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <ModalAccept
-      :service="service_detail"
-      :estimate-cost="estimateCost"
-      :warehouses="wareHouses"
-      :visible.sync="isVisibleModalAccept"
-      @accept="acceptHandle"
+    <PageLoading :is-loading="isFetching" />
+    <ModalReturn
+      :visible="isVisibleModalReturn"
+      :current="current"
+      @submit="returnHandle"
     />
   </div>
 </template>
 <script>
+import { mapActions, mapMutations, mapState } from 'vuex'
+import ModalReturn from '../components/ModalReturn'
+import mixinBarcode from '@core/mixins/barcode'
+import PageLoading from '@components/shared/OverLoading'
 import {
-  FETCH_PACKAGE_DETAIL,
-  ACCEPT_PACKAGE_LABEL,
+  GET_PACKAGE_BY_CODE,
+  PACKAGE_CREATE_LABEL,
+  GET_CHECKIN_REQUEST,
+  CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
 } from '../store'
-import { mapActions, mapState, mapMutations } from 'vuex'
-import ModalAccept from '../components/ModalAccept'
 import {
-  MAP_NAME_STATUS_PACKAGE,
   PACKAGE_WAREHOUSE_STATUS_PICK,
+  PACKAGE_STATUS_WAREHOUSE_LABELED,
+  PACKAGE_STATUS_CREATED,
+  PACKAGE_WAREHOUSE_STATUS_RETURN,
+  PACKAGE_WAREHOUSE_STATUS_CANCELLED,
 } from '../constants'
-import mixinBarcode from '@core/mixins/barcode'
-import { printImage } from '@core/utils/print'
-import http from '@core/services/http'
-import {
-  FETCH_SERVICE,
-  FETCH_ESTIMATE_COST,
-  FETCH_WAREHOUSE,
-} from '../../shared/store'
 
 export default {
   name: 'CheckPackage',
-  components: { ModalAccept },
+  components: { ModalReturn, PageLoading },
   mixins: [mixinBarcode],
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
     }),
-    ...mapState('shared', {
-      service_detail: (state) => state.service_detail,
-      estimateCost: (state) => state.estimateCost,
-      wareHouses: (state) => state.wareHouses,
-    }),
+
     messages() {
       if (!this.current.id) return []
 
       const messages = []
-      if (this.volume.weight > this.current.weight) {
+      if (this.form.weight > this.current.actual_weight) {
         messages.push('Trọng lượng vượt ngưỡng')
       }
 
-      if (this.volume.length > this.current.length) {
+      if (this.form.length > this.current.actual_length) {
         messages.push('Chiều dài vượt ngưỡng')
       }
 
-      if (this.volume.width > this.current.width) {
+      if (this.form.width > this.current.actual_width) {
         messages.push('Chiều rộng vượt ngưỡng')
       }
 
-      if (this.volume.height > this.current.height) {
+      if (this.form.height > this.current.actual_height) {
         messages.push('Chiều cao vượt ngưỡng')
       }
 
       return messages
     },
-    disInput() {
-      return (
-        !this.current.id || this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
-      )
-    },
-    isAccepted() {
-      return (
-        this.current.id && this.current.status > PACKAGE_WAREHOUSE_STATUS_PICK
-      )
-    },
-    disReturn() {
-      return (
-        !this.current.id || this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
-      )
-    },
-    disBtnReturn() {
-      return (
-        !this.current.id ||
-        this.note === '' ||
-        this.isSubmitting ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
-      )
-    },
-    disBtnAccept() {
-      return (
-        !this.current.id ||
-        this.isSubmitting ||
-        this.isFetching ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
-      )
-    },
-    disBtnIncurred() {
-      return (
-        !this.messages.length ||
-        this.isSubmitting ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
-        !this.volume.weight ||
-        !this.volume.length ||
-        !this.volume.width ||
-        !this.volume.height
-      )
-    },
-    statusText() {
-      if (!this.current.id) return ''
-      if (!MAP_NAME_STATUS_PACKAGE[this.current.status]) return 'unknown'
-      return MAP_NAME_STATUS_PACKAGE[this.current.status].value
-    },
-    statusClass() {
-      if (!this.current.id) return ''
-      if (!MAP_NAME_STATUS_PACKAGE[this.current.status]) return 'badge-default'
-      return MAP_NAME_STATUS_PACKAGE[this.current.status].class
+
+    hasChange() {
+      return this.messages.length
     },
 
-    tracking() {
-      return this.current.tracking || {}
+    disableBtnReturn() {
+      return (
+        !this.current ||
+        !this.current.id ||
+        this.isFetching ||
+        this.current.status > PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.iscaned
+      )
+    },
+
+    disableBtnAccept() {
+      return (
+        !this.current ||
+        !this.current.id ||
+        this.isFetching ||
+        !this.hasAccept ||
+        this.iscaned
+      )
+    },
+    disableBtnScan() {
+      return (
+        !this.keyword ||
+        !this.iscan ||
+        this.isFetching ||
+        (this.codecurrent == this.keyword && this.codecurrent != '')
+      )
+    },
+    isHasUpdate() {
+      return (
+        this.current &&
+        this.current.id &&
+        this.current.status <= PACKAGE_WAREHOUSE_STATUS_PICK &&
+        !this.isFetching
+      )
+    },
+    codecurrent() {
+      return !this.current || !this.current.package_code
+        ? ''
+        : this.current.package_code.code || ''
+    },
+    customer() {
+      return !this.current || !this.current.user
+        ? ''
+        : this.current.user.full_name ||
+            this.current.user.email ||
+            this.current.user.phone_number
+    },
+    hasAccept() {
+      return (
+        this.current &&
+        this.current.id &&
+        this.current.status < PACKAGE_STATUS_WAREHOUSE_LABELED &&
+        (!this.current.tracking || !this.current.tracking.id)
+      )
+    },
+    total() {
+      return this.packages.length
     },
   },
   data() {
     return {
-      keyword: '',
+      iscan: false,
+      iscaned: false,
       isFetching: false,
-      note: '',
-      volume: {
+      keyword: '',
+      isSubmitting: false,
+      form: {
         weight: 0,
         length: 0,
         width: 0,
         height: 0,
       },
-      isChange: false,
-      isVisibleModalAccept: false,
-      isSubmitting: false,
+      isVisibleModalReturn: false,
+      checkinRequestId: 0,
+      packages: [],
+      groups: [],
     }
-  },
-  mounted() {
-    if (this.$route.query.keyword) {
-      this.keyword = this.$route.query.keyword.trim()
-      this.fetchPackageSubmit()
-    } else {
-      this.setPackage({})
-    }
-
-    this.beforeLeaveHandle()
   },
   methods: {
-    ...mapActions('shared', [
-      'loading',
-      FETCH_SERVICE,
-      FETCH_ESTIMATE_COST,
-      FETCH_WAREHOUSE,
-    ]),
     ...mapActions('warehouse', {
-      fetchPackage: FETCH_PACKAGE_DETAIL,
-      acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
-      returnPackageSubmit: RETURN_PACKAGE,
+      fetchPackage: GET_PACKAGE_BY_CODE,
+      createLabel: PACKAGE_CREATE_LABEL,
+      getCheckinRequest: GET_CHECKIN_REQUEST,
+      closeCheckinRequest: CLOSE_CHECKIN_REQUEST,
+      returnPackageRequest: RETURN_PACKAGE,
     }),
     ...mapMutations('warehouse', {
-      setPackage: FETCH_PACKAGE_DETAIL,
+      setPackage: GET_PACKAGE_BY_CODE,
     }),
 
-    searchHandle(e) {
-      this.beforeFetchPackge(e.target.value || '')
+    async stopHandle() {
+      if (this.isFetching || this.isSubmitting) return
+
+      const res = await this.closeCheckinRequest({ id: this.checkinRequestId })
+
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.iscan = false
+      this.iscaned = false
+      this.checkinRequestId = 0
+      this.keyword = ''
+      this.groups = []
+      this.packages = []
+      this.setPackage({})
+      this.reset()
+    },
+
+    async startHandle() {
+      if (this.isFetching || this.isSubmitting) return
+
+      this.iscaned = false
+      this.isFetching = true
+      this.reset()
+      this.setPackage({})
+
+      const res = await this.getCheckinRequest()
+
+      if (res.error || !res.checkin) {
+        this.isFetching = false
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.iscan = true
+      this.checkinRequestId = res.checkin.id
+
+      const packages = res.checkin.packages || []
+      for (const pkg of packages) {
+        if (!pkg.package_code || !pkg.user) {
+          continue
+        }
+
+        const code = pkg.package_code.code
+        const customer =
+          pkg.user.full_name || pkg.user.email || pkg.user.phone_number
+        const status =
+          pkg.status == PACKAGE_WAREHOUSE_STATUS_RETURN
+            ? 'returned'
+            : 'accepted'
+
+        const item = {
+          id: this.current.id,
+          code,
+          status,
+          statusHTML: '<span class="text-success">Đã quét</span>',
+        }
+
+        if (status == 'returned') {
+          item.statusHTML = '<span class="text-danger">Trả hàng</span>'
+        }
+
+        this.packages.push(item)
+
+        const group = this.groups.find(({ id }) => id == pkg.user.id)
+        if (group) {
+          group.count++
+          group.items.push(item)
+          continue
+        }
+
+        this.groups.push({
+          id: pkg.user.id,
+          count: 1,
+          name: customer,
+          show: false,
+          items: [item],
+        })
+      }
+
+      this.isFetching = false
+    },
+
+    searchHandle() {
+      const keyword = this.keyword.trim()
+      this.beforeFetchPackage(keyword)
     },
 
     barcodeSubmit(keyword) {
-      this.beforeFetchPackge(keyword)
+      this.beforeFetchPackage(keyword)
     },
 
-    beforeFetchPackge(keyword) {
+    async beforeFetchPackage(keyword) {
       keyword = keyword.trim()
-      if (this.keyword === keyword) return
+      if (this.codecurrent === keyword) return
 
-      if (!this.current.id || this.isAccepted) {
-        this.keyword = keyword
-        this.pushQuery(keyword)
-        this.fetchPackageSubmit()
+      if (this.isFetching || this.isSubmitting) return
+
+      const index = this.packages.findIndex(({ code }) => code == keyword)
+      if (index !== -1) return
+
+      if (this.hasAccept && !this.iscaned) {
+        if (!this.hasChange) {
+          await this.acceptSubmit()
+        } else {
+          try {
+            const result = await this.confirmHandle()
+            if (!result) return
+
+            await this.acceptSubmit()
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
+
+      this.isFetching = true
+      await this.fetchPackge(keyword)
+      setTimeout(() => {
+        this.isFetching = false
+      }, 200)
+    },
+
+    async fetchPackge(keyword) {
+      if (!this.iscan) {
+        this.$toast.warning('Vui lòng bấm bắt đầu quét để quét')
         return
       }
 
-      this.$dialog.confirm({
-        title: `Xác nhận duyệt mã vận đơn ${this.keyword}?`,
-        message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không.',
-        onConfirm: () => {
-          this.quickAcceptHandle()
-        },
-        onCancel: () => {
-          this.keyword = keyword
-          this.pushQuery(keyword)
-          this.fetchPackageSubmit()
-        },
-      })
-    },
-
-    pushQuery(keyword) {
-      this.$router.push({
-        query: { keyword: keyword },
-        path: this.$route.path,
-      })
-    },
-
-    async fetchPackageSubmit() {
-      if (this.keyword === '') return
-
+      this.iscaned = false
       this.reset()
 
-      this.loading(true)
-      this.isFetching = true
-      const res = await this.fetchPackage(this.keyword)
-      this.isFetching = false
-      this.loading(false)
-
+      const res = await this.fetchPackage(keyword)
       if (res.error) {
         this.$toast.error(res.message)
+      }
+
+      if (!this.current || !this.current.id) {
         return
       }
 
-      this.volume.weight = this.current.weight
-      this.volume.length = this.current.length
-      this.volume.width = this.current.width
-      this.volume.height = this.current.height
-    },
+      if (this.current.status == PACKAGE_STATUS_CREATED) {
+        this.$toast.warning('Đơn chưa xác thực')
+        this.setPackage({})
+        return
+      }
 
-    quickAcceptHandle() {
-      this.isChange = false
+      if (this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED) {
+        this.$toast.warning('Đơn đã được huỷ')
+        this.setPackage({})
+        return
+      }
+
+      if (this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN) {
+        this.$toast.warning('Đơn đã được hoàn trả')
+        this.setPackage({})
+        return
+      }
 
       if (
-        parseFloat(this.volume.weight) != parseFloat(this.current.weight) ||
-        parseFloat(this.volume.length) != parseFloat(this.current.length) ||
-        parseFloat(this.volume.width) != parseFloat(this.current.width) ||
-        parseFloat(this.volume.height) != parseFloat(this.current.height)
+        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED ||
+        (this.current.tracking && this.current.tracking.id)
       ) {
-        this.isChange = true
-        this.extraHandle()
+        this.$toast.warning('Đơn đã được quét')
+        this.setPackage({})
         return
       }
 
-      this.volume.weight = this.current.weight
-      this.volume.length = this.current.length
-      this.volume.width = this.current.width
-      this.volume.height = this.current.height
-      this.showModalAcceptHandle()
+      this.form.width = this.current.actual_width
+      this.form.height = this.current.actual_height
+      this.form.length = this.current.actual_length
+      this.form.weight = this.current.actual_weight
     },
 
-    async showModalAcceptHandle() {
-      let req = { type: 1, status: 1 }
-      let [result, result2, result3] = await Promise.all([
-        this[FETCH_SERVICE](this.current.service_id),
-        this[FETCH_ESTIMATE_COST](this.keyword),
-        this[FETCH_WAREHOUSE](req),
-      ])
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-        return
+    async acceptHandle() {
+      if (!this.hasChange) {
+        return await this.acceptSubmit()
       }
-      if (!result2.success) {
-        this.$toast.open({ message: result2.message, type: 'error' })
-        return
+
+      try {
+        const result = await this.confirmHandle()
+        if (!result) {
+          return false
+        }
+
+        return await this.acceptSubmit()
+      } catch (error) {
+        return false
       }
-      if (!result3.success) {
-        this.$toast.open({ message: result3.message, type: 'error' })
-        return
-      }
-      this.isVisibleModalAccept = true
     },
 
-    extraHandle() {
-      this.$dialog.confirm({
-        title: 'Xác nhận thay đổi trọng lượng và kích thước?',
-        onConfirm: () => this.showModalAcceptHandle(),
-      })
-    },
-
-    async acceptHandle(carrier, warehouse) {
-      if (!carrier) {
-        return this.$toast.error('Vui lòng chọn Loại vận chuyển')
-      }
-
-      if (!warehouse) {
-        return this.$toast.error('Vui lòng chọn Kho')
-      }
-
+    async acceptSubmit() {
       if (
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
-        this.isSubmitting
+        this.isFetching ||
+        this.isSubmitting ||
+        !this.current ||
+        !this.current.id
       )
         return
 
-      this.loading(true)
       this.isSubmitting = true
-      const body = {
-        id: this.current.id,
-        carrier: carrier,
-        warehouse: warehouse,
-      }
 
-      if (this.isChange) {
-        body.weight = this.volume.weight || 0
-        body.length = this.volume.length || 0
-        body.width = this.volume.width || 0
-        body.height = this.volume.height || 0
-      }
+      const form = Object.assign(
+        {
+          id: this.current.id,
+          checkin_request_id: this.checkinRequestId,
+        },
+        this.form
+      )
 
-      const res = await this.acceptPackageSubmit(body)
-      this.isSubmitting = false
-      this.loading(false)
+      const res = await this.createLabel(form)
+
       if (res.error) {
         this.$toast.error(res.message)
-        return
+        this.isSubmitting = false
+        return false
       }
-      this.isVisibleModalAccept = false
-      this.printLabel()
+
+      this.addToAnalytics('accepted')
+      this.isSubmitting = false
+      this.iscaned = true
+
+      this.$toast.success(`Mã ${this.codecurrent} quét thành công`)
+
+      return true
     },
 
-    returnHandleConfirm() {
-      this.$dialog.confirm({
-        title: 'Xác nhận trả hàng?',
-        onConfirm: () => this.returnHandle(),
+    // xác nhận thông tin đã chỉnh sửa
+    confirmHandle() {
+      return new Promise((resolve) => {
+        this.$dialog.confirm({
+          title: `Xác nhận thông tin đơn hàng?`,
+          message:
+            'Đơn hàng đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?',
+          onConfirm: () => {
+            resolve(true)
+          },
+          onCancel: () => {
+            resolve(false)
+          },
+        })
       })
-    },
-
-    async returnHandle() {
-      if (this.isSubmitting || !this.current.id || this.note == '') return
-
-      this.loading(true)
-      this.isSubmitting = true
-      const body = { id: this.current.id, note: this.note }
-      const res = await this.returnPackageSubmit(body)
-      this.isSubmitting = false
-      this.loading(false)
-
-      if (res.error) {
-        this.$toast.error(res.message)
-        return
-      }
-    },
-
-    async printLabel() {
-      document.activeElement && document.activeElement.blur()
-
-      try {
-        if (!this.tracking.label_url) return
-        const url = this.tracking.label_url
-
-        if (/^http/gi.test(url)) {
-          printImage(url)
-          return
-        }
-
-        const res = await http.get(
-          `/uploads/file-export/download?type=labels&url=${url}`,
-          { type: 'blob' }
-        )
-
-        if (!res || res.error) {
-          return this.$toast.error(res.errorMessage || '')
-        }
-
-        const src = (window.webkitURL || window.URL).createObjectURL(res)
-        printImage(src)
-      } catch (error) {
-        this.$toast.error('File error !!!')
-      }
-    },
-
-    beforeLeaveHandle() {
-      window.onbeforeunload = () => {
-        if (
-          this.current.id &&
-          this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
-        ) {
-          return 'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
-        }
-
-        return null
-      }
     },
 
     reset() {
-      ;(this.note = ''),
-        (this.volume = { weight: 0, length: 0, width: 0, height: 0 })
-    },
-  },
-
-  beforeRouteLeave(to, from, next) {
-    if (
-      this.current.id &&
-      this.current.status == PACKAGE_WAREHOUSE_STATUS_PICK
-    ) {
-      const answer = window.confirm(
-        'Đơn chưa được duyệt, bạn có muốn thoát khỏi page'
-      )
-      if (answer) {
-        next()
-      } else {
-        next(false)
+      this.form = {
+        weight: 0,
+        length: 0,
+        width: 0,
+        height: 0,
       }
-    } else {
-      next()
-    }
+    },
+
+    showModalReturnHandle() {
+      this.isVisibleModalReturn = true
+    },
+
+    returnHandle(note) {
+      this.$dialog.confirm({
+        title: 'Xác nhận trả hàng?',
+        onConfirm: () => this.returnSubmit(note),
+      })
+    },
+
+    async returnSubmit(note) {
+      if (
+        this.isFetching ||
+        this.isSubmitting ||
+        !this.current.id ||
+        note == ''
+      )
+        return
+
+      this.isSubmitting = true
+      const body = {
+        id: this.current.id,
+        checkin_request_id: this.checkinRequestId,
+        note,
+      }
+
+      const res = await this.returnPackageRequest(body)
+
+      if (res.error) {
+        this.isSubmitting = false
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.addToAnalytics('returned')
+      this.isSubmitting = false
+
+      this.$toast.success(`Mã ${this.codecurrent} trả hàng thành công`)
+      this.isVisibleModalReturn = false
+    },
+
+    addToAnalytics(status) {
+      const item = {
+        id: this.current.id,
+        code: this.codecurrent,
+        status,
+        statusHTML: '<span class="text-success">Đã quét</span>',
+      }
+
+      if (status == 'returned') {
+        item.statusHTML = '<span class="text-danger">Trả hàng</span>'
+      }
+
+      this.packages.push(item)
+
+      const user = this.current.user
+      const group = this.groups.find(({ id }) => id == user.id)
+      if (group) {
+        group.count++
+        group.items.push(item)
+      } else {
+        this.groups.push({
+          id: user.id,
+          count: 1,
+          name: this.customer,
+          show: false,
+          items: [item],
+        })
+      }
+    },
+
+    collapseToggle(id) {
+      const idx = this.groups.findIndex((item) => item.id == id)
+
+      if (idx === -1) return
+
+      const show = !this.groups[idx].show
+      this.$set(this.groups[idx], 'show', show)
+    },
   },
 }
 </script>
+<style lang="scss">
+.scan-in {
+  .package-info {
+    .d-flex {
+      margin-bottom: 10px;
+    }
+    span {
+      color: #333;
+      &:first-child {
+        width: 150px;
+        color: #636363;
+      }
+    }
+  }
+  .actions {
+    .icon {
+      margin-right: 8px;
+      vertical-align: bottom;
+      path {
+        fill: #fff;
+      }
+    }
+
+    .btn-white {
+      font-weight: normal;
+      b {
+        color: #333;
+      }
+    }
+  }
+
+  #scanin-list {
+    .card {
+      border: none;
+      + .card {
+        margin-top: 2px;
+      }
+    }
+    .card-header {
+      padding: 0;
+      position: relative;
+
+      .head {
+        transition: all 0.35s ease;
+        padding: 12px 12px;
+        width: 100%;
+        background-color: #141f65;
+        color: #fff;
+        font-size: 14px;
+        line-height: 20px;
+        span:first-child {
+          margin-right: 15px;
+        }
+      }
+
+      a {
+        transform: rotate(180deg);
+        position: absolute;
+        right: 12px;
+        top: 14px;
+        transition: all 0.35s ease;
+      }
+
+      a.collapsed {
+        transform: rotate(0deg);
+        top: 11px;
+        path {
+          stroke: #333;
+        }
+
+        + .head {
+          background-color: #f6f7f7;
+          color: #111212;
+        }
+      }
+    }
+
+    .accordion-collapse {
+      height: 0;
+      transition: height 0.35s ease;
+
+      &.show {
+        height: auto;
+      }
+    }
+  }
+
+  .row {
+    margin-right: -8px;
+    margin-left: -8px;
+  }
+
+  [class^='col-'] {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .empty {
+    padding: 120px 0;
+    text-align: center;
+    p {
+      margin-top: 24px;
+    }
+  }
+  .table {
+    th,
+    td {
+      border: none;
+    }
+    th {
+      padding: 8px 12px;
+      background-color: #f6f7f7;
+      color: #626363;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 16px;
+    }
+    td {
+      padding: 12px 12px 11px;
+      color: #111212;
+    }
+    tr + tr {
+      td {
+        border-top: 1px solid #edeeee;
+      }
+    }
+  }
+
+  .table-hover tbody tr:first-child td {
+    border-top: 0;
+  }
+}
+</style>

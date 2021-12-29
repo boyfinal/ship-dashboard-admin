@@ -30,7 +30,7 @@ export const routes = [
   },
   {
     path: '/warehouse/scan-in',
-    name: 'check-in',
+    name: 'scan-in',
     meta: {
       title: 'Quét nhận kho',
     },
