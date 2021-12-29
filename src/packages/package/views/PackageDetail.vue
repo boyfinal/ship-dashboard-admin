@@ -14,7 +14,7 @@
         <div class="page-header__subtitle">
           <div class="page-header__info">
             <div>
-              <div>Mã vận đơn</div>
+              <div>LionBay tracking</div>
               <div class="package-code"
                 >{{ $evaluate('package_detail.package.package_code?.code') }}
               </div>
@@ -30,7 +30,7 @@
               <div>{{ $evaluate('package_detail.package.service?.name') }}</div>
             </div>
             <div v-if="package_detail.package.tracking">
-              <div>Tracking </div>
+              <div>Last mile tracking </div>
               <div>
                 <a
                   target="_blank"
@@ -211,7 +211,7 @@
                   </div>
                   <div class="card-content">
                     <div class="row">
-                      <div class="col-4 mb-8">Mã vận đơn:</div>
+                      <div class="col-4 mb-8">LionBay tracking:</div>
                       <div class="col-8"
                         ><div>{{
                           $evaluate('package_detail.package.package_code?.code')

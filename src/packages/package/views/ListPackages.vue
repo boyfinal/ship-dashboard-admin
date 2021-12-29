@@ -287,12 +287,12 @@ export default {
       isVisibleExport: false,
       selected: [],
       searchBy: {
-        code: 'Mã vận đơn',
+        code: 'LionBay tracking',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
         account: 'Tài khoản khách hàng',
         customer_full_name: 'Tên khách hàng',
-        tracking: 'Mã tracking',
+        tracking: 'Last mile tracking',
       },
       PackageStatusDeactive: PackageStatusDeactive,
       PackageStatusExpiredText,
@@ -329,13 +329,13 @@ export default {
     searchPlaceholder() {
       const maptext = {
         id: 'Tìm theo mã hoá đơn',
-        code: 'Tìm theo mã vận đơn',
+        code: 'Tìm theo LionBay tracking',
         recipient: 'Tìm theo tên người nhận',
         account: 'Tìm theo email hoặc sđt của khách hàng',
         order_number: 'Tìm theo mã đơn hàng',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
-        tracking: 'Tìm theo mã tracking',
+        tracking: 'Tìm theo last mile tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']
