@@ -20,8 +20,10 @@
               prefixIcon="search"
               type="search"
               class="mr-8"
+              clearable
               :value="filter.search"
               @keyup.enter="handleSearch"
+              @clear="clearSearch"
             >
             </p-input>
             <p-button type="info" @click="CreateContainerHandle">
