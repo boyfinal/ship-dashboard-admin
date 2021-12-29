@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="d-flex list__claim-search mb-12">
         <p-input
-          placeholder="Tìm theo LionBay tracking hoặc last mile tracking"
+          placeholder="Tìm theo mã tracking"
           prefixIcon="search"
           type="search"
           clearable
