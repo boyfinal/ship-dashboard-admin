@@ -263,9 +263,7 @@ export default {
   #search-box .input-group {
     margin-right: 8px;
   }
-  .p-input-search {
-    padding-left: 18px;
-  }
+
   .btn-info {
     white-space: nowrap;
   }
