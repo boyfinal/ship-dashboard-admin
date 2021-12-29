@@ -27,7 +27,7 @@ export default {
     return http.get(`/bills/count?${buildQueryString(payload)}`)
   },
   cancelExtraFee(payload) {
-    return http.post(`/bills/${payload.id}`, payload)
+    return http.post(`/bills/${payload.code}`, payload)
   },
   fetchExtraFeeTypes() {
     return http.get(`/bills/extra-fee-types`)
