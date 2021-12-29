@@ -50,7 +50,7 @@
         <div class="page-header__subtitle row">
           <div class="page-header__input col-6">
             <p-input
-              placeholder="Tìm theo mã vận đơn"
+              placeholder="Tìm theo LionBay tracking"
               prefixIcon="search"
               type="search"
               v-model="code"
@@ -119,7 +119,7 @@
                 <table class="table table-hover" id="tbl-packages">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Ngày tạo</th>
                       <th>Nhãn đơn hàng</th>
                       <th>Trọng lượng</th>
@@ -307,7 +307,7 @@ export default {
       this.code = this.code.trim()
       if (this.code === '') {
         this.$toast.open({
-          message: `Nhập mã vận đơn để thêm`,
+          message: `Nhập LionBay tracking để thêm`,
           type: 'error',
         })
         return

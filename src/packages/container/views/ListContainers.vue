@@ -16,7 +16,7 @@
           </div>
           <div class="page__container-search d-flex jc-sb col-6 ">
             <p-input
-              placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
+              placeholder="Tìm theo mã kiện, nhãn kiện hoặc LionBay tracking"
               prefixIcon="search"
               type="search"
               class="mr-8"
