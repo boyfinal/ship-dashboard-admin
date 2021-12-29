@@ -15,7 +15,7 @@
     >
       <div v-html="message"></div>
       <div @click="close" class="close-icon">
-        <p-icon name="close-circle-o" iconPack="md"></p-icon>
+        <svgicon name="close" class="text-white" />
       </div>
     </div>
   </transition>
