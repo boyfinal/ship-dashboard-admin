@@ -66,17 +66,8 @@ export default {
   cancelPackages(payload) {
     return http.put(`/packages/cancel`, payload)
   },
-
-  // duyet don va tao label
-  acceptAndLabel(payload) {
-    return http.post(`/warehouses/packages/${payload.id}/accept`, payload)
-  },
-
   returnPackage(payload) {
     return http.post(`/warehouses/packages/${payload.id}/return`, payload)
-  },
-  checkIn(code) {
-    return http.get(`/warehouses/packages/${code}/check-in`)
   },
   exportWarehousePackage(payload) {
     return http.post('/packages-in-warehouse', payload, {
@@ -90,5 +81,40 @@ export default {
   },
   cancelLabel(payload) {
     return http.put(`/warehouses/cancel-label`, payload)
+  },
+
+  /**
+   * Lấy thông tin đơn hàng theo mã vận đơn
+   * @param code mã vận đơn
+   * @return Promise
+   */
+  getPackage(code) {
+    return http.get(`/warehouses/packages/${code}`)
+  },
+
+  /**
+   * Tạo label đơn hàng
+   * @param payload
+   * @return Promise
+   */
+  createLabel(payload) {
+    return http.post(`/warehouses/packages/labels/${payload.id}`, payload)
+  },
+
+  /**
+   * Lấy thông tin checkin request
+   * @return Promise
+   */
+  getCheckin() {
+    return http.get(`/checkins`)
+  },
+
+  /**
+   * Đóng checkin request
+   * @param payload
+   * @return Promise
+   */
+  closeCheckin(payload) {
+    return http.put(`/checkins/close`, payload)
   },
 }

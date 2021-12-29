@@ -83,7 +83,7 @@ $cursor-disabled: not-allowed !default;
     &:checked + label::after,
     &:checked + input[type='hidden'] + label::after {
       content: '';
-      background-image: url('~@/assets/img/Vector.svg');
+      background-image: url('!vue-svg-loader~@/assets/img/Vector.svg');
       background-repeat: no-repeat;
       background-position: center;
     }

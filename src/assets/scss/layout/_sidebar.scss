@@ -178,6 +178,7 @@ $width-sidebar: 240px;
   position: absolute;
   top: 8px;
   left: 8px;
+  line-height: 0;
   &.active {
     display: none;
   }

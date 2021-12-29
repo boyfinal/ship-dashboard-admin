@@ -26,6 +26,6 @@ Vue.component('svgicon', {
     },
   },
   render: function(h) {
-    return h('span', { class: 'icon svg' }, [h(this.iconComponent)])
+    return h(this.iconComponent, { class: `icon svg-${this.name}` })
   },
 })
