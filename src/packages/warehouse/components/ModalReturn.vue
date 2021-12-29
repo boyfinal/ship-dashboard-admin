@@ -2,10 +2,10 @@
   <p-modal :active="visible" @close="handleClose" title="Trả hàng">
     <div class="row mb-24">
       <div class="col-6">
-        <p>Mã vận đơn: {{ code }}</p>
+        <p>LionBay Tracking: {{ code }}</p>
       </div>
       <div class="col-6">
-        <p>Loại hàng: {{ current.detail }}</p>
+        <p>Chi tiết hàng hoá: {{ current.detail }}</p>
       </div>
     </div>
     <div class="form-group">
