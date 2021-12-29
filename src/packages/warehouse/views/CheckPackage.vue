@@ -9,7 +9,7 @@
                 <p-input
                   :value="keyword"
                   @keydown.enter.prevent="searchHandle"
-                  placeholder="Nhập mã vận đơn"
+                  placeholder="Nhập LionBay tracking"
                 ></p-input>
                 <button
                   :disabled="disBtnAccept"
@@ -30,7 +30,7 @@
             <div class="card-body">
               <div class="row">
                 <p class="col-6"
-                  >Mã vận đơn:
+                  >LionBay tracking:
                   {{ current.package_code ? current.package_code.code : '' }}</p
                 >
                 <p class="col-6"
@@ -318,7 +318,7 @@ export default {
       }
 
       this.$dialog.confirm({
-        title: `Xác nhận duyệt mã vận đơn ${this.keyword}?`,
+        title: `Xác nhận duyệt LionBay tracking ${this.keyword}?`,
         message: 'Đơn hàng chưa duyệt. Bạn có muốn duyệt không.',
         onConfirm: () => {
           this.quickAcceptHandle()
