@@ -27,7 +27,7 @@
                   <thead>
                     <tr class="list__claim-title">
                       <th>MÃ KHIẾU NẠI</th>
-                      <th>MÃ VẬN ĐƠN </th>
+                      <th>LIONBAY TRACKING </th>
                       <th>TIÊU ĐỀ</th>
                       <th>NGƯỜI XỬ LÝ</th>
                       <th>NGÀY TẠO</th>
