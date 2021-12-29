@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
-          placeholder="Tìm theo mã vận đơn,tracking number ..."
+          placeholder="Tìm theo mã tracking ..."
           prefixIcon="search"
           type="search"
           clearable
@@ -40,7 +40,7 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Trạng thái</th>
                       <th>Thành phố</th>
                       <th>Mã bang</th>
@@ -236,7 +236,7 @@ export default {
       isVisibleModalCreateLabelPdf: false,
       selected: [],
       searchBy: {
-        code: 'Mã vận đơn',
+        code: 'LionBay tracking',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
