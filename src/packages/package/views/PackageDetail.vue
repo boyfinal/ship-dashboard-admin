@@ -659,7 +659,7 @@ export default {
       return this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
         .filter((log) => {
-          return log.type != PackageStatusCreated
+          return log.type !== PackageStatusCreated
         })
         .map((log) => {
           let text = log.description
@@ -677,7 +677,9 @@ export default {
             default:
               text = log.description || DELIVER_LOG_PACKAGE[log.type]
           }
-
+          if (text.trim() === 'Accepted at USPS Origin Facility') {
+            text = 'USPS‘s pickup awaiting'
+          }
           return { ship_time: log.ship_time, text, location: log.location }
         })
     },
