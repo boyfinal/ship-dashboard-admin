@@ -49,7 +49,7 @@
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
-                      <th>Nội dung</th>
+                      <th width="300">Nội dung</th>
                       <th>Hình thức</th>
                       <th>Giá trị</th>
                       <th>Thao tác</th>
@@ -213,12 +213,12 @@ export default {
         limit: 30,
         status: '',
         search: '',
-        search_by: 'bill_id',
+        search_by: 'bill_code',
         type: 1,
       },
       isFetching: false,
       searchBy: {
-        bill_id: 'Mã hoá đơn',
+        bill_code: 'Mã hoá đơn',
         account: 'Tài khoản khách hàng',
         account_full_name: 'Tên khách hàng',
       },
@@ -397,9 +397,9 @@ export default {
         case TransactionLogTypeTopup:
           return `Nạp topup ${transaction.id}`
         case TransactionLogTypePay:
-          return `Thanh toán hóa đơn #${transaction.bill_id}`
+          return `Thanh toán hóa đơn ${transaction.bill.code}`
         case TransactionLogTypeRefund:
-          return `Hoàn tiền hóa đơn #${transaction.bill_id}`
+          return `Hoàn tiền hóa đơn ${transaction.bill.code}`
         default:
           return null
       }
@@ -412,15 +412,15 @@ export default {
         case TransactionLogTypePay:
           path = this.$router.resolve({
             name: 'bill-detail',
-            params: { id: transaction.bill_id },
+            params: { code: transaction.bill.code },
           }).href
-          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypeRefund:
           path = this.$router.resolve({
             name: 'bill-detail',
-            params: { id: transaction.bill_id },
+            params: { code: transaction.bill.code },
           }).href
-          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill_id}</strong></a>`
+          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypePayoneer:
           return `#${transaction.description}`
         case TransactionLogTypePingPong:

@@ -186,6 +186,7 @@ const getFormatStatus = (status) => {
       statusClass = 'refund'
       break
     case 'alert':
+    case 'Alert':
       statusClass = 'alert'
       break
   }

@@ -247,8 +247,10 @@ import {
   GET_CHECKIN_REQUEST,
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
+  UPDATE_STATUS_PACKAGE,
 } from '../store'
 import {
+  PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_WAREHOUSE_STATUS_PICK,
   PACKAGE_STATUS_CREATED,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
@@ -294,11 +296,7 @@ export default {
 
     disableBtnReturn() {
       return (
-        !this.current ||
-        !this.current.id ||
-        this.isFetching ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
-        this.iscaned
+        !this.current || !this.current.id || this.isFetching || this.iscaned
       )
     },
 
@@ -338,7 +336,7 @@ export default {
       return (
         this.current &&
         this.current.id &&
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+        this.current.status == PACKAGE_STATUS_PENDING_PICKUP
       )
     },
     total() {
@@ -378,6 +376,7 @@ export default {
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
+      updateStauts: UPDATE_STATUS_PACKAGE,
     }),
 
     async stopHandle() {
@@ -531,28 +530,28 @@ export default {
       }
 
       if (this.current.status == PACKAGE_STATUS_CREATED) {
-        this.$toast.warning('Đơn chưa xác thực')
+        this.$toast.warning(`Mã ${keyword} chưa xác thực`)
         this.setPackage({})
         return
       }
 
       if (this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED) {
-        this.$toast.warning('Đơn đã được huỷ')
+        this.$toast.warning(`Đơn ${keyword} đã được huỷ`)
         this.setPackage({})
         return
       }
 
       if (this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN) {
-        this.$toast.warning('Đơn đã được hoàn trả')
+        this.$toast.warning(`Đơn ${keyword} đã được hoàn trả`)
         this.setPackage({})
         return
       }
 
       if (
-        this.current.status >= PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.current.status != PACKAGE_STATUS_PENDING_PICKUP ||
         (this.current.tracking && this.current.tracking.id)
       ) {
-        this.$toast.warning('Đơn đã được quét')
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
         this.setPackage({})
         return
       }
@@ -611,7 +610,9 @@ export default {
       this.isSubmitting = false
       this.iscaned = true
 
-      this.$toast.success(`Mã ${this.codecurrent} quét thành công`)
+      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_PICK)
+
+      this.$toast.success(`Đơn ${this.codecurrent} quét thành công`)
 
       return true
     },
@@ -621,8 +622,7 @@ export default {
       return new Promise((resolve) => {
         this.$dialog.confirm({
           title: `Xác nhận thông tin đơn hàng?`,
-          message:
-            'Đơn hàng đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?',
+          message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
           onConfirm: () => {
             resolve(true)
           },
@@ -679,6 +679,8 @@ export default {
 
       this.addToAnalytics('returned')
       this.isSubmitting = false
+
+      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_RETURN)
 
       this.$toast.success(`Mã ${this.codecurrent} trả hàng thành công`)
       this.isVisibleModalReturn = false

@@ -13,6 +13,7 @@ export const GET_PACKAGE_BY_CODE = 'getPackage'
 export const PACKAGE_CREATE_LABEL = 'createLabel'
 export const GET_CHECKIN_REQUEST = 'getCheckinRequest'
 export const CLOSE_CHECKIN_REQUEST = 'closeCheckinRequest'
+export const UPDATE_STATUS_PACKAGE = 'updateStatusPackage'
 
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -81,6 +82,11 @@ export const mutations = {
 
     if (state.package.actual_width <= 0) {
       state.package.actual_width = state.package.width
+    }
+  },
+  [UPDATE_STATUS_PACKAGE]: (state, payload) => {
+    if (state.package.id > 0) {
+      state.package.status = payload
     }
   },
 }
