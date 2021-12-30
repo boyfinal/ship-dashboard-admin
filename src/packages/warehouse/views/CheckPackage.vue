@@ -40,7 +40,7 @@
               </div>
               <div class="row">
                 <p class="col-6"
-                  >Thông tin đơn:
+                  >Last mile tracking:
                   {{
                     current.tracking ? current.tracking.tracking_number : 'N/A'
                   }}</p
