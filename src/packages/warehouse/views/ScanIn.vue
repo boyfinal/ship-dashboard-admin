@@ -21,7 +21,7 @@
               <div class="d-flex">
                 <p-input
                   :disabled="disableInput"
-                  :v-model="keyword"
+                  v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập LionBay tracking"
                 ></p-input>
