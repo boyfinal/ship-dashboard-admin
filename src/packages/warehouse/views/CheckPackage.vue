@@ -291,7 +291,7 @@ export default {
       this.isSubmitting = false
       this.loading(false)
 
-      if (res.error) {
+      if (!res.success) {
         this.$toast.error(res.message)
         return
       }
