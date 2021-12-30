@@ -182,16 +182,14 @@ export const CHANGE_PACKAGE_TYPE = [
 export const DELIVER_LOG_PACKAGE = {
   [PackageStatusInTransit]: 'In transit',
   [PackageStatusCreated]: ' Shipping label created, LionBay awaiting item',
-  [PackageStatusPendingPickup]:
-    'Shipping label confirmed, LionBay awaiting item',
+  [PackageStatusPendingPickup]: 'Shipping label created, LionBay awaiting item',
   [PackageStatusRePendingPickup]:
-    'Shipping label confirmed, LionBay awaiting item',
-  [PackageStatusPicked]: 'Accepted at LionBay Origin Facility',
+    'Shipping label created, LionBay awaiting item',
+  [PackageStatusPicked]: 'Accepted at LionBay Processing	Center',
   [PackageStatusCancelled]: 'Label canceled',
   [PackageStatusAlert]: ' Package returned',
   [PackageStatusDelivered]: 'Delivered',
-  [PackageStatusWareHouseExport]:
-    'Your package is on the way to international airport',
+  [PackageStatusWareHouseExport]: 'Departed from LionBay Processing Center',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {

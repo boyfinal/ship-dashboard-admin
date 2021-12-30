@@ -599,6 +599,7 @@ import {
   PackageStatusDelivered,
   PackageStatusInTransit,
   PackageStatusAlert,
+  PackageStatusCreated,
   PackageStatusWareHouseInContainer,
   PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
@@ -665,6 +666,9 @@ export default {
 
       return this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
+        .filter((log) => {
+          return log.type != PackageStatusCreated
+        })
         .map((log) => {
           let text = log.description
           switch (log.type) {
