@@ -247,8 +247,10 @@ import {
   GET_CHECKIN_REQUEST,
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
+  UPDATE_STATUS_PACKAGE,
 } from '../store'
 import {
+  PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_WAREHOUSE_STATUS_PICK,
   PACKAGE_STATUS_CREATED,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
@@ -294,11 +296,7 @@ export default {
 
     disableBtnReturn() {
       return (
-        !this.current ||
-        !this.current.id ||
-        this.isFetching ||
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
-        this.iscaned
+        !this.current || !this.current.id || this.isFetching || this.iscaned
       )
     },
 
@@ -338,7 +336,7 @@ export default {
       return (
         this.current &&
         this.current.id &&
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
+        this.current.status == PACKAGE_STATUS_PENDING_PICKUP
       )
     },
     total() {
@@ -378,6 +376,7 @@ export default {
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
+      updateStauts: UPDATE_STATUS_PACKAGE,
     }),
 
     async stopHandle() {
@@ -549,7 +548,7 @@ export default {
       }
 
       if (
-        this.current.status >= PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.current.status != PACKAGE_STATUS_PENDING_PICKUP ||
         (this.current.tracking && this.current.tracking.id)
       ) {
         this.$toast.warning(`Mã ${keyword} đã được quét`)
@@ -610,6 +609,8 @@ export default {
       this.addToAnalytics('accepted')
       this.isSubmitting = false
       this.iscaned = true
+
+      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_PICK)
 
       this.$toast.success(`Đơn ${this.codecurrent} quét thành công`)
 
@@ -678,6 +679,8 @@ export default {
 
       this.addToAnalytics('returned')
       this.isSubmitting = false
+
+      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_RETURN)
 
       this.$toast.success(`Mã ${this.codecurrent} trả hàng thành công`)
       this.isVisibleModalReturn = false
