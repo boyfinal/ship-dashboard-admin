@@ -45,38 +45,3 @@ export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
     text: 'Hủy',
   },
 ]
-
-export const MAP_NAME_STATUS_PACKAGE = {
-  [PACKAGE_WAREHOUSE_STATUS_PICK]: {
-    value: 'Đã lấy',
-    class: 'badge-primary',
-  },
-  [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
-    value: 'Kiểm hàng',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_IN_CONTAINER]: {
-    value: 'Đóng kiện',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_IN_SHIPMENT]: {
-    value: 'Đóng lô',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_INTRANSIT]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
-  },
-  [PACKAGE_STATUS_DELIVERED]: {
-    value: 'Giao thành công',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_RETURN]: {
-    value: 'Trả hàng',
-    class: 'badge-warning',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_CANCELLED]: {
-    value: 'Hủy',
-    class: 'badge-danger',
-  },
-}

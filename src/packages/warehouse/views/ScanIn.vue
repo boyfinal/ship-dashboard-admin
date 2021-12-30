@@ -22,7 +22,7 @@
                 <p-input
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
-                  placeholder="Nhập mã vận đơn"
+                  placeholder="Nhập LionBay tracking"
                 ></p-input>
                 <button
                   @click.prevent="searchHandle"
@@ -52,7 +52,7 @@
             <div class="card-body">
               <div class="package-info">
                 <div class="d-flex">
-                  <span>Mã vận đơn:</span>
+                  <span>LionBay Tracking:</span>
                   <span>{{ codecurrent }}</span>
                 </div>
                 <div class="d-flex">
@@ -64,8 +64,8 @@
                   <span>{{ current.detail }}</span>
                 </div>
                 <div class="d-flex">
-                  <span>Yêu cầu:</span>
-                  <span>{{ current.note || 'N/A' }}</span>
+                  <span>Trạng thái:</span>
+                  <span v-status:status="currentStatus"></span>
                 </div>
               </div>
             </div>
@@ -115,7 +115,7 @@
                     <label class="form-label">Trọng lượng thực(gram):</label>
                     <p-input
                       type="text"
-                      v-model.number="form.weight"
+                      v-model.number="form.actual_weight"
                       placeholder="eg: 69 (đơn vị grams)"
                       :disabled="!isHasUpdate"
                     ></p-input>
@@ -124,7 +124,7 @@
                     <label class="form-label">Chiều dài thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="form.length"
+                      v-model.number="form.actual_length"
                       placeholder="eg: 15 (đơn vị cm)"
                       :disabled="!isHasUpdate"
                     ></p-input>
@@ -133,7 +133,7 @@
                     <label class="form-label">Chiều rộng thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="form.width"
+                      v-model.number="form.actual_width"
                       placeholder="eg: 10 (đơn vị cm)"
                       :disabled="!isHasUpdate"
                     ></p-input>
@@ -142,7 +142,7 @@
                     <label class="form-label">Chiều cao thực(cm):</label>
                     <p-input
                       type="text"
-                      v-model.number="form.height"
+                      v-model.number="form.actual_height"
                       placeholder="eg: 3 (đơn vị cm)"
                       :disabled="!isHasUpdate"
                     ></p-input>
@@ -177,7 +177,7 @@
             <div class="card-body">
               <div class="empty" v-if="!groups.length">
                 <p-svg name="empty"></p-svg>
-                <p>Chư có đơn hàng được quét!</p>
+                <p>Chưa có đơn hàng được quét!</p>
               </div>
               <div v-else class="accordion" id="scanin-list">
                 <div class="card" v-for="group in groups" :key="group.id">
@@ -207,7 +207,7 @@
                       <div class="table-responsive">
                         <table class="table table-hover">
                           <tr>
-                            <th>Mã vận đơn</th>
+                            <th>LionBay tracking</th>
                             <th>Trạng thái</th>
                           </tr>
                           <tbody>
@@ -254,6 +254,7 @@ import {
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
 } from '../constants'
+import { MAP_NAME_STATUS_PACKAGE } from '../../package/constants'
 
 export default {
   name: 'CheckPackage',
@@ -268,19 +269,19 @@ export default {
       if (!this.current.id) return []
 
       const messages = []
-      if (this.form.weight > this.current.actual_weight) {
+      if (this.form.actual_weight > this.current.actual_weight) {
         messages.push('Trọng lượng vượt ngưỡng')
       }
 
-      if (this.form.length > this.current.actual_length) {
+      if (this.form.actual_length > this.current.actual_length) {
         messages.push('Chiều dài vượt ngưỡng')
       }
 
-      if (this.form.width > this.current.actual_width) {
+      if (this.form.actual_width > this.current.actual_width) {
         messages.push('Chiều rộng vượt ngưỡng')
       }
 
-      if (this.form.height > this.current.actual_height) {
+      if (this.form.actual_height > this.current.actual_height) {
         messages.push('Chiều cao vượt ngưỡng')
       }
 
@@ -349,6 +350,9 @@ export default {
     total() {
       return this.packages.length
     },
+    currentStatus() {
+      return (MAP_NAME_STATUS_PACKAGE[this.current.status] || {}).value
+    },
   },
   data() {
     return {
@@ -358,10 +362,10 @@ export default {
       keyword: '',
       isSubmitting: false,
       form: {
-        weight: 0,
-        length: 0,
-        width: 0,
-        height: 0,
+        actual_weight: 0,
+        actual_length: 0,
+        actual_width: 0,
+        actual_height: 0,
       },
       isVisibleModalReturn: false,
       checkinRequestId: 0,
@@ -482,7 +486,10 @@ export default {
       if (this.isFetching || this.isSubmitting) return
 
       const index = this.packages.findIndex(({ code }) => code == keyword)
-      if (index !== -1) return
+      if (index !== -1) {
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
+        return
+      }
 
       if (this.hasAccept && !this.iscaned) {
         if (!this.hasChange) {
@@ -551,10 +558,10 @@ export default {
         return
       }
 
-      this.form.width = this.current.actual_width
-      this.form.height = this.current.actual_height
-      this.form.length = this.current.actual_length
-      this.form.weight = this.current.actual_weight
+      this.form.actual_width = this.current.actual_width
+      this.form.actual_height = this.current.actual_height
+      this.form.actual_length = this.current.actual_length
+      this.form.actual_weight = this.current.actual_weight
     },
 
     async acceptHandle() {
@@ -629,10 +636,10 @@ export default {
 
     reset() {
       this.form = {
-        weight: 0,
-        length: 0,
-        width: 0,
-        height: 0,
+        actual_weight: 0,
+        actual_length: 0,
+        actual_width: 0,
+        actual_height: 0,
       }
     },
 
