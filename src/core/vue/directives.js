@@ -152,6 +152,7 @@ const getFormatStatus = (status) => {
     case 'Đã dán nhãn':
     case 'Đang giao':
     case 'processing':
+    case 'Processing':
       statusClass = 'primary'
       break
     case 'Giao thành công':
