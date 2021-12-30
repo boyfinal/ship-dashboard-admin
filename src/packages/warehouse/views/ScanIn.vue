@@ -20,7 +20,8 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
-                  v-model="keyword"
+                  :disabled="disableInput"
+                  :v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập LionBay tracking"
                 ></p-input>
@@ -371,6 +372,7 @@ export default {
       checkinRequestId: 0,
       packages: [],
       groups: [],
+      disableInput: false,
     }
   },
   methods: {
@@ -476,7 +478,9 @@ export default {
     },
 
     barcodeSubmit(keyword) {
+      this.disableInput = true
       this.beforeFetchPackage(keyword)
+      this.disableInput = false
     },
 
     async beforeFetchPackage(keyword) {
@@ -484,6 +488,8 @@ export default {
       if (this.codecurrent === keyword) return
 
       if (this.isFetching || this.isSubmitting) return
+
+      this.keyword = keyword
 
       const index = this.packages.findIndex(({ code }) => code == keyword)
       if (index !== -1) {
