@@ -211,14 +211,6 @@
                   </div>
                   <div class="card-content">
                     <div class="row">
-                      <div class="col-4 mb-8">LionBay tracking:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.package_code?.code')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
                       <div class="col-4 mb-8">Chi tiết hàng hóa:</div>
                       <div class="col-8"
                         ><div>{{
