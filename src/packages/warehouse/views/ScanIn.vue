@@ -549,7 +549,7 @@ export default {
       }
 
       if (
-        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.current.status >= PACKAGE_WAREHOUSE_STATUS_PICK ||
         (this.current.tracking && this.current.tracking.id)
       ) {
         this.$toast.warning('Đơn đã được quét')
