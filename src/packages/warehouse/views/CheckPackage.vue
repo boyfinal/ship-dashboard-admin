@@ -142,10 +142,7 @@ import {
   CANCEL_LABEL,
 } from '../store'
 import { mapActions, mapState, mapMutations } from 'vuex'
-import {
-  MAP_NAME_STATUS_PACKAGE,
-  PACKAGE_WAREHOUSE_STATUS_PICK,
-} from '../constants'
+import { PACKAGE_WAREHOUSE_STATUS_PICK } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
 import http from '@core/services/http'
@@ -154,6 +151,7 @@ import {
   FETCH_ESTIMATE_COST,
   FETCH_WAREHOUSE,
 } from '../../shared/store'
+import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
 
 export default {
   name: 'CheckPackage',

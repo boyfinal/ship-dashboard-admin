@@ -21,7 +21,7 @@
               <div class="d-flex">
                 <p-input
                   :disabled="disableInput"
-                  :v-model="keyword"
+                  v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập LionBay tracking"
                 ></p-input>
@@ -230,7 +230,7 @@
     </div>
     <PageLoading :is-loading="isFetching" />
     <ModalReturn
-      :visible="isVisibleModalReturn"
+      :visible.sync="isVisibleModalReturn"
       :current="current"
       @submit="returnHandle"
     />
@@ -250,7 +250,6 @@ import {
 } from '../store'
 import {
   PACKAGE_WAREHOUSE_STATUS_PICK,
-  PACKAGE_STATUS_WAREHOUSE_LABELED,
   PACKAGE_STATUS_CREATED,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
@@ -298,7 +297,7 @@ export default {
         !this.current ||
         !this.current.id ||
         this.isFetching ||
-        this.current.status > PACKAGE_WAREHOUSE_STATUS_PICK ||
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK ||
         this.iscaned
       )
     },
@@ -321,12 +320,7 @@ export default {
       )
     },
     isHasUpdate() {
-      return (
-        this.current &&
-        this.current.id &&
-        this.current.status <= PACKAGE_WAREHOUSE_STATUS_PICK &&
-        !this.isFetching
-      )
+      return this.current && this.current.id && !this.isFetching
     },
     codecurrent() {
       return !this.current || !this.current.package_code
@@ -344,8 +338,7 @@ export default {
       return (
         this.current &&
         this.current.id &&
-        this.current.status < PACKAGE_STATUS_WAREHOUSE_LABELED &&
-        (!this.current.tracking || !this.current.tracking.id)
+        this.current.status != PACKAGE_WAREHOUSE_STATUS_PICK
       )
     },
     total() {
@@ -556,7 +549,7 @@ export default {
       }
 
       if (
-        this.current.status >= PACKAGE_STATUS_WAREHOUSE_LABELED ||
+        this.current.status >= PACKAGE_WAREHOUSE_STATUS_PICK ||
         (this.current.tracking && this.current.tracking.id)
       ) {
         this.$toast.warning('Đơn đã được quét')
