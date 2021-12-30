@@ -318,7 +318,12 @@ export default {
       )
     },
     isHasUpdate() {
-      return this.current && this.current.id && !this.isFetching
+      return (
+        this.current &&
+        this.current.id &&
+        !this.isFetching &&
+        this.status == PACKAGE_STATUS_PENDING_PICKUP
+      )
     },
     codecurrent() {
       return !this.current || !this.current.package_code
