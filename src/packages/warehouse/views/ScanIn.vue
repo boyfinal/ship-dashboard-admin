@@ -531,19 +531,19 @@ export default {
       }
 
       if (this.current.status == PACKAGE_STATUS_CREATED) {
-        this.$toast.warning('Đơn chưa xác thực')
+        this.$toast.warning(`Mã ${keyword} chưa xác thực`)
         this.setPackage({})
         return
       }
 
       if (this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED) {
-        this.$toast.warning('Đơn đã được huỷ')
+        this.$toast.warning(`Đơn ${keyword} đã được huỷ`)
         this.setPackage({})
         return
       }
 
       if (this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN) {
-        this.$toast.warning('Đơn đã được hoàn trả')
+        this.$toast.warning(`Đơn ${keyword} đã được hoàn trả`)
         this.setPackage({})
         return
       }
@@ -552,7 +552,7 @@ export default {
         this.current.status >= PACKAGE_WAREHOUSE_STATUS_PICK ||
         (this.current.tracking && this.current.tracking.id)
       ) {
-        this.$toast.warning('Đơn đã được quét')
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
         this.setPackage({})
         return
       }
@@ -611,7 +611,7 @@ export default {
       this.isSubmitting = false
       this.iscaned = true
 
-      this.$toast.success(`Mã ${this.codecurrent} quét thành công`)
+      this.$toast.success(`Đơn ${this.codecurrent} quét thành công`)
 
       return true
     },
@@ -621,8 +621,7 @@ export default {
       return new Promise((resolve) => {
         this.$dialog.confirm({
           title: `Xác nhận thông tin đơn hàng?`,
-          message:
-            'Đơn hàng đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?',
+          message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
           onConfirm: () => {
             resolve(true)
           },
