@@ -203,7 +203,7 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
+import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -276,7 +276,7 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      return MAP_NAME_STATUS_PACKAGE
+      return MAP_NAME_STATUS_WAREHOUSE
     },
   },
   methods: {
