@@ -61,7 +61,9 @@ export default {
     submitHandle() {
       if (!this.note) return
 
-      this.$emit('submit', this.note)
+      const note = this.note
+      this.note = ''
+      this.$emit('submit', note)
     },
   },
 }
