@@ -49,10 +49,26 @@
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
-                      <th width="300">Nội dung</th>
+                      <th
+                        :style="{
+                          width:
+                            this.filter.type == 2 || filter.type == 4
+                              ? '300px'
+                              : '',
+                        }"
+                        >Nội dung</th
+                      >
                       <th>Hình thức</th>
                       <th>Giá trị</th>
-                      <th>Thao tác</th>
+                      <th
+                        :style="{
+                          width:
+                            this.filter.type == 2 || filter.type == 4
+                              ? '40px'
+                              : '',
+                        }"
+                        >Thao tác</th
+                      >
                     </template>
                   </tr>
                 </thead>
@@ -109,7 +125,7 @@
                           @input="onChangeAmount($event, item)"
                         />
                       </div>
-                      <span v-else style="white-space: nowrap;"
+                      <span v-else style="white-space: nowrap"
                         >{{ item.type === typePay ? '-' : '+' }}
                         {{ Math.abs(item.amount) | formatPrice }}</span
                       >
@@ -265,7 +281,7 @@ export default {
     },
     getPlaceHolder() {
       switch (this.filter.search_by) {
-        case 'bill_id':
+        case 'bill_code':
           return 'Tìm theo mã hóa đơn'
         case 'account':
           return 'Tìm theo email hoặc số điện thoại khách hàng'
