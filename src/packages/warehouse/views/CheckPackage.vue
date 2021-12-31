@@ -391,6 +391,7 @@ export default {
       this.showModalAcceptHandle()
     },
     validateInput(e, atrr) {
+      e = e.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
       this.volume[atrr] =
         e.indexOf('.') >= 0
           ? e.substr(0, e.indexOf('.')) + e.substr(e.indexOf('.'), 3)
