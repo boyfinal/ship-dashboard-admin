@@ -119,6 +119,7 @@
                       v-model.number="form.actual_weight"
                       placeholder="eg: 69 (đơn vị grams)"
                       :disabled="!isHasUpdate"
+                      :error="errors.actual_weight"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -128,6 +129,7 @@
                       v-model.number="form.actual_length"
                       placeholder="eg: 15 (đơn vị cm)"
                       :disabled="!isHasUpdate"
+                      :error="errors.actual_length"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -137,6 +139,7 @@
                       v-model.number="form.actual_width"
                       placeholder="eg: 10 (đơn vị cm)"
                       :disabled="!isHasUpdate"
+                      :error="errors.actual_width"
                     ></p-input>
                   </div>
                   <div class="form-group">
@@ -146,6 +149,7 @@
                       v-model.number="form.actual_height"
                       placeholder="eg: 3 (đơn vị cm)"
                       :disabled="!isHasUpdate"
+                      :error="errors.actual_height"
                     ></p-input>
                   </div>
                 </div>
@@ -257,6 +261,7 @@ import {
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
 } from '../constants'
 import { MAP_NAME_STATUS_WAREHOUSE } from '../../package/constants'
+import { yup } from '../../../core/valider'
 
 export default {
   name: 'CheckPackage',
@@ -266,7 +271,6 @@ export default {
     ...mapState('warehouse', {
       current: (state) => state.package,
     }),
-
     messages() {
       if (!this.current.id) return []
 
@@ -289,17 +293,14 @@ export default {
 
       return messages
     },
-
     hasChange() {
       return this.messages.length
     },
-
     disableBtnReturn() {
       return (
         !this.current || !this.current.id || this.isFetching || this.iscaned
       )
     },
-
     disableBtnAccept() {
       return (
         !this.current ||
@@ -341,7 +342,8 @@ export default {
       return (
         this.current &&
         this.current.id &&
-        this.current.status == PACKAGE_STATUS_PENDING_PICKUP
+        this.current.status == PACKAGE_STATUS_PENDING_PICKUP &&
+        !this.hasError
       )
     },
     total() {
@@ -355,6 +357,41 @@ export default {
       }
 
       return (allstatus[this.current.status] || {}).value
+    },
+    errors() {
+      if (!this.current.id) return {}
+
+      const errors = {}
+
+      if (this.form.actual_weight <= 0) {
+        errors['actual_weight'] = 'Trọng lượng thực > 0'
+      } else if (!this.validNumber.isValidSync(this.form.actual_weight)) {
+        errors['actual_weight'] = 'Trọng lượng thực không đúng định dạng'
+      }
+
+      if (this.form.actual_length <= 0) {
+        errors['actual_length'] = 'Chiều dài thực > 0'
+      } else if (!this.validNumber.isValidSync(this.form.actual_length)) {
+        errors['actual_length'] = 'Chiều dài thực không đúng định dạng'
+      }
+
+      if (this.form.actual_width <= 0) {
+        errors['actual_width'] = 'Chiều rộng thực > 0'
+      } else if (!this.validNumber.isValidSync(this.form.actual_width)) {
+        errors['actual_width'] = 'Chiều rộng thực không đúng định dạng'
+      }
+
+      if (this.form.actual_height <= 0) {
+        errors['actual_height'] = 'Chiều cao thực > 0'
+      } else if (!this.validNumber.isValidSync(this.form.actual_height)) {
+        errors['actual_height'] = 'Chiều cao thực không đúng định dạng'
+      }
+
+      return errors
+    },
+
+    hasError() {
+      return Object.keys(this.errors).length > 0
     },
   },
   data() {
@@ -375,6 +412,7 @@ export default {
       packages: [],
       groups: [],
       disableInput: false,
+      validNumber: yup.number(),
     }
   },
   methods: {
@@ -509,12 +547,6 @@ export default {
 
       this.keyword = keyword
 
-      const index = this.packages.findIndex(({ code }) => code == keyword)
-      if (index !== -1) {
-        this.$toast.warning(`Mã ${keyword} đã được quét`)
-        return
-      }
-
       if (this.hasAccept && !this.iscaned) {
         if (!this.hasChange) {
           await this.acceptSubmit()
@@ -528,6 +560,12 @@ export default {
             console.log(error)
           }
         }
+      }
+
+      const index = this.packages.findIndex(({ code }) => code == keyword)
+      if (index !== -1) {
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
+        return
       }
 
       this.isFetching = true
@@ -610,7 +648,8 @@ export default {
         this.isFetching ||
         this.isSubmitting ||
         !this.current ||
-        !this.current.id
+        !this.current.id ||
+        this.hasError
       )
         return
 

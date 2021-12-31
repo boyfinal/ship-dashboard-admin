@@ -234,7 +234,6 @@ export default {
       if (!MAP_NAME_STATUS_PACKAGE[this.current.status]) return 'badge-default'
       return MAP_NAME_STATUS_PACKAGE[this.current.status].class
     },
-
     tracking() {
       return this.current.tracking || {}
     },
