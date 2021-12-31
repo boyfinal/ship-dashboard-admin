@@ -620,10 +620,29 @@ export default {
         return
       }
 
+      this.updateVolum()
+    },
+
+    updateVolum() {
       this.form.actual_width = this.current.actual_width
+      if (this.form.actual_width >= 0) {
+        this.form.actual_width = this.current.width
+      }
+
       this.form.actual_height = this.current.actual_height
+      if (this.form.actual_height >= 0) {
+        this.form.actual_height = this.current.height
+      }
+
       this.form.actual_length = this.current.actual_length
+      if (this.form.actual_length >= 0) {
+        this.form.actual_length = this.current.length
+      }
+
       this.form.actual_weight = this.current.actual_weight
+      if (this.form.actual_weight >= 0) {
+        this.form.actual_weight = this.current.weight
+      }
     },
 
     async acceptHandle() {
@@ -727,6 +746,7 @@ export default {
       )
         return
 
+      this.updateVolum()
       this.isSubmitting = true
       const body = {
         id: this.current.id,
