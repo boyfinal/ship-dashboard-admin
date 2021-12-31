@@ -27,7 +27,7 @@
           class="ml-8 add-user"
           @click="visibleModalAddUser"
         >
-          <p-icon name="plus"></p-icon>
+          <svgicon name="plus" class="text-white " />
           Thêm quản lý
         </p-button>
       </div>

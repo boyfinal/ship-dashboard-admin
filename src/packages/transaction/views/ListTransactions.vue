@@ -41,7 +41,13 @@
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="transactions.length">
             <div class="table-responsive">
-              <table class="table table-hover" id="tbl-packages">
+              <table
+                class="table table-hover"
+                id="tbl-packages"
+                :class="{
+                  responsive: this.filter.type == 2 || filter.type == 4,
+                }"
+              >
                 <thead>
                   <tr>
                     <template>
@@ -49,26 +55,10 @@
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
-                      <th
-                        :style="{
-                          width:
-                            this.filter.type == 2 || filter.type == 4
-                              ? '300px'
-                              : '',
-                        }"
-                        >Nội dung</th
-                      >
+                      <th class="content">Nội dung</th>
                       <th>Hình thức</th>
                       <th>Giá trị</th>
-                      <th
-                        :style="{
-                          width:
-                            this.filter.type == 2 || filter.type == 4
-                              ? '40px'
-                              : '',
-                        }"
-                        >Thao tác</th
-                      >
+                      <th>Thao tác</th>
                     </template>
                   </tr>
                 </thead>
@@ -476,8 +466,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @media screen and (max-width: 1400px) {
+  .responsive {
+    .content {
+      width: 300px;
+    }
+    .btn-action {
+      min-width: 10px !important;
+    }
+  }
   .btn-action {
     min-width: 180px;
   }
