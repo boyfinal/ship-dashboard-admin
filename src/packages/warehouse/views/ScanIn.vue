@@ -703,6 +703,7 @@ export default {
         return
       }
 
+      this.iscaned = true
       this.isSubmitting = false
       this.updateStauts(PACKAGE_WAREHOUSE_STATUS_RETURN)
 
