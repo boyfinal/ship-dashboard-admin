@@ -43,4 +43,5 @@ const valider = {
   },
 }
 
+export { yup }
 export default valider
