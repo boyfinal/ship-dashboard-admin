@@ -94,6 +94,7 @@
                     <p-input
                       type="text"
                       v-model.number="volume.weight"
+                      @input="validateInput($event, 'weight')"
                       placeholder="eg: 69 (đơn vị grams)"
                       :disabled="disInput"
                     ></p-input>
@@ -103,6 +104,7 @@
                     <p-input
                       type="text"
                       v-model.number="volume.length"
+                      @input="validateInput($event, 'length')"
                       placeholder="eg: 15 (đơn vị cm)"
                       :disabled="disInput"
                     ></p-input>
@@ -113,6 +115,7 @@
                       type="text"
                       v-model.number="volume.width"
                       placeholder="eg: 10 (đơn vị cm)"
+                      @input="validateInput($event, 'width')"
                       :disabled="disInput"
                     ></p-input>
                   </div>
@@ -121,6 +124,7 @@
                     <p-input
                       type="text"
                       v-model.number="volume.height"
+                      @input="validateInput($event, 'height')"
                       placeholder="eg: 3 (đơn vị cm)"
                       :disabled="disInput"
                     ></p-input>
@@ -386,7 +390,12 @@ export default {
       this.volume.height = this.current.height
       this.showModalAcceptHandle()
     },
-
+    validateInput(e, atrr) {
+      this.volume[atrr] =
+        e.indexOf('.') >= 0
+          ? e.substr(0, e.indexOf('.')) + e.substr(e.indexOf('.'), 3)
+          : e
+    },
     async showModalAcceptHandle() {
       let req = { type: 1, status: 1 }
       let [result, result2, result3] = await Promise.all([
