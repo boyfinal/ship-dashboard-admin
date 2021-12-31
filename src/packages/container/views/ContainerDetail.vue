@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-container' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Danh sách kiện hàng</span>
           </router-link>
         </div>
@@ -18,13 +16,13 @@
             <div>
               <div>Mã kiện:</div>
               <div class="package-code"
-                >C{{ container_detail.id }}
+                >{{ container_detail.code ? container_detail.code : '' }}
                 <span
                   class="page-header__barcode"
                   style="vertical-align: bottom;"
                   @click="printBarcode"
                 >
-                  <img src="@/assets/img/barcode.svg" alt="barcode" />
+                  <p-svg name="barcode"></p-svg>
                 </span>
               </div>
             </div>
@@ -52,7 +50,7 @@
         <div class="page-header__subtitle row">
           <div class="page-header__input col-6">
             <p-input
-              placeholder="Tìm theo mã vận đơn"
+              placeholder="Tìm theo LionBay tracking"
               prefixIcon="search"
               type="search"
               v-model="code"
@@ -65,7 +63,7 @@
               :class="'btn-add-container ml-3'"
               @click="handleAppend"
             >
-              <img src="@/assets/img/plus_blue.svg" />
+              <p-svg name="plus_blue"></p-svg>
               Thêm
             </p-button>
           </div>
@@ -121,7 +119,7 @@
                 <table class="table table-hover" id="tbl-packages">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Ngày tạo</th>
                       <th>Nhãn đơn hàng</th>
                       <th>Trọng lượng</th>
@@ -293,7 +291,7 @@ export default {
       this.handleUpdateRouteQuery()
       this.filter.search = this.code
       let payload = cloneDeep(this.filter)
-      payload = { ...payload, ...{ id: parseInt(this.$route.params.id) } }
+      payload = { ...payload, ...{ code: this.$route.params.code } }
       const result = await this[FETCH_CONTAINER_DETAIL](payload)
       this.isFetching = false
       if (!result.success) {
@@ -309,14 +307,14 @@ export default {
       this.code = this.code.trim()
       if (this.code === '') {
         this.$toast.open({
-          message: `Nhập mã vận đơn để thêm`,
+          message: `Nhập LionBay tracking để thêm`,
           type: 'error',
         })
         return
       }
       const payload = {
         search: this.code,
-        container_id: +this.$route.params.id,
+        container_id: +this.container_detail.id,
       }
       const result = await this[APPEND_PACKAGE_TO_CONTAINER](payload)
       if (!result.success) {
@@ -332,7 +330,7 @@ export default {
     },
     async handlerRemovePackage(package_id) {
       const payload = {
-        container_id: parseInt(this.$route.params.id),
+        container_id: parseInt(this.container_detail.id),
         package_ids: [package_id],
       }
       const result = await this[REMOVE_PACKAGE_FROM_CONTAINER](payload)
@@ -352,7 +350,7 @@ export default {
     async handleCancelContainer() {
       this.visibleConfirm = false
       const payload = {
-        id: parseInt(this.$route.params.id),
+        id: parseInt(this.container_detail.id),
       }
       const result = await this[CANCEL_CONTAINER](payload)
       if (!result.success) {
@@ -383,7 +381,7 @@ export default {
       this.visibleModalClose = false
 
       const payload = {
-        id: parseInt(this.$route.params.id),
+        id: parseInt(this.container_detail.id),
         weight: +weight,
       }
       const result = await this[CLOSE_CONTAINER](payload)
@@ -420,7 +418,7 @@ export default {
 
       const payload = {
         tracking_number: keyword,
-        container_id: +this.$route.params.id,
+        container_id: +this.container_detail.id,
       }
       const result = await this[APPEND_PACKAGE_TO_CONTAINER](payload)
       if (!result.success) {
@@ -564,7 +562,7 @@ export default {
   //margin-left: 34px;
 }
 
-.page-header__info > {
+.container-detail .page-header__info > {
   div {
     margin-right: 50px;
     div:last-child {

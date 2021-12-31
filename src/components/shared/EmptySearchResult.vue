@@ -3,7 +3,7 @@
     <div class="content">
       <div class="content_404">
         <div class="content_404-img">
-          <img src="~@/assets/img/noresult.svg" alt="" />
+          <p-svg name="noresult"></p-svg>
         </div>
       </div>
     </div>

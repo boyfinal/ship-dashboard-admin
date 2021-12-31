@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-package' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Quản lý vận đơn</span>
           </router-link>
         </div>
@@ -16,7 +14,7 @@
         <div class="page-header__subtitle">
           <div class="page-header__info">
             <div>
-              <div>Mã vận đơn</div>
+              <div>LionBay tracking</div>
               <div class="package-code"
                 >{{ $evaluate('package_detail.package.package_code?.code') }}
               </div>
@@ -24,7 +22,7 @@
             <div>
               <div>Khách hàng </div>
               <div>{{
-                $evaluate('package_detail.package.user.full_name')
+                $evaluate('package_detail.package.user ?.full_name')
               }}</div>
             </div>
             <div>
@@ -32,7 +30,7 @@
               <div>{{ $evaluate('package_detail.package.service?.name') }}</div>
             </div>
             <div v-if="package_detail.package.tracking">
-              <div>Tracking </div>
+              <div>Last mile tracking </div>
               <div>
                 <a
                   target="_blank"
@@ -213,14 +211,6 @@
                   </div>
                   <div class="card-content">
                     <div class="row">
-                      <div class="col-4 mb-8">Mã vận đơn:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.package_code?.code')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
                       <div class="col-4 mb-8">Chi tiết hàng hóa:</div>
                       <div class="col-8"
                         ><div>{{
@@ -243,9 +233,7 @@
                           >{{ $evaluate('package_detail.package.weight')
                           }}<span v-if="isOverThanOld('weight')">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.weight'
-                              )
+                              $evaluate('package_detail.package.actual_weight')
                             }})
                           </span></div
                         ></div
@@ -258,9 +246,7 @@
                           >{{ $evaluate('package_detail.package.length')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.length'
-                              )
+                              $evaluate('package_detail.package.actual_length')
                             }})
                           </span></div
                         ></div
@@ -273,9 +259,7 @@
                           >{{ $evaluate('package_detail.package.width')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.width'
-                              )
+                              $evaluate('package_detail.package.actual_width')
                             }})
                           </span></div
                         ></div
@@ -288,9 +272,7 @@
                           >{{ $evaluate('package_detail.package.height')
                           }}<span v-if="isOverThanOld()">
                             ({{
-                              $evaluate(
-                                'package_detail.package.tracking.height'
-                              )
+                              $evaluate('package_detail.package.actual_height')
                             }})
                           </span></div
                         ></div
@@ -608,7 +590,8 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
-  PackageStatusReturned,
+  PackageStatusAlert,
+  PackageStatusCreated,
   PackageStatusWareHouseInContainer,
   PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
@@ -675,6 +658,9 @@ export default {
 
       return this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
+        .filter((log) => {
+          return log.type !== PackageStatusCreated
+        })
         .map((log) => {
           let text = log.description
           switch (log.type) {
@@ -683,7 +669,7 @@ export default {
                 log.updated_user_name
               }</strong>`
               break
-            case PackageStatusReturned:
+            case PackageStatusAlert:
               text = `${DELIVER_LOG_PACKAGE[log.type]} <p>Lí do: ${
                 log.description
               }</p>`
@@ -691,7 +677,9 @@ export default {
             default:
               text = log.description || DELIVER_LOG_PACKAGE[log.type]
           }
-
+          if (text.trim() === 'Accepted at USPS Origin Facility') {
+            text = 'USPS‘s pickup awaiting'
+          }
           return { ship_time: log.ship_time, text, location: log.location }
         })
     },
@@ -901,14 +889,14 @@ export default {
 
       if (prop == 'weight') {
         return (
-          this.package_detail.package.tracking[prop] >
+          this.package_detail.package.actual_weight >
           this.package_detail.package[prop]
         )
       }
       return (
-        this.package_detail.package.tracking.height *
-          this.package_detail.package.tracking.width *
-          this.package_detail.package.tracking.length >
+        this.package_detail.package.actual_height *
+          this.package_detail.package.actual_width *
+          this.package_detail.package.actual_length >
         this.package_detail.package.height *
           this.package_detail.package.width *
           this.package_detail.package.length

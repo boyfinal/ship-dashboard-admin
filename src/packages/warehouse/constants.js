@@ -1,12 +1,15 @@
+export const PACKAGE_STATUS_CREATED = 1
 export const PACKAGE_STATUS_PENDING_PICKUP = 2
 export const PACKAGE_WAREHOUSE_STATUS_PICK = 10
 export const PACKAGE_STATUS_WAREHOUSE_LABELED = 11
 export const PACKAGE_WAREHOUSE_STATUS_IN_CONTAINER = 12
 export const PACKAGE_WAREHOUSE_STATUS_IN_SHIPMENT = 13
+export const PACKAGE_WAREHOUSE_STATUS_EXPORT = 14
 export const PACKAGE_WAREHOUSE_STATUS_INTRANSIT = 30
-export const PACKAGE_STATUS_DELIVERED = 31
 export const PACKAGE_WAREHOUSE_STATUS_RETURN = 40
 export const PACKAGE_WAREHOUSE_STATUS_CANCELLED = 50
+export const PACKAGE_STATUS_DELIVERED = 60
+export const PACKAGE_WAREHOUSE_EXPIRED = 70
 
 export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
   {
@@ -43,37 +46,12 @@ export const PACKAGE_IN_WAREHOUSE_STATUS_TAB = [
   },
 ]
 
-export const MAP_NAME_STATUS_PACKAGE = {
-  [PACKAGE_WAREHOUSE_STATUS_PICK]: {
-    value: 'Đã lấy',
-    class: 'badge-primary',
-  },
-  [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
-    value: 'Kiểm hàng',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_IN_CONTAINER]: {
-    value: 'Đóng kiện',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_IN_SHIPMENT]: {
-    value: 'Đóng lô',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_INTRANSIT]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
-  },
-  [PACKAGE_STATUS_DELIVERED]: {
-    value: 'Giao thành công',
-    class: 'badge-success',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_RETURN]: {
-    value: 'Trả hàng',
-    class: 'badge-warning',
-  },
-  [PACKAGE_WAREHOUSE_STATUS_CANCELLED]: {
-    value: 'Hủy',
-    class: 'badge-danger',
-  },
+export const PACKAGES_STATUS_TEXT = {
+  [PACKAGE_WAREHOUSE_STATUS_PICK]: 'Đã lấy',
+  [PACKAGE_STATUS_WAREHOUSE_LABELED]: 'Kiểm hàng',
+  [PACKAGE_WAREHOUSE_STATUS_IN_CONTAINER]: 'Đóng kiện',
+  [PACKAGE_WAREHOUSE_STATUS_IN_SHIPMENT]: 'Đóng lô',
+  [PACKAGE_WAREHOUSE_STATUS_INTRANSIT]: 'Xuất kho',
+  [PACKAGE_WAREHOUSE_STATUS_RETURN]: 'Trả hàng',
+  [PACKAGE_WAREHOUSE_STATUS_CANCELLED]: 'Hủy',
 }

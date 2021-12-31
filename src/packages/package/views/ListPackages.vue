@@ -33,7 +33,7 @@
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow:unset">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <div
@@ -63,20 +63,19 @@
                       ></p-checkbox>
                     </th>
                     <template>
-                      <th :class="{ hidden: hiddenClass }">Mã vận đơn</th>
-                      <th :class="{ hidden: hiddenClass }">Mã đơn hàng</th>
-                      <th :class="{ hidden: hiddenClass }">Tracking</th>
-                      <th :class="{ hidden: hiddenClass }">Khách hàng</th>
+                      <th :class="{ hidden: hiddenClass }">order no.</th>
+                      <th :class="{ hidden: hiddenClass }">lionbay tracking</th>
                       <th :class="{ hidden: hiddenClass }"
-                        >Chi tiết hàng hóa</th
+                        >last mile tracking</th
                       >
+                      <th :class="{ hidden: hiddenClass }">customer</th>
                       <th width="100" :class="{ hidden: hiddenClass }"
-                        >Ngày tạo
+                        >created date
                       </th>
                       <th width="100" :class="{ hidden: hiddenClass }"
-                        >Trạng thái</th
+                        >status</th
                       >
-                      <th :class="{ hidden: hiddenClass }">Tổng cước</th>
+                      <th :class="{ hidden: hiddenClass }">Total fee</th>
                     </template>
                   </tr>
                 </thead>
@@ -87,8 +86,9 @@
                     :class="{
                       hover: isChecked(item),
                       deactive:
-                        item.package_code &&
-                        item.package_code.status == PackageStatusDeactive,
+                        (item.package_code &&
+                          item.package_code.status == PackageStatusDeactive) ||
+                        item.status_string == PackageStatusExpiredText,
                     }"
                   >
                     <td width="40">
@@ -98,24 +98,33 @@
                         @input="handleValue($event)"
                       ></p-checkbox>
                     </td>
-                    <td class="text-nowrap">
-                      <router-link
-                        class="text-no-underline"
-                        :to="{
-                          name: 'package-detail',
-                          params: {
-                            id: item.id,
-                          },
-                        }"
-                        v-if="item.package_code"
+                    <td>
+                      <p-tooltip
+                        :label="item.order_number"
+                        v-if="item.order_number"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.order_number.length > 20"
                       >
-                        {{ item.package_code.code }}
-                      </router-link>
+                        <router-link
+                          class="text-no-underline"
+                          :to="{
+                            name: 'package-detail',
+                            params: {
+                              id: item.id,
+                            },
+                          }"
+                        >
+                          {{ truncate(item.order_number, 20) }}
+                        </router-link>
+                      </p-tooltip>
                       <span
                         v-if="!item.validate_address"
                         @click="handleValidateAddress(item.id)"
                         class="
                             list-warning
+                            pull-right
                             badge badge-round badge-warning-order
                           "
                       >
@@ -125,17 +134,67 @@
                           position="top"
                           type="dark"
                         >
-                          <i aria-hidden="true"
-                            ><img src="@assets/img/warning.svg" />
+                          <i aria-hidden="true">
+                            <p-svg name="warning"></p-svg>
                           </i>
                         </p-tooltip>
                       </span>
                     </td>
-                    <td>{{ item.order_number }}</td>
+                    <td class="text-nowrap code">
+                      <span class="link-code">
+                        {{ item.package_code ? item.package_code.code : '' }}
+                      </span>
+                      <span class="svg" v-if="item.package_code">
+                        <p-tooltip
+                          class="item_name"
+                          :label="` Track `"
+                          position="top"
+                          type="dark"
+                        >
+                          <a
+                            target="_blank"
+                            :href="
+                              `https://t.17track.net/en#nums=${
+                                item.package_code ? item.package_code.code : ''
+                              }`
+                            "
+                          >
+                            <svg
+                              width="32"
+                              height="32"
+                              viewBox="0 0 32 32"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle cx="16" cy="16" r="16" fill="none" />
+                              <g clip-path="url(#clip0_382_4459)">
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M12.0682 18.9542L8.14707 17.6451C7.95102 17.5204 7.95102 17.3957 8.14707 17.2711L23.4723 8.04502C23.6356 7.95151 23.701 8.01385 23.7337 8.13853L23.9951 22.5074C24.0278 22.7568 23.8971 22.8815 23.6356 22.7568L18.2114 20.9802L16.4795 23.9101C16.4142 24.0347 16.2508 24.0347 16.2508 23.8789L15.7607 20.0763L21.7404 11.5671L14.8784 18.2373C14.1268 18.9542 13.2119 19.2035 12.0682 18.9542Z"
+                                  fill="#313232"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_382_4459">
+                                  <rect
+                                    width="16"
+                                    height="16"
+                                    fill="white"
+                                    transform="translate(8 8)"
+                                  />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          </a>
+                        </p-tooltip>
+                      </span>
+                    </td>
                     <td class="text-nowrap">
                       <a
                         v-if="item.tracking"
                         target="_blank"
+                        class="on-hover"
                         :href="
                           `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
                         "
@@ -145,17 +204,6 @@
                     </td>
                     <td>
                       {{ item.user.full_name }}
-                    </td>
-                    <td>
-                      <p-tooltip
-                        :label="item.detail"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.detail.length > 15"
-                      >
-                        {{ truncate(item.detail, 15) }}
-                      </p-tooltip>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
@@ -193,12 +241,12 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
-
 import {
   PACKAGE_STATUS_TAB,
   PackageStatusCreatedText,
   MAP_NAME_STATUS_STRING_PACKAGE,
   PackageStatusDeactive,
+  PackageStatusExpiredText,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -239,14 +287,15 @@ export default {
       isVisibleExport: false,
       selected: [],
       searchBy: {
-        code: 'Mã vận đơn',
+        code: 'LionBay tracking',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
         account: 'Tài khoản khách hàng',
         customer_full_name: 'Tên khách hàng',
-        tracking: 'Mã tracking',
+        tracking: 'Last mile tracking',
       },
       PackageStatusDeactive: PackageStatusDeactive,
+      PackageStatusExpiredText,
     }
   },
   created() {
@@ -268,6 +317,9 @@ export default {
         return this.packages
       },
     }),
+    showDetailPackage() {
+      return !this.$isAccountant() && !this.$isSupport()
+    },
     statusTab() {
       return PACKAGE_STATUS_TAB
     },
@@ -277,13 +329,13 @@ export default {
     searchPlaceholder() {
       const maptext = {
         id: 'Tìm theo mã hoá đơn',
-        code: 'Tìm theo mã vận đơn',
+        code: 'Tìm theo LionBay tracking',
         recipient: 'Tìm theo tên người nhận',
         account: 'Tìm theo email hoặc sđt của khách hàng',
         order_number: 'Tìm theo mã đơn hàng',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
-        tracking: 'Tìm theo mã tracking',
+        tracking: 'Tìm theo last mile tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']
@@ -353,6 +405,14 @@ export default {
 .deactive {
   td {
     opacity: 0.6;
+  }
+}
+td.code {
+  max-width: 20vw !important;
+  span.link-code,
+  span.svg {
+    position: relative;
+    top: 3px;
   }
 }
 </style>

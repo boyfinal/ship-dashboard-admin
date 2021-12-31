@@ -13,8 +13,8 @@
           @click.prevent="selectpage = !selectpage"
           :class="{ icon_select: selectpage == true }"
           >{{ this.perPage }}
-          <img src="@assets/img/Frame.svg" style="margin-top: 10px;"
-        /></span>
+          <p-svg name="Frame" style="margin-top: 10px;"></p-svg>
+        </span>
         <nav>
           <ul v-if="selectpage && !fixedLimit">
             <li
@@ -39,7 +39,10 @@
         :class="rootClasses"
         v-if="!simple"
       >
-        <li class="page-item button-page" :class="{ disabled: !hasPrev }">
+        <li
+          class="page-item button-page button-left"
+          :class="{ disabled: !hasPrev }"
+        >
           <a
             role="button"
             href="#"
@@ -49,7 +52,7 @@
             @click.prevent="prev"
             :aria-label="ariaPreviousLabel"
           >
-            <i class="fa md-arrow-left"></i>
+            <svgicon name="arrowright" class="text-white" />
           </a>
         </li>
         <!--First-->
@@ -112,7 +115,7 @@
             @click.prevent="next"
             :aria-label="ariaNextLabel"
           >
-            <i class="fa md-arrow-right"></i>
+            <svgicon name="arrowright" class="text-white" />
           </a>
         </li>
       </ul>

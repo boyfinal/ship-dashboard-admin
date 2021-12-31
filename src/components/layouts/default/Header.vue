@@ -2,11 +2,9 @@
   <nav class="site-navbar" role="navigation">
     <div class="navbar__header">
       <div class="navbar__header-content">
-        <img
-          class="navbar__header-icon"
-          src="@/assets/img/humbeger-menu.svg"
-          alt="icon"
-        />
+        <div class="navbar__header-icon">
+          <p-svg name="humbeger-menu"></p-svg>
+        </div>
         <div class="navbar__header-title">{{ handleTitle }}</div>
       </div>
       <div class="navbar__header-user d-flex">
@@ -14,7 +12,7 @@
           <span class="mr-2"
             >Xin chào, <b>{{ user.full_name }}</b></span
           >
-          <img src="@/assets/img/dropdown.svg" />
+          <p-svg name="dropdown"></p-svg>
         </div>
         <div
           class="dropdown-menu"
@@ -23,7 +21,9 @@
         >
           <div class="dropdown-content">
             <div class="dropdown-item">
-              <img src="@/assets/img/user.svg" class="navbar__header-icon" />
+              <span class="navbar__header-icon">
+                <p-svg name="user"></p-svg>
+              </span>
               <a
                 href="/profile"
                 aria-current="page"
@@ -32,7 +32,9 @@
               >
             </div>
             <div class="dropdown-item">
-              <img src="@/assets/img/logout.svg" class="navbar__header-icon" />
+              <span class="navbar__header-icon">
+                <p-svg name="logout"></p-svg>
+              </span>
               <a href="/logout" class="nav-item">Đăng xuất</a>
             </div>
           </div>

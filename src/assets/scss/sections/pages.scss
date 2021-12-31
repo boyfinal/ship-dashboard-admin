@@ -43,15 +43,18 @@
     }
     .page-header {}
     .page-content {
-        svg {
-            margin-top: 1rem;
-        }
         .text-no-underline,
         .router-link-active {
             font-weight: 500;
             line-height: 160%;
             color: $color-java-blue-10 !important
         }
+        .on-hover{
+            &:hover{
+                color:#37393E !important;
+            }
+        }
+
         .order-list {
             box-shadow: 0px 4px 32px -14px rgba(0, 0, 0, 0.12);
             border-radius: 20px;

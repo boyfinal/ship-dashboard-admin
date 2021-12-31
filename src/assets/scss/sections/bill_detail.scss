@@ -104,4 +104,13 @@
       }
     }
   }
+  .table-responsive{
+    overflow: revert;
+  }
+  .p-tooltip:after{
+    height: auto;
+    word-break: break-word;
+    width: 250%;
+  }
+
 }

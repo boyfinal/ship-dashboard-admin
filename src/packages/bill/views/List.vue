@@ -20,11 +20,11 @@
           </p-input>
           <div class="ml-8">
             <select v-model="filter.search_by" class="form-control">
-              <option value="id">Mã hoá đơn</option>
-              <option value="code">Mã vận đơn</option>
+              <option value="bill_code">Mã hoá đơn</option>
+              <option value="code">Lionbay tracking</option>
               <option value="customer">Tài khoản Khách hàng</option>
               <option value="customer_full_name">Tên Khách hàng</option>
-              <option value="tracking">Mã tracking</option>
+              <option value="tracking">Last mile tracking</option>
             </select>
           </div>
         </div>
@@ -61,10 +61,10 @@
                           class="text-no-underline"
                           :to="{
                             name: 'bill-detail',
-                            params: { id: item.id },
+                            params: { code: item.code },
                           }"
                         >
-                          {{ item.id }}
+                          {{ item.code }}
                         </router-link>
                       </td>
                       <td>{{ item.customer }}</td>
@@ -128,7 +128,7 @@ export default {
         page: 1,
         limit: 30,
         search: '',
-        search_by: 'id',
+        search_by: 'bill_code',
         status: '',
       },
       isSubmitting: false,
@@ -168,7 +168,7 @@ export default {
         }
 
         return {
-          id: item.id,
+          code: item.code,
           customer: user,
           created_at: item.created_at,
           total_amount: item.shipping_fee + item.extra_fee,
@@ -177,11 +177,11 @@ export default {
     },
     searchPlaceholder() {
       const maptext = {
-        id: 'Tìm theo mã hoá đơn',
-        code: 'Tìm theo mã vận đơn',
+        bill_code: 'Tìm theo mã hoá đơn',
+        code: 'Tìm theo LionBay tracking',
         customer: 'Tìm theo email hoặc sđt của khách hàng',
         customer_full_name: 'Tìm theo tên khách hàng',
-        tracking: 'Tìm theo mã tracking',
+        tracking: 'Tìm theo last mile tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']

@@ -23,7 +23,7 @@
     ></div>
     <slot name="caret" :toggle="toggle">
       <div @mousedown.prevent.stop="toggle()" class="multiselect__select">
-        <img src="@assets/img/Frame.svg" />
+        <p-svg name="Frame"></p-svg>
       </div>
     </slot>
     <slot name="clear" :search="search"></slot>

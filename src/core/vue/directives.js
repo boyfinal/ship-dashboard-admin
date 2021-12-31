@@ -83,6 +83,7 @@ const getFormatStatus = (status) => {
   switch (status) {
     case 'draft':
     case 'awaiting':
+    case 'in-Transit':
       statusClass = 'default'
       break
     case 'process':
@@ -99,20 +100,23 @@ const getFormatStatus = (status) => {
     case 'in-review':
       statusClass = 'info'
       break
-    case 'canceled':
-      statusClass = 'warning'
-      break
+
     case 'inactive':
     case 'rejected':
     case 'withdrew':
+    case 'canceled':
       statusClass = 'danger'
       break
     case 'closed':
       statusClass = 'dark'
       break
+    case 'Hết hạn':
+    case 'expired':
+      statusClass = 'expired'
+      break
     case 'confirm payment':
-    case 'pending':
     case 'unpaid':
+    case 'Pre-Transit':
       statusClass = 'pending'
       break
     case 'partially paid':
@@ -141,16 +145,20 @@ const getFormatStatus = (status) => {
       statusClass = 'default'
       break
     case 'Chờ lấy':
+    case 'pending':
       statusClass = 'await'
       break
     case 'Đã lấy':
     case 'Đã dán nhãn':
     case 'Đang giao':
+    case 'processing':
+    case 'Processing':
       statusClass = 'primary'
       break
     case 'Giao thành công':
     case 'Thành công':
     case 'Xuất kho':
+    case 'delivered':
       statusClass = 'success'
       break
     case 'Trả hàng':
@@ -159,6 +167,7 @@ const getFormatStatus = (status) => {
     case 'Hủy':
     case 'Đã hủy':
     case 'Thất bại':
+    case 'Từ chối':
       statusClass = 'danger'
       break
     case 'Đang xử lý':
@@ -175,6 +184,10 @@ const getFormatStatus = (status) => {
       break
     case 'Hoàn tiền':
       statusClass = 'refund'
+      break
+    case 'alert':
+    case 'Alert':
+      statusClass = 'alert'
       break
   }
 

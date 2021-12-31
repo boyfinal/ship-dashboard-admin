@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
-          placeholder="Tìm theo mã vận đơn ..."
+          placeholder="Tìm theo mã tracking ..."
           prefixIcon="search"
           type="search"
           clearable
@@ -40,7 +40,7 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Trạng thái</th>
                       <th>Thành phố</th>
                       <th>Mã bang</th>
@@ -77,9 +77,11 @@
                         item.code
                       }}</span>
                     </td>
-                    <td
-                      ><span v-status="mapStatus[item.status].value"></span
-                    ></td>
+                    <td>
+                      <span
+                        v-status:status="mapStatus[item.status].value"
+                      ></span>
+                    </td>
                     <td>
                       {{ item.city }}
                     </td>
@@ -112,10 +114,14 @@
                         v-if="item.container_id"
                         :to="{
                           name: 'container-detail',
-                          params: { id: item.container_id },
+                          params: {
+                            code: item.container_code
+                              ? item.container_code
+                              : '',
+                          },
                         }"
                       >
-                        C{{ item.container_id }}
+                        {{ item.container_code ? item.container_code : '' }}
                       </router-link>
                       <span v-else>-</span>
                     </td>
@@ -176,7 +182,7 @@
 </template>
 <script>
 import PackageStatusTab from '../components/PackageStatusTab'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
 import ModalExport from '../components/ModalExport'
@@ -185,18 +191,19 @@ import api from '../api'
 import { date } from '@core/utils/datetime'
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
-  MAP_NAME_STATUS_PACKAGE,
   PACKAGE_WAREHOUSE_STATUS_PICK,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES_IN_WAREHOUSE,
+  COUNT_LIST_PACKAGES_IN_WAREHOUSE,
   EXPORT_WAREHOUSE_PACKAGES,
 } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -232,7 +239,7 @@ export default {
       isVisibleModalCreateLabelPdf: false,
       selected: [],
       searchBy: {
-        code: 'Mã vận đơn',
+        code: 'LionBay tracking',
         order_number: 'Mã đơn hàng',
         recipient: 'Người nhận',
         account: 'Tài khoản khách',
@@ -269,25 +276,46 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      return MAP_NAME_STATUS_PACKAGE
+      return MAP_NAME_STATUS_WAREHOUSE
     },
   },
   methods: {
-    ...mapActions('warehouse', [
-      FETCH_LIST_PACKAGES_IN_WAREHOUSE,
-      EXPORT_WAREHOUSE_PACKAGES,
-    ]),
     truncate,
+
+    ...mapActions('warehouse', {
+      fetchPackages: FETCH_LIST_PACKAGES_IN_WAREHOUSE,
+      exportPackage: EXPORT_WAREHOUSE_PACKAGES,
+    }),
+
+    ...mapMutations('warehouse', {
+      setPackages: FETCH_LIST_PACKAGES_IN_WAREHOUSE,
+      setCount: COUNT_LIST_PACKAGES_IN_WAREHOUSE,
+    }),
+
     async init() {
+      this.setPackages([])
+      this.setCount({
+        count: 0,
+        status_count: [{ status: 0, count: 0 }],
+      })
+
+      if (!this.filter.search) {
+        return
+      }
+
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.keywordSearch = this.filter.search.trim()
-      const result = await this[FETCH_LIST_PACKAGES_IN_WAREHOUSE](this.filter)
+
+      const result = await this.fetchPackages(this.filter)
+
       this.isFetching = false
+
       if (!result || !result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
+
     acceptHandle(code) {
       this.$router.push({ name: 'check-package', query: { keyword: code } })
     },
@@ -316,7 +344,7 @@ export default {
     },
     async handleExport(payload) {
       this.isExporting = true
-      const result = await this[EXPORT_WAREHOUSE_PACKAGES](payload)
+      const result = await this.exportPackage(payload)
       this.isExporting = false
 
       if (!result.success) {

@@ -18,7 +18,7 @@
   >
     <slot name="caret" :toggle="toggle">
       <div @mousedown.prevent.stop="toggle()" class="multiselect__select">
-        <img src="@assets/img/dropdown.svg" />
+        <p-svg name="dropdown"></p-svg>
       </div>
     </slot>
     <div ref="tags" class="multiselect__tags">

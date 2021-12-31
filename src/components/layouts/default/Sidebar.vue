@@ -1,7 +1,9 @@
 <template>
   <div class="site-menubar">
     <div class="site-menubar-header">
-      <img src="~@/assets/img/logo.svg" alt="lionbay" class="logo-header" />
+      <span class="logo-header">
+        <p-svg name="logo"></p-svg>
+      </span>
     </div>
     <div class="site-menubar-body">
       <ul class="site-menu">
@@ -14,18 +16,17 @@
           :key="i"
         >
           <router-link :to="handelRouter(menu)">
-            <img class="site-menu-icon default" :src="menu.icon" />
-            <img class="site-menu-icon active" :src="menu.iconActive" />
+            <span class="site-menu-icon">
+              <p-svg :name="menu.icon"></p-svg>
+            </span>
             <span class="site-menu-title" @click="menu.isOpen = !menu.isOpen">{{
               menu.title
             }}</span>
             <div class="icon-sub" @click="menu.isOpen = !menu.isOpen">
-              <img
+              <p-svg
                 :class="{ 'is-active': menu.isOpen }"
-                class=""
-                v-if="menu.sub.length"
-                src="@/assets/img/up-white.svg"
-              />
+                name="up-white"
+              ></p-svg>
             </div>
           </router-link>
           <div
@@ -59,8 +60,6 @@
     </div>
   </div>
 </template>
-
-<style></style>
 
 <script>
 import { isObject } from '@core/utils/type'
@@ -97,7 +96,7 @@ export default {
     return {
       hoverIndex: -1,
       chooseShop: {
-        icon: require('@assets/img/shopping-bag.svg'),
+        icon: 'shopping-bag',
       },
       isActiveSub: false,
       activeSubIndex: 0,
@@ -106,8 +105,8 @@ export default {
       menus: [
         {
           title: 'Quản lý ',
-          icon: require('@assets/img/OrderInactive.svg'),
-          iconActive: require('@assets/img/OrderActive.svg'),
+          icon: 'OrderInactive',
+          iconActive: 'OrderActive',
           route: { name: 'packages' },
           class: '',
           isOpen: false,
@@ -121,11 +120,11 @@ export default {
             {
               route: '/bills',
               title: 'Hóa đơn',
-              alias: ['/bills', '/bills/:id'],
+              alias: ['/bills', '/bills/:code'],
             },
             {
               route: '/transactions',
-              title: 'Lịch sử giao dịch',
+              title: 'Thanh toán ',
               alias: ['/transactions', '/transactions/:id'],
             },
             {
@@ -142,40 +141,42 @@ export default {
         },
         {
           title: 'Vận chuyển',
-          icon: require('@assets/img/car.svg'),
-          iconActive: require('@assets/img/carActive.svg'),
+          icon: 'car',
+          iconActive: 'carActive',
           route: { name: 'deliver' },
           class: '',
           sub: [],
         },
         {
           title: 'Kho',
-          icon: require('@assets/img/warehouse.svg'),
-          iconActive: require('@assets/img/warehouseActive.svg'),
+          icon: 'warehouse',
+          iconActive: 'warehouseActive',
           route: '/bill',
           class: '',
           isOpen: false,
-          disable: this.$isAccountant() || this.$isSupport(),
+          disable: this.$isSupport(),
           sub: [
             {
               route: '/warehouse',
-              title: 'Danh sách kho',
+              title: 'Tra cứu kho',
               alias: ['/warehouse'],
+              disable: this.$isAccountant(),
             },
             {
-              route: '/warehouse/check-in',
-              title: 'Quét nhận hàng',
-              alias: ['/warehouse/check-in'],
+              route: '/warehouse/scan-in',
+              title: 'Quét nhận kho',
+              alias: ['/warehouse/scan-in'],
             },
             {
               route: '/warehouse/check-package',
-              title: 'Quét kiểm hàng',
+              title: 'Dán nhãn',
               alias: ['/warehouse/check-package'],
+              disable: this.$isAccountant(),
             },
             {
               route: '/containers',
               title: 'Kiện hàng',
-              alias: ['/containers', '/containers/:id'],
+              alias: ['/containers', '/containers/:code'],
             },
             {
               route: '/shipments',
@@ -186,8 +187,8 @@ export default {
         },
         {
           title: 'Quản trị',
-          icon: require('@assets/img/Setting.svg'),
-          iconActive: require('@assets/img/SettingActive.svg'),
+          icon: 'Setting',
+          iconActive: 'SettingActive',
           route: { name: 'setting' },
           class: '',
           isOpen: false,

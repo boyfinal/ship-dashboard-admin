@@ -1,20 +1,36 @@
 <template>
-  <div class="list-packages pages">
+  <div class="list-packages pages page__container">
     <div class="page-content">
-      <div class="mb-12">
-        <div class="d-flex jc-sb" id="search-box">
-          <p-input
-            placeholder="Tìm theo mã kiện, nhãn kiện hoặc mã vận đơn"
-            prefixIcon="search"
-            type="search"
-            :value="filter.search"
-            @keyup.enter="handleSearch"
-          >
-          </p-input>
-          <p-button type="info" @click="CreateContainerHandle">
-            <p-icon name="plus"></p-icon>
-            Tạo kiện hàng
-          </p-button>
+      <div class="mb-12 ">
+        <div class="d-flex jc-sb row" id="search-box">
+          <div class="page__container-warehouses col-6">
+            <button
+              v-for="(warehouse, i) in wareHouses"
+              :key="i"
+              :class="{ active: warehouse.id == filter.warehouse }"
+              @click="handleFilter(warehouse.id)"
+              class="choose-warehouse btn btn-default mr-8 mb-8"
+            >
+              HUB {{ warehouse ? warehouse.state : '' }}
+            </button>
+          </div>
+          <div class="page__container-search d-flex jc-sb col-6 ">
+            <p-input
+              placeholder="Tìm theo mã kiện, nhãn kiện hoặc LionBay tracking"
+              prefixIcon="search"
+              type="search"
+              class="mr-8"
+              clearable
+              :value="filter.search"
+              @keyup.enter="handleSearch"
+              @clear="clearSearch"
+            >
+            </p-input>
+            <p-button type="info" @click="CreateContainerHandle">
+              <svgicon name="plus" class="text-white add_container" />
+              Tạo kiện hàng
+            </p-button>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -39,7 +55,7 @@
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
                       <th class="text-center">Số lượng đơn</th>
-                      <th>Kho</th>
+                      <th class="text-center">Tổng cân nặng</th>
                       <th>Trạng thái</th>
                     </template>
                   </tr>
@@ -52,22 +68,22 @@
                         :to="{
                           name: 'container-detail',
                           params: {
-                            id: item.id,
+                            code: item.code ? item.code : '',
                           },
                         }"
                       >
-                        C{{ item.id }}
+                        {{ item.code ? item.code : '' }}
                       </router-link>
                       <span
                         class="page-header__barcode"
                         @click="printBarcode(item.barcode)"
                       >
-                        <img src="@/assets/img/barcode.svg" alt="barcode" />
+                        <p-svg name="barcode"></p-svg>
                       </span>
                     </td>
                     <td>
                       <a
-                        class="text-no-underline"
+                        class="text-no-underline on-hover"
                         v-if="item.tracking_number"
                         href="javascript:void(0)"
                         @click="downloadLabel(item.label_url)"
@@ -98,11 +114,7 @@
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
-                    <td
-                      >{{ item.warehouse ? item.warehouse.name : '' }} ({{
-                        item.warehouse ? item.warehouse.state : ''
-                      }})</td
-                    >
+                    <td class="text-center">{{ item.weight }}</td>
                     <td>
                       <span
                         class="badge badge-round"
@@ -175,6 +187,7 @@ export default {
         page: 1,
         status: '',
         search: '',
+        warehouse: 1,
       },
       isFetching: false,
       visibleModalChoiceBox: false,
@@ -314,6 +327,10 @@ export default {
       })
       this.init()
     },
+    handleFilter(id) {
+      this.filter.page = 1
+      this.filter.warehouse = id
+    },
   },
   watch: {
     filter: {
@@ -325,9 +342,4 @@ export default {
   },
 }
 </script>
-<style>
-#search-box .input-group {
-  margin-right: 10px;
-  width: 85%;
-}
-</style>
+<style></style>

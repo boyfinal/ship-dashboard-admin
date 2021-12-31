@@ -116,7 +116,7 @@
                             },
                           }"
                         >
-                          Lịch sử
+                          Thanh toán
                         </router-link>
                         <a
                           href="#"

@@ -3,7 +3,7 @@ export const routes = [
     path: '/warehouse',
     name: 'list-package-in-warehouse',
     meta: {
-      title: 'Danh sách kho',
+      title: 'Tra cứu kho',
     },
     component: () =>
       import(
@@ -14,7 +14,7 @@ export const routes = [
     path: '/warehouse/check-package',
     name: 'check-package',
     meta: {
-      title: 'Quét kiểm hàng',
+      title: 'Quét in label',
     },
     component: () =>
       import(/* webpackChunkName: "warehouse" */ './views/CheckPackage'),
@@ -27,5 +27,14 @@ export const routes = [
     },
     component: () =>
       import(/* webpackChunkName: "warehouse" */ './views/ScanInWarehouse'),
+  },
+  {
+    path: '/warehouse/scan-in',
+    name: 'scan-in',
+    meta: {
+      title: 'Quét nhận kho',
+    },
+    component: () =>
+      import(/* webpackChunkName: "warehouse" */ './views/ScanIn'),
   },
 ]

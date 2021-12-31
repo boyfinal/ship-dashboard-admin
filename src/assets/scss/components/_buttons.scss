@@ -104,3 +104,39 @@ $color in $theme-colors {
         border-color: $color;
     }
 }
+.btn-white {
+    background-color: #fff;
+    color: #626363;
+}
+.btn-inline-info {
+    background-color: #ddf2f2;
+    border: none;
+    color: #00978c;
+    &:disabled,
+    &.disabled {
+        background-color: #f9fdfe;
+        color: #a9e0de;
+    }
+    &:hover,
+    &:focus,
+    &.focus {
+        background-color: #c0f3f3;
+        color: #00978c;
+    }
+}
+.btn-inline-danger {
+    background-color: #fff1f0;
+    border: none;
+    color: #f5222d;
+    &:disabled,
+    &.disabled {
+        background-color: #fff1f1;
+        color: #ff5555;
+    }
+    &:hover,
+    &:focus,
+    &.focus {
+        background-color: #ffd6d6;
+        color: #ff5555;
+    }
+}

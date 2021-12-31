@@ -4,11 +4,9 @@
       <div class="page-header">
         <div class="page-header_back">
           <router-link :to="{ name: 'list-shipment' }" class="text">
-            <img
-              src="@/assets/img/chevron-left.svg"
-              alt=""
-              class="page-header_back_icon"
-            />
+            <span class="page-header_back_icon">
+              <p-svg name="chevron-left"></p-svg>
+            </span>
             <span>Lô hàng</span>
           </router-link>
         </div>
@@ -64,8 +62,16 @@
               @click="handleAppendShipment"
               v-if="!isClosedShipment && !isCanceledShipment"
             >
-              <img src="@/assets/img/plus_blue.svg" />
+              <p-svg name="plus_blue"></p-svg>
               Thêm
+            </p-button>
+            <p-button
+              type="info"
+              v-if="!isClosedShipment && !isCanceledShipment"
+              :class="'btn-add-container ml-3'"
+              @click="handleShowModalListContainer"
+            >
+              Danh sách
             </p-button>
           </div>
           <div
@@ -76,12 +82,15 @@
               type="info"
               class="mr-3"
               v-if="!isStartScan"
-              @click="handleStartScan"
+              @click.prevent="handleStartScan"
             >
               Bắt đầu quét
             </p-button>
-            <p-button type="info" class="mr-3" v-else @click="handleStopScan"
-              >Dừng quét</p-button
+            <button
+              class="btn-info btn mr-3"
+              v-else
+              @click.prevent="handleStopScan"
+              >Dừng quét</button
             >
             <p-button
               type="info"
@@ -134,7 +143,7 @@
                           :to="{
                             name: 'container-detail',
                             params: {
-                              id: item.id,
+                              code: item.code,
                             },
                           }"
                         >
@@ -144,12 +153,85 @@
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
                         <a
-                          class="text-no-underline"
+                          class="text-no-underline mr-2"
                           v-if="item.tracking_number"
                           href="javascript:void(0)"
-                          @click="downloadLabel(item.label_url)"
                           >{{ item.tracking_number }}</a
                         >
+
+                        <span class="svg" v-if="item.tracking_number">
+                          <p-tooltip
+                            class="item_name"
+                            :label="` Download `"
+                            position="top"
+                            type="dark"
+                          >
+                            <a
+                              href="javascript:void(0)"
+                              @click="downloadLabel(item.label_url)"
+                            >
+                              <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <circle cx="16" cy="16" r="16" fill="none" />
+                                <path
+                                  fill-rule="evenodd"
+                                  clip-rule="evenodd"
+                                  d="M8.00002 19.264V12.728C8.00002 9.904 9.81682 8 12.528 8H19.464C22.176 8 24 9.904 24 12.728V19.264C24 22.096 22.176 24 19.464 24H12.528C9.81682 24 8.00002 22.096 8.00002 19.264ZM16.6 17.816V12.736C16.6 12.4 16.328 12.136 16 12.136C15.664 12.136 15.4 12.4 15.4 12.736V17.816L13.424 15.832C13.312 15.72 13.152 15.656 13 15.656C12.8488 15.656 12.696 15.72 12.576 15.832C12.344 16.064 12.344 16.448 12.576 16.68L15.576 19.696C15.8 19.92 16.2 19.92 16.424 19.696L19.424 16.68C19.656 16.448 19.656 16.064 19.424 15.832C19.184 15.6 18.808 15.6 18.568 15.832L16.6 17.816Z"
+                                  fill="#313232"
+                                />
+                              </svg>
+                            </a>
+                          </p-tooltip>
+                        </span>
+
+                        <span class="svg" v-if="item.tracking_number">
+                          <p-tooltip
+                            class="item_name"
+                            :label="` Track `"
+                            position="top"
+                            type="dark"
+                          >
+                            <a
+                              target="_blank"
+                              :href="
+                                `https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`
+                              "
+                            >
+                              <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <circle cx="16" cy="16" r="16" fill="none" />
+                                <g clip-path="url(#clip0_382_4459)">
+                                  <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M12.0682 18.9542L8.14707 17.6451C7.95102 17.5204 7.95102 17.3957 8.14707 17.2711L23.4723 8.04502C23.6356 7.95151 23.701 8.01385 23.7337 8.13853L23.9951 22.5074C24.0278 22.7568 23.8971 22.8815 23.6356 22.7568L18.2114 20.9802L16.4795 23.9101C16.4142 24.0347 16.2508 24.0347 16.2508 23.8789L15.7607 20.0763L21.7404 11.5671L14.8784 18.2373C14.1268 18.9542 13.2119 19.2035 12.0682 18.9542Z"
+                                    fill="#313232"
+                                  />
+                                </g>
+                                <defs>
+                                  <clipPath id="clip0_382_4459">
+                                    <rect
+                                      width="16"
+                                      height="16"
+                                      fill="white"
+                                      transform="translate(8 8)"
+                                    />
+                                  </clipPath>
+                                </defs>
+                              </svg>
+                            </a>
+                          </p-tooltip>
+                        </span>
                       </td>
                       <td>{{
                         item.container_items ? item.container_items.length : '0'
@@ -189,6 +271,13 @@
         </div>
       </div>
     </div>
+    <modal-list-container
+      :visible.sync="isShowModalListContainer"
+      :warehouse="shipment.warehouse_id"
+      :loading="loading"
+      @save="handleAddContainer"
+    >
+    </modal-list-container>
   </div>
 </template>
 
@@ -204,7 +293,9 @@ import {
   CLOSE_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
   EXPORT_SHIPMENT,
+  APPEND_CONTAINERS_SHIPMENT,
 } from '../store'
+import ModalListContainer from '../components/ModalListContainer'
 import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -220,6 +311,7 @@ export default {
   mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
   components: {
     EmptySearchResult,
+    ModalListContainer,
   },
   data() {
     return {
@@ -233,6 +325,7 @@ export default {
       isStartScan: false,
       loading: false,
       ShipmentClosed: ShipmentClosed,
+      isShowModalListContainer: false,
     }
   },
   computed: {
@@ -261,6 +354,7 @@ export default {
     ...mapActions('shipment', [
       FETCH_SHIPMENT_DETAIL,
       APPEND_SHIPMENT,
+      APPEND_CONTAINERS_SHIPMENT,
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
@@ -437,6 +531,27 @@ export default {
         'danh_sach_don_hang_'
       )
     },
+    handleShowModalListContainer() {
+      this.isShowModalListContainer = true
+    },
+    async handleAddContainer(ids) {
+      this.loading = true
+      const payload = {
+        container_ids: ids,
+        shipment_id: parseInt(this.$route.params.id),
+      }
+      const result = await this[APPEND_CONTAINERS_SHIPMENT](payload)
+      this.loading = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      this.$toast.open({
+        message: `Thêm kiện hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
   },
   watch: {
     filter: {
@@ -481,7 +596,7 @@ export default {
   display: flex;
 }
 .shipment-detail .page-header__info .input-group {
-  width: calc(100% - 100px);
+  width: calc(100% - 195px);
 }
 .shipment-detail .btn-cancel-container {
   padding: 6px 16px;
@@ -506,5 +621,23 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
+}
+#tbl-packages svg {
+  margin-top: 0;
+}
+#tbl-packages .svg {
+  opacity: 0;
+}
+#tbl-packages tr:hover .svg {
+  opacity: 1;
+}
+#tbl-packages tr:hover .svg svg:hover circle {
+  fill: #e1f7fc;
+}
+#tbl-packages tr:hover .svg svg:hover path {
+  fill: #20bddb;
+}
+#tbl-packages .p-tooltip::after {
+  width: auto;
 }
 </style>

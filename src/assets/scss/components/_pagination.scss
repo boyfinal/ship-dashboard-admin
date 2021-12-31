@@ -224,8 +224,25 @@
         .page-link{
           background-color: unset;
         }
+        svg{
+         path{
+           stroke: $color-neutral-4;
+         }
+        }
+      }
+      .page-link{
+        padding: 3px 0 0px 9px;
+      }
+      &.button-left{
+        svg{
+          transform: rotate(180deg);
+        }
+        .disabled{
+
+        }
       }
     }
+
     .page-link:focus {
       outline-style: none;
       box-shadow: none;

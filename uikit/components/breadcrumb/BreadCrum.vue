@@ -7,7 +7,7 @@
     <li :key="i" v-for="(crumb, i) in crumbs" style="display:inline-block">
       <router-link v-if="i < crumbs.length - 1" :to="crumb.path"
         >{{ crumb.name }}
-        <img src="./arrow right.svg" alt="" />
+        <IconArrorRight />
       </router-link>
       <span class="last" v-else style="cursor:default">{{ crumb.name }}</span>
     </li></ul
@@ -15,8 +15,11 @@
 </template>
 
 <script>
+import IconArrorRight from './arrow right.svg'
+
 export default {
   name: 'VsCrumbs',
+  components: { IconArrorRight },
   props: { root: String },
   computed: {
     crumbs: function() {

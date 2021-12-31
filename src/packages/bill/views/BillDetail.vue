@@ -17,7 +17,7 @@
           <div class="bill__detail-title">Ngày tạo:</div>
           <div class="bill__detail-title">Tên khách hàng</div>
           <div class="bill__detail-title">Tổng hóa đơn</div>
-          <div class="bill__detail-code">{{ bill.id }}</div>
+          <div class="bill__detail-code">{{ bill.code }}</div>
           <div class="bill__detail-date">{{
             bill.created_at | date('dd/MM/yyyy HH:mm:ss')
           }}</div>
@@ -39,7 +39,7 @@
     </div>
     <div class="page-content">
       <div class="row">
-        <div class="col-12  item-gutters ">
+        <div class="col-12  item-gutters " v-if="feeCreate.length">
           <div class="card-block ">
             <div class="card-header ">
               <div class="card-title">Phí vận đơn</div>
@@ -69,7 +69,8 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
+                      <th>Last mile tracking</th>
                       <th>Phí giao</th>
                     </tr>
                   </thead>
@@ -85,13 +86,15 @@
                             },
                           }"
                         >
-                          {{ item.package_code.code }}
-                          <img
-                            class="link-icon"
-                            src="@/assets/img/external.svg"
-                          />
+                          {{ item.package_code ? item.package_code.code : '' }}
+                          <span class="link-icon">
+                            <p-svg name="external"></p-svg>
+                          </span>
                         </router-link>
                       </td>
+                      <td>{{
+                        item.tracking ? item.tracking.tracking_number : ``
+                      }}</td>
                       <td>{{ item.shipping_fee | formatPrice }}</td>
                     </tr>
                   </tbody>
@@ -100,7 +103,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12  item-gutters ">
+        <div class="col-12  item-gutters " v-if="feeExtra.length">
           <div class="card-block ">
             <div class="card-header">
               <div class="card-title">Phí phát sinh</div>
@@ -130,7 +133,7 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Mã vận đơn</th>
+                      <th>LionBay tracking</th>
                       <th>Thời gian</th>
                       <th>Phí phát sinh</th>
                       <th>Loại phí</th>
@@ -157,11 +160,14 @@
                             },
                           }"
                         >
-                          {{ item.package.package_code.code }}
-                          <img
-                            class="link-icon"
-                            src="@/assets/img/external.svg"
-                          />
+                          {{
+                            item.package.package_code
+                              ? item.package.package_code.code
+                              : ''
+                          }}
+                          <span class="link-icon">
+                            <p-svg name="external"></p-svg>
+                          </span>
                         </router-link>
                       </td>
                       <td>{{
@@ -172,7 +178,17 @@
                       >
                       <td v-else>{{ item.amount | formatPrice }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
-                      <td>{{ item.description }}</td>
+                      <td>
+                        <p-tooltip
+                          :label="item.description"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.description.length > 15"
+                        >
+                          {{ truncate(item.description, 15) }}
+                        </p-tooltip>
+                      </td>
                       <td
                         v-if="
                           user.role == ROLE_ADMIN ||
@@ -210,6 +226,8 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { truncate } from '@core/utils/string'
+
 import {
   FETCH_BILL_DETAIL,
   FETCH_BILL_EXTRA,
@@ -267,8 +285,8 @@ export default {
     },
   },
   created() {
-    this.filterExtra.id = this.$route.params.id
-    this.filter.id = this.$route.params.id
+    this.filterExtra.code = this.$route.params.code
+    this.filter.code = this.$route.params.code
     this.init()
   },
   methods: {
@@ -278,6 +296,7 @@ export default {
       CANCEL_EXTRA_FEE,
       EXPORT_BILL,
     ]),
+    truncate,
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -342,10 +361,9 @@ export default {
       this.idExtra = id
     },
     async handleCancel() {
-      let { id } = this.$route.params
       let params = {
         id_extra: this.idExtra,
-        id: id,
+        id: this.bill.id,
       }
       let res = await this[CANCEL_EXTRA_FEE](params)
       if (!res.success) {

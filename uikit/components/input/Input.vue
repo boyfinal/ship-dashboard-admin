@@ -16,10 +16,11 @@
         :class="`wb-${suffixIcon}`"
       ></i>
       <i
-        class="form-control-icon form-control-icon-right wb-close"
+        class="form-control-icon form-control-icon-right "
         v-else-if="isShowClear"
         @click="clear"
       >
+        <p-svg name="x-sm"> </p-svg>
       </i>
       <input
         :class="formControlClasses"
@@ -44,18 +45,14 @@
       <div class="input-group-prepend" v-if="$slots.prepend">
         <slot name="prepend"></slot>
       </div>
-      <img
+
+      <p-svg
+        name="calendar"
         v-if="hiddenPass == 'on'"
         class="form-control-icon form-control-icon-right"
-        :src="
-          `${
-            typeInputPassword == 'password'
-              ? require('@assets/img/eye.svg')
-              : require('@assets/img/eye-close.svg')
-          }`
-        "
+        :src="`${typeInputPassword == 'password' ? 'eye' : 'eye-close'}`"
         @click.prevent="togglePasswordVisibelity()"
-      />
+      ></p-svg>
 
       <input
         :class="formControlClasses"
@@ -97,25 +94,26 @@
         <slot name="prepend"></slot>
       </div>
 
-      <img
+      <p-svg
+        name="search"
         class="form-control-icon form-control-icon-left"
         v-if="prefixIcon"
-        src="@assets/img/search.svg"
-      />
+      ></p-svg>
 
-      <img
+      <p-svg
+        name="search"
         class="form-control-icon form-control-icon-right"
         v-if="suffixIcon"
-        src="@assets/img/search.svg"
         style="cursor: pointer"
         @click="suffixFunc"
-      />
+      ></p-svg>
 
       <i
-        class="form-control-icon form-control-icon-right wb-close"
+        class="form-control-icon form-control-icon-right "
         v-else-if="isShowClear"
         @click="clear"
       >
+        <p-svg name="x-sm"> </p-svg>
       </i>
 
       <input
@@ -144,8 +142,10 @@
 </template>
 <script>
 import FormElementMixin from '../../mixins/FormElement'
+import PSvg from '../svg/svg'
 export default {
   name: 'PInput',
+  components: { PSvg },
   inheritAttrs: false,
   mixins: [FormElementMixin],
   props: {
