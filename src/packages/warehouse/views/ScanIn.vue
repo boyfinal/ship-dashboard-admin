@@ -322,7 +322,7 @@ export default {
         this.current &&
         this.current.id &&
         !this.isFetching &&
-        this.status == PACKAGE_STATUS_PENDING_PICKUP
+        this.current.status == PACKAGE_STATUS_PENDING_PICKUP
       )
     },
     codecurrent() {
