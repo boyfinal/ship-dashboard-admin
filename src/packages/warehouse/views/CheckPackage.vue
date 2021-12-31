@@ -351,7 +351,6 @@ export default {
         this.$toast.error(res.message)
         return
       }
-      console.log(this.current)
       this.volume.weight = this.current.tracking
         ? this.current.actual_weight
         : this.current.weight
@@ -372,15 +371,12 @@ export default {
         return
       }
 
-      this.isChange = false
-
       if (
         parseFloat(this.volume.weight) != parseFloat(this.current.weight) ||
         parseFloat(this.volume.length) != parseFloat(this.current.length) ||
         parseFloat(this.volume.width) != parseFloat(this.current.width) ||
         parseFloat(this.volume.height) != parseFloat(this.current.height)
       ) {
-        this.isChange = true
         this.extraHandle()
         return
       }
@@ -463,12 +459,10 @@ export default {
         warehouse: warehouse,
       }
 
-      if (this.isChange) {
-        body.weight = this.volume.weight || 0
-        body.length = this.volume.length || 0
-        body.width = this.volume.width || 0
-        body.height = this.volume.height || 0
-      }
+      body.weight = this.volume.weight || 0
+      body.length = this.volume.length || 0
+      body.width = this.volume.width || 0
+      body.height = this.volume.height || 0
 
       const res = await this.acceptPackageSubmit(body)
       this.isSubmitting = false
