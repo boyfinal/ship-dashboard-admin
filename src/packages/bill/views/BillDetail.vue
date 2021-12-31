@@ -39,7 +39,7 @@
     </div>
     <div class="page-content">
       <div class="row">
-        <div class="col-12  item-gutters ">
+        <div class="col-12  item-gutters " v-if="feeCreate.length">
           <div class="card-block ">
             <div class="card-header ">
               <div class="card-title">Phí vận đơn</div>
@@ -103,7 +103,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12  item-gutters ">
+        <div class="col-12  item-gutters " v-if="feeExtra.length">
           <div class="card-block ">
             <div class="card-header">
               <div class="card-title">Phí phát sinh</div>
