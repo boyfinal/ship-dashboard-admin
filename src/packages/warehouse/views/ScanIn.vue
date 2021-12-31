@@ -256,7 +256,7 @@ import {
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
 } from '../constants'
-import { MAP_NAME_STATUS_PACKAGE } from '../../package/constants'
+import { MAP_NAME_STATUS_WAREHOUSE } from '../../package/constants'
 
 export default {
   name: 'CheckPackage',
@@ -318,7 +318,12 @@ export default {
       )
     },
     isHasUpdate() {
-      return this.current && this.current.id && !this.isFetching
+      return (
+        this.current &&
+        this.current.id &&
+        !this.isFetching &&
+        this.status == PACKAGE_STATUS_PENDING_PICKUP
+      )
     },
     codecurrent() {
       return !this.current || !this.current.package_code
@@ -343,7 +348,13 @@ export default {
       return this.packages.length
     },
     currentStatus() {
-      return (MAP_NAME_STATUS_PACKAGE[this.current.status] || {}).value
+      const allstatus = MAP_NAME_STATUS_WAREHOUSE
+      allstatus[PACKAGE_STATUS_PENDING_PICKUP] = {
+        value: 'Pre-Transit',
+        class: 'badge-default',
+      }
+
+      return (allstatus[this.current.status] || {}).value
     },
   },
   data() {
@@ -381,6 +392,21 @@ export default {
 
     async stopHandle() {
       if (this.isFetching || this.isSubmitting) return
+
+      if (this.hasAccept && !this.iscaned) {
+        if (!this.hasChange) {
+          await this.acceptSubmit()
+        } else {
+          try {
+            const result = await this.confirmHandle()
+            if (!result) return
+
+            await this.acceptSubmit()
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
 
       const res = await this.closeCheckinRequest({ id: this.checkinRequestId })
 
@@ -677,9 +703,8 @@ export default {
         return
       }
 
-      this.addToAnalytics('returned')
+      this.iscaned = true
       this.isSubmitting = false
-
       this.updateStauts(PACKAGE_WAREHOUSE_STATUS_RETURN)
 
       this.$toast.success(`Mã ${this.codecurrent} trả hàng thành công`)

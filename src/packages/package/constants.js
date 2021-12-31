@@ -127,11 +127,11 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   },
   [PackageStatusProcessingText]: {
     value: 'processing',
-    class: 'badge-success',
+    class: 'badge-primary',
   },
   [PackageStatusInTransitText]: {
     value: 'in-Transit',
-    class: 'badge-success',
+    class: 'badge-default',
   },
   [PackageStatusDeliveredText]: {
     value: 'delivered',
@@ -139,15 +139,15 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   },
   [PackageStatusAlertText]: {
     value: 'alert',
-    class: 'badge-success',
+    class: 'badge-alert',
   },
   [PackageStatusCancelledText]: {
     value: 'canceled',
-    class: 'badge-success',
+    class: 'badge-danger',
   },
   [PackageStatusExpiredText]: {
     value: 'expired',
-    class: 'badge-success',
+    class: 'badge-expired',
   },
 }
 
@@ -207,7 +207,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   },
   [PackageStatusWareHouseInShipment]: {
     value: 'Đóng lô',
-    class: 'badge-success',
+    class: 'badge-primary',
   },
   [PackageStatusInTransit]: {
     value: 'Xuất kho',
@@ -215,11 +215,11 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   },
   [PackageStatusAlert]: {
     value: 'Trả hàng',
-    class: 'badge-success',
+    class: 'badge-alert',
   },
   [PackageStatusCancelled]: {
     value: 'Đã hủy',
-    class: 'badge-success',
+    class: 'badge-danger',
   },
   [PackageStatusDelivered]: {
     value: 'Xuất kho',
