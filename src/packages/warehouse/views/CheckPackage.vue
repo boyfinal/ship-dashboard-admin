@@ -468,10 +468,10 @@ export default {
         warehouse: warehouse,
       }
 
-      body.weight = this.volume.weight || 0
-      body.length = this.volume.length || 0
-      body.width = this.volume.width || 0
-      body.height = this.volume.height || 0
+      body.weight = parseFloat(this.volume.weight) || 0
+      body.length = parseFloat(this.volume.length) || 0
+      body.width = parseFloat(this.volume.width) || 0
+      body.height = parseFloat(this.volume.height) || 0
 
       const res = await this.acceptPackageSubmit(body)
       this.isSubmitting = false
