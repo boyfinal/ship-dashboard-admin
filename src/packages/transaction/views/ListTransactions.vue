@@ -41,7 +41,13 @@
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="transactions.length">
             <div class="table-responsive">
-              <table class="table table-hover" id="tbl-packages">
+              <table
+                class="table table-hover"
+                id="tbl-packages"
+                :class="{
+                  responsive: this.filter.type == 2 || filter.type == 4,
+                }"
+              >
                 <thead>
                   <tr>
                     <template>
@@ -49,7 +55,7 @@
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
-                      <th width="300">Nội dung</th>
+                      <th class="content">Nội dung</th>
                       <th>Hình thức</th>
                       <th>Giá trị</th>
                       <th>Thao tác</th>
@@ -109,7 +115,7 @@
                           @input="onChangeAmount($event, item)"
                         />
                       </div>
-                      <span v-else style="white-space: nowrap;"
+                      <span v-else style="white-space: nowrap"
                         >{{ item.type === typePay ? '-' : '+' }}
                         {{ Math.abs(item.amount) | formatPrice }}</span
                       >
@@ -265,7 +271,7 @@ export default {
     },
     getPlaceHolder() {
       switch (this.filter.search_by) {
-        case 'bill_id':
+        case 'bill_code':
           return 'Tìm theo mã hóa đơn'
         case 'account':
           return 'Tìm theo email hoặc số điện thoại khách hàng'
@@ -460,8 +466,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @media screen and (max-width: 1400px) {
+  .responsive {
+    .content {
+      width: 300px;
+    }
+    .btn-action {
+      min-width: 10px !important;
+    }
+  }
   .btn-action {
     min-width: 180px;
   }
