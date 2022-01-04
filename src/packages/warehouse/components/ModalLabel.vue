@@ -11,7 +11,7 @@
         <p-upload v-model="file" :accept="accept">
           <div class="btn btn-primary">
             <div class="upload">
-              <p-icon name="upload"></p-icon>
+              <svgicon name="import-excel"></svgicon>
               <span class="ml-10">Chọn file</span>
             </div>
           </div>
