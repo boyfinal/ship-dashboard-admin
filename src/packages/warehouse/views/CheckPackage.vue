@@ -354,18 +354,22 @@ export default {
         this.$toast.error(res.message)
         return
       }
-      this.volume.weight = this.current.tracking
-        ? this.current.actual_weight
-        : this.current.weight
-      this.volume.length = this.current.tracking
-        ? this.current.actual_length
-        : this.current.length
-      this.volume.width = this.current.tracking
-        ? this.current.actual_width
-        : this.current.width
-      this.volume.height = this.current.tracking
-        ? this.current.actual_height
-        : this.current.height
+      this.volume.weight =
+        this.current.actual_weight > 0
+          ? this.current.actual_weight
+          : this.current.weight
+      this.volume.length =
+        this.current.actual_length > 0
+          ? this.current.actual_length
+          : this.current.length
+      this.volume.width =
+        this.current.actual_width > 0
+          ? this.current.actual_width
+          : this.current.width
+      this.volume.height =
+        this.current.actual_height > 0
+          ? this.current.actual_height
+          : this.current.height
     },
 
     quickAcceptHandle() {
