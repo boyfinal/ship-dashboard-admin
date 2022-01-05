@@ -51,12 +51,13 @@
                       <th>Mã kiện</th>
                       <th>Nhãn kiện</th>
                       <th>Mã lô</th>
-                      <th>Kích thước</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
+                      <th>Kích thước</th>
                       <th class="text-center">Số lượng đơn</th>
                       <th class="text-center">Tổng cân nặng</th>
                       <th>Trạng thái</th>
+                      <th>Hành động</th>
                     </template>
                   </tr>
                 </thead>
@@ -102,15 +103,15 @@
                         {{ item.shipment_id }}
                       </router-link>
                     </td>
-                    <td
-                      >{{ item.length }} x {{ item.width }} x
-                      {{ item.height }}</td
-                    >
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td v-if="isCloseContainer(item)">{{
                       item.updated_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
+                    <td
+                      >{{ item.length }} x {{ item.width }} x
+                      {{ item.height }}</td
+                    >
                     <td class="text-center">{{
                       item.container_items ? item.container_items.length : '0'
                     }}</td>
@@ -121,6 +122,14 @@
                         :class="mapStatus[item.status].class"
                         >{{ mapStatus[item.status].value }}</span
                       >
+                    </td>
+                    <td>
+                      <p-button
+                        class="btn btn-info ml-3 text-nowrap"
+                        @click="showHistoryContainer(item)"
+                      >
+                        Xem lịch sử
+                      </p-button>
                     </td>
                   </tr>
                 </tbody>
@@ -150,6 +159,11 @@
       :loading="loadingCreateContainer"
     >
     </modal-choice-shipping-box>
+    <modal-history-container
+      :visible.sync="visibleModalHistory"
+      :histories="containerHistories"
+    >
+    </modal-history-container>
   </div>
 </template>
 <script>
@@ -172,10 +186,12 @@ import Browser from '@core/helpers/browser'
 import api from '../api'
 import { printImage } from '@core/utils/print'
 import { cloneDeep } from '../../../core/utils'
+import ModalHistoryContainer from '../components/ModalHistoryContainer'
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
   components: {
+    ModalHistoryContainer,
     EmptySearchResult,
     ContainerStatusTab,
     ModalChoiceShippingBox,
@@ -192,6 +208,8 @@ export default {
       isFetching: false,
       visibleModalChoiceBox: false,
       loadingCreateContainer: false,
+      visibleModalHistory: false,
+      containerHistories: [],
     }
   },
   created() {
@@ -246,6 +264,10 @@ export default {
     },
     CreateContainerHandle() {
       this.visibleModalChoiceBox = true
+    },
+    showHistoryContainer(container) {
+      this.containerHistories = container.container_history
+      this.visibleModalHistory = true
     },
     async downloadLabel(labelUrl) {
       if (labelUrl == '') {
