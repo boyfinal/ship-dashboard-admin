@@ -3,7 +3,7 @@ export const routes = [
     path: '/warehouse',
     name: 'list-package-in-warehouse',
     meta: {
-      title: 'Tra cứu kho',
+      title: 'Tra cứu đơn',
     },
     component: () =>
       import(
