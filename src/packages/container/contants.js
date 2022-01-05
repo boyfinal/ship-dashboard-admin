@@ -44,7 +44,7 @@ export const MAP_TEXT_STATUS_CONTAINER = [
   },
   {
     value: CONTAINER_DELIVERIED,
-    text: 'Đã chuyển ',
+    text: 'Đã giao ',
   },
 ]
 
