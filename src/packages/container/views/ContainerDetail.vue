@@ -507,6 +507,11 @@ export default {
   white-space: nowrap;
   border: none;
 }
+.btn-add-container {
+  svg {
+    margin-bottom: 3px;
+  }
+}
 .container-detail .page-header_back {
   margin-bottom: 16px;
 }
