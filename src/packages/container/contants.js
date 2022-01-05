@@ -9,15 +9,15 @@ export const CONTAINER_STATUS_TAB = [
   },
   {
     value: CONTAINER_WAITING_CLOSE,
-    text: 'Chờ đóng kiện',
+    text: 'Đang xử lý',
   },
   {
     value: CONTAINER_CLOSE,
-    text: 'Đã đóng kiện',
+    text: 'Đã đóng',
   },
   {
     value: CONTAINER_DELIVERIED,
-    text: 'Đã chuyển hàng',
+    text: 'Đã giao',
   },
   {
     value: CONTAINER_CANCEL,
@@ -32,11 +32,11 @@ export const MAP_TEXT_STATUS_CONTAINER = [
   },
   {
     value: CONTAINER_WAITING_CLOSE,
-    text: 'Chờ đóng kiện',
+    text: 'Đang xử lý',
   },
   {
     value: CONTAINER_CLOSE,
-    text: 'Đã đóng kiện',
+    text: 'Đã đóng ',
   },
   {
     value: CONTAINER_CANCEL,
@@ -44,21 +44,21 @@ export const MAP_TEXT_STATUS_CONTAINER = [
   },
   {
     value: CONTAINER_DELIVERIED,
-    text: 'Đã chuyển hàng',
+    text: 'Đã giao ',
   },
 ]
 
 export const MAP_NAME_STATUS_CONTAINER = {
   [CONTAINER_WAITING_CLOSE]: {
-    value: 'Chờ đóng kiện',
+    value: 'Đang xử lý',
     class: 'badge-await',
   },
   [CONTAINER_CLOSE]: {
-    value: 'Đã đóng kiện',
+    value: 'Đã đóng ',
     class: 'badge-success',
   },
   [CONTAINER_DELIVERIED]: {
-    value: 'Đã chuyển hàng',
+    value: 'Đã giao',
     class: 'badge-info',
   },
   [CONTAINER_CANCEL]: {

@@ -12,11 +12,11 @@ export const SHIPMENT_STATUS_TAB = [
   },
   {
     value: ShipmentWaitingClose,
-    text: 'Chờ đóng lô',
+    text: 'Đang xử lý',
   },
   {
     value: ShipmentClosed,
-    text: 'Đã đóng lô',
+    text: 'Đã đóng ',
   },
   {
     value: ShipmentCanceled,
@@ -25,11 +25,11 @@ export const SHIPMENT_STATUS_TAB = [
 ]
 export const MAP_NAME_STATUS_SHIPMENT = {
   [ShipmentWaitingClose]: {
-    value: 'Chờ đóng lô',
+    value: 'Đang xử lý',
     class: 'badge-await',
   },
   [ShipmentClosed]: {
-    value: 'Đã đóng lô',
+    value: 'Đã đóng ',
     class: 'badge-success',
   },
 
