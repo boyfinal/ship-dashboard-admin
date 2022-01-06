@@ -1,6 +1,7 @@
 export const CONTAINER_WAITING_CLOSE = 1
 export const CONTAINER_CLOSE = 2
 export const CONTAINER_CANCEL = 3
+export const CONTAINER_INTRANSIT = 5
 export const CONTAINER_DELIVERIED = 4
 export const CONTAINER_STATUS_TAB = [
   {
@@ -14,6 +15,10 @@ export const CONTAINER_STATUS_TAB = [
   {
     value: CONTAINER_CLOSE,
     text: 'Đã đóng',
+  },
+  {
+    value: CONTAINER_INTRANSIT,
+    text: 'Đang giao',
   },
   {
     value: CONTAINER_DELIVERIED,

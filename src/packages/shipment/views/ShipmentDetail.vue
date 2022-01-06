@@ -112,6 +112,15 @@
             class="page-header__action col-6 text-right"
             v-if="isClosedShipment"
           >
+            <p-button
+              type="info"
+              v-if="showIntransitButton"
+              @click="handleChangeIntransit"
+              :loading="loading"
+              :class="`mr-3`"
+            >
+              Chuyển UPS
+            </p-button>
             <p-button type="info" @click="handleExport()" :class="`mr-3`">
               Xuất excel
             </p-button>
@@ -291,6 +300,7 @@ import {
   CANCEL_CONTAINER,
   CANCEL_SHIPMENT,
   CLOSE_SHIPMENT,
+  INTRANSIT_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
   EXPORT_SHIPMENT,
   APPEND_CONTAINERS_SHIPMENT,
@@ -300,6 +310,8 @@ import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
+import { PackageStatusWareHouseInShipment } from '@/packages/package/constants'
+
 import {
   ShipmentClosed,
   ShipmentCanceled,
@@ -342,6 +354,28 @@ export default {
       shipmentStatus() {
         return SHIPMENT_STATUS_TAB
       },
+      showIntransitButton() {
+        let flag = true
+        let items = this.shipmentItems
+        for (let item of items) {
+          if (item.status !== PackageStatusWareHouseInShipment) {
+            flag = false
+          }
+        }
+        return this.isClosedShipment && flag
+      },
+      shipmentItems() {
+        return this.shipment.containers
+          ? this.shipment.containers
+              .filter((container) => container.container_items.length)
+              .map((container) => {
+                return container.container_items.map((item) => {
+                  return item.package
+                })
+              })
+              .flat(1)
+          : []
+      },
     }),
     items() {
       return this.containers
@@ -358,6 +392,7 @@ export default {
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
+      INTRANSIT_SHIPMENT,
       EXPORT_SHIPMENT,
     ]),
     ...mapActions('container', [GET_LABEL]),
@@ -371,6 +406,7 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+      console.log(this.showIntransitButton)
     },
     getBoxInfo(container) {
       return `${container.length} x ${container.width}  x ${container.height}`
@@ -461,6 +497,26 @@ export default {
       }
       this.$toast.open({
         message: `Hủy lô hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    async handleChangeIntransit() {
+      this.loading = true
+      const payload = {
+        id: parseInt(this.$route.params.id),
+      }
+      const result = await this[INTRANSIT_SHIPMENT](payload)
+      this.loading = false
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Chuyển UPS thành công`,
         type: 'success',
       })
       this.init()

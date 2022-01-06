@@ -6,6 +6,7 @@ export const APPEND_CONTAINERS_SHIPMENT = 'appendContainersShipment'
 export const CANCEL_CONTAINER = 'cancelContainer'
 export const CANCEL_SHIPMENT = 'cancelShipment'
 export const CLOSE_SHIPMENT = 'closeShipment'
+export const INTRANSIT_SHIPMENT = 'intransitShipment'
 export const FETCH_LIST_SHIPMENT = 'fetchListShipments'
 export const COUNT_LIST_SHIPMENTS = 'countListShipments'
 export const CREATE_SHIPMENT = 'createShipment'
@@ -104,6 +105,19 @@ export const actions = {
   async [CLOSE_SHIPMENT]({ commit }, payload) {
     let result = { success: true }
     let response = await api.closeShipment(payload)
+    if (response.error || response.errorMessage) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+    }
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [INTRANSIT_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.intransitShipment(payload)
     if (response.error || response.errorMessage) {
       result = {
         success: false,

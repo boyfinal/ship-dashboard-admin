@@ -26,6 +26,9 @@ export default {
   closeShipment(payload) {
     return http.put(`/shipments/close/${payload.id}`)
   },
+  intransitShipment(payload) {
+    return http.put(`/shipments/intransit/${payload.id}`)
+  },
   fetchListShipments(payload) {
     return http.get(`/shipments?${buildQueryString(payload)}`)
   },
