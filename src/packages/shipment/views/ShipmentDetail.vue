@@ -60,14 +60,18 @@
               type="info"
               :class="'btn-add-container ml-3'"
               @click="handleAppendShipment"
-              v-if="!isClosedShipment && !isCanceledShipment"
+              v-if="
+                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+              "
             >
               <p-svg name="plus_blue"></p-svg>
               Thêm
             </p-button>
             <p-button
               type="info"
-              v-if="!isClosedShipment && !isCanceledShipment"
+              v-if="
+                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+              "
               :class="'btn-add-container ml-3'"
               @click="handleShowModalListContainer"
             >
@@ -76,7 +80,9 @@
           </div>
           <div
             class="page-header__action col-6 text-right"
-            v-if="!isClosedShipment && !isCanceledShipment"
+            v-if="
+              !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+            "
           >
             <p-button
               type="info"
@@ -110,7 +116,7 @@
           </div>
           <div
             class="page-header__action col-6 text-right"
-            v-if="isClosedShipment"
+            v-if="isClosedShipment || isDeliveredShipment"
           >
             <p-button type="info" @click="handleExport()" :class="`mr-3`">
               Xuất excel
@@ -242,7 +248,7 @@
                       </td>
                       <td>
                         <p-button
-                          v-if="!isClosedShipment"
+                          v-if="!isClosedShipment && !isDeliveredShipment"
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handleCancelContainer(item.id)"
@@ -303,6 +309,7 @@ import mixinDownload from '@/packages/shared/mixins/download'
 import {
   ShipmentClosed,
   ShipmentCanceled,
+  ShipmentDelivered,
   SHIPMENT_STATUS_TAB,
 } from '../constants'
 import Browser from '@core/helpers/browser'
@@ -338,6 +345,9 @@ export default {
       },
       isClosedShipment() {
         return this.shipment.status === ShipmentClosed
+      },
+      isDeliveredShipment() {
+        return this.shipment.status === ShipmentDelivered
       },
       shipmentStatus() {
         return SHIPMENT_STATUS_TAB
