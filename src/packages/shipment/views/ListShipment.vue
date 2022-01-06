@@ -82,9 +82,11 @@
                       {{ item.quantity }}
                     </td>
                     <td>
-                      <span class="badge badge-round" :class="``">{{
-                        item.status
-                      }}</span>
+                      <span
+                        class="badge badge-round"
+                        :class="mapStatus[item.status].class"
+                        >{{ mapStatus[item.status].value }}</span
+                      >
                     </td>
                   </tr>
                 </tbody>
