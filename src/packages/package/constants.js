@@ -90,6 +90,10 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Processing',
     class: 'badge-success',
   },
+  [PackageStatusWareHouseExport]: {
+    value: 'Processing',
+    class: 'badge-success',
+  },
   [PackageStatusInTransit]: {
     value: 'In-Transit',
     class: 'badge-success',
@@ -209,7 +213,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Đóng lô',
     class: 'badge-primary',
   },
-  [PackageStatusInTransit]: {
+  [PackageStatusWareHouseExport]: {
     value: 'Xuất kho',
     class: 'badge-success',
   },
