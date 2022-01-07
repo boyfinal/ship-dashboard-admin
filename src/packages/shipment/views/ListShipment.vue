@@ -54,6 +54,7 @@
                         >Số lượng kiện</th
                       >
                       <th>Trạng thái</th>
+                      <th>Hành động</th>
                     </template>
                   </tr>
                 </thead>
@@ -88,6 +89,17 @@
                         >{{ mapStatus[item.status].value }}</span
                       >
                     </td>
+                    <td>
+                      <p-button
+                        @click="showConfirmChangeIntransit(item)"
+                        :loading="isLoading[item.id]"
+                        type="info"
+                        :class="`mr-3`"
+                        v-if="showIntransitButton(item)"
+                      >
+                        Chuyển UPS
+                      </p-button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -107,15 +119,15 @@
         </div>
       </div>
     </div>
-    <!-- <modal-confirm
-      :visible.sync="visibleConfirm"
+    <modal-confirm
+      :visible.sync="visibleConfirmIntransit"
+      :type="`danger`"
       :actionConfirm="`Có`"
       :cancel="`Không`"
-      :description="`Bạn có muốn tạo lô hàng ?`"
+      :description="`Bạn có chắc chắn muốn chuyển UPS không?`"
       :title="`Xác nhận`"
-      @action="handleCreate"
-      :size="`sm`"
-    ></modal-confirm> -->
+      @action="handleChangeIntransit"
+    ></modal-confirm>
     <modal-choice-warehouse
       :warehouses="wareHouses"
       @save="handleCreate"
@@ -132,13 +144,18 @@ import {
   WareHouseStatusActive,
   WareHouseTypeInternational,
 } from '../constants'
+import { PackageStatusWareHouseInShipment } from '@/packages/package/constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
-
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_LIST_SHIPMENT, CREATE_SHIPMENT } from '../store'
+import {
+  FETCH_LIST_SHIPMENT,
+  CREATE_SHIPMENT,
+  INTRANSIT_SHIPMENT,
+} from '../store'
 import ShipmentStatusTab from '../components/ShipmentStatusTab'
 import ModalChoiceWarehouse from '../components/ModalChoiceWarehouse'
 import { cloneDeep } from '../../../core/utils'
@@ -151,6 +168,7 @@ export default {
     EmptySearchResult,
     ShipmentStatusTab,
     ModalChoiceWarehouse,
+    ModalConfirm,
   },
   data() {
     return {
@@ -160,8 +178,11 @@ export default {
         status: '',
         warehouseID: 1,
       },
+      shipmentAction: null,
+      isLoading: [],
       isFetching: false,
       visibleConfirm: false,
+      visibleConfirmIntransit: false,
       ShipmentClosed: ShipmentClosed,
       loadingCreateWarehouse: false,
       WareHouseStatusActive,
@@ -188,7 +209,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('shipment', [FETCH_LIST_SHIPMENT, CREATE_SHIPMENT]),
+    ...mapActions('shipment', [
+      FETCH_LIST_SHIPMENT,
+      CREATE_SHIPMENT,
+      INTRANSIT_SHIPMENT,
+    ]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
       this.isFetching = true
@@ -212,6 +237,50 @@ export default {
         this.$toast.open({ message: result_1.message, type: 'error' })
         return
       }
+    },
+    showIntransitButton(shipment) {
+      const items = shipment.containers
+        ? shipment.containers
+            .filter((container) => container.container_items.length)
+            .map((container) => {
+              return container.container_items.map((item) => {
+                return item.package
+              })
+            })
+            .flat(1)
+        : []
+      let flag = true
+      for (let item of items) {
+        if (item.status !== PackageStatusWareHouseInShipment) {
+          flag = false
+        }
+      }
+      return shipment.status === ShipmentClosed && flag
+    },
+    showConfirmChangeIntransit(shipment) {
+      this.shipmentAction = shipment
+      this.visibleConfirmIntransit = true
+    },
+    async handleChangeIntransit() {
+      this.visibleConfirmIntransit = false
+      this.$set(this.isLoading, this.shipmentAction.id, true)
+      const payload = {
+        id: parseInt(this.shipmentAction.id),
+      }
+      const result = await this[INTRANSIT_SHIPMENT](payload)
+      this.$set(this.isLoading, this.shipmentAction.id, false)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Chuyển UPS thành công`,
+        type: 'success',
+      })
+      this.init()
     },
     async handleCreate(body) {
       if (body.warehouse_id == 0) {

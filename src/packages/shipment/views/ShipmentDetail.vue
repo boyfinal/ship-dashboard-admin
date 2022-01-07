@@ -121,7 +121,7 @@
             <p-button
               type="info"
               v-if="showIntransitButton"
-              @click="handleChangeIntransit"
+              @click="showConfirmChangeIntransit"
               :loading="loading"
               :class="`mr-3`"
             >
@@ -293,6 +293,15 @@
       @save="handleAddContainer"
     >
     </modal-list-container>
+    <modal-confirm
+      :visible.sync="visibleConfirmIntransit"
+      :type="`danger`"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn chuyển UPS không?`"
+      :title="`Xác nhận`"
+      @action="handleChangeIntransit"
+    ></modal-confirm>
   </div>
 </template>
 
@@ -317,7 +326,7 @@ import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { PackageStatusWareHouseInShipment } from '@/packages/package/constants'
-
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   ShipmentClosed,
   ShipmentCanceled,
@@ -331,6 +340,7 @@ export default {
   components: {
     EmptySearchResult,
     ModalListContainer,
+    ModalConfirm,
   },
   data() {
     return {
@@ -345,6 +355,7 @@ export default {
       loading: false,
       ShipmentClosed: ShipmentClosed,
       isShowModalListContainer: false,
+      visibleConfirmIntransit: false,
     }
   },
   computed: {
@@ -416,10 +427,12 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
-      console.log(this.showIntransitButton)
     },
     getBoxInfo(container) {
       return `${container.length} x ${container.width}  x ${container.height}`
+    },
+    showConfirmChangeIntransit() {
+      this.visibleConfirmIntransit = true
     },
     async downloadLabel(labelUrl) {
       if (labelUrl == '') {
@@ -512,6 +525,7 @@ export default {
       this.init()
     },
     async handleChangeIntransit() {
+      this.visibleConfirmIntransit = false
       this.loading = true
       const payload = {
         id: parseInt(this.$route.params.id),
