@@ -213,6 +213,10 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Đóng lô',
     class: 'badge-primary',
   },
+  [PackageStatusInTransit]: {
+    value: 'Xuất kho',
+    class: 'badge-success',
+  },
   [PackageStatusWareHouseExport]: {
     value: 'Xuất kho',
     class: 'badge-success',
