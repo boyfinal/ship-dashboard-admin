@@ -144,7 +144,7 @@ import {
   WareHouseStatusActive,
   WareHouseTypeInternational,
 } from '../constants'
-import { PackageStatusWareHouseInShipment } from '@/packages/package/constants'
+import { PackageStatusWareHouseExport } from '@/packages/package/constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -251,7 +251,7 @@ export default {
         : []
       let flag = true
       for (let item of items) {
-        if (item.status !== PackageStatusWareHouseInShipment) {
+        if (item.status !== PackageStatusWareHouseExport) {
           flag = false
         }
       }

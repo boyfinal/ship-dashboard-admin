@@ -325,7 +325,7 @@ import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
-import { PackageStatusWareHouseInShipment } from '@/packages/package/constants'
+import { PackageStatusWareHouseExport } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   ShipmentClosed,
@@ -379,7 +379,7 @@ export default {
         let flag = true
         let items = this.shipmentItems
         for (let item of items) {
-          if (item.status !== PackageStatusWareHouseInShipment) {
+          if (item.status !== PackageStatusWareHouseExport) {
             flag = false
           }
         }
