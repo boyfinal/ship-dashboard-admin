@@ -66,6 +66,10 @@ export const MAP_NAME_STATUS_CONTAINER = {
     value: 'Đã giao',
     class: 'badge-info',
   },
+  [CONTAINER_INTRANSIT]: {
+    value: 'Đang giao',
+    class: 'badge-primary',
+  },
   [CONTAINER_CANCEL]: {
     value: 'Đã hủy',
     class: 'badge-danger',
