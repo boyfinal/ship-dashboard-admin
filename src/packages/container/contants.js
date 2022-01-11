@@ -51,6 +51,10 @@ export const MAP_TEXT_STATUS_CONTAINER = [
     value: CONTAINER_DELIVERIED,
     text: 'Đã giao ',
   },
+  {
+    value: CONTAINER_INTRANSIT,
+    text: 'Đang giao',
+  },
 ]
 
 export const MAP_NAME_STATUS_CONTAINER = {
