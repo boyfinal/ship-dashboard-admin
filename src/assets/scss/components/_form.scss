@@ -119,6 +119,13 @@ input[type='search'] {
         z-index: 4;
         transform: translateY(-50%);
     }
+    .form-control-icon-eye {
+        position: absolute;
+        top: math.div($input-height, 2);
+        left: 20px;
+        z-index: 4;
+        transform: translateY(-30%);
+    }
     .p-input-search {
         border-radius: 8px !important;
         line-height: $input-height;

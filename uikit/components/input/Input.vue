@@ -48,7 +48,7 @@
 
       <p-svg
         v-if="hiddenPass == 'on'"
-        class="form-control-icon form-control-icon-right"
+        class="form-control-icon-eye form-control-icon-right"
         :name="`${typeInputPassword == 'password' ? 'eye' : 'eye-close'}`"
         @click="togglePasswordVisibelity()"
       ></p-svg>
