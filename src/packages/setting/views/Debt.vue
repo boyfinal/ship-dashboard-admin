@@ -26,58 +26,50 @@
               <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
-                    <th width="350">Khách hàng</th>
-                    <!-- <th>Hạng</th> -->
-                    <th width="150">Kiểu thanh toán</th>
-                    <th width="100">Số dư</th>
-                    <th width="100">Số nợ</th>
-                    <th width="100">Giới hạn nợ</th>
-                    <th width="100">Thời gian nợ</th>
-                    <th width="100">Action</th>
+                    <th width="120">Khách hàng</th>
+                    <th width="300">Email</th>
+                    <th max-width="50">Loại tài khoản</th>
+                    <th max-width="80">Kiểu thanh toán</th>
+                    <th max-width="50">Số dư hiện tại</th>
+                    <th max-width="80">Công nợ hiện tại</th>
+                    <th max-width="80">Công nợ cho phép</th>
+                    <th max-width="80">Thời gian cho phép</th>
+                    <th width=""></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in displayUsers" :key="i">
                     <td>
-                      <p class="mb-0">
-                        <p-tooltip
-                          :label="item.full_name"
-                          size="large"
-                          position="top"
-                          type="dark"
-                          :active="item.full_name.length > 25"
-                        >
-                          <b>{{ item.full_name_short }}</b>
-                          <span
-                            class="badge badge-round ml-8"
-                            :class="typesClass[item.class]"
-                          >
-                            {{ types[item.class] }}
-                          </span>
-                        </p-tooltip>
-                      </p>
-                      <p class="mb-0" style="font-style: italic">
-                        <p-tooltip
-                          :label="item.email"
-                          size="large"
-                          position="top"
-                          type="dark"
-                          :active="item.email.length > 25"
-                        >
-                          {{ item.email_short }}
-                        </p-tooltip>
-                        /
-                        <span>{{ item.phone_number }}</span>
-                      </p>
-                    </td>
-                    <!-- <td>
-                      <span
-                        class="badge badge-round"
-                        :class="typesClass[item.class]"
+                      <p-tooltip
+                        :label="item.full_name"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.full_name.length > 25"
                       >
-                        {{ types[item.class] }}
-                      </span>
-                    </td> -->
+                        <b>{{ item.full_name_short }}</b>
+                      </p-tooltip>
+                    </td>
+                    <td>
+                      <p-tooltip
+                        :label="item.email"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="item.email.length > 25"
+                      >
+                        {{ item.email_short }}
+                      </p-tooltip>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <p-svg
+                          :name="typesClass[item.class]"
+                          style="margin-right: 4px"
+                        ></p-svg>
+                        {{ types[item.class] }}</div
+                      >
+                    </td>
                     <td>
                       <span
                         v-if="item.is_debt"
@@ -104,7 +96,15 @@
                             },
                           }"
                         >
-                          Hóa đơn
+                          <p-tooltip
+                            :label="'Hóa đơn'"
+                            size="large"
+                            position="top"
+                            type="dark"
+                            :active="true"
+                          >
+                            <p-svg name="receipt"></p-svg>
+                          </p-tooltip>
                         </router-link>
                         <router-link
                           class="btn_action"
@@ -116,15 +116,31 @@
                             },
                           }"
                         >
-                          Thanh toán
+                          <p-tooltip
+                            :label="'Thanh toán'"
+                            size="large"
+                            position="top"
+                            type="dark"
+                            :active="true"
+                          >
+                            <p-svg name="clock_history"></p-svg>
+                          </p-tooltip>
                         </router-link>
                         <a
                           href="#"
-                          class="btn btn_action ml-2"
+                          class="btn_action ml-2"
                           v-if="!$isSupport()"
                           @click.prevent="editUser(item.id)"
                         >
-                          <i class="fa fa-cog"></i>
+                          <p-tooltip
+                            :label="'Cài đặt'"
+                            size="large"
+                            position="top"
+                            type="dark"
+                            :active="true"
+                          >
+                            <p-svg name="setting"></p-svg>
+                          </p-tooltip>
                         </a>
                       </div>
                     </td>

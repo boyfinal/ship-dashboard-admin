@@ -90,6 +90,10 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Processing',
     class: 'badge-success',
   },
+  [PackageStatusWareHouseExport]: {
+    value: 'Processing',
+    class: 'badge-success',
+  },
   [PackageStatusInTransit]: {
     value: 'In-Transit',
     class: 'badge-success',
@@ -180,7 +184,7 @@ export const CHANGE_PACKAGE_TYPE = [
 ]
 
 export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInTransit]: 'In transit',
+  [PackageStatusInTransit]: 'Arriving at international airport to go abroad',
   [PackageStatusCreated]: ' Shipping label created, LionBay awaiting item',
   [PackageStatusPendingPickup]: 'Shipping label created, LionBay awaiting item',
   [PackageStatusRePendingPickup]:
@@ -210,6 +214,10 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-primary',
   },
   [PackageStatusInTransit]: {
+    value: 'Xuất kho',
+    class: 'badge-success',
+  },
+  [PackageStatusWareHouseExport]: {
     value: 'Xuất kho',
     class: 'badge-success',
   },

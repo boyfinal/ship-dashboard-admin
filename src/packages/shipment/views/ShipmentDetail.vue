@@ -60,14 +60,18 @@
               type="info"
               :class="'btn-add-container ml-3'"
               @click="handleAppendShipment"
-              v-if="!isClosedShipment && !isCanceledShipment"
+              v-if="
+                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+              "
             >
               <p-svg name="plus_blue"></p-svg>
               Thêm
             </p-button>
             <p-button
               type="info"
-              v-if="!isClosedShipment && !isCanceledShipment"
+              v-if="
+                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+              "
               :class="'btn-add-container ml-3'"
               @click="handleShowModalListContainer"
             >
@@ -76,7 +80,9 @@
           </div>
           <div
             class="page-header__action col-6 text-right"
-            v-if="!isClosedShipment && !isCanceledShipment"
+            v-if="
+              !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+            "
           >
             <p-button
               type="info"
@@ -110,8 +116,17 @@
           </div>
           <div
             class="page-header__action col-6 text-right"
-            v-if="isClosedShipment"
+            v-if="isClosedShipment || isDeliveredShipment"
           >
+            <p-button
+              type="info"
+              v-if="showIntransitButton"
+              @click="showConfirmChangeIntransit"
+              :loading="loading"
+              :class="`mr-3`"
+            >
+              Chuyển UPS
+            </p-button>
             <p-button type="info" @click="handleExport()" :class="`mr-3`">
               Xuất excel
             </p-button>
@@ -242,7 +257,7 @@
                       </td>
                       <td>
                         <p-button
-                          v-if="!isClosedShipment"
+                          v-if="!isClosedShipment && !isDeliveredShipment"
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handleCancelContainer(item.id)"
@@ -278,6 +293,15 @@
       @save="handleAddContainer"
     >
     </modal-list-container>
+    <modal-confirm
+      :visible.sync="visibleConfirmIntransit"
+      :type="`danger`"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn chuyển UPS không?`"
+      :title="`Xác nhận`"
+      @action="handleChangeIntransit"
+    ></modal-confirm>
   </div>
 </template>
 
@@ -291,6 +315,7 @@ import {
   CANCEL_CONTAINER,
   CANCEL_SHIPMENT,
   CLOSE_SHIPMENT,
+  INTRANSIT_SHIPMENT,
   FETCH_SHIPMENT_DETAIL,
   EXPORT_SHIPMENT,
   APPEND_CONTAINERS_SHIPMENT,
@@ -300,9 +325,12 @@ import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
+import { PackageStatusWareHouseExport } from '@/packages/package/constants'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   ShipmentClosed,
   ShipmentCanceled,
+  ShipmentDelivered,
   SHIPMENT_STATUS_TAB,
 } from '../constants'
 import Browser from '@core/helpers/browser'
@@ -312,6 +340,7 @@ export default {
   components: {
     EmptySearchResult,
     ModalListContainer,
+    ModalConfirm,
   },
   data() {
     return {
@@ -326,6 +355,7 @@ export default {
       loading: false,
       ShipmentClosed: ShipmentClosed,
       isShowModalListContainer: false,
+      visibleConfirmIntransit: false,
     }
   },
   computed: {
@@ -339,8 +369,33 @@ export default {
       isClosedShipment() {
         return this.shipment.status === ShipmentClosed
       },
+      isDeliveredShipment() {
+        return this.shipment.status === ShipmentDelivered
+      },
       shipmentStatus() {
         return SHIPMENT_STATUS_TAB
+      },
+      showIntransitButton() {
+        let flag = true
+        let items = this.shipmentItems
+        for (let item of items) {
+          if (item.status !== PackageStatusWareHouseExport) {
+            flag = false
+          }
+        }
+        return this.isClosedShipment && flag
+      },
+      shipmentItems() {
+        return this.shipment.containers
+          ? this.shipment.containers
+              .filter((container) => container.container_items.length)
+              .map((container) => {
+                return container.container_items.map((item) => {
+                  return item.package
+                })
+              })
+              .flat(1)
+          : []
       },
     }),
     items() {
@@ -358,6 +413,7 @@ export default {
       CANCEL_CONTAINER,
       CANCEL_SHIPMENT,
       CLOSE_SHIPMENT,
+      INTRANSIT_SHIPMENT,
       EXPORT_SHIPMENT,
     ]),
     ...mapActions('container', [GET_LABEL]),
@@ -374,6 +430,9 @@ export default {
     },
     getBoxInfo(container) {
       return `${container.length} x ${container.width}  x ${container.height}`
+    },
+    showConfirmChangeIntransit() {
+      this.visibleConfirmIntransit = true
     },
     async downloadLabel(labelUrl) {
       if (labelUrl == '') {
@@ -461,6 +520,27 @@ export default {
       }
       this.$toast.open({
         message: `Hủy lô hàng thành công`,
+        type: 'success',
+      })
+      this.init()
+    },
+    async handleChangeIntransit() {
+      this.visibleConfirmIntransit = false
+      this.loading = true
+      const payload = {
+        id: parseInt(this.$route.params.id),
+      }
+      const result = await this[INTRANSIT_SHIPMENT](payload)
+      this.loading = false
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.$toast.open({
+        message: `Chuyển UPS thành công`,
         type: 'success',
       })
       this.init()

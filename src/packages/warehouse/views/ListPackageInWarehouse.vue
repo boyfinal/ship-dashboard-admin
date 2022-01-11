@@ -27,12 +27,6 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <package-status-tab
-            :has-all="false"
-            :status="statusTab"
-            v-model="filter.status"
-            :count-status="count_status"
-          />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
             <div class="table-responsive">
@@ -181,7 +175,6 @@
   </div>
 </template>
 <script>
-import PackageStatusTab from '../components/PackageStatusTab'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
@@ -210,7 +203,6 @@ export default {
   mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
-    PackageStatusTab,
     ModalExport,
     ModalLabel,
   },

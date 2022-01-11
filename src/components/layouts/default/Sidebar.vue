@@ -139,14 +139,14 @@ export default {
             },
           ],
         },
-        {
-          title: 'Vận chuyển',
-          icon: 'car',
-          iconActive: 'carActive',
-          route: { name: 'deliver' },
-          class: '',
-          sub: [],
-        },
+        // {
+        //   title: 'Vận chuyển',
+        //   icon: 'car',
+        //   iconActive: 'carActive',
+        //   route: { name: 'deliver' },
+        //   class: '',
+        //   sub: [],
+        // },
         {
           title: 'Kho',
           icon: 'warehouse',
@@ -158,13 +158,13 @@ export default {
           sub: [
             {
               route: '/warehouse',
-              title: 'Tra cứu kho',
+              title: 'Tra cứu đơn',
               alias: ['/warehouse'],
               disable: this.$isAccountant(),
             },
             {
               route: '/warehouse/scan-in',
-              title: 'Quét nhận kho',
+              title: 'Quét nhận hàng',
               alias: ['/warehouse/scan-in'],
             },
             {
@@ -175,12 +175,12 @@ export default {
             },
             {
               route: '/containers',
-              title: 'Kiện hàng',
+              title: 'Tạo kiện hàng',
               alias: ['/containers', '/containers/:code'],
             },
             {
               route: '/shipments',
-              title: 'Lô hàng',
+              title: 'Tạo lô hàng',
               alias: ['/shipments', '/shipments/:id'],
             },
           ],
