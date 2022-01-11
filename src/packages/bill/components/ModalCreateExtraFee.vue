@@ -151,7 +151,7 @@ export default {
       if (this.package_code === '') {
         this.$toast.open({
           type: 'error',
-          message: 'Nhập mã vận đơn !',
+          message: 'Nhập mã Lionbay tracking !',
         })
         return false
       }
