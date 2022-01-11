@@ -79,13 +79,10 @@
             font-weight: 600;
             font-size: 14px;
             line-height: 22px;
-            background: #00b4c3;
-            color: #FFFFFF;
             height: 32px;
-            white-space: nowrap;
-            &:hover {
-                background: #138496;
-            }
+            // &:hover {
+            //     background: #138496;
+            // }
         }
         .p-tooltip::after {
             width: fit-content

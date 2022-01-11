@@ -30,9 +30,9 @@ export const USER_CLASS_PRIORITY = 2
 export const USER_CLASS_PARTNER = 3
 
 export const MAP_USER_CLASS_ICON = {
-  [USER_CLASS_PUBLIC]: 'badge-public',
-  [USER_CLASS_PRIORITY]: 'badge-priority',
-  [USER_CLASS_PARTNER]: 'badge-partner',
+  [USER_CLASS_PUBLIC]: 'public-class',
+  [USER_CLASS_PRIORITY]: 'priority-class',
+  [USER_CLASS_PARTNER]: 'partner-class',
 }
 
 export const MAP_USER_CLASS_TEXT = {
