@@ -104,8 +104,8 @@
                       </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td v-if="isCloseContainer(item)">{{
-                      item.updated_at | date('dd/MM/yyyy')
+                    <td v-if="item.close_at">{{
+                      item.close_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
                     <td

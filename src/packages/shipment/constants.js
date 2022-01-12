@@ -20,16 +20,16 @@ export const SHIPMENT_STATUS_TAB = [
     text: 'Đã đóng ',
   },
   {
-    value: ShipmentCanceled,
-    text: 'Đã hủy',
+    value: ShipmentIntransit,
+    text: 'Đang giao',
   },
   {
     value: ShipmentDelivered,
     text: 'Đã giao',
   },
   {
-    value: ShipmentIntransit,
-    text: 'Đang giao',
+    value: ShipmentCanceled,
+    text: 'Đã hủy',
   },
 ]
 export const MAP_NAME_STATUS_SHIPMENT = {

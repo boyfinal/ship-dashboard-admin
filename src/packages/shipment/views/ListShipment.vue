@@ -74,8 +74,10 @@
                       </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td v-if="item.status != ShipmentClosed">-</td>
-                    <td v-else>{{ item.updated_at | date('dd/MM/yyyy') }}</td>
+                    <td v-if="item.close_at">{{
+                      item.close_at | date('dd/MM/yyyy')
+                    }}</td>
+                    <td v-else>-</td>
                     <td style="text-align: center">{{
                       item.quantity > 0 ? sumWeight(item.containers) : 0
                     }}</td>
