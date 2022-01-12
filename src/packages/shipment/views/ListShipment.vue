@@ -144,7 +144,6 @@ import {
   WareHouseStatusActive,
   WareHouseTypeInternational,
 } from '../constants'
-import { PackageStatusWareHouseExport } from '@/packages/package/constants'
 import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -239,23 +238,7 @@ export default {
       }
     },
     showIntransitButton(shipment) {
-      const items = shipment.containers
-        ? shipment.containers
-            .filter((container) => container.container_items.length)
-            .map((container) => {
-              return container.container_items.map((item) => {
-                return item.package
-              })
-            })
-            .flat(1)
-        : []
-      let flag = true
-      for (let item of items) {
-        if (item.status !== PackageStatusWareHouseExport) {
-          flag = false
-        }
-      }
-      return shipment.status === ShipmentClosed && flag
+      return shipment.status === ShipmentClosed
     },
     showConfirmChangeIntransit(shipment) {
       this.shipmentAction = shipment
