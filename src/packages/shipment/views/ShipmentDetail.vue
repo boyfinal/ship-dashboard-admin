@@ -40,7 +40,7 @@
             <div class="info">
               <div>Trạng thái lô: </div>
               <div>{{
-                shipment.status ? shipmentStatus[shipment.status].text : '-'
+                shipment.status ? shipmentStatus[shipment.status].value : '-'
               }}</div>
             </div>
           </div>
@@ -346,7 +346,7 @@ import {
   ShipmentCanceled,
   ShipmentDelivered,
   ShipmentIntransit,
-  SHIPMENT_STATUS_TAB,
+  MAP_NAME_STATUS_SHIPMENT,
 } from '../constants'
 import Browser from '@core/helpers/browser'
 export default {
@@ -391,7 +391,7 @@ export default {
         return this.shipment.status === ShipmentIntransit
       },
       shipmentStatus() {
-        return SHIPMENT_STATUS_TAB
+        return MAP_NAME_STATUS_SHIPMENT
       },
       showIntransitButton() {
         return this.isClosedShipment
