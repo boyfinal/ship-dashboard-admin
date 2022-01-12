@@ -112,9 +112,7 @@
                       >{{ item.length }} x {{ item.width }} x
                       {{ item.height }}</td
                     >
-                    <td class="text-center">{{
-                      item.container_items ? item.container_items.length : '0'
-                    }}</td>
+                    <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
                     <td>
                       <span
