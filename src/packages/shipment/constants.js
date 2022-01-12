@@ -2,7 +2,7 @@ export const ShipmentWaitingClose = 1
 export const ShipmentClosed = 2
 export const ShipmentCanceled = 3
 export const ShipmentDelivered = 4
-
+export const ShipmentIntransit = 5
 export const WareHouseStatusActive = 1
 export const WareHouseTypeInternational = 1
 
@@ -27,6 +27,10 @@ export const SHIPMENT_STATUS_TAB = [
     value: ShipmentDelivered,
     text: 'Đã giao',
   },
+  {
+    value: ShipmentIntransit,
+    text: 'Đang giao',
+  },
 ]
 export const MAP_NAME_STATUS_SHIPMENT = {
   [ShipmentWaitingClose]: {
@@ -45,5 +49,9 @@ export const MAP_NAME_STATUS_SHIPMENT = {
   [ShipmentDelivered]: {
     value: 'Đã giao',
     class: 'badge-info',
+  },
+  [ShipmentIntransit]: {
+    value: 'Đang giao',
+    class: 'badge-primary',
   },
 }
