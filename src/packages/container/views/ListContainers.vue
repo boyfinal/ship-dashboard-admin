@@ -104,17 +104,15 @@
                       </router-link>
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td v-if="isCloseContainer(item)">{{
-                      item.updated_at | date('dd/MM/yyyy')
+                    <td v-if="item.close_at">{{
+                      item.close_at | date('dd/MM/yyyy')
                     }}</td>
                     <td v-else></td>
                     <td
                       >{{ item.length }} x {{ item.width }} x
                       {{ item.height }}</td
                     >
-                    <td class="text-center">{{
-                      item.container_items ? item.container_items.length : '0'
-                    }}</td>
+                    <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
                     <td>
                       <span

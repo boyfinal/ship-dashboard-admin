@@ -48,7 +48,7 @@
               </td>
               <td> {{ item.code }} </td>
               <td>
-                {{ item.container_items ? item.container_items.length : '0' }}
+                {{ item.count_item }}
               </td>
               <td
                 >{{ item.length }} x {{ item.width }} x
