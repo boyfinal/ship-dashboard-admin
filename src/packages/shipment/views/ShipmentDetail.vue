@@ -375,7 +375,7 @@ export default {
         return SHIPMENT_STATUS_TAB
       },
       showIntransitButton() {
-        return this.isClosedShipment && this.shipment.can_change_ups
+        return this.isClosedShipment
       },
     }),
     items() {

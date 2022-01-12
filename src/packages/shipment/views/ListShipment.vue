@@ -238,7 +238,7 @@ export default {
       }
     },
     showIntransitButton(shipment) {
-      return shipment.status === ShipmentClosed && shipment.can_change_ups
+      return shipment.status === ShipmentClosed
     },
     showConfirmChangeIntransit(shipment) {
       this.shipmentAction = shipment
