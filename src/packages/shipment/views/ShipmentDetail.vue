@@ -325,7 +325,6 @@ import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
-import { PackageStatusWareHouseExport } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   ShipmentClosed,
@@ -376,26 +375,7 @@ export default {
         return SHIPMENT_STATUS_TAB
       },
       showIntransitButton() {
-        let flag = true
-        let items = this.shipmentItems
-        for (let item of items) {
-          if (item.status !== PackageStatusWareHouseExport) {
-            flag = false
-          }
-        }
-        return this.isClosedShipment && flag
-      },
-      shipmentItems() {
-        return this.shipment.containers
-          ? this.shipment.containers
-              .filter((container) => container.container_items.length)
-              .map((container) => {
-                return container.container_items.map((item) => {
-                  return item.package
-                })
-              })
-              .flat(1)
-          : []
+        return this.isClosedShipment
       },
     }),
     items() {
