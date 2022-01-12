@@ -164,7 +164,7 @@ export default {
             },
             {
               route: '/warehouse/scan-in',
-              title: 'Quét nhận kho',
+              title: 'Quét nhận hàng',
               alias: ['/warehouse/scan-in'],
             },
             {
