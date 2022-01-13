@@ -150,11 +150,7 @@ import { PACKAGE_WAREHOUSE_STATUS_PICK } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
 import http from '@core/services/http'
-import {
-  FETCH_SERVICE,
-  FETCH_ESTIMATE_COST,
-  FETCH_WAREHOUSE,
-} from '../../shared/store'
+import { FETCH_SERVICE, FETCH_WAREHOUSE } from '../../shared/store'
 import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
 
 export default {
@@ -269,12 +265,7 @@ export default {
     this.beforeLeaveHandle()
   },
   methods: {
-    ...mapActions('shared', [
-      'loading',
-      FETCH_SERVICE,
-      FETCH_ESTIMATE_COST,
-      FETCH_WAREHOUSE,
-    ]),
+    ...mapActions('shared', ['loading', FETCH_SERVICE, FETCH_WAREHOUSE]),
     ...mapActions('warehouse', {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
@@ -403,17 +394,12 @@ export default {
     },
     async showModalAcceptHandle() {
       let req = { type: 1, status: 1 }
-      let [result, result2, result3] = await Promise.all([
+      let [result, result3] = await Promise.all([
         this[FETCH_SERVICE](this.current.service_id),
-        this[FETCH_ESTIMATE_COST](this.keyword),
         this[FETCH_WAREHOUSE](req),
       ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
-        return
-      }
-      if (!result2.success) {
-        this.$toast.open({ message: result2.message, type: 'error' })
         return
       }
       if (!result3.success) {
