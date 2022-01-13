@@ -40,7 +40,7 @@
             <div class="info">
               <div>Trạng thái lô: </div>
               <div>{{
-                shipment.status ? shipmentStatus[shipment.status].text : '-'
+                shipment.status ? shipmentStatus[shipment.status].value : '-'
               }}</div>
             </div>
           </div>
@@ -61,7 +61,10 @@
               :class="'btn-add-container ml-3'"
               @click="handleAppendShipment"
               v-if="
-                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+                !isClosedShipment &&
+                  !isCanceledShipment &&
+                  !isDeliveredShipment &&
+                  !isIntransitShipment
               "
             >
               <p-svg name="plus_blue"></p-svg>
@@ -70,7 +73,10 @@
             <p-button
               type="info"
               v-if="
-                !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+                !isClosedShipment &&
+                  !isCanceledShipment &&
+                  !isDeliveredShipment &&
+                  !isIntransitShipment
               "
               :class="'btn-add-container ml-3'"
               @click="handleShowModalListContainer"
@@ -81,7 +87,10 @@
           <div
             class="page-header__action col-6 text-right"
             v-if="
-              !isClosedShipment && !isCanceledShipment && !isDeliveredShipment
+              !isClosedShipment &&
+                !isCanceledShipment &&
+                !isDeliveredShipment &&
+                !isIntransitShipment
             "
           >
             <p-button
@@ -116,7 +125,9 @@
           </div>
           <div
             class="page-header__action col-6 text-right"
-            v-if="isClosedShipment || isDeliveredShipment"
+            v-if="
+              isClosedShipment || isDeliveredShipment || isIntransitShipment
+            "
           >
             <p-button
               type="info"
@@ -257,7 +268,11 @@
                       </td>
                       <td>
                         <p-button
-                          v-if="!isClosedShipment && !isDeliveredShipment"
+                          v-if="
+                            !isClosedShipment &&
+                              !isDeliveredShipment &&
+                              !isIntransitShipment
+                          "
                           type="danger"
                           :class="`btn-cancel-container`"
                           @click="handleCancelContainer(item.id)"
@@ -325,13 +340,13 @@ import { GET_LABEL } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
-import { PackageStatusWareHouseExport } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   ShipmentClosed,
   ShipmentCanceled,
   ShipmentDelivered,
-  SHIPMENT_STATUS_TAB,
+  ShipmentIntransit,
+  MAP_NAME_STATUS_SHIPMENT,
 } from '../constants'
 import Browser from '@core/helpers/browser'
 export default {
@@ -372,30 +387,14 @@ export default {
       isDeliveredShipment() {
         return this.shipment.status === ShipmentDelivered
       },
+      isIntransitShipment() {
+        return this.shipment.status === ShipmentIntransit
+      },
       shipmentStatus() {
-        return SHIPMENT_STATUS_TAB
+        return MAP_NAME_STATUS_SHIPMENT
       },
       showIntransitButton() {
-        let flag = true
-        let items = this.shipmentItems
-        for (let item of items) {
-          if (item.status !== PackageStatusWareHouseExport) {
-            flag = false
-          }
-        }
-        return this.isClosedShipment && flag
-      },
-      shipmentItems() {
-        return this.shipment.containers
-          ? this.shipment.containers
-              .filter((container) => container.container_items.length)
-              .map((container) => {
-                return container.container_items.map((item) => {
-                  return item.package
-                })
-              })
-              .flat(1)
-          : []
+        return this.isClosedShipment
       },
     }),
     items() {
