@@ -19,7 +19,7 @@
                 >
                 <button
                   v-if="tracking.id"
-                  @click="cancelLabelHandler"
+                  @click="confirmCancelLabel"
                   class="btn btn-danger ml-3 text-nowrap"
                   >Hủy label</button
                 >
@@ -136,6 +136,15 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="isVisilbeModalConfirmCancel"
+      :type="`danger`"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn hủy label ?`"
+      :title="`Xác nhận hủy`"
+      @action="cancelLabelHandler"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -149,6 +158,7 @@ import { mapActions, mapState, mapMutations } from 'vuex'
 import { PACKAGE_WAREHOUSE_STATUS_PICK } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import http from '@core/services/http'
 import {
   FETCH_SERVICE,
@@ -160,6 +170,9 @@ import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
 export default {
   name: 'CheckPackage',
   mixins: [mixinBarcode],
+  components: {
+    ModalConfirm,
+  },
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
@@ -255,6 +268,7 @@ export default {
       },
       isChange: false,
       isVisibleModalAccept: false,
+      isVisilbeModalConfirmCancel: false,
       isSubmitting: false,
     }
   },
@@ -284,7 +298,11 @@ export default {
     ...mapMutations('warehouse', {
       setPackage: FETCH_PACKAGE_DETAIL,
     }),
+    confirmCancelLabel() {
+      this.isVisilbeModalConfirmCancel = true
+    },
     async cancelLabelHandler() {
+      this.isVisilbeModalConfirmCancel = false
       this.loading(true)
       this.isSubmitting = true
       const body = { tracking_number: this.tracking.tracking_number }
