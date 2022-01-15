@@ -291,7 +291,7 @@ export default {
       this.fetchPackageSubmit()
     },
     searchHandle(e) {
-      this.beforeFetchPackge(e.target.value || '')
+      this.beforeFetchPackge(e.target.value || '' || '')
     },
 
     barcodeSubmit(keyword) {
