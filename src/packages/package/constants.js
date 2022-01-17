@@ -19,7 +19,6 @@ export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-transit'
 export const PackageStatusDeliveredText = 'delivered'
 export const PackageStatusCancelledText = 'canceled'
-export const PackageStatusReturnedText = 'return'
 export const PackageStatusExpiredText = 'expired'
 
 export const PACKAGE_STATUS_TAB = [
@@ -46,10 +45,6 @@ export const PACKAGE_STATUS_TAB = [
   {
     value: PackageStatusDeliveredText,
     text: 'Delivered',
-  },
-  {
-    value: PackageStatusReturnedText,
-    text: 'Return',
   },
   {
     value: PackageStatusCancelledText,
@@ -102,10 +97,6 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Delivered',
     class: 'badge-success',
   },
-  [PackageStatusReturned]: {
-    value: 'Return',
-    class: 'badge-success',
-  },
   [PackageStatusCancelled]: {
     value: 'Canceled',
     class: 'badge-success',
@@ -140,10 +131,6 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   [PackageStatusDeliveredText]: {
     value: 'delivered',
     class: 'badge-success',
-  },
-  [PackageStatusReturnedText]: {
-    value: 'Return',
-    class: 'badge-alert',
   },
   [PackageStatusCancelledText]: {
     value: 'canceled',
@@ -191,7 +178,6 @@ export const DELIVER_LOG_PACKAGE = {
     'Shipping label created, LionBay awaiting item',
   [PackageStatusPicked]: 'Accepted at LionBay Processing	Center',
   [PackageStatusCancelled]: 'Label canceled',
-  [PackageStatusReturned]: ' Package returned',
   [PackageStatusDelivered]: 'Delivered',
   [PackageStatusWareHouseExport]: 'Departed from LionBay Processing Center',
 }
@@ -220,10 +206,6 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   [PackageStatusWareHouseExport]: {
     value: 'Xuất kho',
     class: 'badge-success',
-  },
-  [PackageStatusReturned]: {
-    value: 'Trả hàng',
-    class: 'badge-alert',
   },
   [PackageStatusCancelled]: {
     value: 'Đã hủy',
