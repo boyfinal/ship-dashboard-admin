@@ -179,6 +179,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PackageStatusPicked]: 'Accepted at LionBay Processing	Center',
   [PackageStatusCancelled]: 'Label canceled',
   [PackageStatusDelivered]: 'Delivered',
+  [PackageStatusReturned]: ' Package returned',
   [PackageStatusWareHouseExport]: 'Departed from LionBay Processing Center',
 }
 
