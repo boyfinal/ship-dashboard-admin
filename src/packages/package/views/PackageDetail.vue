@@ -60,7 +60,8 @@
               v-if="
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
-                  package_detail.package.status != statusShipping
+                  package_detail.package.status != statusShipping &&
+                  package_detail.package.status != statusExpired
               "
             >
               <span>Hủy đơn</span>
@@ -73,7 +74,8 @@
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
                   package_detail.package.status != statusShipping &&
-                  !package_detail.package.tracking
+                  !package_detail.package.tracking &&
+                  package_detail.package.status != statusExpired
               "
             >
               Sửa đơn
@@ -592,6 +594,7 @@ import {
   PackageStatusInTransit,
   PackageStatusReturned,
   PackageStatusCreated,
+  PackageStatusExpired,
   PackageStatusWareHouseInContainer,
   PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
@@ -731,6 +734,9 @@ export default {
     },
     statusSuccess() {
       return PackageStatusDelivered
+    },
+    statusExpired() {
+      return PackageStatusExpired
     },
     statusShipping() {
       return PackageStatusInTransit
