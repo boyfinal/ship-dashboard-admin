@@ -72,7 +72,7 @@
                       <th width="100" :class="{ hidden: hiddenClass }"
                         >created date
                       </th>
-                      <th width="100" :class="{ hidden: hiddenClass }"
+                      <th width="150" :class="{ hidden: hiddenClass }"
                         >status</th
                       >
                       <th :class="{ hidden: hiddenClass }">Total fee</th>
@@ -134,9 +134,7 @@
                           position="top"
                           type="dark"
                         >
-                          <i aria-hidden="true">
-                            <p-svg name="warning"></p-svg>
-                          </i>
+                          <p-svg name="location-warning"></p-svg>
                         </p-tooltip>
                       </span>
                     </td>
@@ -210,6 +208,23 @@
                       <span
                         v-status:status="mapStatus[item.status_string].value"
                       ></span>
+                      <span
+                        v-if="item.alert > 0"
+                        class="
+                            pull-right
+                            list-warning
+                            badge badge-round badge-warning-order
+                          "
+                      >
+                        <p-tooltip
+                          class="item_name"
+                          :label="description(item.alert)"
+                          position="top"
+                          type="dark"
+                        >
+                          <p-svg name="warning"></p-svg>
+                        </p-tooltip>
+                      </span>
                     </td>
                     <td>{{ item.shipping_fee | formatPrice }}</td>
                   </tr>
@@ -247,6 +262,9 @@ import {
   MAP_NAME_STATUS_STRING_PACKAGE,
   PackageStatusDeactive,
   PackageStatusExpiredText,
+  PackageAlertTypeOverPretransit,
+  PackageAlertTypeWarehoseReturn,
+  PackageAlertTypeHubReturn,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -384,6 +402,16 @@ export default {
         'danh_sach_van_don_'
       )
       this.isVisibleExport = false
+    },
+    description(alert) {
+      switch (alert) {
+        case PackageAlertTypeOverPretransit:
+          return 'Quá 7 ngày chờ lấy'
+        case PackageAlertTypeWarehoseReturn:
+          return 'Bị kho trả lại'
+        case PackageAlertTypeHubReturn:
+          return 'Hàng bị trả lại'
+      }
     },
   },
   watch: {
