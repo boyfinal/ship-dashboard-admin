@@ -95,7 +95,7 @@
                       <td>{{
                         item.tracking ? item.tracking.tracking_number : ``
                       }}</td>
-                      <td>{{ item.shipping_fee | formatPrice }}</td>
+                      <td>{{ item.shipping_fee | formatPrice2 }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -173,10 +173,7 @@
                       <td>{{
                         item.created_at | date('dd/MM/yyyy HH:mm:ss')
                       }}</td>
-                      <td v-if="item.amount < 0"
-                        >-{{ Math.abs(item.amount) | formatPrice }}</td
-                      >
-                      <td v-else>{{ item.amount | formatPrice }}</td>
+                      <td>{{ item.amount | formatPrice2 }}</td>
                       <td>{{ item.extra_fee_types.name }}</td>
                       <td>
                         <p-tooltip
