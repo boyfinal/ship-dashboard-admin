@@ -19,7 +19,7 @@
                 >
                 <button
                   v-if="tracking.id"
-                  @click="cancelLabelHandler"
+                  @click="confirmCancelLabel"
                   class="btn btn-danger ml-3 text-nowrap"
                   >Hủy label</button
                 >
@@ -136,6 +136,15 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      :visible.sync="isVisilbeModalConfirmCancel"
+      :type="`danger`"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn hủy label ?`"
+      :title="`Xác nhận hủy`"
+      @action="cancelLabelHandler"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -149,17 +158,17 @@ import { mapActions, mapState, mapMutations } from 'vuex'
 import { PACKAGE_WAREHOUSE_STATUS_PICK } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
 import { printImage } from '@core/utils/print'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import http from '@core/services/http'
-import {
-  FETCH_SERVICE,
-  FETCH_ESTIMATE_COST,
-  FETCH_WAREHOUSE,
-} from '../../shared/store'
+import { FETCH_SERVICE, FETCH_WAREHOUSE } from '../../shared/store'
 import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
 
 export default {
   name: 'CheckPackage',
   mixins: [mixinBarcode],
+  components: {
+    ModalConfirm,
+  },
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
@@ -255,6 +264,7 @@ export default {
       },
       isChange: false,
       isVisibleModalAccept: false,
+      isVisilbeModalConfirmCancel: false,
       isSubmitting: false,
     }
   },
@@ -269,12 +279,7 @@ export default {
     this.beforeLeaveHandle()
   },
   methods: {
-    ...mapActions('shared', [
-      'loading',
-      FETCH_SERVICE,
-      FETCH_ESTIMATE_COST,
-      FETCH_WAREHOUSE,
-    ]),
+    ...mapActions('shared', ['loading', FETCH_SERVICE, FETCH_WAREHOUSE]),
     ...mapActions('warehouse', {
       fetchPackage: FETCH_PACKAGE_DETAIL,
       acceptPackageSubmit: ACCEPT_PACKAGE_LABEL,
@@ -284,7 +289,11 @@ export default {
     ...mapMutations('warehouse', {
       setPackage: FETCH_PACKAGE_DETAIL,
     }),
+    confirmCancelLabel() {
+      this.isVisilbeModalConfirmCancel = true
+    },
     async cancelLabelHandler() {
+      this.isVisilbeModalConfirmCancel = false
       this.loading(true)
       this.isSubmitting = true
       const body = { tracking_number: this.tracking.tracking_number }
@@ -403,17 +412,12 @@ export default {
     },
     async showModalAcceptHandle() {
       let req = { type: 1, status: 1 }
-      let [result, result2, result3] = await Promise.all([
+      let [result, result3] = await Promise.all([
         this[FETCH_SERVICE](this.current.service_id),
-        this[FETCH_ESTIMATE_COST](this.keyword),
         this[FETCH_WAREHOUSE](req),
       ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
-        return
-      }
-      if (!result2.success) {
-        this.$toast.open({ message: result2.message, type: 'error' })
         return
       }
       if (!result3.success) {
@@ -435,11 +439,7 @@ export default {
         })
       })
 
-      let minOb = warehouseOptions.reduce(function(prev, curr) {
-        return prev.cost <= curr.cost ? prev : curr
-      })
-
-      this.acceptHandle(this.service_detail.domestic_carrier.code, minOb.id)
+      this.acceptHandle(this.service_detail.domestic_carrier.code)
     },
 
     extraHandle() {
@@ -449,17 +449,13 @@ export default {
       })
     },
 
-    async acceptHandle(carrier, warehouse) {
+    async acceptHandle(carrier) {
       if (this.tracking.id) {
         this.printLabel()
         return
       }
       if (!carrier) {
         return this.$toast.error('Vui lòng chọn Loại vận chuyển')
-      }
-
-      if (!warehouse) {
-        return this.$toast.error('Vui lòng chọn Kho')
       }
 
       if (this.isSubmitting) return
@@ -469,7 +465,6 @@ export default {
       const body = {
         id: this.current.id,
         carrier: carrier,
-        warehouse: warehouse,
       }
 
       body.weight = parseFloat(this.volume.weight) || 0

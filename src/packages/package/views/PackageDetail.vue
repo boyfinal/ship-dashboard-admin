@@ -60,7 +60,8 @@
               v-if="
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
-                  package_detail.package.status != statusShipping
+                  package_detail.package.status != statusShipping &&
+                  package_detail.package.status != statusExpired
               "
             >
               <span>Hủy đơn</span>
@@ -73,7 +74,8 @@
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
                   package_detail.package.status != statusShipping &&
-                  !package_detail.package.tracking
+                  !package_detail.package.tracking &&
+                  package_detail.package.status != statusExpired
               "
             >
               Sửa đơn
@@ -590,8 +592,9 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
-  PackageStatusAlert,
+  PackageStatusReturned,
   PackageStatusCreated,
+  PackageStatusExpired,
   PackageStatusWareHouseInContainer,
   PackageStatusWareHouseInShipment,
   MAP_NAME_STATUS_WAREHOUSE,
@@ -669,7 +672,7 @@ export default {
                 log.updated_user_name
               }</strong>`
               break
-            case PackageStatusAlert:
+            case PackageStatusReturned:
               text = `${DELIVER_LOG_PACKAGE[log.type]} <p>Lí do: ${
                 log.description
               }</p>`
@@ -731,6 +734,9 @@ export default {
     },
     statusSuccess() {
       return PackageStatusDelivered
+    },
+    statusExpired() {
+      return PackageStatusExpired
     },
     statusShipping() {
       return PackageStatusInTransit
