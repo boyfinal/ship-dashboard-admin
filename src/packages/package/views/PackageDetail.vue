@@ -680,7 +680,7 @@ export default {
             default:
               text = log.description || DELIVER_LOG_PACKAGE[log.type]
           }
-          if (text.trim() === 'Accepted at USPS Origin Facility') {
+          if (text && text.trim() === 'Accepted at USPS Origin Facility') {
             text = 'USPS‘s pickup awaiting'
           }
           return { ship_time: log.ship_time, text, location: log.location }
