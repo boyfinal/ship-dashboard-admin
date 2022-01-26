@@ -16,7 +16,10 @@
             <div>
               <div>LionBay tracking</div>
               <div class="package-code"
-                >{{ $evaluate('package_detail.package.package_code?.code') }}
+                >{{
+                  $evaluate('package_detail.package.package_code?.code') ||
+                    'N/A'
+                }}
               </div>
             </div>
             <div>
@@ -679,9 +682,6 @@ export default {
               break
             default:
               text = log.description || DELIVER_LOG_PACKAGE[log.type]
-          }
-          if (text && text.trim() === 'Accepted at USPS Origin Facility') {
-            text = 'USPS‘s pickup awaiting'
           }
           return { ship_time: log.ship_time, text, location: log.location }
         })
