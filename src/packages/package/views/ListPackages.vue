@@ -139,8 +139,11 @@
                       </span>
                     </td>
                     <td class="text-nowrap code">
-                      <span class="link-code">
-                        {{ item.package_code ? item.package_code.code : '' }}
+                      <span v-if="item.package_code" class="link-code">
+                        {{ item.package_code.code }}
+                      </span>
+                      <span v-else class="no-track-code">
+                        N/A
                       </span>
                       <span class="svg" v-if="item.package_code">
                         <p-tooltip
@@ -192,13 +195,14 @@
                       <a
                         v-if="item.tracking"
                         target="_blank"
-                        class="on-hover"
+                        class="on-hover "
                         :href="
                           `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
                         "
                       >
                         {{ item.tracking.tracking_number }}
                       </a>
+                      <span class="no-track-code" v-else>N/A</span>
                     </td>
                     <td>
                       {{ item.user.full_name }}
@@ -442,5 +446,11 @@ td.code {
     position: relative;
     top: 3px;
   }
+}
+.no-track-code,
+.no-pkg-code {
+  position: relative;
+  left: 50px;
+  display: inline-block;
 }
 </style>
