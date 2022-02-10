@@ -26,6 +26,7 @@
               <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
+                    <th width="8"></th>
                     <th width="120">Khách hàng</th>
                     <th width="300">Email</th>
                     <th max-width="50">Loại tài khoản</th>
@@ -39,7 +40,13 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in displayUsers" :key="i">
-                    <td>
+                    <td width="8" class="user-status">
+                      <i
+                        class="fa fa-circle"
+                        :class="{ active: item.active }"
+                      ></i>
+                    </td>
+                    <td class="user-fullname">
                       <p-tooltip
                         :label="item.full_name"
                         size="large"
@@ -47,7 +54,7 @@
                         type="dark"
                         :active="item.full_name.length > 25"
                       >
-                        <b>{{ item.full_name_short }}</b>
+                        {{ item.full_name_short }}
                       </p-tooltip>
                     </td>
                     <td>
@@ -63,10 +70,10 @@
                     </td>
                     <td>
                       <div class="d-flex align-items-center">
-                        <p-svg
-                          :name="typesClass[item.class]"
+                        <!-- <p-svg
+                          :name="item.type_icon"
                           style="margin-right: 4px"
-                        ></p-svg>
+                        ></p-svg> -->
                         {{ types[item.class] }}</div
                       >
                     </td>
@@ -139,7 +146,7 @@
                             type="dark"
                             :active="true"
                           >
-                            <p-svg name="setting"></p-svg>
+                            <p-svg name="Setting"></p-svg>
                           </p-tooltip>
                         </a>
                       </div>
@@ -194,7 +201,11 @@ import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 import ModalEditUser from '../components/ModalEdit'
-import { MAP_USER_CLASS_TEXT, MAP_USER_CLASS_ICON } from '../constants'
+import {
+  MAP_USER_CLASS_TEXT,
+  MAP_USER_CLASS_ICON,
+  USER_STATUS_ACTIVE,
+} from '../constants'
 
 export default {
   name: 'Debt',
@@ -269,6 +280,8 @@ export default {
           debt: balance > 0 ? 0 : Math.abs(balance),
           balance: balance > 0 ? balance : 0,
           class: item.class,
+          active: item.status == USER_STATUS_ACTIVE,
+          type_icon: MAP_USER_CLASS_ICON[item.class] || '',
         }
       })
     },
@@ -334,11 +347,42 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .table-cumtomers {
   tbody tr td {
     padding: 10px 5px;
-    // vertical-align: top;
+    border-radius: 0;
+  }
+
+  th {
+    text-transform: initial;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 22px;
+    color: #111212;
+  }
+}
+.user-status {
+  .fa-circle {
+    color: #cfd0d0;
+    margin-right: 3px !important;
+    margin-top: 0 !important;
+    vertical-align: middle;
+    line-height: 18px;
+    &.active {
+      color: #48be78;
+    }
+  }
+}
+.user-fullname {
+  &,
+  span {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+    color: #313232;
   }
 }
 </style>

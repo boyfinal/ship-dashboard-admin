@@ -129,7 +129,7 @@ export default {
             },
             {
               route: '/debt',
-              title: 'Công nợ',
+              title: 'Người dùng',
               alias: ['/debt'],
             },
             {
