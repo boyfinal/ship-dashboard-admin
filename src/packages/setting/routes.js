@@ -12,7 +12,7 @@ export const routes = [
     path: '/debt',
     name: 'debt',
     meta: {
-      title: 'Quản lý công nợ',
+      title: 'Quản lý người dùng',
     },
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/Debt.vue'),
