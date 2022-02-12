@@ -245,7 +245,7 @@ export default {
       user: (state) => state.user,
     }),
     statusPackage() {
-      return PACKAGE_STATUS_TAB
+      return PACKAGE_STATUS_TAB.filter((x)=>x.value != "alert")
     },
     types() {
       return MAP_USER_CLASS_TEXT
