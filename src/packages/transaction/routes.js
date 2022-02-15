@@ -7,7 +7,7 @@ export const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "list-transaction" */ './views/ListTransactions.vue'
+        /* webpackChunkName: "transaction" */ './views/ListTransactions.vue'
       ),
   },
 ]

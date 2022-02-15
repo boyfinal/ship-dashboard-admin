@@ -6,9 +6,7 @@ export const routes = [
       title: 'Chi tiết lô hàng',
     },
     component: () =>
-      import(
-        /* webpackChunkName: "shipment-detail" */ './views/ShipmentDetail.vue'
-      ),
+      import(/* webpackChunkName: "shipment" */ './views/ShipmentDetail.vue'),
   },
   {
     path: '/shipments',
@@ -17,6 +15,6 @@ export const routes = [
       title: 'Quản lý lô hàng',
     },
     component: () =>
-      import(/* webpackChunkName: "sign-in" */ './views/ListShipment'),
+      import(/* webpackChunkName: "shipment" */ './views/ListShipment'),
   },
 ]
