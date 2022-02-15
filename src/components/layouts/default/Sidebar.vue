@@ -186,6 +186,32 @@ export default {
           ],
         },
         {
+          title: 'Hub',
+          icon: 'warehouse',
+          iconActive: 'warehouseActive',
+          route: '#',
+          class: '',
+          isOpen: false,
+          disable: this.$isSupport(),
+          sub: [
+            {
+              route: '/packages',
+              title: 'Tra cứu đơn',
+              alias: ['/packages'],
+            },
+            {
+              route: '/packages',
+              title: 'Quét nhập hub',
+              alias: ['/packages'],
+            },
+            {
+              route: '/packages',
+              title: 'Quét xuất hub',
+              alias: ['/packages'],
+            },
+          ],
+        },
+        {
           title: 'Quản trị',
           icon: 'Setting',
           iconActive: 'SettingActive',
