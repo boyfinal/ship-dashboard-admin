@@ -257,4 +257,12 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     value: 'Xuất kho',
     class: 'badge-success',
   },
+  [PackageStatusImportHub]: {
+    value: 'Nhập hub',
+    class: 'badge-success',
+  },
+  [PackageStatusExportHub]: {
+    value: 'Xuất hub',
+    class: 'badge-success',
+  },
 }
