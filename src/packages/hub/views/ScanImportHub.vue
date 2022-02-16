@@ -118,7 +118,7 @@ export default {
       containers: (state) => state.containers,
     }),
     disableBtnScan() {
-      return !this.keyword || this.isFetchingContainer
+      return !this.keyword || this.isFetchingContainer || this.isScan
     },
     disableBtnAccept() {
       return (
@@ -151,6 +151,7 @@ export default {
       current_tracking_number: '',
       isSubmitting: false,
       isCancel: false,
+      isScan: false,
     }
   },
   created() {
@@ -171,6 +172,7 @@ export default {
         this.keyword == this.current_tracking_number
       )
         return
+      this.isScan = true
       this.isCancel = false
       const params = {
         code: keyword,
@@ -179,6 +181,8 @@ export default {
       const res = await this[GET_CONTAINER_IMPORT](params)
       if (!res.success) {
         this.isFetchingContainer = false
+        this.isScan = false
+        this.isCancel = true
         this.$toast.open({
           type: 'error',
           message: res.message,
@@ -223,9 +227,11 @@ export default {
       if (!res.success) {
         this.$toast.error(res.message)
         this.isSubmitting = false
+        this.isScan = false
         return
       }
       this.isSubmitting = false
+      this.isScan = false
       this.isCancel = true
       this.$toast.success(`Kiện ${this.current_code} quét thành công`)
       this.init()
