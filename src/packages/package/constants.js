@@ -7,6 +7,8 @@ export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
 export const PackageStatusWareHouseInShipment = 13
 export const PackageStatusWareHouseExport = 14
+export const PackageStatusImportHub = 15
+export const PackageStatusExportHub = 16
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 60
 export const PackageStatusReturned = 40
@@ -17,6 +19,8 @@ export const PackageStatusCreatedText = 'pending'
 export const PackageStatusPendingPickupText = 'pre-transit'
 export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-transit'
+export const PackageStatusImportHubText = 'import-hub'
+export const PackageStatusExportHubText = 'export-hub'
 export const PackageStatusDeliveredText = 'delivered'
 export const PackageStatusAlertText = 'alert'
 export const PackageStatusCancelledText = 'canceled'
@@ -62,6 +66,14 @@ export const PACKAGE_STATUS_TAB = [
   {
     value: PackageStatusExpiredText,
     text: 'Expired',
+  },
+  {
+    value: PackageStatusImportHubText,
+    text: 'Import-Hub',
+  },
+  {
+    value: PackageStatusExportHubText,
+    text: 'Export-Hub',
   },
 ]
 
@@ -114,6 +126,14 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'Expired',
     class: 'badge-success',
   },
+  [PackageStatusImportHub]: {
+    value: 'Import Hub',
+    class: 'badge-success',
+  },
+  [PackageStatusExportHub]: {
+    value: 'Export Hub',
+    class: 'badge-success',
+  },
 }
 
 export const MAP_NAME_STATUS_STRING_PACKAGE = {
@@ -151,6 +171,14 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   },
   [PackageStatusExpiredText]: {
     value: 'expired',
+    class: 'badge-expired',
+  },
+  [PackageStatusImportHubText]: {
+    value: 'import-hub',
+    class: 'badge-expired',
+  },
+  [PackageStatusExportHubText]: {
+    value: 'export-hub',
     class: 'badge-expired',
   },
 }

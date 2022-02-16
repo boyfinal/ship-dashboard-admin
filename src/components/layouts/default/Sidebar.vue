@@ -200,9 +200,9 @@ export default {
               alias: ['/packages'],
             },
             {
-              route: '/packages',
+              route: '/hub/import',
               title: 'Quét nhập hub',
-              alias: ['/packages'],
+              alias: ['/hub/import'],
             },
             {
               route: '/packages',
