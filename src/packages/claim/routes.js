@@ -6,7 +6,7 @@ export const routes = [
       title: 'Khiếu nại',
     },
     component: () =>
-      import(/* webpackChunkName: "settings" */ './views/ListClaim.vue'),
+      import(/* webpackChunkName: "claim" */ './views/ListClaim.vue'),
   },
   {
     path: '/claims/:id',
@@ -15,6 +15,6 @@ export const routes = [
       title: 'Chi tiết khiếu nại',
     },
     component: () =>
-      import(/* webpackChunkName: "settings" */ './views/ClaimDetail.vue'),
+      import(/* webpackChunkName: "claim" */ './views/ClaimDetail.vue'),
   },
 ]

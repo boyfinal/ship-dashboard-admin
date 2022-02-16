@@ -11,9 +11,7 @@ export const routes = [
       ...noAuthRequired(),
     },
     component: () =>
-      lazyLoadView(
-        import(/* webpackChunkName: "sign-in" */ './views/SignIn.vue')
-      ),
+      lazyLoadView(import(/* webpackChunkName: "auth" */ './views/SignIn.vue')),
   },
   {
     path: '/sign-up',
@@ -25,9 +23,7 @@ export const routes = [
       ...noAuthRequired(),
     },
     component: () =>
-      lazyLoadView(
-        import(/* webpackChunkName: "sign-up" */ './views/SignUp.vue')
-      ),
+      lazyLoadView(import(/* webpackChunkName: "auth" */ './views/SignUp.vue')),
   },
   {
     path: '/forgot',
@@ -39,9 +35,7 @@ export const routes = [
       ...noAuthRequired(),
     },
     component: () =>
-      lazyLoadView(
-        import(/* webpackChunkName: "forgot" */ './views/Forgot.vue')
-      ),
+      lazyLoadView(import(/* webpackChunkName: "auth" */ './views/Forgot.vue')),
   },
   {
     path: '/verify-email',
@@ -54,7 +48,7 @@ export const routes = [
     },
     component: () =>
       lazyLoadView(
-        import(/* webpackChunkName: "verify-email" */ './views/VerifyEmail.vue')
+        import(/* webpackChunkName: "auth" */ './views/VerifyEmail.vue')
       ),
   },
   {
@@ -68,7 +62,7 @@ export const routes = [
     },
     component: () =>
       lazyLoadView(
-        import(/* webpackChunkName: "forgot" */ './views/ResetPassword.vue')
+        import(/* webpackChunkName: "auth" */ './views/ResetPassword.vue')
       ),
   },
 ]
