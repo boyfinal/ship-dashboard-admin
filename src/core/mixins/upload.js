@@ -8,7 +8,7 @@ export default {
       }
     },
     uploadEndpoint() {
-      return `${process.env.VUE_APP_BASE_API_ENDPOINT}/uploads/images`
+      return `${process.env.VUE_APP_BASE_API_ENDPOINT}/uploads`
     },
     uploadFileEndpoint() {
       return `${process.env.VUE_APP_BASE_API_ENDPOINT}/uploads/files`

@@ -195,9 +195,9 @@ export default {
           disable: this.$isSupport(),
           sub: [
             {
-              route: '/packages',
+              route: '/hubs/search',
               title: 'Tra cứu đơn',
-              alias: ['/packages'],
+              alias: ['/hubs/search'],
             },
             {
               route: '/packages',
