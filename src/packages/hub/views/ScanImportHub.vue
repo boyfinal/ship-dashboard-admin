@@ -12,6 +12,7 @@
                     clearable
                     type="search"
                     :disabled="disableInput"
+                    @clear="clearInput"
                     v-model="keyword"
                     @keydown.enter.prevent="searchHandle"
                     placeholder="Nhập mã ups hoặc mã kiện"
@@ -78,7 +79,7 @@
                 <div class="info-container"
                   >Cân nặng : {{ current_weight }}</div
                 >
-                <div class="info-container">Số đơn : {{ countPackage }}</div>
+                <div class="info-container">Số đơn : {{ current_count }}</div>
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
                   <span v-status:status="currentStatus"></span>
@@ -130,7 +131,7 @@ export default {
     },
     currentStatus() {
       const allstatus = MAP_NAME_STATUS_CONTAINER
-      return (allstatus[this.current.status] || {}).value
+      return (allstatus[this.current_status] || {}).value
     },
   },
   data() {
@@ -148,6 +149,8 @@ export default {
       current_weight: '',
       current_height: '',
       current_id: '',
+      current_status: '',
+      current_count: 0,
       current_tracking_number: '',
       isSubmitting: false,
       isCancel: false,
@@ -211,6 +214,8 @@ export default {
       this.current_length = this.current.length
       this.current_width = this.current.width
       this.current_weight = this.current.weight
+      this.current_status = this.current.status
+      this.current_count = this.countPackage
       this.current_tracking_number = this.current.tracking_number
     },
     async init() {
@@ -249,6 +254,19 @@ export default {
       this.isCancel = true
       this.$toast.success(`Kiện ${this.current_code} quét thành công`)
       this.init()
+    },
+    clearInput() {
+      this.keyword = ''
+      this.isScan = false
+      this.current_code = ''
+      this.current_tracking_number = ''
+      this.isCancel = false
+      this.current_height = ''
+      this.current_length = ''
+      this.current_width = ''
+      this.current_weight = ''
+      this.current_status = ''
+      this.current_count = 0
     },
   },
   watch: {
