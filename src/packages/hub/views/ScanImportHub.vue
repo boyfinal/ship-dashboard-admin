@@ -177,7 +177,8 @@ export default {
         })
         return
       }
-      if (keyword.match(/^[^a-zA-Z0-9]+$/)) {
+
+      if (/\W|_/g.test(keyword)) {
         this.$toast.open({
           message: 'Mã nhập vào không đúng định dạng',
           type: 'error',
