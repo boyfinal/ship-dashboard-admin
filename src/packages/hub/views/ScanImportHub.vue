@@ -55,7 +55,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <p-pagination
-                :total="1"
+                :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
@@ -167,6 +167,20 @@ export default {
 
     async searchHandle() {
       const keyword = this.keyword.trim()
+      if (!keyword) {
+        this.$toast.open({
+          message: 'Mã nhập vào không để trống',
+          type: 'error',
+        })
+        return
+      }
+      if (keyword.match(/^[^a-zA-Z0-9]+$/)) {
+        this.$toast.open({
+          message: 'Mã nhập vào không đúng định dạng',
+          type: 'error',
+        })
+        return
+      }
       if (
         this.keyword == this.current_code ||
         this.keyword == this.current_tracking_number

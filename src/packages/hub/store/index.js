@@ -63,7 +63,7 @@ export const actions = {
       return result
     }
     commit(FETCH_LIST_CONTAINER_IMPORTED, list.containers)
-    commit(COUNT_LIST_CONTAINER_IMPORTED, count)
+    commit(COUNT_LIST_CONTAINER_IMPORTED, count.count)
     return result
   },
 
