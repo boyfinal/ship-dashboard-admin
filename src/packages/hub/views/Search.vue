@@ -1,5 +1,5 @@
 <template>
-  <div class="pages">
+  <div class="pages page-hub-search">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
@@ -212,3 +212,8 @@ export default {
   },
 }
 </script>
+<style>
+.page-hub-search .table a {
+  color: #015858;
+}
+</style>

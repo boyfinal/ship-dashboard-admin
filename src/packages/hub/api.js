@@ -25,4 +25,17 @@ export default {
   fetchPackageDetail(package_id) {
     return http.get(`/hubs/packages/${package_id}`)
   },
+
+  getContainerImport(payload) {
+    return http.get(`/hubs/import/${payload.code}`)
+  },
+  fetchListContainerImported(payload) {
+    return http.get(`/hubs/import?${buildQueryString(payload)}`)
+  },
+  countListContainerImported(payload) {
+    return http.get(`/hubs/import/count?${buildQueryString(payload)}`)
+  },
+  scanContainerImport(payload) {
+    return http.post(`/hubs/import/${payload.code}/scan`)
+  },
 }

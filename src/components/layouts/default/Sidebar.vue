@@ -200,9 +200,9 @@ export default {
               alias: ['/hubs/search'],
             },
             {
-              route: '/packages',
+              route: '/hub/import',
               title: 'Quét nhập hub',
-              alias: ['/packages'],
+              alias: ['/hub/import'],
             },
             {
               route: '/packages',
@@ -213,7 +213,7 @@ export default {
         },
         {
           title: 'Quản trị',
-          icon: 'Setting',
+          icon: 'setting',
           iconActive: 'SettingActive',
           route: { name: 'setting' },
           class: '',

@@ -64,7 +64,8 @@
                 package_detail.package.status != statusCancel &&
                   package_detail.package.status != statusSuccess &&
                   package_detail.package.status != statusShipping &&
-                  package_detail.package.status != statusExpired
+                  package_detail.package.status != statusExpired &&
+                  package_detail.package.status != statusImportHub
               "
             >
               <span>Hủy đơn</span>
@@ -595,6 +596,7 @@ import {
   PackageStatusCancelled,
   PackageStatusDelivered,
   PackageStatusInTransit,
+  PackageStatusImportHub,
   PackageStatusReturned,
   PackageStatusCreated,
   PackageStatusExpired,
@@ -607,6 +609,7 @@ import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
+
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
@@ -740,6 +743,9 @@ export default {
     },
     statusShipping() {
       return PackageStatusInTransit
+    },
+    statusImportHub() {
+      return PackageStatusImportHub
     },
     mapExtraFee() {
       let arr = cloneDeep(this.extraFee),
