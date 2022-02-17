@@ -44,7 +44,7 @@ export default {
     return {
       count: 0,
       image: '',
-      className: '',
+      className: 'center',
       blob: null,
       callAPi: false,
       isError: false,
