@@ -205,9 +205,9 @@ export default {
               alias: ['/hub/import'],
             },
             {
-              route: '/packages',
+              route: '/hub/export',
               title: 'Quét xuất hub',
-              alias: ['/packages'],
+              alias: ['/hub/export'],
             },
           ],
         },

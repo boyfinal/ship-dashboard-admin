@@ -55,3 +55,14 @@ export const PACKAGES_STATUS_TEXT = {
   [PACKAGE_WAREHOUSE_STATUS_RETURN]: 'Trả hàng',
   [PACKAGE_WAREHOUSE_STATUS_CANCELLED]: 'Hủy',
 }
+
+export const EXPORT_HUB_TAB = [
+  {
+    value: 'container',
+    text: 'Kiện hàng',
+  },
+  {
+    value: 'package',
+    text: 'Đơn hàng',
+  },
+]

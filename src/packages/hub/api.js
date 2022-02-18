@@ -15,4 +15,21 @@ export default {
   scanContainerImport(payload) {
     return http.post(`/hubs/import/${payload.code}/scan`)
   },
+  fetchListImported(payload) {
+    return http.get(`/hubs/list-import?${buildQueryString(payload)}`)
+  },
+  getImportHubDetail(payload) {
+    let param = new Object()
+    param.type = payload.type
+    return http.get(
+      `/hubs/import-detail/${payload.code}?${buildQueryString(param)}`
+    )
+  },
+  scanExportHub(payload) {
+    let param = new Object()
+    param.type = payload.type
+    return http.post(
+      `/hubs/export/${payload.code}/scan?${buildQueryString(param)}`
+    )
+  },
 }
