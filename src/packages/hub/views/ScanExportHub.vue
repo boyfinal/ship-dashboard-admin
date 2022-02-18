@@ -13,6 +13,7 @@
                     type="search"
                     :disabled="disableInput"
                     v-model="keyword"
+                    @clear="clearInput"
                     @keydown.enter.prevent="searchHandle"
                     placeholder="Nhập mã kiện, mã đơn"
                   ></p-input>
@@ -21,12 +22,6 @@
                     :disabled="disableBtnScan"
                     class="btn btn-scan-info ml-3 text-nowrap"
                     >Quét</button
-                  >
-                  <button
-                    :disabled="disableBtnAccept"
-                    @click.prevent="acceptSubmit"
-                    class="btn btn-scan-info ml-3 text-nowrap"
-                    >Xác nhận</button
                   >
                 </div>
               </div>
@@ -50,7 +45,7 @@
                         <p-button
                           class="mr-2 btn-submit"
                           type="info"
-                          @click.prevent="acceptSubmit(item)"
+                          @click.prevent="handelModalConfirm(item)"
                         >
                           Xuất
                         </p-button>
@@ -95,12 +90,12 @@
                 <div class="info-container"
                   >Cân nặng : {{ current_container.weight }}</div
                 >
-                <div class="info-container">Số đơn : {{ countPackage }}</div>
+                <div class="info-container"
+                  >Số đơn : {{ current_container.count }}</div
+                >
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
-                  <span
-                    v-status:status="current_container.currentStatus"
-                  ></span>
+                  <span v-status:status="currentStatus"></span>
                 </div>
               </div>
             </div>
@@ -133,19 +128,49 @@
                 >
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
-                  <span v-status:status="current_package.currentStatus"></span>
+                  <span v-status:status="currentStatus"></span>
                 </div>
               </div>
             </div>
 
-            <div class="card list-export">
+            <div class="card list-export" v-if="filter.type == 'container'">
               <div class="card-header">
-                <div class="card-title">Danh sách xuất</div>
+                <div class="card-title">Danh sách xuất kiện hàng</div>
               </div>
               <div class="card-body">
-                <div class="empty">
+                <div class="empty" v-if="listExportedContainer.length == 0">
                   <p-svg name="empty"></p-svg>
                   <p>Chưa có đơn hàng được quét!</p>
+                </div>
+                <div class="list-exported" v-else>
+                  <div
+                    class="item-exported"
+                    v-for="(item, i) in listExportedContainer"
+                    :key="i"
+                  >
+                    {{ item }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card list-export" v-if="filter.type == 'package'">
+              <div class="card-header">
+                <div class="card-title">Danh sách xuất đơn hàng</div>
+              </div>
+              <div class="card-body">
+                <div class="empty" v-if="listExportedPackage.length == 0">
+                  <p-svg name="empty"></p-svg>
+                  <p>Chưa có đơn hàng được quét!</p>
+                </div>
+                <div class="list-exported" v-else>
+                  <div
+                    class="item-exported"
+                    v-for="(item, i) in listExportedPackage"
+                    :key="i"
+                  >
+                    {{ item }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -154,6 +179,14 @@
       </div>
     </div>
     <PageLoading :is-loading="isFetchingImportHub" />
+    <modal-confirm
+      :visible.sync="visibleConfirm"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn muốn xuất đơn/kiện này ?`"
+      :title="`Xác nhận xuất`"
+      @action="acceptSubmit"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -168,13 +201,15 @@ import {
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
 import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
+import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
 import { cloneDeep } from '../../../core/utils'
 import mixinRoute from '@core/mixins/route'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'ExportHub',
-  components: { PageLoading, EmptySearchResult, ExportHubTab },
+  components: { PageLoading, EmptySearchResult, ExportHubTab, ModalConfirm },
   mixins: [mixinBarcode, mixinRoute],
   computed: {
     ...mapState('hub', {
@@ -187,19 +222,17 @@ export default {
       return EXPORT_HUB_TAB
     },
     disableBtnScan() {
-      return !this.keyword || this.isFetchingImportHub
+      return !this.keyword || this.isFetchingImportHub || this.isScan
     },
-    disableBtnAccept() {
-      return (
-        this.isFetchingImportHub ||
-        !this.code ||
-        !this.tracking_number ||
-        this.isCancel
-      )
-    },
+
     currentStatus() {
-      const allstatus = MAP_NAME_STATUS_CONTAINER
-      return (allstatus[this.current.status] || {}).value
+      if (this.filter.type == 'container') {
+        const allstatus = MAP_NAME_STATUS_CONTAINER
+        return (allstatus[this.current_container.status] || {}).value
+      } else {
+        const allstatus = MAP_NAME_STATUS_WAREHOUSE
+        return (allstatus[this.current_package.status] || {}).value
+      }
     },
   },
   data() {
@@ -212,6 +245,7 @@ export default {
         type: 'container',
       },
       isFetchingImportHub: false,
+      currentCode: '',
       current_container: {
         code: '',
         width: '',
@@ -220,6 +254,7 @@ export default {
         height: '',
         id: '',
         tracking_number: '',
+        status: '',
       },
       current_package: {
         code: '',
@@ -230,9 +265,13 @@ export default {
         id: '',
         order_number: '',
         tracking_number: '',
+        status: '',
       },
+      visibleConfirm: false,
       isSubmitting: false,
-      isCancel: false,
+      listExportedContainer: [],
+      listExportedPackage: [],
+      isScan: false,
     }
   },
   created() {
@@ -257,13 +296,28 @@ export default {
         this.current_package = {}
       }
       const keyword = this.keyword.trim()
+      if (!keyword) {
+        this.$toast.open({
+          message: 'Mã nhập vào không để trống',
+          type: 'error',
+        })
+        return
+      }
+
+      if (/\W|_/g.test(keyword)) {
+        this.$toast.open({
+          message: 'Mã nhập vào không đúng định dạng',
+          type: 'error',
+        })
+        return
+      }
+
       if (
         this.keyword == this.current_container.code ||
         this.keyword == this.current_package.code ||
         this.keyword == this.tracking_number
       )
         return
-      this.isCancel = false
 
       this.handleUpdateRouteQuery()
 
@@ -281,10 +335,12 @@ export default {
         code: keyword,
       }
 
+      this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
       if (!res.success) {
         this.isFetchingImportHub = false
+        this.isScan = false
         this.$toast.open({
           type: 'error',
           message: res.message,
@@ -302,8 +358,9 @@ export default {
         this.current_container.width = this.current.width
         this.current_container.weight = this.current.weight
         this.current_container.tracking_number = this.current.tracking_number
+        this.current_container.status = this.current.status
+        this.current_container.count = this.countPackage
       } else if (this.filter.type == 'package') {
-        console.log(this.current)
         this.current_package.code = this.current.package_code.code
         this.current_package.id = this.current.id
         this.current_package.height = this.current.height
@@ -312,6 +369,7 @@ export default {
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
         this.current_package.tracking_number = this.current.tracking_number
+        this.current_package.status = this.current.status
       }
     },
 
@@ -333,32 +391,67 @@ export default {
       this.disableInput = false
     },
 
+    handelModalConfirm(code) {
+      this.visibleConfirm = true
+      this.currentCode = code
+    },
+
     async acceptSubmit() {
-      if (
-        (!this.current_package && !this.current_container) ||
-        this.isSubmitting ||
-        this.isCancel
-      )
+      if (!this.currentCode || this.isSubmitting) {
         return
+      }
 
       this.isSubmitting = true
       let payload = {
-        code: this.current_package.code
-          ? this.current_package.code
-          : this.current_container.code,
+        code: this.currentCode,
         type: this.filter.type,
       }
       const res = await this[SCAN_EXPORT_HUB](payload)
 
       if (!res.success) {
+        this.isScan = false
         this.$toast.error(res.message)
         this.isSubmitting = false
         return
       }
       this.isSubmitting = false
-      this.isCancel = true
-      this.$toast.success(`Kiện ${this.code} quét thành công`)
+      this.$toast.success(`Kiện ${payload.code} quét thành công`)
+      if (this.filter.type == 'container') {
+        this.listExportedContainer.push(this.currentCode)
+      } else if (this.filter.type == 'package') {
+        this.listExportedPackage.push(this.currentCode)
+      }
+      this.isScan = false
+      this.visibleConfirm = false
       this.init()
+    },
+
+    clearInput() {
+      this.keyword = ''
+      this.isScan = false
+      this.currentCode = ''
+      if (this.filter.type == 'container') {
+        this.current_container.code = ''
+        this.current_container.id = ''
+        this.current_container.height = ''
+        this.current_container.length = ''
+        this.current_container.width = ''
+        this.current_container.weight = ''
+        this.current_container.tracking_number = ''
+        this.current_container.status = ''
+        this.current_container.count = ''
+      } else if (this.filter.type == 'package') {
+        this.current_package.code = ''
+        this.current_package.id = ''
+        this.current_package.height = ''
+        this.current_package.length = ''
+        this.current_package.width = ''
+        this.current_package.weight = ''
+        this.current_package.order_number = ''
+        this.current_package.tracking_number = ''
+        this.current_package.status = ''
+      }
+      this.c
     },
   },
   watch: {

@@ -195,9 +195,9 @@ export default {
           disable: this.$isSupport(),
           sub: [
             {
-              route: '/packages',
+              route: '/hubs/search',
               title: 'Tra cứu đơn',
-              alias: ['/packages'],
+              alias: ['/hubs/search'],
             },
             {
               route: '/hub/import',
@@ -213,7 +213,7 @@ export default {
         },
         {
           title: 'Quản trị',
-          icon: 'Setting',
+          icon: 'setting',
           iconActive: 'SettingActive',
           route: { name: 'setting' },
           class: '',

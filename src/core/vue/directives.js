@@ -190,11 +190,11 @@ const getFormatStatus = (status) => {
       statusClass = 'alert'
       break
     case 'import-hub':
-    case 'Nhập hub':
+    case 'Hub đã nhận':
       statusClass = 'import-hub'
       break
     case 'export-hub':
-    case 'Xuất hub':
+    case 'Hub đã xuất':
       statusClass = 'export-hub'
       break
   }

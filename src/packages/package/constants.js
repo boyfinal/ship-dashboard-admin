@@ -67,14 +67,6 @@ export const PACKAGE_STATUS_TAB = [
     value: PackageStatusExpiredText,
     text: 'Expired',
   },
-  {
-    value: PackageStatusImportHubText,
-    text: 'Import-Hub',
-  },
-  {
-    value: PackageStatusExportHubText,
-    text: 'Export-Hub',
-  },
 ]
 
 export const MAP_NAME_STATUS_PACKAGE = {
@@ -127,11 +119,11 @@ export const MAP_NAME_STATUS_PACKAGE = {
     class: 'badge-success',
   },
   [PackageStatusImportHub]: {
-    value: 'Import Hub',
+    value: 'In-Transit',
     class: 'badge-success',
   },
   [PackageStatusExportHub]: {
-    value: 'Export Hub',
+    value: 'In-Transit',
     class: 'badge-success',
   },
 }
@@ -171,14 +163,6 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   },
   [PackageStatusExpiredText]: {
     value: 'expired',
-    class: 'badge-expired',
-  },
-  [PackageStatusImportHubText]: {
-    value: 'import-hub',
-    class: 'badge-expired',
-  },
-  [PackageStatusExportHubText]: {
-    value: 'export-hub',
     class: 'badge-expired',
   },
 }
@@ -258,11 +242,11 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-success',
   },
   [PackageStatusImportHub]: {
-    value: 'Nhập hub',
+    value: 'Hub đã nhận',
     class: 'badge-success',
   },
   [PackageStatusExportHub]: {
-    value: 'Xuất hub',
+    value: 'Hub đã xuất',
     class: 'badge-success',
   },
 }

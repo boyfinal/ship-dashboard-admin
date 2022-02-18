@@ -54,15 +54,30 @@
   &-containers{
     .container-code{
       display: flex;
-    align-items: center;
-    justify-content: space-between;
-     padding: 14px 7px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 7px;
       border-bottom: 1px solid #CFD0D0;
-     color: $color-neutral-10;
+      color: $color-neutral-10;
      &:last-child{
        border: none;
      }
     }
+  }
+  .list-exported{
+    height: 365px;
+    overflow-y: auto;
+  }
+  .item-exported{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 7px;
+    border-bottom: 1px solid #CFD0D0;
+    color: $color-neutral-10;
+   &:last-child{
+     border: none;
+   }
   }
   .info-container{
     margin-bottom: 10px;
@@ -84,6 +99,7 @@
   }
 
   .empty {
+    height: 365px;
     padding: 120px 0;
     text-align: center;
   }
