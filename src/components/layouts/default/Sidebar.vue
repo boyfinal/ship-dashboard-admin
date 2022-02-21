@@ -192,22 +192,25 @@ export default {
           route: '#',
           class: '',
           isOpen: false,
-          disable: this.$isSupport(),
+          disable: this.$isSupport() || this.$isAccountant(),
           sub: [
             {
               route: '/hubs/search',
               title: 'Tra cứu đơn',
               alias: ['/hubs/search'],
+              disable: this.$isSupport() || this.$isAccountant(),
             },
             {
               route: '/hub/import',
               title: 'Quét nhập hub',
               alias: ['/hub/import'],
+              disable: this.$isSupport() || this.$isAccountant(),
             },
             {
               route: '/hub/export',
               title: 'Quét xuất hub',
               alias: ['/hub/export'],
+              disable: this.$isSupport() || this.$isAccountant(),
             },
           ],
         },
