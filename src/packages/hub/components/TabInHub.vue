@@ -8,7 +8,7 @@
           <th>LIONBAY TRACKING</th>
           <th>LAST MILE TRACKING</th>
           <th>NHÃN KIỆN</th>
-          <th>TRẠNG THÁI</th>
+          <!-- <th>TRẠNG THÁI</th> -->
         </template>
       </tr>
     </thead>
@@ -23,7 +23,7 @@
         <td>{{ item.code }}</td>
         <td>{{ item.tracking_number }}</td>
         <td>{{ item.label_number }}</td>
-        <td>{{ item.status }}</td>
+        <!-- <td>{{ item.status }}</td> -->
       </tr>
     </tbody>
   </table>

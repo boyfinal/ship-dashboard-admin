@@ -29,6 +29,8 @@
   </table>
 </template>
 <script>
+import { datetime } from '@/core/utils/datetime'
+
 export default {
   name: 'ListReship',
   props: {
@@ -47,7 +49,7 @@ export default {
             code: 'N/A',
             tracking_number: 'N/A',
             label_number: item.tracking_number,
-            date: '',
+            date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
           }
         }
 
@@ -58,7 +60,7 @@ export default {
             code: item.code,
             tracking_number: item.tracking_number,
             label_number: 'N/A',
-            date: '',
+            date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
           }
         }
 
