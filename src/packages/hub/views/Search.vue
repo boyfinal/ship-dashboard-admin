@@ -88,6 +88,7 @@ import ModalReturn from '../components/ModalReturn'
 import TabInHub from '../components/TabInHub'
 import TabExportHub from '../components/TabExportHub'
 import TabReship from '../components/TabReship'
+import mixinBarcode from '@core/mixins/barcode'
 
 export default {
   name: 'HubSearch',
@@ -99,7 +100,7 @@ export default {
     TabExportHub,
     TabReship,
   },
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinBarcode],
   computed: {
     ...mapState('hub', {
       items: (state) => state.items,
@@ -143,7 +144,14 @@ export default {
       returnSubmit: HUB_RETURN,
       fetchPackageDetail: FETCH_PACKAGE_DETAIL,
     }),
+    barcodeSubmit(keyword) {
+      keyword = keyword.trim()
 
+      if (keyword != '' && this.filter.search != keyword) {
+        this.filter.search = keyword.trim()
+        this.searchHandle()
+      }
+    },
     async searchHandle() {
       if (this.filter.status == HUB_ITEM_FILTER_STATUS_RESHIP_TEXT) return
 
@@ -152,10 +160,14 @@ export default {
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
 
+      this.isFetching = true
+
       const res = await Promise.all([
         this.searchSubmit(filters),
         this.countSearchSubmit(filters),
       ])
+
+      this.isFetching = false
 
       for (const v of res) {
         if (v.error) {
