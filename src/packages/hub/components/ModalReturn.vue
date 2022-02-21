@@ -42,7 +42,6 @@
             :action="uploadEndpoint"
             drag
             :accept="acceptUpload"
-            :limit="5"
             list-type="picture"
             :headers="uploadHeaders"
             @e-change="listenChange"
@@ -115,7 +114,7 @@
         <p-button
           type="info"
           @click.prevent="submitHandle"
-          :disabled="disableSubmit"
+          :disabled="disableSubmit || urls.length > 5"
           >Xác nhận</p-button
         >
       </div>
@@ -173,6 +172,12 @@ export default {
     acceptUpload() {
       return ALLOW_MIME_TYPE_FILE_RETURN.join(',')
     },
+    disableSubmit() {
+      const returnId = this.current.package_return
+        ? this.current.package_return.id
+        : 0
+      return returnId > 0 || this.files.length > 0
+    },
   },
   data() {
     return {
@@ -186,29 +191,40 @@ export default {
       reasons: ['Sai đia chỉ', 'Hàng hư hỏng', 'Khác'],
       validErrors: {},
       isSubmitting: false,
-      disableSubmit: false,
     }
   },
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
     },
-    onChange(e) {
+    onChange(e, fileList) {
       const exists = this.files.some(({ uid }) => uid == e.uid)
-      if (!exists) {
-        this.files.push(e)
+      if (exists || e.status == 'success') return
+
+      if (fileList.length > 5) {
+        this.onLimit()
       }
 
+      if (this.urls.length + this.files.length >= 5) {
+        this.onLimit()
+        return
+      }
+
+      this.files.push(e)
       this.files = this.files.filter(
         ({ status }) => !['fail', 'success'].includes(status)
       )
     },
     onLimit() {
-      this.validErrors.files = 'Tối đa chỉ được 5 files đính kèm'
+      this.$set(this.validErrors, 'files', 'Tối đa chỉ được 5 files đính kèm')
     },
-    onUploadSuccess(e) {
-      if (e && e.url) {
+    onUploadSuccess(e, file, fileList) {
+      fileList.splice(fileList.indexOf(file), 1)
+
+      const idx = this.files.findIndex(({ uid }) => uid == file.uid)
+      if (e && e.url && idx !== -1) {
         this.urls.push(e.url)
+        this.files = this.files.filter(({ uid }) => uid != file.uid)
       }
     },
     onUploadError(e, file) {
@@ -246,6 +262,7 @@ export default {
         title: `Bạn có muốn xóa file?`,
         onConfirm: () => {
           this.urls = this.urls.filter((v) => v != item)
+          this.$set(this.validErrors, 'files', '')
         },
       })
     },
@@ -254,7 +271,8 @@ export default {
         !this.validate() ||
         this.isSubmitting ||
         !this.current ||
-        !this.current.id
+        !this.current.id ||
+        this.files.length > 0
       )
         return
 
@@ -279,7 +297,11 @@ export default {
     validate() {
       this.validErrors = {}
       if (!this.reason) {
-        this.validErrors.reason = 'Lý do trả hàng không được để trống'
+        this.$set(
+          this.validErrors,
+          'reason',
+          'Lý do trả hàng không được để trống'
+        )
       }
 
       return Object.keys(this.validErrors).length == 0
@@ -288,7 +310,6 @@ export default {
   watch: {
     current: {
       handler: function(val) {
-        this.disableSubmit = false
         this.reason = 'Sai đia chỉ'
         this.content = ''
         this.urls = []
@@ -297,7 +318,6 @@ export default {
 
         const { reason, content, images } = val.package_return
 
-        this.disableSubmit = true
         this.reason = reason
         this.content = content
         this.urls = images
