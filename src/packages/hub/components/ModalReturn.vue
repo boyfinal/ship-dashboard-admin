@@ -64,7 +64,7 @@
           </upload>
           <div class="rule mb-16">
             Chúng tôi chỉ chấp nhận file dưới 5MB và có các định dạng sau: CSV,
-            PNG, JPG, JPEG
+            XLSX, PNG, JPG, JPEG
           </div>
           <span class="invalid-error" v-if="validErrors.files">
             {{ validErrors.files }}
