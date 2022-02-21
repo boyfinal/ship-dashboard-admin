@@ -1,4 +1,4 @@
-export const MAXIMUM_SIZE = 5
+export const MAXIMUM_SIZE = 5 * 2 ** 20
 
 // export const HUB_ITEM_FILTER_STATUS_PENDING = 10
 export const HUB_ITEM_FILTER_STATUS_IN = 20
@@ -68,6 +68,7 @@ export const ALLOW_MIME_TYPE_FILE_RETURN = [
   'application/csv',
   'application/x-csv',
   'text/csv',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ]
 
-export const REGEX_ALLOW_FILE_RETURN_EXTENSION = /(\.jpg|\.jpeg|\.png|\.csv)$/i
+export const REGEX_ALLOW_FILE_RETURN_EXTENSION = /(\.jpg|\.jpeg|\.png|\.csv|\.xlsx)$/i

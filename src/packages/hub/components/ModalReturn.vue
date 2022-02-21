@@ -11,9 +11,10 @@
         >Lý do trả hàng: <span class="text-danger">*</span></label
       >
       <select v-model="reason" class="form-control">
-        <option v-for="item in reasons" :key="item" :value="item">{{
-          item
-        }}</option>
+        <option value="">-- Chọn lý do trả hàng --</option>
+        <option v-for="item in reasons" :key="item" :value="item">
+          {{ item }}
+        </option>
       </select>
       <span class="invalid-error" v-if="validErrors.reason">
         {{ validErrors.reason }}
@@ -40,12 +41,15 @@
             class="file-uploader"
             :action="uploadEndpoint"
             drag
+            :accept="acceptUpload"
+            :limit="5"
             list-type="picture"
             :headers="uploadHeaders"
             @e-change="listenChange"
             :on-change="onChange"
             :on-success="onUploadSuccess"
             :on-error="onUploadError"
+            :on-exceed="onLimit"
             multiple
             :auto-upload="true"
             :on-max-size="errorMaximum"
@@ -62,9 +66,12 @@
             Chúng tôi chỉ chấp nhận file dưới 5MB và có các định dạng sau: CSV,
             PNG, JPG, JPEG
           </div>
+          <span class="invalid-error" v-if="validErrors.files">
+            {{ validErrors.files }}
+          </span>
         </div>
 
-        <div v-if="fileErrors.length > 0" class="ticket__error w-100">
+        <div v-if="fileErrors.length > 0" class="ticket__error w-100 mb-3">
           <div class="ticket__error-title">
             <span class="ticket__error-icon">
               <p-svg name="alert"></p-svg>
@@ -163,27 +170,20 @@ export default {
     isReturned() {
       return this.current.package_return && this.current.package_return.id > 0
     },
+    acceptUpload() {
+      return ALLOW_MIME_TYPE_FILE_RETURN.join(',')
+    },
   },
   data() {
     return {
-      maximumSize: MAXIMUM_SIZE * 2 ** 20,
-      allowedTypes: [
-        'image/png',
-        'image/jpeg',
-        'image/jpg',
-        'application/vnd.ms-excel',
-        'application/csv',
-        'application/x-csv',
-        'text/csv',
-      ],
-      allowedExtensions: /(\.jpg|\.jpeg|\.png|\.csv)$/i,
+      maximumSize: MAXIMUM_SIZE,
       fileErrors: [],
       files: [],
       urls: [],
       reason: 'Sai đia chỉ',
       content: '',
       errors: {},
-      reasons: ['Sai đia chỉ'],
+      reasons: ['Sai đia chỉ', 'Hàng hư hỏng', 'Khác'],
       validErrors: {},
       isSubmitting: false,
       disableSubmit: false,
@@ -202,6 +202,9 @@ export default {
       this.files = this.files.filter(
         ({ status }) => !['fail', 'success'].includes(status)
       )
+    },
+    onLimit() {
+      this.validErrors.files = 'Tối đa chỉ được 5 files đính kèm'
     },
     onUploadSuccess(e) {
       if (e && e.url) {
@@ -266,7 +269,7 @@ export default {
 
       const result = await this.submit(payload)
       if (result) {
-        this.reason = ''
+        this.reason = 'Sai đia chỉ'
         this.content = ''
         this.urls = []
       }
@@ -286,7 +289,7 @@ export default {
     current: {
       handler: function(val) {
         this.disableSubmit = false
-        this.reason = ''
+        this.reason = 'Sai đia chỉ'
         this.content = ''
         this.urls = []
 
