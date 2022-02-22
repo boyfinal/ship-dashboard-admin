@@ -1,6 +1,8 @@
 import { hasOwn } from '@core/utils/object'
 import { isObject } from '@core/utils/type'
 
+export function noop() {}
+
 /**
  * Is def
  * @param v

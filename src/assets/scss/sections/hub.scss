@@ -1,0 +1,150 @@
+﻿//Import Hub
+.import__hub{
+  .btn-scan-info{
+    background-color: #00978C;
+    color: white;
+    transition: .4s;
+
+    &:hover{
+      opacity: .8;
+    }
+  }
+  .list-container{
+    padding: 0;
+  }
+  &-containers{
+    .container-code{
+     padding: 14px 16px;
+      border-bottom: 1px solid #CFD0D0;
+     color: $color-neutral-10;
+     &:last-child{
+       border: none;
+     }
+    }
+  }
+  .info-container{
+    margin-bottom: 10px;
+
+    .badge{
+      margin-left: 10px;
+    }
+  }
+  .page-not-found{
+    height: 300px;
+    min-height: unset;
+    .content{
+      height: auto;
+    }
+  }
+}
+
+.export__hub{
+  .btn-scan-info{
+    background-color: #00978C;
+    color: white;
+    transition: .4s;
+
+    &:hover{
+      opacity: .8;
+    }
+  }
+  .list-container{
+    padding: 0;
+  }
+  &-containers{
+    .container-code{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 7px;
+      border-bottom: 1px solid #CFD0D0;
+      color: $color-neutral-10;
+     &:last-child{
+       border: none;
+     }
+    }
+  }
+  .list-exported{
+    height: 365px;
+    overflow-y: auto;
+  }
+  .item-exported{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 7px;
+    border-bottom: 1px solid #CFD0D0;
+    color: $color-neutral-10;
+   &:last-child{
+     border: none;
+   }
+  }
+  .info-container{
+    margin-bottom: 10px;
+
+    .badge{
+      margin-left: 10px;
+    }
+  }
+  .page-not-found{
+    height: 300px;
+    min-height: unset;
+    .content{
+      height: auto;
+    }
+  }
+
+  .list-export{
+    margin-top: 10px;
+  }
+
+  .empty {
+    height: 365px;
+    padding: 120px 0;
+    text-align: center;
+  }
+
+  .card-title {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+
+    letter-spacing: 0.75px;
+    text-transform: uppercase;
+
+    /* Neutral / Neutral 5 */
+
+    color: #AAABAB;
+  }
+
+  .card-header {
+    padding: 21px 7px;
+  }
+
+  .btn-submit {
+    text-align: center;
+    
+    width: 66px;
+    height: 32px;
+    left: 110px;
+    top: 0px;
+
+    /* LionWhite */
+
+    background: #FFFFFF;
+    /* Primary/PersianGreen 4 */
+
+    color: #00A79F;
+    
+    border: 1px solid #00B7B0;
+    box-sizing: border-box;
+    border-radius: 4px;
+  }
+  .pagination-box {
+    margin-top : 0
+  }
+
+}
+

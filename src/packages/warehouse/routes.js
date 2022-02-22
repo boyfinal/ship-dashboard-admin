@@ -7,7 +7,7 @@ export const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "sign-in" */ './views/ListPackageInWarehouse'
+        /* webpackChunkName: "warehouse" */ './views/ListPackageInWarehouse'
       ),
   },
   {

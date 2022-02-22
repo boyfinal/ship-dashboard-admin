@@ -6,9 +6,7 @@ export const routes = [
       title: 'Quản lý kiện hàng',
     },
     component: () =>
-      import(
-        /* webpackChunkName: "list-containers" */ './views/ListContainers.vue'
-      ),
+      import(/* webpackChunkName: "container" */ './views/ListContainers.vue'),
   },
   {
     path: '/containers/:code',
@@ -17,8 +15,6 @@ export const routes = [
       title: 'Chi tiết kiện hàng',
     },
     component: () =>
-      import(
-        /* webpackChunkName: "list-containers" */ './views/ContainerDetail.vue'
-      ),
+      import(/* webpackChunkName: "container" */ './views/ContainerDetail.vue'),
   },
 ]

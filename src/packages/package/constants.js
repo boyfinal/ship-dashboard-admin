@@ -7,6 +7,8 @@ export const PackageStatusWareHouseLabeled = 11
 export const PackageStatusWareHouseInContainer = 12
 export const PackageStatusWareHouseInShipment = 13
 export const PackageStatusWareHouseExport = 14
+export const PackageStatusImportHub = 15
+export const PackageStatusExportHub = 16
 export const PackageStatusInTransit = 30
 export const PackageStatusDelivered = 60
 export const PackageStatusReturned = 40
@@ -17,6 +19,8 @@ export const PackageStatusCreatedText = 'pending'
 export const PackageStatusPendingPickupText = 'pre-transit'
 export const PackageStatusProcessingText = 'processing'
 export const PackageStatusInTransitText = 'in-transit'
+export const PackageStatusImportHubText = 'import-hub'
+export const PackageStatusExportHubText = 'export-hub'
 export const PackageStatusDeliveredText = 'delivered'
 export const PackageStatusAlertText = 'alert'
 export const PackageStatusCancelledText = 'canceled'
@@ -112,6 +116,14 @@ export const MAP_NAME_STATUS_PACKAGE = {
   },
   [PackageStatusExpired]: {
     value: 'Expired',
+    class: 'badge-success',
+  },
+  [PackageStatusImportHub]: {
+    value: 'In-Transit',
+    class: 'badge-success',
+  },
+  [PackageStatusExportHub]: {
+    value: 'In-Transit',
     class: 'badge-success',
   },
 }
@@ -227,6 +239,14 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   },
   [PackageStatusDelivered]: {
     value: 'Xuất kho',
+    class: 'badge-success',
+  },
+  [PackageStatusImportHub]: {
+    value: 'Hub đã nhận',
+    class: 'badge-success',
+  },
+  [PackageStatusExportHub]: {
+    value: 'Hub đã xuất',
     class: 'badge-success',
   },
 }

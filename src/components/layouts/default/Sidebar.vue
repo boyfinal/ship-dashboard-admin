@@ -129,7 +129,7 @@ export default {
             },
             {
               route: '/debt',
-              title: 'Công nợ',
+              title: 'Người dùng',
               alias: ['/debt'],
             },
             {
@@ -185,9 +185,38 @@ export default {
             },
           ],
         },
+        // {
+        //   title: 'Hub',
+        //   icon: 'warehouse',
+        //   iconActive: 'warehouseActive',
+        //   route: '#',
+        //   class: '',
+        //   isOpen: false,
+        //   disable: this.$isSupport() || this.$isAccountant(),
+        //   sub: [
+        //     {
+        //       route: '/hubs/search',
+        //       title: 'Tra cứu đơn',
+        //       alias: ['/hubs/search'],
+        //       disable: this.$isSupport() || this.$isAccountant(),
+        //     },
+        //     {
+        //       route: '/hub/import',
+        //       title: 'Quét nhập hub',
+        //       alias: ['/hub/import'],
+        //       disable: this.$isSupport() || this.$isAccountant(),
+        //     },
+        //     {
+        //       route: '/hub/export',
+        //       title: 'Quét xuất hub',
+        //       alias: ['/hub/export'],
+        //       disable: this.$isSupport() || this.$isAccountant(),
+        //     },
+        //   ],
+        // },
         {
           title: 'Quản trị',
-          icon: 'Setting',
+          icon: 'setting',
           iconActive: 'SettingActive',
           route: { name: 'setting' },
           class: '',

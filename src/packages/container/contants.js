@@ -3,6 +3,8 @@ export const CONTAINER_CLOSE = 2
 export const CONTAINER_CANCEL = 3
 export const CONTAINER_INTRANSIT = 5
 export const CONTAINER_DELIVERIED = 4
+export const CONTAINER_IMPORT_HUB = 6
+export const CONTAINER_EXPORT_HUB = 7
 export const CONTAINER_STATUS_TAB = [
   {
     value: '',
@@ -28,6 +30,14 @@ export const CONTAINER_STATUS_TAB = [
     value: CONTAINER_CANCEL,
     text: 'Đã hủy',
   },
+  // {
+  //   value: CONTAINER_IMPORT_HUB,
+  //   text: 'Hub đã nhận',
+  // },
+  // {
+  //   value: CONTAINER_EXPORT_HUB,
+  //   text: 'Hub đã xuất',
+  // },
 ]
 
 export const MAP_TEXT_STATUS_CONTAINER = [
@@ -55,6 +65,14 @@ export const MAP_TEXT_STATUS_CONTAINER = [
     value: CONTAINER_INTRANSIT,
     text: 'Đang giao',
   },
+  {
+    value: CONTAINER_IMPORT_HUB,
+    text: 'Hub đã nhận',
+  },
+  {
+    value: CONTAINER_EXPORT_HUB,
+    text: 'Hub đã xuất',
+  },
 ]
 
 export const MAP_NAME_STATUS_CONTAINER = {
@@ -77,5 +95,13 @@ export const MAP_NAME_STATUS_CONTAINER = {
   [CONTAINER_CANCEL]: {
     value: 'Đã hủy',
     class: 'badge-danger',
+  },
+  [CONTAINER_IMPORT_HUB]: {
+    value: 'Hub đã nhận',
+    class: 'badge-import-hub',
+  },
+  [CONTAINER_EXPORT_HUB]: {
+    value: 'Hub đã xuất',
+    class: 'badge-export-hub',
   },
 }

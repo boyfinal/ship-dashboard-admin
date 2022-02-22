@@ -6,7 +6,7 @@ export const routes = [
       title: 'Quản lý vận đơn',
     },
     component: () =>
-      import(/* webpackChunkName: "sign-in" */ './views/ListPackages.vue'),
+      import(/* webpackChunkName: "package" */ './views/ListPackages.vue'),
   },
   {
     path: '/packages/:id',
@@ -15,6 +15,6 @@ export const routes = [
       title: 'Chi tiết đơn hàng',
     },
     component: () =>
-      import(/* webpackChunkName: "packages" */ './views/PackageDetail'),
+      import(/* webpackChunkName: "package" */ './views/PackageDetail'),
   },
 ]
