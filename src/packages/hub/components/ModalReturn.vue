@@ -198,6 +198,8 @@ export default {
       this.$emit('update:visible', false)
     },
     onChange(e, fileList) {
+      if (!this.validFile(e)) return
+
       const exists = this.files.some(({ uid }) => uid == e.uid)
       if (exists || e.status == 'success') return
 
