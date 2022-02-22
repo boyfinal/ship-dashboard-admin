@@ -198,7 +198,7 @@ export default {
       this.$emit('update:visible', false)
     },
     onChange(e, fileList) {
-      if (!this.validFile(e)) return
+      if (!this.validFile(e.raw)) return
 
       const exists = this.files.some(({ uid }) => uid == e.uid)
       if (exists || e.status == 'success') return
@@ -221,13 +221,15 @@ export default {
       this.$set(this.validErrors, 'files', 'Tối đa chỉ được 5 files đính kèm')
     },
     onUploadSuccess(e, file, fileList) {
-      fileList.splice(fileList.indexOf(file), 1)
+      setTimeout(() => {
+        fileList.splice(fileList.indexOf(file), 1)
 
-      const idx = this.files.findIndex(({ uid }) => uid == file.uid)
-      if (e && e.url && idx !== -1) {
-        this.urls.push(e.url)
-        this.files = this.files.filter(({ uid }) => uid != file.uid)
-      }
+        const idx = this.files.findIndex(({ uid }) => uid == file.uid)
+        if (e && e.url && idx !== -1) {
+          this.urls.push(e.url)
+          this.files = this.files.filter(({ uid }) => uid != file.uid)
+        }
+      }, 300)
     },
     onUploadError(e, file) {
       if (!e || !e.error) return
