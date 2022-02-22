@@ -287,14 +287,7 @@ export default {
 
     async searchHandle() {
       this.filter.page = 1
-      if (this.filter.type == 'package') {
-        this.current_container = {}
-      } else if (this.filter.type == 'container') {
-        this.current_package = {}
-      } else {
-        this.current_container = {}
-        this.current_package = {}
-      }
+      this.clearData()
       const keyword = this.keyword.trim()
       if (!keyword) {
         this.$toast.open({
@@ -375,6 +368,7 @@ export default {
 
     async init() {
       this.isFetching = true
+      this.clearInput()
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
       const result = await this[FETCH_LIST_IMPORTED](payload)
@@ -382,6 +376,28 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+
+    clearData() {
+      this.current_container.code = ''
+      this.current_container.id = ''
+      this.current_container.height = ''
+      this.current_container.length = ''
+      this.current_container.width = ''
+      this.current_container.weight = ''
+      this.current_container.tracking_number = ''
+      this.current_container.status = ''
+      this.current_container.count = ''
+
+      this.current_package.code = ''
+      this.current_package.id = ''
+      this.current_package.height = ''
+      this.current_package.length = ''
+      this.current_package.width = ''
+      this.current_package.weight = ''
+      this.current_package.order_number = ''
+      this.current_package.tracking_number = ''
+      this.current_package.status = ''
     },
 
     barcodeSubmit(keyword) {
@@ -451,7 +467,6 @@ export default {
         this.current_package.tracking_number = ''
         this.current_package.status = ''
       }
-      this.c
     },
   },
   watch: {
