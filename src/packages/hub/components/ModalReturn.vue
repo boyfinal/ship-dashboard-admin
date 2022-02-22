@@ -188,7 +188,7 @@ export default {
       reason: 'Sai đia chỉ',
       content: '',
       errors: {},
-      reasons: ['Sai đia chỉ', 'Hàng hư hỏng', 'Khác'],
+      reasons: ['Sai địa chỉ', 'Hàng hư hỏng', 'Khác'],
       validErrors: {},
       isSubmitting: false,
     }
