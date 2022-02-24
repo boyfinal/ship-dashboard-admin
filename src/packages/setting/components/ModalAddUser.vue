@@ -201,7 +201,9 @@ export default {
       full_name: y.string().required('Tên không để trống'),
       role: y.string().required('Quyền không để trống'),
       email: y.string().required('Email không để trống'),
-      password: y.string().required('Password không để trống'),
+      password: this.data.id
+        ? ''
+        : y.string().required('Password không để trống'),
     }))
     this.fetchWarehouses(), this.fetchCustomer()
   },
@@ -265,7 +267,7 @@ export default {
 
       const data = {
         full_name: this.user.full_name.trim(),
-        password: this.user.password.trim(),
+        password: this.user.password ? this.user.password.trim() : '',
         role: this.user.role,
         slack_id: this.user.slack_id,
         customer_id: this.user.customer_id,
@@ -292,7 +294,9 @@ export default {
       if (!res.success) {
         this.$toast.open({
           type: 'error',
-          message: res.message.isArray ? res.message.join(',') : res.message,
+          message: Array.isArray(res.message)
+            ? res.message.join(',')
+            : res.message,
           duration: 3000,
         })
         return
