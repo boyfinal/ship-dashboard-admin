@@ -131,6 +131,15 @@
           >
             <p-button
               type="info"
+              v-if="showDownloadZipLabel"
+              @click="downloadZipLabel"
+              :loading="loadingLabel"
+              :class="`mr-3`"
+            >
+              Tải Label
+            </p-button>
+            <p-button
+              type="info"
               v-if="showIntransitButton"
               @click="showConfirmChangeIntransit"
               :loading="loading"
@@ -139,7 +148,7 @@
               Chuyển UPS
             </p-button>
             <p-button type="info" @click="handleExport()" :class="`mr-3`">
-              Xuất excel
+              Xuất Excel
             </p-button>
           </div>
         </div>
@@ -334,6 +343,7 @@ import {
   FETCH_SHIPMENT_DETAIL,
   EXPORT_SHIPMENT,
   APPEND_CONTAINERS_SHIPMENT,
+  DOWNLOAD_SHIPMENT_LABEL_ZIP,
 } from '../store'
 import ModalListContainer from '../components/ModalListContainer'
 import { GET_LABEL } from '../../container/store'
@@ -368,6 +378,7 @@ export default {
       code: '',
       isStartScan: false,
       loading: false,
+      loadingLabel: false,
       ShipmentClosed: ShipmentClosed,
       isShowModalListContainer: false,
       visibleConfirmIntransit: false,
@@ -393,6 +404,13 @@ export default {
       shipmentStatus() {
         return MAP_NAME_STATUS_SHIPMENT
       },
+      showDownloadZipLabel() {
+        return (
+          this.isClosedShipment ||
+          this.isIntransitShipment ||
+          this.isDeliveredShipment
+        )
+      },
       showIntransitButton() {
         return this.isClosedShipment
       },
@@ -414,6 +432,7 @@ export default {
       CLOSE_SHIPMENT,
       INTRANSIT_SHIPMENT,
       EXPORT_SHIPMENT,
+      DOWNLOAD_SHIPMENT_LABEL_ZIP,
     ]),
     ...mapActions('container', [GET_LABEL]),
     async init() {
@@ -456,6 +475,20 @@ export default {
       }
 
       Browser.downloadBlob(result.blob, labelUrl.split('/').pop())
+    },
+    async downloadZipLabel() {
+      this.loadingLabel = true
+      const payload = {
+        id: parseInt(this.$route.params.id),
+      }
+      const result = await this[DOWNLOAD_SHIPMENT_LABEL_ZIP](payload)
+      this.loadingLabel = false
+      if (!result.success) {
+        this.$toast.open({ type: 'error', message: `Download failed ! ` })
+        return false
+      }
+
+      this.downloadLabel(result.url)
     },
     handleSearch(e) {
       this.filter.page = 1

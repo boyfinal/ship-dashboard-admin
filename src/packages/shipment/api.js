@@ -43,4 +43,7 @@ export default {
       base_path: '/v1/export/shipment',
     })
   },
+  downloadShipmentLabelZip(payload) {
+    return http.get(`/shipments/zip/${payload.id}`)
+  },
 }

@@ -11,6 +11,7 @@ export const FETCH_LIST_SHIPMENT = 'fetchListShipments'
 export const COUNT_LIST_SHIPMENTS = 'countListShipments'
 export const CREATE_SHIPMENT = 'createShipment'
 export const EXPORT_SHIPMENT = 'exportShipment'
+export const DOWNLOAD_SHIPMENT_LABEL_ZIP = 'downloadShipmentLabelZip'
 
 export const state = {
   shipment: {},
@@ -177,6 +178,21 @@ export const actions = {
       result.url = response.download
     }
 
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [DOWNLOAD_SHIPMENT_LABEL_ZIP]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.downloadShipmentLabelZip(payload)
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.url
+    }
     return result
   },
 }
