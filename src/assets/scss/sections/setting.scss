@@ -24,7 +24,7 @@
 //setting-account
 .setting-account {
     .search-input {
-        width: 86%;
+        width: 90%;
         .search-type {
             width: 15%
         }
@@ -55,6 +55,15 @@
                 &:hover {
                     color: #F0FFF3;
                     background: #48BE78;
+                }
+            }
+            &.edit {
+                margin-right: 4px;
+                background: #DDF2F2;
+                color: #00978C;
+                &:hover {
+                    color: #DDF2F2;
+                    background: #00978C;
                 }
             }
             &:focus {
@@ -92,11 +101,66 @@
 
 //modal-add-user 
 .modal-add-user {
+    .modal-lg {
+        overflow: revert
+    }
     .modal-body {
         overflow-y: inherit;
+        padding-bottom: 8px;
+        max-height: 80vh;
     }
     .btn-primary {
         width: 80px;
+    }
+    .select-customer {}
+    .list-customer {
+        svg {
+            display: none;
+        }
+        .multiselect__tags {
+            border: 1px solid $color-neutral-4;
+            box-sizing: border-box;
+            border-radius: 8px;
+            height: 120px;
+            padding: 16px;
+            overflow-y: auto;
+            .multiselect__tag {
+                font-family: $font-family-sans-serif;
+                background: #F6F7F7;
+                border-radius: 8px;
+                padding: 4px 8px;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 20px;
+                color: $color-neutral-9;
+                margin-bottom: 0px;
+                margin-right: 8px;
+                display: inline-block;
+                svg {
+                    margin-left: 8px;
+                    cursor: pointer;
+                }
+            }
+            .multiselect__tag-icon {
+                position: relative;
+                font-size: 12px;
+                &::after {
+                    color: $color-neutral-9
+                }
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+            .multiselect__placeholder {
+                display: none
+            }
+        }
+    }
+    .custom-label {
+        position: absolute;
+        top: 36px;
+        left: 28px;
+        pointer-events: none
     }
 }
 
