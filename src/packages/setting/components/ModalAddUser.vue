@@ -184,10 +184,7 @@ export default {
     }
   },
   mounted() {
-    this.user = Object.assign({}, this.data, { customer_id: [] })
-    if (this.user.permissions && this.user.permissions.length > 1) {
-      this.user.customer_id = this.user.permissions.map((x) => x.customer_id)
-    }
+    this.user = Object.assign({}, this.data)
     if (this.user.role == ROLE_WAREHOUSE) {
       this.roleWarehouse = true
     }
@@ -231,7 +228,12 @@ export default {
     },
 
     async fetchCustomer() {
-      let req = { role: 'customer', search: '' }
+      let req = { role: 'customer', search: '', not_limit: true }
+      if (this.user.id > 0) {
+        req.user_id = this.user.id
+      } else {
+        req.for_support = true
+      }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []
@@ -240,7 +242,7 @@ export default {
 
       this.listUsers = result.users.map((x) => ({
         key: x.id,
-        name: x.full_name + ' - ' + x.email,
+        name: x.full_name + ' - ' + (x.email ? x.email : x.phone_number),
         full_name: x.full_name,
       }))
     },
@@ -359,6 +361,7 @@ export default {
     },
 
     handleClose() {
+      this.valider.errors = null
       this.$emit('update:visible', false)
       this.$emit('close', true)
     },
@@ -368,11 +371,6 @@ export default {
       handler: function() {
         if (this.visible) {
           this.user = Object.assign({}, this.data)
-          if (this.user.permissions && this.user.permissions.length > 1) {
-            this.user.customer_id = this.user.permissions.map(
-              (x) => x.customer_id
-            )
-          }
         }
         this.listRole = ROLE
       },
