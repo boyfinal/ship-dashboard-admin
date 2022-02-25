@@ -267,7 +267,7 @@ export default {
         return
       }
 
-      const data = {
+      const payload = {
         full_name: this.user.full_name.trim(),
         password: this.user.password ? this.user.password.trim() : '',
         role: this.user.role,
@@ -276,21 +276,29 @@ export default {
       }
 
       if (this.user.email.includes('@')) {
-        data.email = this.user.email.trim().toLowerCase()
+        payload.email = this.user.email.trim().toLowerCase()
       } else {
-        data.phone_number = this.user.email.trim()
+        payload.phone_number = this.user.email.trim()
+      }
+
+      if (payload.email == this.data.email) {
+        payload.email = ''
+      }
+
+      if (payload.phone_number == this.data.phone_number) {
+        payload.phone_number = ''
       }
 
       if (this.user.role == ROLE_WAREHOUSE) {
-        data.warehouse_id = this.user.warehouse_id
+        payload.warehouse_id = this.user.warehouse_id
       }
 
       if (this.user.id > 0) {
-        data.id = this.user.id
+        payload.id = this.user.id
       }
 
       this.loading = true
-      const res = await this.createUser(data)
+      const res = await this.createUser(payload)
       this.loading = false
 
       if (!res.success) {
