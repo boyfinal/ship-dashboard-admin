@@ -184,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    this.user = Object.assign({}, this.data)
+    this.user = Object.assign({}, this.data, { customer_id: [] })
     if (this.user.permissions && this.user.permissions.length > 1) {
       this.user.customer_id = this.user.permissions.map((x) => x.customer_id)
     }
