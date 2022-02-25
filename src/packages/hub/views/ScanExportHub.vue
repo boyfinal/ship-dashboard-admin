@@ -15,7 +15,7 @@
                     v-model="keyword"
                     @clear="clearInput"
                     @keydown.enter.prevent="searchHandle"
-                    placeholder="Nhập mã kiện, mã đơn"
+                    placeholder="Nhập mã kiện/ups, mã đơn/usps"
                   ></p-input>
                   <button
                     @click.prevent="searchHandle"
@@ -319,19 +319,11 @@ export default {
         code: keyword,
       }
       const result = await this[FETCH_LIST_IMPORTED](params)
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
-
-      params = {
-        type: this.filter.type,
-        code: keyword,
-      }
 
       this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
-      if (!res.success) {
+      if (!res.success || !result.success) {
         this.isFetchingImportHub = false
         this.isScan = false
         this.$toast.open({
@@ -343,6 +335,7 @@ export default {
       }
 
       this.isFetchingImportHub = false
+      this.isScan = false
       if (this.filter.type == 'container') {
         this.current_container.code = this.current.code
         this.current_container.id = this.current.id
@@ -368,7 +361,7 @@ export default {
 
     async init() {
       this.isFetching = true
-      this.clearInput()
+      this.clearData()
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
       const result = await this[FETCH_LIST_IMPORTED](payload)
@@ -473,15 +466,6 @@ export default {
     filter: {
       handler: function() {
         this.init()
-      },
-      deep: true,
-    },
-    keyword: {
-      handler: function() {
-        if (this.keyword == '') {
-          this.filter.code = ''
-          this.init()
-        }
       },
       deep: true,
     },
