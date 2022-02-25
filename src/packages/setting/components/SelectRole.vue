@@ -10,6 +10,7 @@
     :openDirection="'below'"
     @select="handleSelect"
     @remove="handleRemove"
+    :disabled="disabled"
   >
   </multiselect>
 </template>
@@ -41,6 +42,10 @@ export default {
     item: {
       type: Object,
       default: () => {},
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

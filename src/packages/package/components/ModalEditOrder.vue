@@ -11,29 +11,6 @@
         <div class="modal__edit-order-content">
           <div class="row sm-gutters  flex-nowrap">
             <div class="col-lg-6 col-xl-6 item-gutters ">
-              <!--              <div class="card__w">-->
-              <!--                <div class="card__w-header">-->
-              <!--                  Người gửi-->
-              <!--                </div>-->
-              <!--                <div class="card__w-content">-->
-              <!--                  <div class="card__w-item">-->
-              <!--                    <label class="card__w-label">-->
-              <!--                      Họ và tên: <span>*</span>-->
-              <!--                    </label>-->
-              <!--                    <div class="card__w-input">-->
-              <!--                      <multiselect-->
-              <!--                        class="multiselect-custom dropdown-reason"-->
-              <!--                        v-model="sender"-->
-              <!--                        :options="senders"-->
-              <!--                        placeholder="Chọn một "-->
-              <!--                        @select="handleSelect"-->
-              <!--                        :custom-label="customLabel"-->
-              <!--                      ></multiselect>-->
-              <!--                    </div>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-
               <div class="card__w">
                 <div class="card__w-header">
                   Người nhận
@@ -50,6 +27,7 @@
                         v-model="form.fullname"
                         :input="form.fullname"
                         name="name"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('fullname')"
                       />
                     </div>
@@ -66,6 +44,7 @@
                         v-model="form.phone"
                         :input="form.phone"
                         name="phone"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('phone')"
                       />
                     </div>
@@ -198,6 +177,7 @@
                         v-model="form.order_number"
                         :input="form.order_number"
                         name="order_number"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('order_number')"
                       />
                     </div>
@@ -213,6 +193,7 @@
                         v-model="form.detail"
                         :input="form.detail"
                         name="detail"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('detail')"
                       />
                     </div>
@@ -292,6 +273,7 @@
                     </label>
                     <div class="card__w-input">
                       <multiselect
+                        :disabled="isEditOrderReturn"
                         class="multiselect-custom dropdown-reason"
                         v-model="service"
                         :options="services"
@@ -347,6 +329,10 @@ export default {
   components: { PButton },
   props: {
     visible: {
+      type: Boolean,
+      default: false,
+    },
+    isEditOrderReturn: {
       type: Boolean,
       default: false,
     },
@@ -593,3 +579,9 @@ export default {
   },
 }
 </script>
+<style>
+.multiselect--disabled .multiselect__tags,
+.multiselect--disabled .multiselect__single {
+  background-color: #eee;
+}
+</style>

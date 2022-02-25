@@ -66,6 +66,10 @@
                     background: #00978C;
                 }
             }
+            &.deactive {
+                opacity: 0.6;
+                pointer-events: none
+            }
             &:focus {
                 box-shadow: none;
             }

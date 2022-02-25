@@ -164,7 +164,7 @@
                 border-radius: unset;
             }
         }
-        tr.hover{
+        tr.hover {
             cursor: pointer;
             background: #F9FDFE;
             td:first-child {
@@ -173,7 +173,6 @@
             td:last-child {
                 border-right: 1px solid $color-neutral-3;
             }
-
         }
         tr:last-child {
             td {
@@ -198,6 +197,16 @@
             td {
                 border-top: 2px solid $color-neutral-3;
             }
+        }
+        tr.deactive {
+            td {
+                opacity: 0.6;
+            }
+        }
+        td.deactive,
+        td>.deactive {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
     }
     .btn {
