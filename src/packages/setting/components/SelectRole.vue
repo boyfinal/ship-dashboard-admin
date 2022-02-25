@@ -7,6 +7,7 @@
     :custom-label="customLabel"
     :loading="isLoading"
     :item="item"
+    :openDirection="'below'"
     @select="handleSelect"
     @remove="handleRemove"
   >
@@ -46,7 +47,7 @@ export default {
     return {
       selected: {
         key: 'more-filter',
-        name: 'Quyền',
+        name: this.placeHolder,
       },
       isLoading: false,
       users: [],
@@ -54,7 +55,10 @@ export default {
   },
   created() {
     this.selected = this.item
-      ? this.optionSearch.find((item) => item.key == this.item.role)
+      ? this.optionSearch.find(
+          (item) =>
+            item.key == this.item.role || item.key == this.item.warehouse_id
+        )
       : this.selected
   },
   methods: {

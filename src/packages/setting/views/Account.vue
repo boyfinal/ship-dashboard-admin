@@ -25,9 +25,8 @@
         <p-button
           type="info"
           class="ml-8 add-user"
-          @click="visibleModalAddUser"
+          @click="visibleModalAddUser({})"
         >
-          <svgicon name="plus" class="text-white " />
           Thêm quản lý
         </p-button>
       </div>
@@ -45,7 +44,7 @@
                     <th width="200">Trạng thái</th>
                     <th width="100">Ngày tạo</th>
                     <th width="150">Thao tác</th>
-                    <th width="100"></th>
+                    <th width="180"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -82,8 +81,8 @@
                         ></i
                         >{{
                           checkActive(item.status)
-                            ? 'Kích hoạt'
-                            : 'Không kích hoạt'
+                            ? 'Hoạt động'
+                            : 'Không hoạt động'
                         }}</span
                       >
                     </td>
@@ -98,6 +97,12 @@
                       />
                     </td>
                     <td style="text-align: center">
+                      <a
+                        href="#"
+                        class="btn edit"
+                        @click="visibleModalAddUser(item)"
+                        >Sửa</a
+                      >
                       <a
                         href="#"
                         class="btn"
@@ -150,6 +155,7 @@
     <modal-add-user
       :visible.sync="isVisibleAddUser"
       v-if="isVisibleAddUser"
+      :data="user"
       @init="init"
     >
     </modal-add-user>
@@ -214,6 +220,7 @@ export default {
       statusActive: USER_STATUS_ACTIVE,
       filterRole: ROLE,
       statusUser: USER_STATUS_TAB,
+      user: {},
     }
   },
   created() {
@@ -331,7 +338,8 @@ export default {
       })
     },
 
-    visibleModalAddUser() {
+    visibleModalAddUser(item) {
+      this.user = item
       this.isVisibleAddUser = true
     },
   },
