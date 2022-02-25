@@ -74,13 +74,7 @@
               type="info"
               @click="handleModal"
               class="btn-primary-custom ml-7"
-              v-if="
-                package_detail.package.status != statusCancel &&
-                  package_detail.package.status != statusSuccess &&
-                  package_detail.package.status != statusShipping &&
-                  !package_detail.package.tracking &&
-                  package_detail.package.status != statusExpired
-              "
+              v-if="showButtonEdit"
             >
               Sửa đơn
             </p-button>
@@ -518,6 +512,7 @@
       </div>
     </div>
     <modal-edit-order
+      :is-edit-order-return="isEditOrderReturn"
       :visible.sync="isVisibleModal"
       :info_user="package_detail"
       @create="init2"
@@ -609,6 +604,7 @@ import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
+import { PackageAlertTypeHubReturn } from '../constants'
 
 export default {
   name: 'PackageDetail',
@@ -622,6 +618,7 @@ export default {
       isVisibleModal: false,
       isVisiblePopupMoreExtraFee: false,
       isVisibleConfirmWayBill: false,
+      isEditOrderReturn: false,
       timelinePagination: {
         numberPage: 0,
         itemsPerPage: 10,
@@ -660,6 +657,19 @@ export default {
     ...mapState('package', {
       package_detail: (state) => state.package_detail,
     }),
+    showButtonEdit() {
+      return (
+        (this.package_detail.package.status !== this.statusCancel &&
+          this.package_detail.package.status !== this.statusSuccess &&
+          this.package_detail.package.status !== this.statusShipping &&
+          !this.package_detail.package.tracking &&
+          this.package_detail.package.status !== this.statusExpired) ||
+        (this.statusShipping && this.$isSupport() && this.isAlertReturn)
+      )
+    },
+    isAlertReturn() {
+      return this.package_detail.package.alert === PackageAlertTypeHubReturn
+    },
     displayDeliverLogs() {
       const start =
         (this.timelinePagination.currentPage - 1) *
@@ -785,6 +795,9 @@ export default {
     },
     handleModal() {
       this.isVisibleModal = true
+      if (this.statusShipping && this.isAlertReturn) {
+        this.isEditOrderReturn = true
+      }
     },
     previousTimeLinePage() {
       this.timelinePagination.currentPage <= 1
