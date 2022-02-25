@@ -60,7 +60,6 @@
                         v-model="form.city"
                         :input="form.city"
                         name="city"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('city')"
                       />
                     </div>
@@ -107,7 +106,6 @@
                         v-model="form.state"
                         :input="form.state"
                         name="state"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('state')"
                       />
                     </div>
@@ -123,7 +121,6 @@
                         v-model="form.postcode"
                         :input="form.postcode"
                         name="postcode"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('postcode')"
                       />
                     </div>
@@ -139,7 +136,6 @@
                         v-model="form.countrycode"
                         :input="form.countrycode"
                         name="countrycode"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('countrycode')"
                       />
                     </div>

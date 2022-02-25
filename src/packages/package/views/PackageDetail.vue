@@ -664,7 +664,9 @@ export default {
           this.package_detail.package.status !== this.statusShipping &&
           !this.package_detail.package.tracking &&
           this.package_detail.package.status !== this.statusExpired) ||
-        (this.statusShipping && this.$isSupport() && this.isAlertReturn)
+        (this.statusShipping &&
+          (this.$isSupport() || this.$isAdmin()) &&
+          this.isAlertReturn)
       )
     },
     isAlertReturn() {
