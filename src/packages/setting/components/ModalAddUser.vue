@@ -248,7 +248,7 @@ export default {
     },
 
     async handleCreate() {
-      if (this.user.role == '') {
+      if (!this.user.role) {
         this.errorRole = true
       }
 
