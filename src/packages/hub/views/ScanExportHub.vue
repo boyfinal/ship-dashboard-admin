@@ -395,6 +395,9 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       this.keyword = keyword
       this.searchHandle()
       this.disableInput = false
