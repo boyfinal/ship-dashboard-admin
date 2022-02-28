@@ -395,7 +395,7 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
-      if (keyword.length > 22) {
+      if (keyword.length > 22 && this.filter.type == 'package') {
         keyword = keyword.slice(-22)
       }
       this.keyword = keyword
