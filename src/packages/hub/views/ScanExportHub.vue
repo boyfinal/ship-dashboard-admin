@@ -354,7 +354,7 @@ export default {
         this.current_package.width = this.current.width
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
-        this.current_package.tracking_number = this.current.tracking_number
+        this.current_package.tracking.tracking_number = this.current.tracking_number
         this.current_package.status = this.current.status
       }
     },
@@ -424,10 +424,12 @@ export default {
         return
       }
       this.isSubmitting = false
-      this.$toast.success(`Kiện ${payload.code} quét thành công`)
+
       if (this.filter.type == 'container') {
+        this.$toast.success(`Kiện ${payload.code} quét thành công`)
         this.listExportedContainer.push(this.currentCode)
       } else if (this.filter.type == 'package') {
+        this.$toast.success(`Đơn ${payload.code} quét thành công`)
         this.listExportedPackage.push(this.currentCode)
       }
       this.isScan = false
