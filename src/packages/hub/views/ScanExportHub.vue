@@ -354,7 +354,7 @@ export default {
         this.current_package.width = this.current.width
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
-        this.current_package.tracking.tracking_number = this.current.tracking_number
+        this.current_package.tracking_number = this.current.tracking.tracking_number
         this.current_package.status = this.current.status
       }
     },
