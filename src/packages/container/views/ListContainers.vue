@@ -248,14 +248,17 @@ export default {
         this.isFetching = false
         this.$toast.open({ message: result.message, type: 'error' })
       }
-      let wareHouseActive = this.wareHouses.filter(
-        (ele) => ele.status == 1 && ele.type == 1
-      )
-      if (wareHouseActive.length < 1) {
-        this.isFetching = false
-        return
+      if (!this.filter.warehouse) {
+        let wareHouseActive = this.wareHouses.filter(
+          (ele) => ele.status == 1 && ele.type == 1
+        )
+        if (wareHouseActive.length < 1) {
+          this.isFetching = false
+          return
+        }
+        this.filter.warehouse = wareHouseActive[0].id
       }
-      this.filter.warehouse = wareHouseActive[0].id
+
       let payload = cloneDeep(this.filter)
       payload.search = payload.search.toUpperCase()
 
