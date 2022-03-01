@@ -192,6 +192,7 @@ export const CHANGE_PACKAGE_TYPE = [
   'Phí phát sinh khác',
   'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
   'Bỏ qua kiểm tra địa chỉ bằng API',
+  'Reship',
   'Mã đơn hàng',
 ]
 
