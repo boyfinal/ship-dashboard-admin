@@ -231,11 +231,17 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      let wareHouseActive = this.wareHouses.filter(
-        (ele) => ele.status == 1 && ele.type == 1
-      )
-      if (wareHouseActive.length < 1) return
-      this.filter.warehouseID = wareHouseActive[0].id
+      if (!this.filter.warehouseID) {
+        let wareHouseActive = this.wareHouses.filter(
+          (ele) => ele.status == 1 && ele.type == 1
+        )
+        if (wareHouseActive.length < 1) {
+          this.isFetching = false
+          return
+        }
+        this.filter.warehouseID = wareHouseActive[0].id
+      }
+
       let payload = cloneDeep(this.filter)
       payload.search = payload.search.toUpperCase()
       const result_1 = await this[FETCH_LIST_SHIPMENT](payload)
