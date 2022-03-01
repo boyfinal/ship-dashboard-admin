@@ -201,7 +201,7 @@ export default {
         page: 1,
         status: '',
         search: '',
-        warehouse: 1,
+        warehouse: '',
       },
       isFetching: false,
       visibleModalChoiceBox: false,
@@ -241,6 +241,11 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      let wareHouseActive = this.wareHouses.filter(
+        (ele) => ele.status == 1 && ele.type == 1
+      )
+      if (wareHouseActive.length < 1) return
+      this.filter.warehouse = wareHouseActive[0].id
       let payload = cloneDeep(this.filter)
       let req = { type: 1, status: 1 }
       payload.search = payload.search.toUpperCase()
