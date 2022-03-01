@@ -219,30 +219,32 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+
+      let req = {
+        type: this.WareHouseTypeInternational,
+        status: this.WareHouseStatusActive,
+      }
+      const result = await this[FETCH_WAREHOUSE](req)
+
+      if (!result.success) {
+        this.isFetching = false
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
       let wareHouseActive = this.wareHouses.filter(
         (ele) => ele.status == 1 && ele.type == 1
       )
       if (wareHouseActive.length < 1) return
       this.filter.warehouseID = wareHouseActive[0].id
       let payload = cloneDeep(this.filter)
-      let req = {
-        type: this.WareHouseTypeInternational,
-        status: this.WareHouseStatusActive,
-      }
       payload.search = payload.search.toUpperCase()
-      const [result, result_1] = await Promise.all([
-        this[FETCH_LIST_SHIPMENT](payload),
-        this[FETCH_WAREHOUSE](req),
-      ])
-      this.isFetching = false
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-        return
-      }
+      const result_1 = await this[FETCH_LIST_SHIPMENT](payload)
       if (!result_1.success) {
+        this.isFetching = false
         this.$toast.open({ message: result_1.message, type: 'error' })
         return
       }
+      this.isFetching = false
     },
     showIntransitButton(shipment) {
       return shipment.status === ShipmentClosed
