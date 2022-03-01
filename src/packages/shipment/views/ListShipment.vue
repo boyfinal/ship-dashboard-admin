@@ -177,7 +177,7 @@ export default {
         limit: 30,
         search: '',
         status: '',
-        warehouseID: 1,
+        warehouseID: '',
       },
       shipmentAction: null,
       isLoading: [],
@@ -219,6 +219,11 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      let wareHouseActive = this.wareHouses.filter(
+        (ele) => ele.status == 1 && ele.type == 1
+      )
+      if (wareHouseActive.length < 1) return
+      this.filter.warehouseID = wareHouseActive[0].id
       let payload = cloneDeep(this.filter)
       let req = {
         type: this.WareHouseTypeInternational,
