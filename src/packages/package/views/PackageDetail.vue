@@ -78,6 +78,14 @@
             >
               Sửa đơn
             </p-button>
+            <p-button
+              type="info"
+              @click="showModalReship"
+              class="btn-primary-custom ml-7"
+              v-if="isAlertReturn"
+            >
+              Reship
+            </p-button>
           </div>
         </div>
       </div>
@@ -543,6 +551,12 @@
       :loading="actions.cancelPackage.loading"
       @action="cancelPackageAction"
     ></modal-confirm>
+
+    <modal-reship
+      :visible.sync="isVisibleModalReship"
+      :current="package_detail.package"
+      @submit="reshipHandle"
+    ></modal-reship>
   </div>
 </template>
 
@@ -579,6 +593,7 @@ import {
   FETCH_PACKAGE_DETAIL,
   FETCH_LIST_SERVICE,
   CANCEL_PACKAGES,
+  RESHIP_PACKAGE,
 } from '../store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
 import ModalEditOrder from '../components/ModalEditOrder'
@@ -605,11 +620,12 @@ import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
 import { PackageAlertTypeHubReturn } from '../constants'
+import ModalReship from '../components/ModalReship'
 
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm },
+  components: { ModalEditOrder, ModalConfirm, ModalReship },
   data() {
     return {
       isFetching: true,
@@ -619,6 +635,7 @@ export default {
       isVisiblePopupMoreExtraFee: false,
       isVisibleConfirmWayBill: false,
       isEditOrderReturn: false,
+      isVisibleModalReship: false,
       timelinePagination: {
         numberPage: 0,
         itemsPerPage: 10,
@@ -780,6 +797,7 @@ export default {
       FETCH_PACKAGE_DETAIL,
       FETCH_LIST_SERVICE,
       CANCEL_PACKAGES,
+      RESHIP_PACKAGE,
     ]),
     truncate,
     // ...mapActions('setting', [LIST_SENDER]),
@@ -920,6 +938,26 @@ export default {
           this.package_detail.package.width *
           this.package_detail.package.length
       )
+    },
+
+    showModalReship() {
+      this.isVisibleModalReship = true
+    },
+    async reshipHandle({ amount, description }) {
+      this.isVisibleModalReship = false
+
+      const res = await this.reshipPackage({
+        id: this.packageID,
+        amount,
+        description,
+      })
+      if (res.error) {
+        this.$toast.error(res.message, { duration: 3000 })
+        return
+      }
+
+      this.$toast.success('Reship đơn hàng thành công', { duration: 3000 })
+      await this.init()
     },
   },
 
