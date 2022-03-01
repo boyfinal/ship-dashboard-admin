@@ -7,7 +7,11 @@
         class="floating p-select form-control"
         placeholder="Phí reship"
         @change="formatAmount"
+        @input="inputAmount"
       />
+      <span class="invalid-error" v-if="validErrors.amount">
+        {{ validErrors.amount }}
+      </span>
     </div>
 
     <div class="form-group mb-16">
@@ -19,7 +23,12 @@
       <div></div>
       <div>
         <p-button @click="handleClose" type="default">Huỷ</p-button>
-        <p-button @click="submitHandle" class="ml-8" type="primary">
+        <p-button
+          @click="submitHandle"
+          class="ml-8"
+          type="primary"
+          :disabled="disableSubmit"
+        >
           Reship
         </p-button>
       </div>
@@ -48,11 +57,15 @@ export default {
     title() {
       return `Reship ${this.code}`
     },
+    disableSubmit() {
+      return Object.keys(this.validErrors).length > 0
+    },
   },
   data() {
     return {
       amount: '',
       note: '',
+      validErrors: {},
     }
   },
   methods: {
@@ -60,12 +73,10 @@ export default {
       this.$emit('update:visible', false)
     },
 
-    formatAmount() {
-      let amount = this.amount.trim().replace(/[^0-9.,]/g, '')
-      if (!amount) {
-        this.amount = ''
-        return
-      }
+    toNumber(amount) {
+      amount = ('' + amount).trim()
+      amount = amount.trim().replace(/[^0-9.,]/g, '')
+      if (!amount) return 0
 
       amount = amount.replace(/,/g, '').replace(/^0+/g, '')
       const arr = amount.split('.')
@@ -80,10 +91,20 @@ export default {
         decimal = amount.split('.')[1]
       }
 
-      number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       amount = decimal ? `${number}.${decimal}` : number
+      return parseFloat(amount)
+    },
 
-      this.amount = amount
+    toPrice(amount) {
+      amount = this.toNumber(amount)
+      if (amount === 0) return ''
+
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    },
+
+    formatAmount() {
+      this.amount = this.toPrice(this.amount)
+      this.validErrors = {}
     },
 
     submitHandle() {
@@ -95,6 +116,27 @@ export default {
         amount: parseFloat(amount),
       })
 
+      this.note = ''
+      this.amount = ''
+      this.validErrors = {}
+    },
+
+    inputAmount() {
+      this.validErrors = {}
+
+      if (this.amount < 0) {
+        this.validErrors.amount = 'Phí phát sinh phải >= 0'
+      }
+
+      const re = /[^0-9.,]/g
+      const n = this.amount.split('.').length
+      if (re.test(this.amount) || n > 2) {
+        this.validErrors.amount = 'Phí phát sinh không đúng định dạng'
+      }
+    },
+  },
+  watch: {
+    visible: function() {
       this.note = ''
       this.amount = ''
     },

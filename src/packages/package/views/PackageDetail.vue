@@ -82,7 +82,7 @@
               type="info"
               @click="showModalReship"
               class="btn-primary-custom ml-7"
-              v-if="isAlertReturn"
+              v-if="isReship"
             >
               Reship
             </p-button>
@@ -784,6 +784,12 @@ export default {
         } else result[index].amount += ele.amount
       }
       return result
+    },
+    isReship() {
+      return (
+        this.package_detail.package.alert === PackageAlertTypeHubReturn &&
+        (this.$isAdmin() || this.$isSupport())
+      )
     },
   },
   created() {
