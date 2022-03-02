@@ -155,6 +155,7 @@
       :visible.sync="isVisibleAddUser"
       v-if="isVisibleAddUser"
       :data="user"
+      :warehouses="wareHouses"
       @init="init"
     >
     </modal-add-user>
@@ -181,6 +182,7 @@ import {
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAddUser from '../components/ModalAddUser'
+import { FETCH_WAREHOUSE } from '../../shared/store'
 
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -233,6 +235,13 @@ export default {
       users: (state) => state.users,
       count: (state) => state.count_user,
     }),
+    ...mapState('shared', {
+      wareHouses: (state) =>
+        state.wareHouses.map((x) => ({
+          key: x.id,
+          name: x.name,
+        })),
+    }),
   },
   methods: {
     truncate,
@@ -242,12 +251,22 @@ export default {
       UPDATE_STATUS_USER,
       UPDATE_ROLE_USER,
     ]),
+    ...mapActions('shared', [FETCH_WAREHOUSE]),
+
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this.listUser(this.filter)
+      let req = { type: 2, status: 1 }
+
+      const [result, result2] = await Promise.all([
+        this.listUser(this.filter),
+        this[FETCH_WAREHOUSE](req),
+      ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
+      }
+      if (!result2.success) {
+        this.$toast.open({ message: result2.message, type: 'error' })
       }
       this.isFetching = false
     },
