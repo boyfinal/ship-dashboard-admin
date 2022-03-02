@@ -557,6 +557,8 @@
       :current="package_detail.package"
       @submit="reshipHandle"
     ></modal-reship>
+
+    <OverLoading :is-loading="isSubmitting" />
   </div>
 </template>
 
@@ -621,14 +623,16 @@ import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
 import { PackageAlertTypeHubReturn } from '../constants'
 import ModalReship from '../components/ModalReship'
+import OverLoading from '@components/shared/OverLoading'
 
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm, ModalReship },
+  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading },
   data() {
     return {
       isFetching: true,
+      isSubmitting: false,
       packageID: 0,
       displayDeliverDetail: false,
       isVisibleModal: false,
@@ -952,6 +956,10 @@ export default {
     async reshipHandle({ amount, description }) {
       this.isVisibleModalReship = false
 
+      if (this.isSubmitting) return
+
+      this.isSubmitting = true
+
       const res = await this.reshipPackage({
         id: this.packageID,
         amount,
@@ -964,6 +972,8 @@ export default {
 
       this.$toast.success('Reship đơn hàng thành công', { duration: 3000 })
       await this.init()
+
+      this.isSubmitting = false
     },
   },
 
