@@ -76,7 +76,7 @@
               :class="{ 'input-valid': errorWarehouse }"
               @selected="handleSelectWarehouse"
               @unselected="handleRemoveWarehouse"
-              :optionSearch="wareHouses"
+              :optionSearch="warehouses"
               :placeHolder="'Chọn kho'"
               :item="user"
             />
@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import valider from '@core/valider'
 import { CREATE_USER } from '../store/index'
 import SelectRole from './SelectRole.vue'
@@ -157,6 +157,10 @@ export default {
     data: {
       type: Object,
       default: () => {},
+    },
+    warehouses: {
+      type: Array,
+      default: () => [],
     },
   },
   data() {
@@ -202,30 +206,12 @@ export default {
         ? ''
         : y.string().required('Password không để trống'),
     }))
-    this.fetchWarehouses(), this.fetchCustomer()
-  },
-
-  computed: {
-    ...mapState('shared', {
-      wareHouses: (state) =>
-        state.wareHouses.map((x) => ({
-          key: x.id,
-          name: x.name,
-        })),
-    }),
+    this.fetchCustomer()
   },
 
   methods: {
     ...mapActions('setting', [CREATE_USER]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
-
-    async fetchWarehouses() {
-      let req = { type: 2, status: 1 }
-      const result = await this[FETCH_WAREHOUSE](req)
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
-    },
 
     async fetchCustomer() {
       let req = { role: 'customer', search: '', not_limit: true }
