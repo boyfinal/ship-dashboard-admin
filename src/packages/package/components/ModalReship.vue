@@ -123,6 +123,7 @@ export default {
 
     inputAmount() {
       this.validErrors = {}
+      this.amount = this.amount.replace(/[^0-9.]/g, '')
 
       if (this.amount < 0) {
         this.validErrors.amount = 'Phí phát sinh phải >= 0'
