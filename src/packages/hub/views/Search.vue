@@ -27,7 +27,7 @@
             :has-all="false"
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
-          <template v-else-if="items.length && !isTabReship">
+          <template v-else-if="items.length">
             <div class="table-responsive">
               <TabReturn
                 v-if="isTabReturn"
@@ -153,8 +153,6 @@ export default {
       }
     },
     async searchHandle() {
-      if (this.filter.status == HUB_ITEM_FILTER_STATUS_RESHIP_TEXT) return
-
       this.handleUpdateRouteQuery()
 
       const filters = Object.assign({}, this.filter)

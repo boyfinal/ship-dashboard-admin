@@ -13,7 +13,10 @@
     <tbody>
       <tr v-for="(item, i) in displayItems" :key="i">
         <td>
-          <a href="#">
+          <router-link :to="item.route" v-if="$isAdmin()">
+            {{ item.id }}
+          </router-link>
+          <a href="#" v-else>
             {{ item.id }}
           </a>
         </td>
@@ -43,6 +46,8 @@ export default {
         item.status_text = item.package_return_id
           ? 'Đã gửi lý do'
           : 'Chưa gửi lý do'
+
+        item.route = { name: 'package-detail', params: { id: item.id } }
         return item
       })
     },
