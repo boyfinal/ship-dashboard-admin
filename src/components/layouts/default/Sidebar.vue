@@ -192,25 +192,35 @@ export default {
           route: '#',
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isAccountant(),
+          disable:
+            this.$isSupport() || this.$isAccountant() || this.$isWarehouse(),
           sub: [
             {
               route: '/hubs/search',
               title: 'Tra cứu đơn',
               alias: ['/hubs/search'],
-              disable: this.$isSupport() || this.$isAccountant(),
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
             },
             {
               route: '/hub/import',
               title: 'Quét nhập hub',
               alias: ['/hub/import'],
-              disable: this.$isSupport() || this.$isAccountant(),
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
             },
             {
               route: '/hub/export',
               title: 'Quét xuất hub',
               alias: ['/hub/export'],
-              disable: this.$isSupport() || this.$isAccountant(),
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
             },
           ],
         },

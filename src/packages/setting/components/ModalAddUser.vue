@@ -215,11 +215,6 @@ export default {
 
     async fetchCustomer() {
       let req = { role: 'customer', search: '', not_limit: true }
-      if (this.user.id > 0) {
-        req.user_id = this.user.id
-      } else {
-        req.for_support = true
-      }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []
@@ -273,6 +268,10 @@ export default {
 
       if (payload.phone_number == this.data.phone_number) {
         payload.phone_number = ''
+      }
+
+      if (payload.slack_id == this.data.slack_id) {
+        payload.slack_id = ''
       }
 
       if (this.user.role == ROLE_WAREHOUSE) {
