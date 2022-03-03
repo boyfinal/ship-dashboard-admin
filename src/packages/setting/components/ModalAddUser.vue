@@ -270,6 +270,10 @@ export default {
         payload.phone_number = ''
       }
 
+      if (payload.slack_id == this.data.slack_id) {
+        payload.slack_id = ''
+      }
+
       if (this.user.role == ROLE_WAREHOUSE) {
         payload.warehouse_id = this.user.warehouse_id
       }
