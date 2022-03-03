@@ -213,11 +213,16 @@ export default {
   },
 
   watch: {
-    filter: {
-      handler: function() {
-        this.searchHandle()
-      },
-      deep: true,
+    'filter.page': function() {
+      this.searchHandle()
+    },
+    'filter.limit': function() {
+      this.filter.page = 1
+      this.searchHandle()
+    },
+    'filter.status': function() {
+      this.filter.page = 1
+      this.searchHandle()
     },
   },
 }
