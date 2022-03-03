@@ -196,7 +196,11 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
+import {
+  MAP_NAME_STATUS_WAREHOUSE,
+  PackageStatusImportHub,
+  PackageStatusExportHub,
+} from '@/packages/package/constants'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -239,6 +243,8 @@ export default {
       PackageWareHouseStatusPick: PACKAGE_WAREHOUSE_STATUS_PICK,
       PackageWareHouseStatusReturn: PACKAGE_WAREHOUSE_STATUS_RETURN,
       visibleExportModal: false,
+      PackageStatusImportHub: PackageStatusImportHub,
+      PackageStatusExportHub: PackageStatusExportHub,
     }
   },
   created() {
@@ -268,6 +274,11 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
+      Object.keys(MAP_NAME_STATUS_WAREHOUSE).map((x) => {
+        if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
+          MAP_NAME_STATUS_WAREHOUSE[x].value = 'Xuất kho'
+        }
+      })
       return MAP_NAME_STATUS_WAREHOUSE
     },
   },
