@@ -274,12 +274,13 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      Object.keys(MAP_NAME_STATUS_WAREHOUSE).map((x) => {
+      let status =  Object.assign({}, MAP_NAME_STATUS_WAREHOUSE)
+      Object.keys(status).map((x) => {
         if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
-          MAP_NAME_STATUS_WAREHOUSE[x].value = 'Xuất kho'
+          status[x].value = 'Xuất kho'
         }
       })
-      return MAP_NAME_STATUS_WAREHOUSE
+      return status
     },
   },
   methods: {
