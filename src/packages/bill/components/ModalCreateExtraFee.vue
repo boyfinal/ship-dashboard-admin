@@ -110,6 +110,7 @@ export default {
         let formated = (Math.floor(this.amount * 100) / 100).toFixed(2)
         decimal = formated.split('.')[1]
       }
+
       if (this.amount.includes('.')) {
         this.amount =
           decimal === undefined ? `${number}.` : `${number}.${decimal}`
@@ -126,8 +127,9 @@ export default {
       }
       this.txtError = ''
       let decimal = this.amount.split('.')[1]
+      let number = this.amount.split('.')[0]
       if (decimal !== undefined && decimal.length >= 2) {
-        this.amount = (Math.floor(this.amount * 100) / 100).toFixed(2)
+        this.amount = `${number}.${decimal.toString().slice(0, 2)}`
       }
     },
     validateParams() {
