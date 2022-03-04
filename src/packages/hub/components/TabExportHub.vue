@@ -15,7 +15,10 @@
     <tbody>
       <tr v-for="(item, i) in displayItems" :key="i">
         <td>
-          <a href="#">
+          <router-link :to="item.route" v-if="$isAdmin()">
+            {{ item.id }}
+          </router-link>
+          <a href="#" v-else>
             {{ item.id }}
           </a>
         </td>
@@ -50,6 +53,7 @@ export default {
             tracking_number: 'N/A',
             label_number: item.tracking_number,
             date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
+            route: { name: 'container-detail', params: { code: item.code } },
           }
         }
 
@@ -61,6 +65,7 @@ export default {
             tracking_number: item.tracking_number,
             label_number: 'N/A',
             date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
+            route: { name: 'package-detail', params: { id: item.id } },
           }
         }
 

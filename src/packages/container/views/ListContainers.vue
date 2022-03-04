@@ -201,7 +201,7 @@ export default {
         page: 1,
         status: '',
         search: '',
-        warehouse: 1,
+        warehouse: '',
       },
       isFetching: false,
       visibleModalChoiceBox: false,
@@ -241,21 +241,34 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      let payload = cloneDeep(this.filter)
+
       let req = { type: 1, status: 1 }
-      payload.search = payload.search.toUpperCase()
-      const [result, result_1] = await Promise.all([
-        this[FETCH_LIST_CONTAINERS](payload),
-        this[FETCH_WAREHOUSE](req),
-      ])
-      this.isFetching = false
+      const result = await this[FETCH_WAREHOUSE](req)
       if (!result.success) {
+        this.isFetching = false
         this.$toast.open({ message: result.message, type: 'error' })
       }
+      if (!this.filter.warehouse) {
+        let wareHouseActive = this.wareHouses.filter(
+          (ele) => ele.status == 1 && ele.type == 1
+        )
+        if (wareHouseActive.length < 1) {
+          this.isFetching = false
+          return
+        }
+        this.filter.warehouse = wareHouseActive[0].id
+      }
+
+      let payload = cloneDeep(this.filter)
+      payload.search = payload.search.toUpperCase()
+
+      const result_1 = await this[FETCH_LIST_CONTAINERS](payload)
       if (!result_1.success) {
+        this.isFetching = false
         this.$toast.open({ message: result_1.message, type: 'error' })
         return
       }
+      this.isFetching = false
     },
     isCloseContainer(container) {
       return container.status === CONTAINER_CLOSE

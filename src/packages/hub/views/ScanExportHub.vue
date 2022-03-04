@@ -15,7 +15,7 @@
                     v-model="keyword"
                     @clear="clearInput"
                     @keydown.enter.prevent="searchHandle"
-                    placeholder="Nhập mã kiện, mã đơn"
+                    placeholder="Nhập mã kiện/ups, mã đơn/usps"
                   ></p-input>
                   <button
                     @click.prevent="searchHandle"
@@ -319,19 +319,11 @@ export default {
         code: keyword,
       }
       const result = await this[FETCH_LIST_IMPORTED](params)
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
-
-      params = {
-        type: this.filter.type,
-        code: keyword,
-      }
 
       this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
-      if (!res.success) {
+      if (!res.success || !result.success) {
         this.isFetchingImportHub = false
         this.isScan = false
         this.$toast.open({
@@ -343,6 +335,7 @@ export default {
       }
 
       this.isFetchingImportHub = false
+      this.isScan = false
       if (this.filter.type == 'container') {
         this.current_container.code = this.current.code
         this.current_container.id = this.current.id
@@ -361,14 +354,14 @@ export default {
         this.current_package.width = this.current.width
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
-        this.current_package.tracking_number = this.current.tracking_number
+        this.current_package.tracking_number = this.current.tracking.tracking_number
         this.current_package.status = this.current.status
       }
     },
 
     async init() {
       this.isFetching = true
-      this.clearInput()
+      this.clearData()
       this.handleUpdateRouteQuery()
       let payload = cloneDeep(this.filter)
       const result = await this[FETCH_LIST_IMPORTED](payload)
@@ -402,6 +395,9 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
+      if (keyword.length > 22 && this.filter.type == 'package') {
+        keyword = keyword.slice(-22)
+      }
       this.keyword = keyword
       this.searchHandle()
       this.disableInput = false
@@ -431,10 +427,12 @@ export default {
         return
       }
       this.isSubmitting = false
-      this.$toast.success(`Kiện ${payload.code} quét thành công`)
+
       if (this.filter.type == 'container') {
+        this.$toast.success(`Kiện ${payload.code} quét thành công`)
         this.listExportedContainer.push(this.currentCode)
       } else if (this.filter.type == 'package') {
+        this.$toast.success(`Đơn ${payload.code} quét thành công`)
         this.listExportedPackage.push(this.currentCode)
       }
       this.isScan = false
@@ -473,15 +471,6 @@ export default {
     filter: {
       handler: function() {
         this.init()
-      },
-      deep: true,
-    },
-    keyword: {
-      handler: function() {
-        if (this.keyword == '') {
-          this.filter.code = ''
-          this.init()
-        }
       },
       deep: true,
     },

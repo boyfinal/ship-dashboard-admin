@@ -177,7 +177,7 @@ export default {
         limit: 30,
         search: '',
         status: '',
-        warehouseID: 1,
+        warehouseID: '',
       },
       shipmentAction: null,
       isLoading: [],
@@ -219,25 +219,38 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      let payload = cloneDeep(this.filter)
+
       let req = {
         type: this.WareHouseTypeInternational,
         status: this.WareHouseStatusActive,
       }
-      payload.search = payload.search.toUpperCase()
-      const [result, result_1] = await Promise.all([
-        this[FETCH_LIST_SHIPMENT](payload),
-        this[FETCH_WAREHOUSE](req),
-      ])
-      this.isFetching = false
+      const result = await this[FETCH_WAREHOUSE](req)
+
       if (!result.success) {
+        this.isFetching = false
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+      if (!this.filter.warehouseID) {
+        let wareHouseActive = this.wareHouses.filter(
+          (ele) => ele.status == 1 && ele.type == 1
+        )
+        if (wareHouseActive.length < 1) {
+          this.isFetching = false
+          return
+        }
+        this.filter.warehouseID = wareHouseActive[0].id
+      }
+
+      let payload = cloneDeep(this.filter)
+      payload.search = payload.search.toUpperCase()
+      const result_1 = await this[FETCH_LIST_SHIPMENT](payload)
       if (!result_1.success) {
+        this.isFetching = false
         this.$toast.open({ message: result_1.message, type: 'error' })
         return
       }
+      this.isFetching = false
     },
     showIntransitButton(shipment) {
       return shipment.status === ShipmentClosed

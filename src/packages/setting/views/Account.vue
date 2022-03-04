@@ -40,16 +40,16 @@
                 <thead>
                   <tr>
                     <th width="200">Tên</th>
-                    <th width="150">Email/SĐT</th>
-                    <th width="200">Trạng thái</th>
+                    <th width="200">Email/SĐT</th>
+                    <th width="150">Trạng thái</th>
                     <th width="100">Ngày tạo</th>
-                    <th width="150">Thao tác</th>
+                    <th width="100">Thao tác</th>
                     <th width="180"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in users" :key="i">
-                    <td>
+                    <td :class="{ deactive: !checkActive(item.status) }">
                       <p-tooltip
                         :label="item.full_name"
                         size="large"
@@ -60,7 +60,7 @@
                         {{ truncate(item.full_name, 25) }}
                       </p-tooltip>
                     </td>
-                    <td>
+                    <td :class="{ deactive: !checkActive(item.status) }">
                       <p-tooltip
                         :label="item.email"
                         size="large"
@@ -71,7 +71,7 @@
                         {{ truncate(item.email, 25) || item.phone_number }}
                       </p-tooltip>
                     </td>
-                    <td>
+                    <td :class="{ deactive: !checkActive(item.status) }">
                       <span class="d-flex"
                         ><i
                           class="fa fa-circle"
@@ -86,23 +86,22 @@
                         }}</span
                       >
                     </td>
-                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td>
-                      <select-role
-                        class="search-type"
-                        @selected="actionUpdateRole"
-                        :optionSearch="filterRole"
-                        :item="item"
-                        :placeHolder="'Phân quyền'"
-                      />
+                    <td :class="{ deactive: !checkActive(item.status) }">{{
+                      item.created_at | date('dd/MM/yyyy')
+                    }}</td>
+                    <td :class="{ deactive: !checkActive(item.status) }">
+                      {{ mapRole(item.role).name }}
                     </td>
                     <td style="text-align: center">
-                      <a
-                        href="#"
-                        class="btn edit"
-                        @click="visibleModalAddUser(item)"
-                        >Sửa</a
-                      >
+                      <span :class="{ deactive: !checkActive(item.status) }">
+                        <a
+                          href="#"
+                          class="btn edit"
+                          @click="visibleModalAddUser(item)"
+                          :class="{ deactive: !checkActive(item.status) }"
+                          >Sửa</a
+                        >
+                      </span>
                       <a
                         href="#"
                         class="btn"
@@ -156,6 +155,7 @@
       :visible.sync="isVisibleAddUser"
       v-if="isVisibleAddUser"
       :data="user"
+      :warehouses="wareHouses"
       @init="init"
     >
     </modal-add-user>
@@ -182,6 +182,7 @@ import {
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAddUser from '../components/ModalAddUser'
+import { FETCH_WAREHOUSE } from '../../shared/store'
 
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -234,6 +235,13 @@ export default {
       users: (state) => state.users,
       count: (state) => state.count_user,
     }),
+    ...mapState('shared', {
+      wareHouses: (state) =>
+        state.wareHouses.map((x) => ({
+          key: x.id,
+          name: x.name,
+        })),
+    }),
   },
   methods: {
     truncate,
@@ -243,12 +251,22 @@ export default {
       UPDATE_STATUS_USER,
       UPDATE_ROLE_USER,
     ]),
+    ...mapActions('shared', [FETCH_WAREHOUSE]),
+
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const result = await this.listUser(this.filter)
+      let req = { type: 2, status: 1 }
+
+      const [result, result2] = await Promise.all([
+        this.listUser(this.filter),
+        this[FETCH_WAREHOUSE](req),
+      ])
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
+      }
+      if (!result2.success) {
+        this.$toast.open({ message: result2.message, type: 'error' })
       }
       this.isFetching = false
     },
@@ -341,6 +359,10 @@ export default {
     visibleModalAddUser(item) {
       this.user = item
       this.isVisibleAddUser = true
+    },
+
+    mapRole(role) {
+      return this.filterRole.find((x) => x.key == role)
     },
   },
   watch: {

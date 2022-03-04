@@ -172,8 +172,8 @@ export const actions = {
     let result = { success: true }
 
     let res = await api.fetchListImported(payload)
-    if (!res.codes || res.count == null) {
-      res.count = 0
+    if (!res.codes || res.count == 0) {
+      res.count = 1
       result = {
         success: false,
         message: res.errorMessage || '',

@@ -76,7 +76,7 @@
               :class="{ 'input-valid': errorWarehouse }"
               @selected="handleSelectWarehouse"
               @unselected="handleRemoveWarehouse"
-              :optionSearch="wareHouses"
+              :optionSearch="warehouses"
               :placeHolder="'Chọn kho'"
               :item="user"
             />
@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import valider from '@core/valider'
 import { CREATE_USER } from '../store/index'
 import SelectRole from './SelectRole.vue'
@@ -158,6 +158,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    warehouses: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -184,10 +188,7 @@ export default {
     }
   },
   mounted() {
-    this.user = Object.assign({}, this.data, { customer_id: [] })
-    if (this.user.permissions && this.user.permissions.length > 1) {
-      this.user.customer_id = this.user.permissions.map((x) => x.customer_id)
-    }
+    this.user = Object.assign({}, this.data)
     if (this.user.role == ROLE_WAREHOUSE) {
       this.roleWarehouse = true
     }
@@ -205,33 +206,15 @@ export default {
         ? ''
         : y.string().required('Password không để trống'),
     }))
-    this.fetchWarehouses(), this.fetchCustomer()
-  },
-
-  computed: {
-    ...mapState('shared', {
-      wareHouses: (state) =>
-        state.wareHouses.map((x) => ({
-          key: x.id,
-          name: x.name,
-        })),
-    }),
+    this.fetchCustomer()
   },
 
   methods: {
     ...mapActions('setting', [CREATE_USER]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
 
-    async fetchWarehouses() {
-      let req = { type: 2, status: 1 }
-      const result = await this[FETCH_WAREHOUSE](req)
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
-    },
-
     async fetchCustomer() {
-      let req = { role: 'customer', search: '' }
+      let req = { role: 'customer', search: '', not_limit: true }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []
@@ -240,13 +223,13 @@ export default {
 
       this.listUsers = result.users.map((x) => ({
         key: x.id,
-        name: x.full_name + ' - ' + x.email,
+        name: x.full_name + ' - ' + (x.email ? x.email : x.phone_number),
         full_name: x.full_name,
       }))
     },
 
     async handleCreate() {
-      if (this.user.role == '') {
+      if (!this.user.role) {
         this.errorRole = true
       }
 
@@ -265,7 +248,7 @@ export default {
         return
       }
 
-      const data = {
+      const payload = {
         full_name: this.user.full_name.trim(),
         password: this.user.password ? this.user.password.trim() : '',
         role: this.user.role,
@@ -274,21 +257,33 @@ export default {
       }
 
       if (this.user.email.includes('@')) {
-        data.email = this.user.email.trim().toLowerCase()
+        payload.email = this.user.email.trim().toLowerCase()
       } else {
-        data.phone_number = this.user.email.trim()
+        payload.phone_number = this.user.email.trim()
+      }
+
+      if (payload.email == this.data.email) {
+        payload.email = ''
+      }
+
+      if (payload.phone_number == this.data.phone_number) {
+        payload.phone_number = ''
+      }
+
+      if (payload.slack_id == this.data.slack_id) {
+        payload.slack_id = ''
       }
 
       if (this.user.role == ROLE_WAREHOUSE) {
-        data.warehouse_id = this.user.warehouse_id
+        payload.warehouse_id = this.user.warehouse_id
       }
 
       if (this.user.id > 0) {
-        data.id = this.user.id
+        payload.id = this.user.id
       }
 
       this.loading = true
-      const res = await this.createUser(data)
+      const res = await this.createUser(payload)
       this.loading = false
 
       if (!res.success) {
@@ -359,6 +354,7 @@ export default {
     },
 
     handleClose() {
+      this.valider.errors = null
       this.$emit('update:visible', false)
       this.$emit('close', true)
     },
@@ -368,11 +364,6 @@ export default {
       handler: function() {
         if (this.visible) {
           this.user = Object.assign({}, this.data)
-          if (this.user.permissions && this.user.permissions.length > 1) {
-            this.user.customer_id = this.user.permissions.map(
-              (x) => x.customer_id
-            )
-          }
         }
         this.listRole = ROLE
       },

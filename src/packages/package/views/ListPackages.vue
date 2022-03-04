@@ -434,11 +434,6 @@ export default {
   width: auto !important;
   white-space: pre;
 }
-.deactive {
-  td {
-    opacity: 0.6;
-  }
-}
 td.code {
   max-width: 20vw !important;
   span.link-code,
