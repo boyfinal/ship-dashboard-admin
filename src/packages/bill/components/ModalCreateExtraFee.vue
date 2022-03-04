@@ -107,8 +107,7 @@ export default {
       number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
       if (decimal !== undefined && decimal.length >= 2) {
-        let formated = (Math.floor(this.amount * 100) / 100).toFixed(2)
-        decimal = formated.split('.')[1]
+        decimal = decimal.toString().slice(0, 2)
       }
 
       if (this.amount.includes('.')) {
