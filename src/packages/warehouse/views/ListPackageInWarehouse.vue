@@ -201,6 +201,7 @@ import {
   PackageStatusImportHub,
   PackageStatusExportHub,
 } from '@/packages/package/constants'
+import { cloneDeep } from '../../../core/utils'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -274,7 +275,7 @@ export default {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
-      let status =  Object.assign({}, MAP_NAME_STATUS_WAREHOUSE)
+      let status = cloneDeep(MAP_NAME_STATUS_WAREHOUSE)
       Object.keys(status).map((x) => {
         if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
           status[x].value = 'Xuất kho'
