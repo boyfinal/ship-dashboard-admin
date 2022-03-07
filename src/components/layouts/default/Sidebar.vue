@@ -117,14 +117,19 @@ export default {
               title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
             },
+                        {
+              route: '/claims',
+              title: 'Khiếu nại',
+              alias: ['/claims', '/claims/:id'],
+            },
             {
               route: '/bills',
-              title: 'Hóa đơn',
+              title: 'Tài chính',
               alias: ['/bills', '/bills/:code'],
             },
             {
               route: '/transactions',
-              title: 'Thanh toán ',
+              title: 'Topup',
               alias: ['/transactions', '/transactions/:id'],
             },
             {
@@ -132,11 +137,7 @@ export default {
               title: 'Người dùng',
               alias: ['/debt'],
             },
-            {
-              route: '/claims',
-              title: 'Khiếu nại',
-              alias: ['/claims', '/claims/:id'],
-            },
+
           ],
         },
         // {
@@ -206,7 +207,7 @@ export default {
             },
             {
               route: '/hub/import',
-              title: 'Quét nhập hub',
+              title: 'Quét nhập',
               alias: ['/hub/import'],
               disable:
                 this.$isSupport() ||
@@ -215,7 +216,7 @@ export default {
             },
             {
               route: '/hub/export',
-              title: 'Quét xuất hub',
+              title: 'Quét xuất',
               alias: ['/hub/export'],
               disable:
                 this.$isSupport() ||
