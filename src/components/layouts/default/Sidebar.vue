@@ -110,14 +110,14 @@ export default {
           route: { name: 'packages' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse(),
+          disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/packages',
               title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
             },
-                        {
+            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
@@ -137,7 +137,6 @@ export default {
               title: 'Người dùng',
               alias: ['/debt'],
             },
-
           ],
         },
         // {
@@ -155,7 +154,7 @@ export default {
           route: '/bill',
           class: '',
           isOpen: false,
-          disable: this.$isSupport(),
+          disable: this.$isSupport() || this.$isHub(),
           sub: [
             {
               route: '/warehouse',
@@ -232,7 +231,7 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isWarehouse(),
+          disable: this.$isSupport() || this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/account',
