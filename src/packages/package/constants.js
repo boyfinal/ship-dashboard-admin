@@ -239,7 +239,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-danger',
   },
   [PackageStatusDelivered]: {
-    value: 'Xuất kho',
+    value: 'Giao thành công',
     class: 'badge-success',
   },
   [PackageStatusImportHub]: {
