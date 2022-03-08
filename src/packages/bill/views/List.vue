@@ -2,12 +2,7 @@
   <div class="pages list__claim">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12">
-        <div
-          class="d-flex"
-          style="
-    width: 84%;
-"
-        >
+        <div class="d-flex" style="flex: auto">
           <p-input
             :placeholder="searchPlaceholder"
             prefixIcon="search"
@@ -19,12 +14,15 @@
           >
           </p-input>
           <div class="ml-8">
-            <select v-model="filter.search_by" class="form-control">
-              <option value="bill_code">Mã hoá đơn</option>
-              <option value="code">Lionbay tracking</option>
-              <option value="customer">Tài khoản Khách hàng</option>
-              <option value="customer_full_name">Tên Khách hàng</option>
-              <option value="tracking">Last mile tracking</option>
+            <select
+              v-model="filter.search_by"
+              class="form-control"
+              style="width: auto"
+            >
+              <option value="customer">Khách hàng</option>
+              <option value="bill_code">Hoá đơn</option>
+              <option value="order_number">Đơn hàng</option>
+              <option value="tracking">Lionbay/ Last mile tracking</option>
             </select>
           </div>
         </div>
@@ -42,8 +40,20 @@
       <div class="card">
         <div class="card-body">
           <div class="list__bill-list">
-            <vcl-table class="md-20" v-if="isFetching"></vcl-table>
-            <template v-else-if="bills.length > 0">
+            <status-tab
+              v-model="filter.tab"
+              :status="listTab"
+              :hasAll="false"
+            />
+            <status-tab
+              v-if="filter.tab == 'topup'"
+              class="mt-8"
+              v-model="filter.type"
+              :status="listType"
+              :hasAll="false"
+            />
+            <vcl-table class="md-20 mt-16" v-if="isFetching"></vcl-table>
+            <template v-else-if="bills.length > 0 && filter.tab == 'bill'">
               <div class="table-responsive">
                 <table class="table table-hover">
                   <thead>
@@ -74,19 +84,135 @@
                   </tbody>
                 </table>
               </div>
+              <div
+                class="d-flex justify-content-between align-items-center mb-16"
+                v-if="count > 0"
+              >
+                <p-pagination
+                  :total="count"
+                  :perPage.sync="filter.limit"
+                  :current.sync="filter.page"
+                  size="sm"
+                ></p-pagination>
+              </div>
+            </template>
+            <template
+              v-else-if="transactions.length > 0 && filter.tab == 'topup'"
+            >
+              <div class="table-responsive">
+                <table
+                  class="table table-hover"
+                  id="tbl-packages"
+                  :class="{
+                    responsive: this.filter.type == 2 || filter.type == 4,
+                  }"
+                >
+                  <thead>
+                    <tr>
+                      <template>
+                        <th>Loại</th>
+                        <th>Ngày tạo</th>
+                        <th>Trạng thái</th>
+                        <th>Khách hàng</th>
+                        <th class="content">Nội dung</th>
+                        <th>Hình thức</th>
+                        <th>Giá trị</th>
+                        <th v-if="filter.type == 1">Thao tác</th>
+                      </template>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, i) in transactions" :key="i">
+                      <td :title="transactionType[item.type]">
+                        <span class="tool-tip">{{
+                          transactionType[item.type]
+                        }}</span>
+                      </td>
+                      <td :title="item.created_at | date('dd/MM/yyyy')"
+                        ><span>{{
+                          item.created_at | date('dd/MM/yyyy')
+                        }}</span></td
+                      >
+                      <td :title="mapStatus[item.status].value"
+                        ><span
+                          v-status:status="mapStatus[item.status].value"
+                        ></span
+                      ></td>
+                      <td :title="item.user.full_name">
+                        <span class="tool-tip"> {{ item.user.full_name }}</span>
+                      </td>
+                      <td :title="getTitle(item)">
+                        <span
+                          class="tool-tip"
+                          v-html="getDescription(item)"
+                        ></span
+                      ></td>
+                      <td :title="getTextType(item)">
+                        <span class="tool-tip">
+                          {{ getTextType(item) }}
+                        </span>
+                      </td>
+                      <td>
+                        <div
+                          :class="{ error: validateErrors[item.id] }"
+                          v-if="showInputMoney(item)"
+                        >
+                          <span class="tooltip-notice">
+                            <p-svg
+                              style="vertical-align: top"
+                              name="notice"
+                            ></p-svg>
+                            Vui lòng nhập số tiền!
+                          </span>
+                          <p-input
+                            v-model="money[item.id]"
+                            :ref="'money_' + item.id"
+                            placeholder="Nhập số tiền ($)"
+                            class="input-money"
+                            type="text"
+                            @blur="resetErrors"
+                            @input="onChangeAmount($event, item)"
+                          />
+                        </div>
+                        <span v-else style="white-space: nowrap"
+                          >{{ item.type === typePay ? '-' : '+' }}
+                          {{ Math.abs(item.amount) | formatPrice }}</span
+                        >
+                      </td>
+                      <td class="btn-action" v-if="filter.type == 1">
+                        <div v-if="showBtn(item)" style="display: flex">
+                          <p-button
+                            @click="handleConfirm(successStatus, item)"
+                            class="mr-2"
+                            type="info"
+                          >
+                            Xác nhận
+                          </p-button>
+                          <p-button
+                            @click="handleConfirm(failStatus, item)"
+                            type="danger"
+                          >
+                            Từ chối
+                          </p-button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div
+                class="d-flex justify-content-between align-items-center mb-16"
+                v-if="count > 0"
+              >
+                <p-pagination
+                  :total="count_transactions"
+                  :perPage.sync="filter.limit"
+                  :current.sync="filter.page"
+                  size="sm"
+                ></p-pagination>
+              </div>
             </template>
             <EmptySearchResult v-else></EmptySearchResult>
-          </div>
-          <div
-            class="d-flex justify-content-between align-items-center mb-16"
-            v-if="count > 0"
-          >
-            <p-pagination
-              :total="count"
-              :perPage.sync="filter.limit"
-              :current.sync="filter.page"
-              size="sm"
-            ></p-pagination>
           </div>
         </div>
       </div>
@@ -98,6 +224,26 @@
       @save="handleSubmitExtraFee"
     >
     </modal-create-extra-fee>
+    <modal-confirm
+      :visible.sync="visibleConfirmSuccess"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn về giao dịch này ?`"
+      :title="`Xác nhận giao dịch`"
+      @action="changeStatusTransactionHandle(successStatus)"
+      :loading="isChangingStatus"
+      :disabled="isChangingStatus"
+    ></modal-confirm>
+    <modal-confirm
+      :visible.sync="visibleConfirmFail"
+      :actionConfirm="`Có`"
+      :cancel="`Không`"
+      :description="`Bạn có chắc chắn giao dịch này không thành công ?`"
+      :title="`Từ chối giao dịch`"
+      @action="changeStatusTransactionHandle(failStatus)"
+      :loading="isChangingStatus"
+      :disabled="isChangingStatus"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -114,6 +260,24 @@ import { mapActions, mapState } from 'vuex'
 import { BILL_MAP_NAME_STATUS } from '../constants'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import {
+  FETCH_LIST_TRANSACTIONS,
+  CHANGE_STATUS_TRANSACTION,
+} from '../../transaction/store'
+import {
+  TRANSACTION_TYPE,
+  TransactionLogTypeTopup,
+  TransactionLogTypePay,
+  TransactionStatusProcess,
+  TransactionStatusSuccess,
+  TransactionStatusFailure,
+  MAP_NAME_STATUS_TRANSACTION,
+  TransactionLogTypeRefund,
+  TransactionLogTypePayoneer,
+  TransactionLogTypePingPong,
+} from '../../transaction/constants'
+import { cloneDeep } from '../../../core/utils'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'BillList',
@@ -121,6 +285,7 @@ export default {
   components: {
     EmptySearchResult,
     ModalCreateExtraFee,
+    ModalConfirm,
   },
   data() {
     return {
@@ -128,14 +293,45 @@ export default {
         page: 1,
         limit: 30,
         search: '',
-        search_by: 'bill_code',
+        search_by: 'customer',
         status: '',
+        tab: 'bill',
       },
       isSubmitting: false,
       visibleCreateExtraFeeModal: false,
       isFetching: false,
       ROLE_ADMIN: ROLE_ADMIN,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
+      listTab: [
+        {
+          value: 'bill',
+          text: 'Hóa đơn',
+        },
+        {
+          value: 'topup',
+          text: 'Thanh toán',
+        },
+      ],
+      typePay: TransactionLogTypePay,
+      validateErrors: [],
+      money: [],
+      isChangingStatus: false,
+      visibleConfirmSuccess: false,
+      visibleConfirmFail: false,
+      listType: [
+        {
+          value: 1,
+          text: 'Nạp tiền',
+        },
+        {
+          value: 2,
+          text: 'Thanh toán',
+        },
+        {
+          value: 4,
+          text: 'Hoàn tiền',
+        },
+      ],
     }
   },
   mounted() {
@@ -147,6 +343,10 @@ export default {
       count: (state) => state.count,
       bills: (state) => state.bills,
       fee_types: (state) => state.extraFeeTypes,
+    }),
+    ...mapState('transaction', {
+      transactions: (state) => state.transactions,
+      count_transactions: (state) => state.count,
     }),
     ...mapState('shared', {
       user: (state) => state.user,
@@ -178,13 +378,24 @@ export default {
     searchPlaceholder() {
       const maptext = {
         bill_code: 'Tìm theo mã hoá đơn',
-        code: 'Tìm theo LionBay tracking',
-        customer: 'Tìm theo email hoặc sđt của khách hàng',
-        customer_full_name: 'Tìm theo tên khách hàng',
-        tracking: 'Tìm theo last mile tracking',
+        order_number: 'Tìm theo mã đơn hàng',
+        customer: 'Tìm theo tên/email/số điện thoại',
+        tracking: 'Tìm theo mã tracking',
       }
 
       return maptext[this.filter.search_by] || maptext['id']
+    },
+    transactionType() {
+      return TRANSACTION_TYPE
+    },
+    mapStatus() {
+      return MAP_NAME_STATUS_TRANSACTION
+    },
+    successStatus() {
+      return TransactionStatusSuccess
+    },
+    failStatus() {
+      return TransactionStatusFailure
     },
   },
   filters: {
@@ -202,6 +413,10 @@ export default {
       fetchFeeType: FETCH_FEE_EXTRA_TYPES,
       createExtraFee: CREATE_EXTRA_FEE,
     }),
+    ...mapActions('transaction', [
+      FETCH_LIST_TRANSACTIONS,
+      CHANGE_STATUS_TRANSACTION,
+    ]),
 
     async init() {
       this.filter.limit = this.filter.limit != 30 ? 30 : this.filter.limit
@@ -220,6 +435,16 @@ export default {
       if (res.error) {
         this.$toast.error(res.message)
         return
+      }
+    },
+    async initTopup() {
+      this.isFetching = true
+      this.handleUpdateRouteQuery()
+      let payload = cloneDeep(this.filter)
+      const result = await this[FETCH_LIST_TRANSACTIONS](payload)
+      this.isFetching = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
       }
     },
     async handleSubmitExtraFee(payload) {
@@ -243,10 +468,166 @@ export default {
     },
     handleSearch() {
       this.filter.page = 1
-      this.init()
+      if (this.filter.tab == 'bill') {
+        this.init()
+      } else this.initTopup()
     },
     handleShowModalCreateExtraFee() {
       this.visibleCreateExtraFeeModal = true
+    },
+    getTitle(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return `Nạp topup ${transaction.id}`
+        case TransactionLogTypePay:
+          return `Thanh toán hóa đơn ${transaction.bill.code}`
+        case TransactionLogTypeRefund:
+          return `Hoàn tiền hóa đơn ${transaction.bill.code}`
+        default:
+          return null
+      }
+    },
+    getDescription(transaction) {
+      let path = ''
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return `Nạp topup <strong>#${transaction.id}</strong>`
+        case TransactionLogTypePay:
+          path = this.$router.resolve({
+            name: 'bill-detail',
+            params: { code: transaction.bill.code },
+          }).href
+          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+        case TransactionLogTypeRefund:
+          path = this.$router.resolve({
+            name: 'bill-detail',
+            params: { code: transaction.bill.code },
+          }).href
+          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+        case TransactionLogTypePayoneer:
+          return `#${transaction.description}`
+        case TransactionLogTypePingPong:
+          return `#${transaction.description}`
+        default:
+          return null
+      }
+    },
+    showInputMoney(transaction) {
+      return (
+        (transaction.type === TransactionLogTypePayoneer ||
+          transaction.type === TransactionLogTypePingPong) &&
+        transaction.status === TransactionStatusProcess
+      )
+    },
+    getTextType(transaction) {
+      switch (transaction.type) {
+        case TransactionLogTypeTopup:
+          return 'Chuyển khoản'
+        case TransactionLogTypePayoneer:
+          return `Payoneer`
+        case TransactionLogTypePingPong:
+          return `PingPong`
+        default:
+          return 'N/A'
+      }
+    },
+    async changeStatusTransactionHandle(status) {
+      this.isChangingStatus = true
+      const payload = {
+        id: this.selectedItem.id,
+        status: status,
+        amount: this.money[this.selectedItem.id]
+          ? parseFloat(this.money[this.selectedItem.id].replaceAll(',', ''))
+          : 0,
+      }
+      const result = await this[CHANGE_STATUS_TRANSACTION](payload)
+      this.isChangingStatus = false
+      this.visibleConfirmSuccess = false
+      this.visibleConfirmFail = false
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+        return
+      }
+      let msg = ''
+      switch (status) {
+        case TransactionStatusSuccess:
+          msg = 'Xác nhận giao dịch thành công'
+          break
+        case TransactionStatusFailure:
+          msg = 'Từ chối giao dịch thành công'
+          break
+        default:
+          break
+      }
+      this.$toast.open({ message: msg, type: 'success' })
+      await this.initTopup()
+    },
+    showBtn(transaction) {
+      return (
+        (transaction.type === TransactionLogTypeTopup ||
+          transaction.type === TransactionLogTypePayoneer ||
+          transaction.type === TransactionLogTypePingPong) &&
+        transaction.status === TransactionStatusProcess &&
+        (this.user.role == ROLE_ADMIN || this.user.role == ROLE_ACCOUNTANT)
+      )
+    },
+    resetErrors() {
+      this.validateErrors = []
+    },
+    checkValidateMoneyAmount() {
+      const transaction = this.selectedItem
+      this.resetErrors()
+      if (
+        transaction.type !== TransactionLogTypePayoneer &&
+        transaction.type !== TransactionLogTypePingPong
+      ) {
+        return true
+      }
+      if (!this.money[transaction.id]) {
+        this.validateErrors[transaction.id] = true
+        return false
+      }
+      return true
+    },
+    handleConfirm(status, item) {
+      this.selectedItem = item
+      this.resetErrors()
+      let validAmount
+      switch (status) {
+        case TransactionStatusSuccess:
+          validAmount = this.checkValidateMoneyAmount()
+          if (!validAmount) {
+            this.$nextTick(function() {
+              this.$refs['money_' + this.selectedItem.id][0].focus()
+            })
+            break
+          }
+          this.visibleConfirmSuccess = true
+          break
+        case TransactionStatusFailure:
+          this.visibleConfirmFail = true
+          break
+        default:
+          break
+      }
+    },
+    onChangeAmount(e, transaction) {
+      let value = e.trim().replace(/[^\d.-]/g, '')
+
+      let lastCharacter = value.substr(-1)
+      if (lastCharacter === '.') {
+        if (value.length === 1 || value.split('.').length > 2) {
+          value = value.slice(0, -1)
+        }
+      } else {
+        let valid = /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/.test(value)
+        if (!valid) {
+          value = value.slice(0, -1)
+        }
+      }
+      value = value.replace(/,/g, '').replace(/^0+/, '')
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      this.money[transaction.id] = value
     },
   },
   watch: {
@@ -260,9 +641,90 @@ export default {
     'filter.search_by': function() {
       if (this.filter.search != '') {
         this.filter.page = 1
-        this.init()
+        if (this.filter.tab == 'bill') {
+          this.init()
+        } else this.initTopup()
       }
+    },
+    'filter.tab': function() {
+      if (this.filter.tab == 'topup') {
+        this.filter.page = 1
+        this.filter.type = 1
+        this.initTopup()
+      }
+    },
+    'filter.type': function() {
+      this.filter.page = 1
+      this.initTopup()
     },
   },
 }
 </script>
+
+<style lang="scss">
+@media screen and (max-width: 1400px) {
+  .responsive {
+    .content {
+      width: 300px;
+    }
+    .btn-action {
+      min-width: 10px !important;
+    }
+  }
+  .btn-action {
+    min-width: 180px;
+  }
+  .list-transactions td > span.tool-tip {
+    width: 100%;
+    height: 23px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+}
+.input-money {
+  max-width: 200px;
+}
+.input-money .form-control {
+  height: 32px;
+  border-radius: 4px !important;
+  border: 1px solid #cfd0d0;
+  padding: 3px 12px 7px;
+}
+.tooltip-notice {
+  z-index: 9999;
+  position: absolute;
+  top: -48px;
+  color: red;
+  padding: 12px 17px 14px;
+  box-shadow: 0 2px 4px rgba(40, 41, 61, 0.04),
+    0 8px 16px rgba(96, 97, 112, 0.16);
+  border: 1px solid #edeeee;
+  background-color: #fff;
+  visibility: hidden;
+}
+.error .tooltip-notice {
+  visibility: visible;
+}
+
+.error .tooltip-notice::after {
+  visibility: visible;
+}
+
+.error .input-money .form-control {
+  border-color: #f5222d;
+}
+.tooltip-notice::after {
+  border-top: 6px solid #fff;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  bottom: -6px;
+  left: 12px;
+  position: absolute;
+  content: '';
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 999;
+}
+</style>
