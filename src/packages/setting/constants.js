@@ -13,8 +13,8 @@ export const HUB_TYPE = 1
 export const WAREHOUSE_TYPE = 2
 
 export const USER_STATUS_TAB = {
-  'Không kích hoạt': 0,
-  'Kích hoạt': 1,
+  'Không hoạt động': 0,
+  'Hoạt động': 1,
 }
 
 export const ROLE = [
