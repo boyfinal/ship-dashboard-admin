@@ -236,11 +236,7 @@ export default {
       count: (state) => state.count_user,
     }),
     ...mapState('shared', {
-      wareHouses: (state) =>
-        state.wareHouses.map((x) => ({
-          key: x.id,
-          name: x.name,
-        })),
+      wareHouses: (state) => state.wareHouses,
     }),
   },
   methods: {
@@ -256,7 +252,7 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      let req = { type: 2, status: 1 }
+      let req = { status: 1 }
 
       const [result, result2] = await Promise.all([
         this.listUser(this.filter),

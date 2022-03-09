@@ -68,7 +68,7 @@
           </div>
         </div>
 
-        <div class="row mb-16" v-if="roleWarehouse">
+        <div class="row mb-16" v-if="isRoleWarehouse">
           <div class="col-12">
             <label class="color-newtral-10 font-weight-600 mb-5">Kho:</label>
             <select-role
@@ -76,7 +76,7 @@
               :class="{ 'input-valid': errorWarehouse }"
               @selected="handleSelectWarehouse"
               @unselected="handleRemoveWarehouse"
-              :optionSearch="warehouses"
+              :optionSearch="displayWarehouses"
               :placeHolder="'Chọn kho'"
               :item="user"
             />
@@ -86,7 +86,25 @@
           </div>
         </div>
 
-        <div class="row mb-16" v-if="roleSupport">
+        <div class="row mb-16" v-if="isRoleHub">
+          <div class="col-12">
+            <label class="color-newtral-10 font-weight-600 mb-5">Hub:</label>
+            <select-role
+              class="search-type mb-10"
+              :class="{ 'input-valid': errorHub }"
+              @selected="handleSelectWarehouse"
+              @unselected="handleRemoveWarehouse"
+              :optionSearch="hubs"
+              :placeHolder="'Chọn hub'"
+              :item="user"
+            />
+            <span class="invalid-error" v-if="errorHub"
+              >Hub không được để trống</span
+            >
+          </div>
+        </div>
+
+        <div class="row mb-16" v-if="isRoleSupport">
           <div class="col-12 mb-10">
             <select-customer
               class="search-type"
@@ -133,10 +151,9 @@ import valider from '@core/valider'
 import { CREATE_USER } from '../store/index'
 import SelectRole from './SelectRole.vue'
 import SelectCustomer from './SelectCustomer.vue'
-import { ROLE_SUPPORT, ROLE_WAREHOUSE } from '@core/constants'
+import { ROLE_SUPPORT, ROLE_WAREHOUSE, ROLE_HUB } from '@core/constants'
 
-import { ROLE } from '../constants'
-import { FETCH_WAREHOUSE } from '../../shared/store'
+import { ROLE, HUB_TYPE, WAREHOUSE_TYPE } from '../constants'
 import api from '@/packages/shared/api'
 
 export default {
@@ -163,6 +180,33 @@ export default {
       default: () => [],
     },
   },
+
+  computed: {
+    isRoleHub() {
+      return this.user.role == ROLE_HUB
+    },
+    isRoleSupport() {
+      return this.user.role == ROLE_SUPPORT
+    },
+    isRoleWarehouse() {
+      return this.user.role == ROLE_WAREHOUSE
+    },
+    displayWarehouses() {
+      if (!this.isRoleWarehouse) return []
+
+      return this.warehouses
+        .filter(({ type }) => type == WAREHOUSE_TYPE)
+        .map(({ id, name }) => ({ key: id, name }))
+    },
+    hubs() {
+      if (!this.isRoleHub) return []
+
+      return this.warehouses
+        .filter(({ type }) => type == HUB_TYPE)
+        .map(({ id, name }) => ({ key: id, name }))
+    },
+  },
+
   data() {
     return {
       user: {
@@ -170,7 +214,7 @@ export default {
         role: '',
         email: '',
         password: '',
-        warehouse_id: '',
+        warehouse_id: 0,
         customer_id: [],
         slack_id: '',
       },
@@ -181,19 +225,7 @@ export default {
       errorRole: false,
       errorWarehouse: false,
       errorCustomer: false,
-      roleWarehouse: false,
-      roleSupport: false,
-      ROLE_SUPPORT: ROLE_SUPPORT,
-      ROLE_WAREHOUSE: ROLE_WAREHOUSE,
-    }
-  },
-  mounted() {
-    this.user = Object.assign({}, this.data)
-    if (this.user.role == ROLE_WAREHOUSE) {
-      this.roleWarehouse = true
-    }
-    if (this.user.role == ROLE_SUPPORT) {
-      this.roleSupport = true
+      errorHub: false,
     }
   },
 
@@ -211,7 +243,6 @@ export default {
 
   methods: {
     ...mapActions('setting', [CREATE_USER]),
-    ...mapActions('shared', [FETCH_WAREHOUSE]),
 
     async fetchCustomer() {
       let req = { role: 'customer', search: '', not_limit: true }
@@ -233,18 +264,28 @@ export default {
         this.errorRole = true
       }
 
-      if (this.user.role == ROLE_SUPPORT && this.user.customer_id.length < 1) {
+      if (this.isRoleSupport && this.user.customer_id.length < 1) {
         this.errorCustomer = true
       }
 
-      if (this.user.role == ROLE_WAREHOUSE && this.user.warehouse_id < 1) {
+      if (this.isRoleWarehouse && this.user.warehouse_id < 1) {
         this.errorWarehouse = true
+      }
+
+      if (this.isRoleHub && this.user.warehouse_id < 1) {
+        this.errorHub = true
       }
 
       if (!this.valider.check(this.user)) {
         return
       }
-      if (this.errorRole || this.errorWarehouse || this.errorCustomer) {
+
+      if (
+        this.errorRole ||
+        this.errorWarehouse ||
+        this.errorCustomer ||
+        this.errorHub
+      ) {
         return
       }
 
@@ -274,7 +315,7 @@ export default {
         payload.slack_id = ''
       }
 
-      if (this.user.role == ROLE_WAREHOUSE) {
+      if (this.user.role == ROLE_WAREHOUSE || this.user.role == ROLE_HUB) {
         payload.warehouse_id = this.user.warehouse_id
       }
 
@@ -287,55 +328,40 @@ export default {
       this.loading = false
 
       if (!res.success) {
-        this.$toast.open({
-          type: 'error',
-          message: Array.isArray(res.message)
-            ? res.message.join(',')
-            : res.message,
-          duration: 3000,
-        })
+        const message = Array.isArray(res.message)
+          ? res.message.join(',')
+          : res.message
+        this.$toast.error(message, { duration: 3000 })
         return
       }
+
       this.$emit('update:visible', false)
       this.$emit('init', true)
-      this.$toast.open({
-        type: 'success',
-        message: 'Thêm thành công',
-        duration: 3000,
-      })
+      this.$toast.success('Thêm thành công', { duration: 3000 })
     },
 
     handleSelectRole(value) {
-      this.roleWarehouse = false
-      this.roleSupport = false
-      this.user.role = value
-      this.user.warehouse_id = ''
-      this.user.customer_id = []
-      if (value == ROLE_WAREHOUSE) {
-        this.roleWarehouse = true
-        this.errorWarehouse = false
-      }
-
-      if (value == ROLE_SUPPORT) {
-        this.roleSupport = true
-        this.errorCustomer = false
-      }
+      this.$set(this.user, 'role', value)
+      this.$set(this.user, 'warehouse_id', '')
+      this.$set(this.user, 'customer_id', [])
       this.errorRole = false
     },
 
     handleRemoveRole() {
-      this.user.role = ''
+      this.$set(this.user, 'role', '')
       this.errorRole = true
     },
 
     handleSelectWarehouse(value) {
-      this.user.warehouse_id = value
+      this.$set(this.user, 'warehouse_id', value)
       this.errorWarehouse = false
+      this.errorHub = false
     },
 
     handleRemoveWarehouse() {
-      this.user.warehouse_id = ''
+      this.$set(this.user, 'warehouse_id', 0)
       this.errorWarehouse = true
+      this.errorHub = true
     },
 
     handleSelectCustomer(value) {

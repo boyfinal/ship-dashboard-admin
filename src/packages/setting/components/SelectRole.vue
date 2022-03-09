@@ -59,14 +59,17 @@ export default {
     }
   },
   created() {
-    this.selected = this.item
-      ? this.optionSearch.find(
-          (item) =>
-            item.key == this.item.role || item.key == this.item.warehouse_id
-        )
-      : this.selected
+    this.update()
   },
   methods: {
+    update() {
+      this.selected = this.item
+        ? this.optionSearch.find(
+            ({ key }) => key == this.item.role || key == this.item.warehouse_id
+          )
+        : this.selected
+    },
+
     customLabel({ key, name }) {
       return typeof key !== 'undefined' ? `${name}` : ''
     },
@@ -77,6 +80,14 @@ export default {
 
     handleRemove() {
       this.$emit('unselected', true)
+    },
+  },
+  watch: {
+    item: {
+      handler: function() {
+        this.update()
+      },
+      deep: true,
     },
   },
 }

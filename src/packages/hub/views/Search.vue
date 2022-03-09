@@ -29,6 +29,7 @@
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="items.length">
             <div class="table-responsive">
+              <TabPending v-if="isTabPending" :items="items" />
               <TabReturn
                 v-if="isTabReturn"
                 :items="items"
@@ -72,6 +73,7 @@ import {
   HUB_ITEM_FILTER_STATUS_RESHIP_TEXT,
   HUB_ITEM_FILTER_STATUS_RETURN_TEXT,
   HUB_ITEM_FILTER_STATUS_IN_TEXT,
+  HUB_ITEM_FILTER_STATUS_PENDING_TEXT,
 } from '../constants'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -88,6 +90,7 @@ import ModalReturn from '../components/ModalReturn'
 import TabInHub from '../components/TabInHub'
 import TabExportHub from '../components/TabExportHub'
 import TabReship from '../components/TabReship'
+import TabPending from '../components/TabPending'
 import mixinBarcode from '@core/mixins/barcode'
 
 export default {
@@ -99,6 +102,7 @@ export default {
     TabInHub,
     TabExportHub,
     TabReship,
+    TabPending,
   },
   mixins: [mixinRoute, mixinTable, mixinBarcode],
   computed: {
@@ -117,6 +121,9 @@ export default {
     },
     isTabReship() {
       return this.checkStatus(HUB_ITEM_FILTER_STATUS_RESHIP_TEXT)
+    },
+    isTabPending() {
+      return this.checkStatus(HUB_ITEM_FILTER_STATUS_PENDING_TEXT)
     },
   },
   data() {
