@@ -312,7 +312,7 @@
     </div>
     <modal-list-container
       :visible.sync="isShowModalListContainer"
-      :warehouse="shipment.warehouse_id"
+      :warehouse="shipment.hub_id"
       :loading="loading"
       @save="handleAddContainer"
     >
