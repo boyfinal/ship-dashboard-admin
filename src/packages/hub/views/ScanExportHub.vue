@@ -326,11 +326,7 @@ export default {
       if (!res.success || !result.success) {
         this.isFetchingImportHub = false
         this.isScan = false
-        this.$toast.open({
-          type: 'error',
-          message: res.message,
-          duration: 3000,
-        })
+        this.$toast.error(res.message, { duration: 3000 })
         return
       }
 
@@ -367,7 +363,7 @@ export default {
       const result = await this[FETCH_LIST_IMPORTED](payload)
       this.isFetching = false
       if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
+        this.$toast.error(result.message)
       }
     },
 

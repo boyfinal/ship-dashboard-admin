@@ -172,14 +172,10 @@ export const actions = {
     let result = { success: true }
 
     let res = await api.fetchListImported(payload)
-    if (!res.codes || res.count == 0) {
-      res.count = 1
-      result = {
-        success: false,
-        message: res.errorMessage || '',
-      }
-
-      return result
+    if (!res || res.error) {
+      res.count = 0
+      res.codes = []
+      result = { success: false, message: res.errorMessage || '' }
     }
 
     commit(FETCH_LIST_IMPORTED, res.codes)
