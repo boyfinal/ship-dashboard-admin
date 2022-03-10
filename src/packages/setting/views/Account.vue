@@ -43,7 +43,7 @@
                     <th width="200">Email/SĐT</th>
                     <th width="150">Trạng thái</th>
                     <th width="100">Ngày tạo</th>
-                    <th width="100">Thao tác</th>
+                    <th width="100">Quyền</th>
                     <th width="180"></th>
                   </tr>
                 </thead>
