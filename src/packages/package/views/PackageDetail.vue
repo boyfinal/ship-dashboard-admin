@@ -78,14 +78,14 @@
             >
               Sửa đơn
             </p-button>
-            <p-button
+            <!-- <p-button
               type="info"
               @click="showModalReship"
               class="btn-primary-custom ml-7"
               v-if="isReship"
             >
               Reship
-            </p-button>
+            </p-button> -->
           </div>
         </div>
       </div>
