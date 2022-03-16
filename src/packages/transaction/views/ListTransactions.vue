@@ -51,7 +51,6 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>Loại</th>
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
@@ -64,11 +63,6 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in transactions" :key="i">
-                    <td :title="transactionType[item.type]">
-                      <span class="tool-tip">{{
-                        transactionType[item.type]
-                      }}</span>
-                    </td>
                     <td :title="item.created_at | date('dd/MM/yyyy')"
                       ><span>{{
                         item.created_at | date('dd/MM/yyyy')
