@@ -148,7 +148,7 @@
                 </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
-                    <label class="card__w-label"> Phí: <span>*</span> </label>
+                    <label class="card__w-label"> Phí:</label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="0"
@@ -164,7 +164,7 @@
                   </div>
                   <div class="card__w-item">
                     <label class="card__w-label">
-                      Nội dung : <span>*</span>
+                      Nội dung :
                     </label>
                     <div class="card__w-input">
                       <p-input
