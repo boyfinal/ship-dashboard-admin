@@ -157,9 +157,13 @@
                         :input="form.amount"
                         name="amount"
                         :disabled="!isReLabel"
-                        :error="valider.error('amount')"
                         @change="formatAmount"
+                        @input="inputAmount"
                       />
+                      <div class="card__w-unit">($)</div>
+                      <span class="invalid-error" v-if="validErrors.amount">
+                        {{ validErrors.amount }}
+                      </span>
                     </div>
                   </div>
                   <div class="card__w-item">
@@ -429,6 +433,7 @@ export default {
       isDisable: true,
       isUpdate: false,
       valider: null,
+      validErrors: {},
     }
   },
   created() {
@@ -500,10 +505,6 @@ export default {
         .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
       address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
         message: 'Địa chỉ phụ không hợp lệ',
-        excludeEmptyString: true,
-      }),
-      amount: y.string().matches(/[0-9.,]/g, {
-        message: 'Phí phát sinh không đúng định dạng',
         excludeEmptyString: true,
       }),
     }))
@@ -611,24 +612,24 @@ export default {
         amount: parseFloat(amount),
         description: this.form.description,
       }
-      let result = await this[UPDATE_PACKAGE](params)
-      if (result.error) {
-        this.isUpdate = false
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
-        return
-      }
-      this.$toast.open({
-        type: 'success',
-        message: 'Sửa đơn thành công',
-        duration: 3000,
-      })
+      // let result = await this[UPDATE_PACKAGE](params)
+      // if (result.error) {
+      //   this.isUpdate = false
+      //   this.$toast.open({
+      //     type: 'error',
+      //     message: result.message,
+      //     duration: 3000,
+      //   })
+      //   return
+      // }
+      // this.$toast.open({
+      //   type: 'success',
+      //   message: 'Sửa đơn thành công',
+      //   duration: 3000,
+      // })
       this.isUpdate = false
       this.handleClose()
-      this.$emit('create', true)
+      this.$emit('submit', params)
     },
 
     formatAmount() {

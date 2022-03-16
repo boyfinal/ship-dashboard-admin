@@ -78,14 +78,14 @@
             >
               Sửa đơn
             </p-button>
-            <p-button
+            <!-- <p-button
               type="info"
               @click="showModalReship"
               class="btn-primary-custom ml-7"
               v-if="isReship"
             >
               Reship
-            </p-button>
+            </p-button> -->
           </div>
         </div>
       </div>
@@ -523,7 +523,7 @@
       :is-edit-order-return="isEditOrderReturn"
       :is-re-label="isReLabel"
       :visible.sync="isVisibleModal"
-      @create="init2"
+      @submit="handleUpdate"
       :total="sumFee"
     >
     </modal-edit-order>
@@ -596,6 +596,7 @@ import {
   FETCH_LIST_SERVICE,
   CANCEL_PACKAGES,
   RESHIP_PACKAGE,
+  UPDATE_PACKAGE,
 } from '../store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
 import ModalEditOrder from '../components/ModalEditOrder'
@@ -809,6 +810,7 @@ export default {
       FETCH_LIST_SERVICE,
       CANCEL_PACKAGES,
       RESHIP_PACKAGE,
+      UPDATE_PACKAGE,
     ]),
     truncate,
     // ...mapActions('setting', [LIST_SENDER]),
@@ -982,6 +984,24 @@ export default {
       await this.init()
 
       this.isSubmitting = false
+    },
+
+    async handleUpdate(params) {
+      this.isVisibleModal = false
+      console.log(params)
+
+      if (this.isSubmitting) return
+
+      this.isSubmitting = true
+
+      let result = await this[UPDATE_PACKAGE](params)
+      if (result.error) {
+        this.$toast.error(result.message, { duration: 3000 })
+        this.isSubmitting = false
+        return
+      }
+      this.$toast.success('Sửa đơn hàng thành công', { duration: 3000 })
+      await this.init2()
     },
   },
 
