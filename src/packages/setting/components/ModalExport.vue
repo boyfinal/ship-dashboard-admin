@@ -104,8 +104,8 @@ export default {
       status: '',
       start_date: '',
       end_date: '',
-      labelStart: 'Chọn ngày bắt đầu',
-      labelEnd: 'Chọn ngày kết thúc',
+      labelStart: 'Chọn ngày tạo hóa đơn',
+      labelEnd: 'Chọn ngày tạo hóa đơn',
     }
   },
   methods: {
@@ -163,8 +163,8 @@ export default {
         this.status = ''
         this.start_date = ''
         this.end_date = ''
-        this.labelStart = 'Chọn ngày bắt đầu'
-        this.labelEnd = 'Chọn ngày kết thúc'
+        this.labelStart = 'Chọn ngày tạo hóa đơn'
+        this.labelEnd = 'Chọn ngày tạo hóa đơn'
       },
     },
   },
