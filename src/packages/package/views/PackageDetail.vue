@@ -521,8 +521,8 @@
     </div>
     <modal-edit-order
       :is-edit-order-return="isEditOrderReturn"
+      :is-re-label="isReLabel"
       :visible.sync="isVisibleModal"
-      :info_user="package_detail"
       @create="init2"
       :total="sumFee"
     >
@@ -639,6 +639,7 @@ export default {
       isVisiblePopupMoreExtraFee: false,
       isVisibleConfirmWayBill: false,
       isEditOrderReturn: false,
+      isReLabel: false,
       isVisibleModalReship: false,
       timelinePagination: {
         numberPage: 0,
@@ -828,6 +829,12 @@ export default {
       if (this.statusShipping && this.isAlertReturn) {
         this.isEditOrderReturn = true
       }
+      if (
+        this.package_detail.package.alert === PackageAlertTypeHubReturn &&
+        (this.$isAdmin() || this.$isSupport())
+      ) {
+        this.isReLabel = true
+      }
     },
     previousTimeLinePage() {
       this.timelinePagination.currentPage <= 1
@@ -967,6 +974,7 @@ export default {
       })
       if (res.error) {
         this.$toast.error(res.message, { duration: 3000 })
+        this.isSubmitting = false
         return
       }
 

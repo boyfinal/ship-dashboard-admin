@@ -142,6 +142,43 @@
                   </div>
                 </div>
               </div>
+              <div class="card__w" v-if="isReLabel">
+                <div class="card__w-header">
+                  Phí relabel
+                </div>
+                <div class="card__w-content">
+                  <div class="card__w-item">
+                    <label class="card__w-label"> Phí: <span>*</span> </label>
+                    <div class="card__w-input">
+                      <p-input
+                        placeholder="0"
+                        type="text"
+                        v-model="form.amount"
+                        :input="form.amount"
+                        name="amount"
+                        :disabled="!isReLabel"
+                        :error="valider.error('amount')"
+                        @change="formatAmount"
+                      />
+                    </div>
+                  </div>
+                  <div class="card__w-item">
+                    <label class="card__w-label">
+                      Nội dung : <span>*</span>
+                    </label>
+                    <div class="card__w-input">
+                      <p-input
+                        :placeholder="title"
+                        type="textarea"
+                        v-model="form.description"
+                        :input="form.description"
+                        name="description"
+                        :disabled="!isReLabel"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
@@ -336,9 +373,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    info_user: {
-      type: Object,
-      default: () => {},
+    isReLabel: {
+      type: Boolean,
+      default: false,
     },
     total: {
       type: Number,
@@ -352,6 +389,14 @@ export default {
     ...mapGetters('package', {
       services: GET_SERVICE,
     }),
+    code() {
+      return this.package_detail && this.package_detail.package.package_code
+        ? this.package_detail.package.package_code.code
+        : ''
+    },
+    title() {
+      return `Phí re-label cho đơn ${this.code}`
+    },
   },
   data() {
     return {
@@ -378,6 +423,8 @@ export default {
         detail: '',
         address: '',
         address2: '',
+        amount: '',
+        description: '',
       },
       isDisable: true,
       isUpdate: false,
@@ -455,6 +502,10 @@ export default {
         message: 'Địa chỉ phụ không hợp lệ',
         excludeEmptyString: true,
       }),
+      amount: y.string().matches(/[0-9.,]/g, {
+        message: 'Phí phát sinh không đúng định dạng',
+        excludeEmptyString: true,
+      }),
     }))
   },
   methods: {
@@ -504,6 +555,8 @@ export default {
       this.form.countrycode = ''
       this.form.service = ''
       this.form.address = ''
+      this.form.amount = ''
+      this.form.description = ''
       this.valider.errors = null
       this.$emit('update:visible', false)
     },
@@ -532,6 +585,10 @@ export default {
         return
       }
       this.isUpdate = true
+
+      let amount = (this.form.amount || '0').trim()
+      amount = parseFloat(amount.replace(/,/g, '')).toFixed(2)
+
       const { id } = this.$route.params
       const params = {
         id: id,
@@ -551,6 +608,8 @@ export default {
         service: this.form.service.name,
         note: this.form.note,
         address_2: this.form.address2,
+        amount: parseFloat(amount),
+        description: this.form.description,
       }
       let result = await this[UPDATE_PACKAGE](params)
       if (result.error) {
@@ -570,6 +629,55 @@ export default {
       this.isUpdate = false
       this.handleClose()
       this.$emit('create', true)
+    },
+
+    formatAmount() {
+      this.form.amount = this.toPrice(this.form.amount)
+      this.validErrors = {}
+    },
+
+    inputAmount() {
+      this.validErrors = {}
+      this.form.amount = this.form.amount.replace(/[^0-9.]/g, '')
+
+      if (this.form.amount < 0) {
+        this.validErrors.amount = 'Phí phát sinh phải >= 0'
+      }
+
+      const re = /[^0-9.,]/g
+      const n = this.form.amount.split('.').length
+      if (re.test(this.form.amount) || n > 2) {
+        this.validErrors.amount = 'Phí phát sinh không đúng định dạng'
+      }
+    },
+
+    toNumber(amount) {
+      amount = ('' + amount).trim()
+      amount = amount.trim().replace(/[^0-9.,]/g, '')
+      if (!amount) return 0
+
+      amount = amount.replace(/,/g, '').replace(/^0+/g, '')
+      const arr = amount.split('.')
+
+      let number = arr[0]
+      let decimal = arr[1]
+
+      amount = decimal ? `${number}.${decimal}` : number
+
+      if (decimal !== undefined && decimal.length >= 2) {
+        amount = (Math.floor(parseFloat(amount) * 100) / 100).toFixed(2)
+        decimal = amount.split('.')[1]
+      }
+
+      amount = decimal ? `${number}.${decimal}` : number
+      return parseFloat(amount)
+    },
+
+    toPrice(amount) {
+      amount = this.toNumber(amount)
+      if (amount === 0) return ''
+
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
   },
   watch: {
