@@ -262,7 +262,7 @@ export default {
       this.isScan = false
       this.isCancel = true
       this.$toast.success(
-        `Kiện ${this.current_code}  đã quét xuất hub thành công`
+        `Kiện ${this.current_code}  đã quét nhập hub thành công`
       )
       this.init()
     },
