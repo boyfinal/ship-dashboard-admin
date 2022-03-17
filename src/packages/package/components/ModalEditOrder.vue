@@ -1,6 +1,6 @@
 <template>
   <div class="modal__edit-order">
-    <p-modal :active="visible" @close="handleClose" :title="`Sửa đơn`">
+    <p-modal :active="visible" @close="handleClose" :title="title">
       <template>
         <div class="modal__edit-order-header">
           <span style="margin-bottom: 3px">
@@ -171,7 +171,7 @@
                     </label>
                     <div class="card__w-input">
                       <p-input
-                        :placeholder="title"
+                        :placeholder="placeholder"
                         type="textarea"
                         v-model="form.description"
                         :input="form.description"
@@ -398,6 +398,13 @@ export default {
         : ''
     },
     title() {
+      if (this.isReLabel) {
+        return `Reship đơn ${this.code}`
+      }
+
+      return `Sửa đơn ${this.code}`
+    },
+    placeholder() {
       return `Phí re-label cho đơn ${this.code}`
     },
   },

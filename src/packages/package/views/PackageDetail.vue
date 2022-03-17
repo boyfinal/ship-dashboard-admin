@@ -74,18 +74,18 @@
               type="info"
               @click="handleModal"
               class="btn-primary-custom ml-7"
-              v-if="showButtonEdit"
+              v-if="showButtonEdit && !isReship"
             >
               Sửa đơn
             </p-button>
-            <!-- <p-button
+            <p-button
               type="info"
-              @click="showModalReship"
+              @click="handleModal"
               class="btn-primary-custom ml-7"
-              v-if="isReship"
+              v-if="showButtonEdit && isReship"
             >
               Reship
-            </p-button> -->
+            </p-button>
           </div>
         </div>
       </div>
