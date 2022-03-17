@@ -17,7 +17,6 @@
                       :disabled="disableInput"
                       v-model="keyword"
                       @clear="clearInput"
-                      @keydown.enter.prevent="searchHandle"
                     ></p-input>
                     <p-select
                       class="ml-8"
@@ -333,8 +332,8 @@ export default {
       listExportedPackage: [],
       isScan: false,
       searchBy: {
-        container: 'Mã kiện',
-        package: 'Mã đơn hàng',
+        container: 'Kiện hàng',
+        package: 'Đơn hàng',
       },
     }
   },
@@ -351,7 +350,6 @@ export default {
 
     async searchHandle() {
       this.filter.page = 1
-      this.clearData()
       const keyword = this.keyword.trim()
       if (!keyword) {
         this.$toast.open({
