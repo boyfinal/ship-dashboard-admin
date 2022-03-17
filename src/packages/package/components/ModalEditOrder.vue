@@ -433,6 +433,7 @@ export default {
       isUpdate: false,
       valider: null,
       validErrors: {},
+      fixAmount: 0,
     }
   },
   created() {
@@ -584,6 +585,9 @@ export default {
       if (!this.valider.check(this.form)) {
         return
       }
+      if (Object.keys(this.validErrors).length > 0) {
+        return
+      }
       this.isUpdate = true
 
       let amount = (this.form.amount || '0').trim()
@@ -637,16 +641,23 @@ export default {
     },
 
     inputAmount() {
+      const n = this.form.amount.split('.')
+      if (String(n[1]).length > 2 && n.length >= 2) {
+        this.form.amount = this.form.amount.slice(0, -1)
+        console.log(this.form.amount)
+      }
+      this.fixAmount = this.form.amount
+
       this.validErrors = {}
-      this.form.amount = this.form.amount.replace(/[^0-9.]/g, '')
+      this.form.amount = String(this.form.amount).replace(/[^0-9.]/g, '')
 
       if (this.form.amount < 0) {
         this.validErrors.amount = 'Phí phát sinh phải >= 0'
       }
 
       const re = /[^0-9.,]/g
-      const n = this.form.amount.split('.').length
-      if (re.test(this.form.amount) || n > 2) {
+
+      if (re.test(this.form.amount) || n.length > 2) {
         this.validErrors.amount = 'Phí phát sinh không đúng định dạng'
       }
     },
