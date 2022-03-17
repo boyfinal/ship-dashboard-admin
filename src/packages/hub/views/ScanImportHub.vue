@@ -15,7 +15,6 @@
                     :disabled="disableInput"
                     @clear="clearInput"
                     v-model="keyword"
-                    @keydown.enter.prevent="searchHandle"
                     placeholder="Nhập mã ups hoặc mã kiện"
                   ></p-input>
                   <div class=" d-flex">
