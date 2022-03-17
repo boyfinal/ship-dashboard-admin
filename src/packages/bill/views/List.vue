@@ -231,7 +231,10 @@
           <div class="card">
             <div class="card-header">
               <span>Khách hàng</span>
-              <div class="icon">
+              <div
+                class="icon"
+                v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+              >
                 <p-svg
                   name="download"
                   @click.prevent="handleShowModalExport"
