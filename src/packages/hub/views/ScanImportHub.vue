@@ -3,68 +3,71 @@
     <div class="page-content">
       <div class="mb-24">
         <div class="row">
-          <div class="col-8">
-            <div class="card mb-16">
+          <div class="col-4">
+            <div class="card mb-16 card_input">
               <div class="card-body">
-                <div class="d-flex">
+                <div class="">
                   <p-input
                     prefixIcon="search"
                     clearable
                     type="search"
+                    class="mb-8"
                     :disabled="disableInput"
                     @clear="clearInput"
                     v-model="keyword"
                     @keydown.enter.prevent="searchHandle"
                     placeholder="Nhập mã ups hoặc mã kiện"
                   ></p-input>
-                  <button
-                    @click.prevent="searchHandle"
-                    :disabled="disableBtnScan"
-                    class="btn btn-scan-info ml-3 text-nowrap"
-                    >Quét</button
-                  >
-                  <button
-                    :disabled="disableBtnAccept"
-                    @click.prevent="acceptSubmit"
-                    class="btn btn-scan-info ml-3 text-nowrap"
-                    >Xác nhận</button
-                  >
+                  <div class=" d-flex">
+                    <button
+                      @click.prevent="searchHandle"
+                      :disabled="disableBtnScan"
+                      class="btn btn-scan-info mr-8  text-nowrap"
+                      >Quét</button
+                    >
+                    <button
+                      :disabled="disableBtnAccept"
+                      @click.prevent="acceptSubmit"
+                      class="btn btn-scan-info  text-nowrap"
+                      >Xác nhận</button
+                    >
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="card mb-16">
-              <div class="card-header">
-                <div class="card-title">Danh sách</div>
-              </div>
-              <div class="card-body list-container">
-                <div
-                  v-if="containers.length > 0"
-                  class="import__hub-containers"
-                >
-                  <div class="container-item">
-                    <div
-                      class="container-code"
-                      v-for="(item, i) in containers"
-                      :key="i"
-                      >{{ item.code }}</div
-                    >
-                  </div>
-                </div>
-                <empty-search-result v-else></empty-search-result>
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <p-pagination
-                :total="count"
-                :perPage.sync="filter.limit"
-                :current.sync="filter.page"
-                size="sm"
-              ></p-pagination>
-            </div>
+            <!--            <div class="card mb-16">-->
+            <!--              <div class="card-header">-->
+            <!--                <div class="card-title">Danh sách</div>-->
+            <!--              </div>-->
+            <!--              <div class="card-body list-container">-->
+            <!--                <div-->
+            <!--                  v-if="containers.length > 0"-->
+            <!--                  class="import__hub-containers"-->
+            <!--                >-->
+            <!--                  <div class="container-item">-->
+            <!--                    <div-->
+            <!--                      class="container-code"-->
+            <!--                      v-for="(item, i) in containers"-->
+            <!--                      :key="i"-->
+            <!--                      >{{ item.code }}</div-->
+            <!--                    >-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--                <empty-search-result v-else></empty-search-result>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div class="d-flex justify-content-between align-items-center">-->
+            <!--              <p-pagination-->
+            <!--                :total="count"-->
+            <!--                :perPage.sync="filter.limit"-->
+            <!--                :current.sync="filter.page"-->
+            <!--                size="sm"-->
+            <!--              ></p-pagination>-->
+            <!--            </div>-->
           </div>
-          <div class="col-4">
-            <div class="card">
+          <div class="col-8">
+            <div v-if="current_code" class="card">
               <div class="card-header">
                 <div class="card-title">Thông tin kiện hàng</div>
               </div>
@@ -86,6 +89,12 @@
                 </div>
               </div>
             </div>
+            <div v-else class="card">
+              <div class="card-header">
+                <div class="card-title">Thông tin kiện hàng</div>
+              </div>
+              <EmptySearchResult></EmptySearchResult>
+            </div>
           </div>
         </div>
       </div>
@@ -94,7 +103,7 @@
   </div>
 </template>
 <script>
-import EmptySearchResult from '@components/shared/EmptySearchResult'
+import EmptySearchResult from '../components/Empty'
 import mixinBarcode from '@core/mixins/barcode'
 import { mapActions, mapState } from 'vuex'
 import {
@@ -104,7 +113,7 @@ import {
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
 import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
-import { cloneDeep } from '../../../core/utils'
+// import { cloneDeep } from '../../../core/utils'
 import mixinRoute from '@core/mixins/route'
 
 export default {
@@ -220,14 +229,14 @@ export default {
       this.current_tracking_number = this.current.tracking_number
     },
     async init() {
-      this.isFetching = true
+      // this.isFetching = true
       this.handleUpdateRouteQuery()
-      let payload = cloneDeep(this.filter)
-      const result = await this[FETCH_LIST_CONTAINER_IMPORTED](payload)
-      this.isFetching = false
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
+      // let payload = cloneDeep(this.filter)
+      // const result = await this[FETCH_LIST_CONTAINER_IMPORTED](payload)
+      // this.isFetching = false
+      // if (!result.success) {
+      //   this.$toast.open({ message: result.message, type: 'error' })
+      // }
     },
     barcodeSubmit(keyword) {
       this.disableInput = true

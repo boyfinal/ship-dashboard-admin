@@ -3,71 +3,90 @@
     <div class="page-content">
       <div class="mb-24">
         <div class="row">
-          <div class="col-9">
+          <div class="col-5">
             <div class="card mb-16">
               <div class="card-body">
-                <div class="d-flex">
-                  <p-input
-                    prefixIcon="search"
-                    clearable
-                    type="search"
-                    :disabled="disableInput"
-                    v-model="keyword"
-                    @clear="clearInput"
-                    @keydown.enter.prevent="searchHandle"
-                    placeholder="Nhập mã kiện/ups, mã đơn/usps"
-                  ></p-input>
+                <div class="">
+                  <div class="d-flex">
+                    <p-input
+                      prefixIcon="search"
+                      :placeholder="searchPlaceholder"
+                      clearable
+                      class="mb-8"
+                      type="search"
+                      :disabled="disableInput"
+                      v-model="keyword"
+                      @clear="clearInput"
+                      @keydown.enter.prevent="searchHandle"
+                    ></p-input>
+                    <p-select
+                      class="ml-8"
+                      placeholder="Please select"
+                      v-model="filter.type"
+                    >
+                      <option
+                        :value="key"
+                        v-for="(value, key) in searchBy"
+                        :key="key"
+                      >
+                        {{ value }}
+                      </option>
+                    </p-select>
+                  </div>
                   <button
                     @click.prevent="searchHandle"
                     :disabled="disableBtnScan"
-                    class="btn btn-scan-info ml-3 text-nowrap"
+                    class="btn btn-scan-info  text-nowrap"
                     >Quét</button
                   >
                 </div>
               </div>
             </div>
 
-            <div class="card mb-16">
-              <div class="card-body">
-                <export-hub-tab :type="typeTab" v-model="filter.type" />
-                <div class="card-header">
-                  <div class="card-title">MÃ KIỆN/ĐƠN</div>
-                </div>
-                <div class="card-body list-container">
-                  <div v-if="codes.length > 0" class="export__hub-containers">
-                    <div class="container-item">
-                      <div
-                        class="container-code"
-                        v-for="(item, i) in codes"
-                        :key="i"
-                      >
-                        {{ item }}
-                        <p-button
-                          class="mr-2 btn-submit"
-                          type="info"
-                          @click.prevent="handelModalConfirm(item)"
-                        >
-                          Xuất
-                        </p-button>
-                      </div>
-                    </div>
-                  </div>
-                  <empty-search-result v-else></empty-search-result>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <p-pagination
-                :total="count"
-                :perPage.sync="filter.limit"
-                :current.sync="filter.page"
-                size="sm"
-              ></p-pagination>
-            </div>
+            <!--            <div class="card mb-16">-->
+            <!--              <div class="card-body">-->
+            <!--                <export-hub-tab :type="typeTab" v-model="filter.type" />-->
+            <!--                <div class="card-header">-->
+            <!--                  <div class="card-title">MÃ KIỆN/ĐƠN</div>-->
+            <!--                </div>-->
+            <!--                <div class="card-body list-container">-->
+            <!--                  <div v-if="codes.length > 0" class="export__hub-containers">-->
+            <!--                    <div class="container-item">-->
+            <!--                      <div-->
+            <!--                        class="container-code"-->
+            <!--                        v-for="(item, i) in codes"-->
+            <!--                        :key="i"-->
+            <!--                      >-->
+            <!--                        {{ item }}-->
+            <!--                        <p-button-->
+            <!--                          class="mr-2 btn-submit"-->
+            <!--                          type="info"-->
+            <!--                          @click.prevent="handelModalConfirm(item)"-->
+            <!--                        >-->
+            <!--                          Xuất-->
+            <!--                        </p-button>-->
+            <!--                      </div>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+            <!--                  <empty-search-result v-else></empty-search-result>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div class="d-flex justify-content-between align-items-center">-->
+            <!--              <p-pagination-->
+            <!--                :total="count"-->
+            <!--                :perPage.sync="filter.limit"-->
+            <!--                :current.sync="filter.page"-->
+            <!--                size="sm"-->
+            <!--              ></p-pagination>-->
+            <!--            </div>-->
           </div>
 
-          <div class="col-3">
-            <div v-if="filter.type == 'container'" class="card">
+          <div class="col-7">
+            <div
+              v-if="filter.type == 'container' && current_container.code"
+              class="card"
+            >
               <div class="card-header">
                 <div class="card-title">Thông tin kiện hàng</div>
               </div>
@@ -97,10 +116,21 @@
                   <span>Trạng thái:</span>
                   <span v-status:status="currentStatus"></span>
                 </div>
+                <hr class="hr mb-24 mt-24" />
+                <p-button
+                  class="mr-2 btn-submit"
+                  type="info"
+                  @click.prevent="handelModalConfirm(current_container.code)"
+                >
+                  Xuất
+                </p-button>
               </div>
             </div>
 
-            <div v-if="filter.type == 'package'" class="card">
+            <div
+              v-else-if="filter.type == 'package' && current_package.code"
+              class="card"
+            >
               <div class="card-header">
                 <div class="card-title">Thông tin đơn hàng</div>
               </div>
@@ -130,50 +160,66 @@
                   <span>Trạng thái:</span>
                   <span v-status:status="currentStatus"></span>
                 </div>
+                <hr class="hr mb-24 mt-24" />
+                <p-button
+                  class="mr-2 btn-submit"
+                  type="info"
+                  @click.prevent="handelModalConfirm(current_package.code)"
+                >
+                  Xuất
+                </p-button>
               </div>
+            </div>
+            <div v-else class="card">
+              <div class="card-header">
+                <div class="card-title">{{ convertHeader }}</div>
+              </div>
+              <EmptySearchResult
+                :type="filter.type === 'container' ? 'kiện' : 'đơn'"
+              ></EmptySearchResult>
             </div>
 
-            <div class="card list-export" v-if="filter.type == 'container'">
-              <div class="card-header">
-                <div class="card-title">Danh sách xuất kiện hàng</div>
-              </div>
-              <div class="card-body">
-                <div class="empty" v-if="listExportedContainer.length == 0">
-                  <p-svg name="empty"></p-svg>
-                  <p>Chưa có đơn hàng được quét!</p>
-                </div>
-                <div class="list-exported" v-else>
-                  <div
-                    class="item-exported"
-                    v-for="(item, i) in listExportedContainer"
-                    :key="i"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="card list-export" v-if="filter.type == 'container'">-->
+            <!--              <div class="card-header">-->
+            <!--                <div class="card-title">Danh sách xuất kiện hàng</div>-->
+            <!--              </div>-->
+            <!--              <div class="card-body">-->
+            <!--                <div class="empty" v-if="listExportedContainer.length == 0">-->
+            <!--                  <p-svg name="empty"></p-svg>-->
+            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
+            <!--                </div>-->
+            <!--                <div class="list-exported" v-else>-->
+            <!--                  <div-->
+            <!--                    class="item-exported"-->
+            <!--                    v-for="(item, i) in listExportedContainer"-->
+            <!--                    :key="i"-->
+            <!--                  >-->
+            <!--                    {{ item }}-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
-            <div class="card list-export" v-if="filter.type == 'package'">
-              <div class="card-header">
-                <div class="card-title">Danh sách xuất đơn hàng</div>
-              </div>
-              <div class="card-body">
-                <div class="empty" v-if="listExportedPackage.length == 0">
-                  <p-svg name="empty"></p-svg>
-                  <p>Chưa có đơn hàng được quét!</p>
-                </div>
-                <div class="list-exported" v-else>
-                  <div
-                    class="item-exported"
-                    v-for="(item, i) in listExportedPackage"
-                    :key="i"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="card list-export" v-if="filter.type == 'package'">-->
+            <!--              <div class="card-header">-->
+            <!--                <div class="card-title">Danh sách xuất đơn hàng</div>-->
+            <!--              </div>-->
+            <!--              <div class="card-body">-->
+            <!--                <div class="empty" v-if="listExportedPackage.length == 0">-->
+            <!--                  <p-svg name="empty"></p-svg>-->
+            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
+            <!--                </div>-->
+            <!--                <div class="list-exported" v-else>-->
+            <!--                  <div-->
+            <!--                    class="item-exported"-->
+            <!--                    v-for="(item, i) in listExportedPackage"-->
+            <!--                    :key="i"-->
+            <!--                  >-->
+            <!--                    {{ item }}-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
@@ -190,8 +236,9 @@
   </div>
 </template>
 <script>
-import ExportHubTab from '../components/ExportHubTab.vue'
-import EmptySearchResult from '@components/shared/EmptySearchResult'
+// import ExportHubTab from '../components/ExportHubTab.vue'
+// import EmptySearchResult from '@components/shared/EmptySearchResult'
+import EmptySearchResult from '../components/Empty'
 import mixinBarcode from '@core/mixins/barcode'
 import { mapActions, mapState } from 'vuex'
 import {
@@ -209,7 +256,7 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'ExportHub',
-  components: { PageLoading, EmptySearchResult, ExportHubTab, ModalConfirm },
+  components: { PageLoading, ModalConfirm, EmptySearchResult },
   mixins: [mixinBarcode, mixinRoute],
   computed: {
     ...mapState('hub', {
@@ -233,6 +280,19 @@ export default {
         const allstatus = MAP_NAME_STATUS_WAREHOUSE
         return (allstatus[this.current_package.status] || {}).value
       }
+    },
+    convertHeader() {
+      return `Thông tin ${
+        this.filter.type == 'container' ? 'kiện' : 'đơn'
+      } hàng`
+    },
+    searchPlaceholder() {
+      const maptext = {
+        container: 'Nhập mã kiện/ups',
+        package: 'Nhập mã đơn/ups',
+      }
+
+      return maptext[this.filter.type] || maptext['container']
     },
   },
   data() {
@@ -272,6 +332,10 @@ export default {
       listExportedContainer: [],
       listExportedPackage: [],
       isScan: false,
+      searchBy: {
+        container: 'Mã kiện',
+        package: 'Mã đơn hàng',
+      },
     }
   },
   created() {
