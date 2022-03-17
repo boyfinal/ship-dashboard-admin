@@ -289,11 +289,13 @@
                 </div>
                 <div class="row">
                   <div class="col-5">Thời gian cho phép:</div>
-                  <div class="col-7">{{
-                    userInfo.user_info.debt_max_day > 0
-                      ? `${userInfo.user_info.debt_max_day} ngày`
-                      : '-'
-                  }}</div>
+                  <div class="col-7">
+                    Còn <br />{{
+                      userInfo.user_info.debt_max_day > 0
+                        ? `${userInfo.user_info.debt_max_day} ngày`
+                        : '-'
+                    }}</div
+                  >
                 </div>
               </div>
               <img v-else src="~@/assets/img/not-found.png" alt="" />
