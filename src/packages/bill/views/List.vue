@@ -489,7 +489,7 @@ export default {
       const maptext = {
         bill_code: 'Tìm theo mã hoá đơn',
         order_number: 'Tìm theo mã đơn hàng',
-        customer: 'Tìm theo tên/email/số điện thoại',
+        customer: 'Tìm theo email/số điện thoại',
         tracking: 'Tìm theo mã tracking',
       }
 
