@@ -148,7 +148,7 @@
                 </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
-                    <label class="card__w-label"> Phí:</label>
+                    <label class="card__w-label"> Phí($):</label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="0"
@@ -160,7 +160,6 @@
                         @change="formatAmount"
                         @input="inputAmount"
                       />
-                      <div class="card__w-unit">($)</div>
                       <span class="invalid-error" v-if="validErrors.amount">
                         {{ validErrors.amount }}
                       </span>
