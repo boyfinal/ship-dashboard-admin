@@ -487,10 +487,10 @@ export default {
       this.isSubmitting = false
 
       if (this.filter.type == 'container') {
-        this.$toast.success(`Kiện ${payload.code} quét thành công`)
+        this.$toast.success(`Kiện ${payload.code} đã quét xuất hub thành công`)
         this.listExportedContainer.push(this.currentCode)
       } else if (this.filter.type == 'package') {
-        this.$toast.success(`Đơn ${payload.code} quét thành công`)
+        this.$toast.success(`Đơn ${payload.code} đã quét xuất hub thành công`)
         this.listExportedPackage.push(this.currentCode)
       }
       this.isScan = false
