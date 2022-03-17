@@ -643,8 +643,8 @@ export default {
     inputAmount() {
       const n = this.form.amount.split('.')
       if (String(n[1]).length > 2 && n.length >= 2) {
-        this.form.amount = parseFloat(this.form.amount).toFixed(2)
-        console.log('1')
+        this.form.amount = this.form.amount.slice(0, -1)
+        console.log(this.form.amount)
       }
       this.fixAmount = this.form.amount
 
