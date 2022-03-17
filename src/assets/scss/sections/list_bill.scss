@@ -69,6 +69,9 @@
             }
         }
     }
+    .btn-danger {
+        min-width: fit-content;
+    }
     @media screen and (max-width: 1400px) {
         #tbl-packages {
             width: 1000px;
