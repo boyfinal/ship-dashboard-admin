@@ -1,9 +1,10 @@
 <template>
-  <div class="pages list__claim">
+  <div class="pages list__claim list__bill">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12">
         <div class="d-flex" style="flex: auto">
           <p-input
+            id="search"
             :placeholder="searchPlaceholder"
             prefixIcon="search"
             type="search"
@@ -13,7 +14,7 @@
             @clear="handleSearch"
           >
           </p-input>
-          <div class="ml-8">
+          <div class="">
             <select
               v-model="filter.search_by"
               class="form-control"
@@ -32,187 +33,268 @@
           class="ml-8"
         >
           <p-button type="info" @click="handleShowModalCreateExtraFee">
-            <svgicon name="plus" class="text-white" />
             Tạo phí phát sinh
           </p-button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <div class="list__bill-list">
-            <status-tab
-              v-model="filter.tab"
-              :status="listTab"
-              :hasAll="false"
-            />
-            <status-tab
-              v-if="filter.tab == 'topup'"
-              class="mt-8"
-              v-model="filter.type"
-              :status="listType"
-              :hasAll="false"
-            />
-            <vcl-table class="md-20 mt-16" v-if="isFetching"></vcl-table>
-            <template v-else-if="bills.length > 0 && filter.tab == 'bill'">
-              <div class="table-responsive">
-                <table class="table table-hover">
-                  <thead>
-                    <tr class="list__claim-title">
-                      <th>MÃ HÓA ĐƠN</th>
-                      <th>KHÁCH HÀNG</th>
-                      <th>NGÀY TẠO</th>
-                      <th>TỔNG HÓA ĐƠN</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in transBills" :key="item.id">
-                      <td>
-                        <router-link
-                          class="text-no-underline"
-                          :to="{
-                            name: 'bill-detail',
-                            params: { code: item.code },
-                          }"
-                        >
-                          {{ item.code }}
-                        </router-link>
-                      </td>
-                      <td>{{ item.customer }}</td>
-                      <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                      <td> {{ item.total_amount | formatPrice }} </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div
-                class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
-              >
-                <p-pagination
-                  :total="count"
-                  :perPage.sync="filter.limit"
-                  :current.sync="filter.page"
-                  size="sm"
-                ></p-pagination>
-              </div>
-            </template>
-            <template
-              v-else-if="transactions.length > 0 && filter.tab == 'topup'"
-            >
-              <div class="table-responsive">
-                <table
-                  class="table table-hover"
-                  id="tbl-packages"
-                  :class="{
-                    responsive: this.filter.type == 2 || filter.type == 4,
-                  }"
+      <div class="row">
+        <div class="col-8">
+          <div class="card">
+            <div class="card-body">
+              <div class="list__bill-list">
+                <status-tab
+                  v-model="filter.tab"
+                  :status="listTab"
+                  :hasAll="false"
+                />
+                <status-tab
+                  v-if="filter.tab == 'topup'"
+                  class="mt-16 topup-type"
+                  v-model="filter.type"
+                  :status="listType"
+                  :hasAll="false"
+                />
+                <vcl-table class="md-20 mt-16" v-if="isFetching"></vcl-table>
+                <template v-else-if="bills.length > 0 && filter.tab == 'bill'">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr class="list__claim-title">
+                          <th width="100">MÃ HÓA ĐƠN</th>
+                          <th>KHÁCH HÀNG</th>
+                          <th>NGÀY TẠO</th>
+                          <th>TỔNG HÓA ĐƠN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="item in transBills" :key="item.id">
+                          <td>
+                            <router-link
+                              class="text-no-underline"
+                              :to="{
+                                name: 'bill-detail',
+                                params: { code: item.code },
+                              }"
+                            >
+                              {{ item.code }}
+                            </router-link>
+                          </td>
+                          <td>
+                            {{ item.customer }}
+                          </td>
+                          <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                          <td> {{ item.total_amount | formatPrice }} </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                      mb-16
+                    "
+                    v-if="count > 0"
+                  >
+                    <p-pagination
+                      :total="count"
+                      :perPage.sync="filter.limit"
+                      :current.sync="filter.page"
+                      size="sm"
+                    ></p-pagination>
+                  </div>
+                </template>
+                <template
+                  v-else-if="transactions.length > 0 && filter.tab == 'topup'"
                 >
-                  <thead>
-                    <tr>
-                      <template>
-                        <th>Loại</th>
-                        <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
-                        <th>Khách hàng</th>
-                        <th class="content">Nội dung</th>
-                        <th>Hình thức</th>
-                        <th>Giá trị</th>
-                        <th v-if="filter.type == 1">Thao tác</th>
-                      </template>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, i) in transactions" :key="i">
-                      <td :title="transactionType[item.type]">
-                        <span class="tool-tip">{{
-                          transactionType[item.type]
-                        }}</span>
-                      </td>
-                      <td :title="item.created_at | date('dd/MM/yyyy')"
-                        ><span>{{
-                          item.created_at | date('dd/MM/yyyy')
-                        }}</span></td
-                      >
-                      <td :title="mapStatus[item.status].value"
-                        ><span
-                          v-status:status="mapStatus[item.status].value"
-                        ></span
-                      ></td>
-                      <td :title="item.user.full_name">
-                        <span class="tool-tip"> {{ item.user.full_name }}</span>
-                      </td>
-                      <td :title="getTitle(item)">
-                        <span
-                          class="tool-tip"
-                          v-html="getDescription(item)"
-                        ></span
-                      ></td>
-                      <td :title="getTextType(item)">
-                        <span class="tool-tip">
-                          {{ getTextType(item) }}
-                        </span>
-                      </td>
-                      <td>
-                        <div
-                          :class="{ error: validateErrors[item.id] }"
-                          v-if="showInputMoney(item)"
-                        >
-                          <span class="tooltip-notice">
-                            <p-svg
-                              style="vertical-align: top"
-                              name="notice"
-                            ></p-svg>
-                            Vui lòng nhập số tiền!
-                          </span>
-                          <p-input
-                            v-model="money[item.id]"
-                            :ref="'money_' + item.id"
-                            placeholder="Nhập số tiền ($)"
-                            class="input-money"
-                            type="text"
-                            @blur="resetErrors"
-                            @input="onChangeAmount($event, item)"
-                          />
-                        </div>
-                        <span v-else style="white-space: nowrap"
-                          >{{ item.type === typePay ? '-' : '+' }}
-                          {{ Math.abs(item.amount) | formatPrice }}</span
-                        >
-                      </td>
-                      <td class="btn-action" v-if="filter.type == 1">
-                        <div v-if="showBtn(item)" style="display: flex">
-                          <p-button
-                            @click="handleConfirm(successStatus, item)"
-                            class="mr-2"
-                            type="info"
+                  <div class="table-responsive">
+                    <table
+                      class="table table-hover"
+                      id="tbl-packages"
+                      :class="{
+                        responsive: this.filter.type == 2 || filter.type == 4,
+                      }"
+                    >
+                      <thead>
+                        <tr>
+                          <template>
+                            <th>Ngày tạo</th>
+                            <th>Trạng thái</th>
+                            <th>Khách hàng</th>
+                            <th class="content">Nội dung</th>
+                            <th>Hình thức</th>
+                            <th>Giá trị</th>
+                            <th v-if="filter.type == 1">Thao tác</th>
+                          </template>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(item, i) in transactions" :key="i">
+                          <td :title="item.created_at | date('dd/MM/yyyy')"
+                            ><span>{{
+                              item.created_at | date('dd/MM/yyyy')
+                            }}</span></td
                           >
-                            Xác nhận
-                          </p-button>
-                          <p-button
-                            @click="handleConfirm(failStatus, item)"
-                            type="danger"
-                          >
-                            Từ chối
-                          </p-button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                          <td :title="mapStatus[item.status].value"
+                            ><span
+                              v-status:status="mapStatus[item.status].value"
+                            ></span
+                          ></td>
+                          <td :title="item.user.full_name">
+                            <span class="tool-tip">
+                              {{ item.user.full_name }}</span
+                            >
+                          </td>
+                          <td :title="getTitle(item)">
+                            <span
+                              class="tool-tip"
+                              v-html="getDescription(item)"
+                            ></span
+                          ></td>
+                          <td :title="getTextType(item)">
+                            <span class="tool-tip">
+                              {{ getTextType(item) }}
+                            </span>
+                          </td>
+                          <td>
+                            <div
+                              :class="{ error: validateErrors[item.id] }"
+                              v-if="showInputMoney(item)"
+                            >
+                              <span class="tooltip-notice">
+                                <p-svg
+                                  style="vertical-align: top"
+                                  name="notice"
+                                ></p-svg>
+                                Vui lòng nhập số tiền!
+                              </span>
+                              <p-input
+                                v-model="money[item.id]"
+                                :ref="'money_' + item.id"
+                                placeholder="Nhập số tiền ($)"
+                                class="input-money"
+                                type="text"
+                                @blur="resetErrors"
+                                @input="onChangeAmount($event, item)"
+                              />
+                            </div>
+                            <span v-else style="white-space: nowrap"
+                              >{{ item.type === typePay ? '-' : '+' }}
+                              {{ Math.abs(item.amount) | formatPrice }}</span
+                            >
+                          </td>
+                          <td class="btn-action" v-if="filter.type == 1">
+                            <div v-if="showBtn(item)" style="display: flex">
+                              <p-button
+                                @click="handleConfirm(successStatus, item)"
+                                class="mr-2"
+                                type="info"
+                              >
+                                Xác nhận
+                              </p-button>
+                              <p-button
+                                @click="handleConfirm(failStatus, item)"
+                                type="danger"
+                              >
+                                Từ chối
+                              </p-button>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                      mb-16
+                    "
+                    v-if="count > 0"
+                  >
+                    <p-pagination
+                      :total="count_transactions"
+                      :perPage.sync="filter.limit"
+                      :current.sync="filter.page"
+                      size="sm"
+                    ></p-pagination>
+                  </div>
+                </template>
+                <EmptySearchResult v-else></EmptySearchResult>
               </div>
-              <div
-                class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
-              >
-                <p-pagination
-                  :total="count_transactions"
-                  :perPage.sync="filter.limit"
-                  :current.sync="filter.page"
-                  size="sm"
-                ></p-pagination>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <div class="card-header">
+              <span>Khách hàng</span>
+              <div class="icon">
+                <p-svg
+                  name="download"
+                  @click.prevent="handleShowModalExport"
+                ></p-svg>
+                <p-svg
+                  name="setting_user"
+                  @click.prevent="handleShowModalSetting"
+                ></p-svg>
               </div>
-            </template>
-            <EmptySearchResult v-else></EmptySearchResult>
+            </div>
+            <div class="card-body">
+              <div v-if="userInfo">
+                <div class="row">
+                  <div class="col-5">Tên:</div>
+                  <div class="col-7">{{ userInfo.full_name }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Email:</div>
+                  <div class="col-7">{{ userInfo.email }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Loại tài khoản:</div>
+                  <div class="col-7">{{ types[userInfo.class] }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Kiểu thanh toán:</div>
+                  <div class="col-7">{{
+                    userInfo.user_info.debt_max_amount > 0
+                      ? 'Trả sau'
+                      : 'Trả trước'
+                  }}</div>
+                </div>
+                <div class="row row-seperate"></div>
+                <div class="row">
+                  <div class="col-5">Số dư:</div>
+                  <div class="col-7">{{
+                    (userInfo.balance > 0 ? userInfo.balance : 0) | formatPrice
+                  }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Công nợ:</div>
+                  <div class="col-7">{{
+                    (userInfo.balance > 0 ? 0 : Math.abs(userInfo.balance))
+                      | formatPrice
+                  }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Công nợ cho phép:</div>
+                  <div class="col-7">{{
+                    userInfo.user_info.debt_max_amount | formatPrice
+                  }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-5">Thời gian cho phép:</div>
+                  <div class="col-7">{{
+                    userInfo.user_info.debt_max_day > 0
+                      ? `${userInfo.user_info.debt_max_day} ngày`
+                      : '-'
+                  }}</div>
+                </div>
+              </div>
+              <img v-else src="~@/assets/img/not-found.png" alt="" />
+            </div>
           </div>
         </div>
       </div>
@@ -244,6 +326,21 @@
       :loading="isChangingStatus"
       :disabled="isChangingStatus"
     ></modal-confirm>
+    <modal-edit-user
+      v-if="isVisibleEditUser"
+      :visible.sync="isVisibleEditUser"
+      :current="userInfo"
+      @success="updateSuccess"
+    >
+    </modal-edit-user>
+    <modal-export
+      :user="userInfo"
+      :options="statusPackage"
+      :visible.sync="visibleExportModal"
+      :loading="isExporting"
+      @save="handleExport"
+    >
+    </modal-export>
   </div>
 </template>
 <script>
@@ -278,14 +375,23 @@ import {
 } from '../../transaction/constants'
 import { cloneDeep } from '../../../core/utils'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import { MAP_USER_CLASS_TEXT } from '../../setting/constants'
+import ModalEditUser from '../../setting/components/ModalEdit'
+import ModalExport from '../../setting/components/ModalExport'
+import { PACKAGE_STATUS_TAB } from '../../package/constants'
+import { EXPORT_PACKAGE } from '../../setting/store/index'
+import mixinDownload from '@/packages/shared/mixins/download'
+import { truncate } from '@core/utils/string'
 
 export default {
   name: 'BillList',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
     EmptySearchResult,
     ModalCreateExtraFee,
     ModalConfirm,
+    ModalEditUser,
+    ModalExport,
   },
   data() {
     return {
@@ -332,6 +438,10 @@ export default {
           text: 'Hoàn tiền',
         },
       ],
+      userInfo: null,
+      isVisibleEditUser: false,
+      visibleExportModal: false,
+      isExporting: false,
     }
   },
   mounted() {
@@ -397,6 +507,12 @@ export default {
     failStatus() {
       return TransactionStatusFailure
     },
+    types() {
+      return MAP_USER_CLASS_TEXT
+    },
+    statusPackage() {
+      return PACKAGE_STATUS_TAB.filter((x) => x.value != 'alert')
+    },
   },
   filters: {
     statusText(val) {
@@ -407,6 +523,8 @@ export default {
     },
   },
   methods: {
+    truncate,
+
     ...mapActions('bill', {
       fetchHandle: BILL_FETCH,
       countHandle: BILL_COUNT,
@@ -417,6 +535,7 @@ export default {
       FETCH_LIST_TRANSACTIONS,
       CHANGE_STATUS_TRANSACTION,
     ]),
+    ...mapActions('setting', [EXPORT_PACKAGE]),
 
     async init() {
       this.filter.limit = this.filter.limit != 30 ? 30 : this.filter.limit
@@ -436,6 +555,9 @@ export default {
         this.$toast.error(res.message)
         return
       }
+      if (this.filter.search_by == 'customer' && this.filter.search != '') {
+        this.userInfo = this.bills.length > 0 ? { ...this.bills[0].user } : null
+      } else this.userInfo = null
     },
     async initTopup() {
       this.isFetching = true
@@ -445,7 +567,12 @@ export default {
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
+        return
       }
+      if (this.filter.search_by == 'customer' && this.filter.search != '') {
+        this.userInfo =
+          this.transactions.length > 0 ? { ...this.transactions[0].user } : null
+      } else this.userInfo = null
     },
     async handleSubmitExtraFee(payload) {
       this.isSubmitting = true
@@ -629,6 +756,37 @@ export default {
       value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       this.money[transaction.id] = value
     },
+    handleShowModalSetting() {
+      if (!this.userInfo) return
+      this.isVisibleEditUser = true
+    },
+
+    updateSuccess() {
+      this.isVisibleEditUser = false
+      if (this.filter.tab == 'topup') {
+        this.initTopup()
+      } else this.init()
+    },
+    handleShowModalExport() {
+      if (!this.userInfo) return
+
+      this.visibleExportModal = true
+    },
+    async handleExport(payload) {
+      this.isExporting = true
+      const result = await this[EXPORT_PACKAGE](payload)
+      this.isExporting = false
+
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
+    },
   },
   watch: {
     'filter.status': function() {
@@ -636,7 +794,9 @@ export default {
       this.init()
     },
     'filter.page': function() {
-      this.init()
+      if (this.filter.tab == 'topup') {
+        this.initTopup()
+      } else this.init()
     },
     'filter.search_by': function() {
       if (this.filter.search != '') {
@@ -647,11 +807,11 @@ export default {
       }
     },
     'filter.tab': function() {
+      this.filter.page = 1
       if (this.filter.tab == 'topup') {
-        this.filter.page = 1
         this.filter.type = 1
         this.initTopup()
-      }
+      } else this.init()
     },
     'filter.type': function() {
       this.filter.page = 1
