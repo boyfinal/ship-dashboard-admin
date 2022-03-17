@@ -1,16 +1,10 @@
 ﻿//Import Hub
 .import__hub{
-  .btn-scan-info{
-    background-color: #00978C;
-    color: white;
-    transition: .4s;
-
-    &:hover{
-      opacity: .8;
-    }
-  }
   .list-container{
     padding: 0;
+  }
+  .btn-scan-info{
+    width: 50%;
   }
   &-containers{
     .container-code{
@@ -29,24 +23,15 @@
       margin-left: 10px;
     }
   }
-  .page-not-found{
-    height: 300px;
-    min-height: unset;
-    .content{
-      height: auto;
-    }
-  }
+
 }
 
 .export__hub{
   .btn-scan-info{
-    background-color: #00978C;
-    color: white;
-    transition: .4s;
-
-    &:hover{
-      opacity: .8;
-    }
+    width: 100%;
+  }
+  .p-select{
+    width: auto;
   }
   .list-container{
     padding: 0;
@@ -63,6 +48,23 @@
        border: none;
      }
     }
+  }
+  .btn-submit{
+    background: #FFFFFF;
+    border: 1px solid #00978C;
+    box-sizing: border-box;
+    border-radius: 8px;
+    width: 74px;
+    height: 44px;
+    color: #00978C;
+    transition: .3s;
+    &:hover{
+      background:#00978C ;
+      color: #fff;
+    }
+  }
+  .hr{
+
   }
   .list-exported{
     height: 365px;
@@ -85,14 +87,9 @@
     .badge{
       margin-left: 10px;
     }
+
   }
-  .page-not-found{
-    height: 300px;
-    min-height: unset;
-    .content{
-      height: auto;
-    }
-  }
+
 
   .list-export{
     margin-top: 10px;
@@ -104,47 +101,52 @@
     text-align: center;
   }
 
-  .card-title {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 16px;
-    /* identical to box height, or 133% */
-
-    letter-spacing: 0.75px;
-    text-transform: uppercase;
-
-    /* Neutral / Neutral 5 */
-
-    color: #AAABAB;
-  }
-
-  .card-header {
-    padding: 21px 7px;
-  }
-
-  .btn-submit {
-    text-align: center;
-    
-    width: 66px;
-    height: 32px;
-    left: 110px;
-    top: 0px;
-
-    /* LionWhite */
-
-    background: #FFFFFF;
-    /* Primary/PersianGreen 4 */
-
-    color: #00A79F;
-    
-    border: 1px solid #00B7B0;
-    box-sizing: border-box;
-    border-radius: 4px;
-  }
   .pagination-box {
     margin-top : 0
   }
 
+}
+.import__hub, .export__hub{
+  .card{
+    box-shadow: 0px 0px 2px rgba(17, 18, 18, 0.04), 0px 4px 8px rgba(17, 18, 18, 0.08);
+    border: none;
+    border-radius: 4px;
+
+    .card-body{
+      padding: 16px;
+    }
+  }
+  .card-title{
+    font-weight: 500;
+    color: #111212;
+  }
+
+  .card_input{
+    height: 128px;
+  }
+  .btn-scan-info{
+    background-color: #00978C;
+    color: white;
+    transition: .4s;
+    height: 44px;
+
+    &:hover{
+      opacity: .8;
+    }
+
+    &:disabled{
+      color: #A9E0DE;
+      background: #F9FDFE;
+      border: none;
+    }
+  }
+
+  .page-not-found{
+    height: 400px;
+    min-height: unset;
+    .content{
+      height: auto;
+    }
+  }
 }
 
