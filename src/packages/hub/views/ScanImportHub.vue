@@ -261,7 +261,9 @@ export default {
       this.isSubmitting = false
       this.isScan = false
       this.isCancel = true
-      this.$toast.success(`Kiện ${this.current_code} quét thành công`)
+      this.$toast.success(
+        `Kiện ${this.current_code}  đã quét xuất hub thành công`
+      )
       this.init()
     },
     clearInput() {
