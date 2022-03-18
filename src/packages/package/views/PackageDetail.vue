@@ -93,198 +93,259 @@
         <div class="">
           <div class="">
             <div class="row">
-              <div class="col-3">
-                <div class="card-block">
-                  <div class="card-header">
-                    <div class="card-title">Người nhận</div>
+              <div class="col-6">
+                <div class="row mb-24">
+                  <div class="col">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Người nhận</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="row">
+                          <div class="col-5 mb-8">Họ và tên:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.recipient')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Điện thoại:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.phone_number')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Địa chỉ:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.address_1')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Địa chỉ phụ:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.address_2')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Thành phố:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.city')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Mã vùng:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.state_code')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Mã bưu điện:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.zipcode')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5">Mã quốc gia:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.country_code')
+                            }}</div></div
+                          >
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="card-content">
-                    <div class="row">
-                      <div class="col-4 mb-8">Họ và tên:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.recipient')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Điện thoại:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.phone_number')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Địa chỉ:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.address_1')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Địa chỉ phụ:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.address_2')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Thành phố:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.city')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Mã vùng:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.state_code')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Mã bưu điện:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.zipcode')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4">Mã quốc gia:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.country_code')
-                        }}</div></div
-                      >
+                  <div class="col">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Thông tin hàng hóa</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="row">
+                          <div class="col-5 mb-8">Chi tiết hàng hóa:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.detail')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Mã đơn hàng:</div>
+                          <div class="col-7"
+                            ><div>{{
+                              $evaluate('package_detail.package.order_number')
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Trọng lượng:</div>
+                          <div class="col-7"
+                            ><div
+                              >{{ $evaluate('package_detail.package.weight')
+                              }}<span v-if="isOverThanOld('weight')">
+                                ({{
+                                  $evaluate(
+                                    'package_detail.package.actual_weight'
+                                  )
+                                }})
+                              </span></div
+                            ></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Dài:</div>
+                          <div class="col-7"
+                            ><div
+                              >{{ $evaluate('package_detail.package.length')
+                              }}<span v-if="isOverThanOld()">
+                                ({{
+                                  $evaluate(
+                                    'package_detail.package.actual_length'
+                                  )
+                                }})
+                              </span></div
+                            ></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Rộng:</div>
+                          <div class="col-7"
+                            ><div
+                              >{{ $evaluate('package_detail.package.width')
+                              }}<span v-if="isOverThanOld()">
+                                ({{
+                                  $evaluate(
+                                    'package_detail.package.actual_width'
+                                  )
+                                }})
+                              </span></div
+                            ></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Cao:</div>
+                          <div class="col-7"
+                            ><div
+                              >{{ $evaluate('package_detail.package.height')
+                              }}<span v-if="isOverThanOld()">
+                                ({{
+                                  $evaluate(
+                                    'package_detail.package.actual_height'
+                                  )
+                                }})
+                              </span></div
+                            ></div
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-3">
-                <div class="card-block">
-                  <div class="card-header">
-                    <div class="card-title">Trạng thái</div>
-                  </div>
-                  <div class="card-content">
-                    <div class="row">
-                      <div class="col-4 mb-8">Trạng thái đơn:</div>
-                      <div class="col-8"
-                        ><div
-                          v-if="
-                            package_detail.package.status &&
-                              package_detail.package.status > 0
-                          "
-                          >{{
-                            mapStatus[package_detail.package.status].value
-                          }}</div
-                        >
-                      </div>
+                <div>
+                  <div class="card-block mb-0">
+                    <div class="card-header">
+                      <div class="card-title">Trạng thái</div>
                     </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Trạng thái kho:</div>
-                      <div class="col-7">
+                    <div class="card-content">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="row">
+                            <div class="col-8 mb-8">Trạng thái đơn:</div>
+                            <div class="col-4 pl-0"
+                              ><div
+                                v-if="
+                                  package_detail.package.status &&
+                                    package_detail.package.status > 0
+                                "
+                                >{{
+                                  mapStatus[package_detail.package.status].value
+                                }}</div
+                              >
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-8 mb-8">Trạng thái kho:</div>
+                            <div class="col-4 pl-0">
+                              <div
+                                v-if="
+                                  package_detail.package.status &&
+                                    package_detail.package.status > 0 &&
+                                    mapStatusWareHouse[
+                                      package_detail.package.status
+                                    ]
+                                "
+                                >{{
+                                  mapStatusWareHouse[
+                                    package_detail.package.status
+                                  ].value
+                                }}</div
+                              >
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-8">Trạng thái khiếu nại:</div>
+                            <div class="col-4 pl-0">
+                              <div v-if="package_detail.status_ticket">
+                                Có
+                              </div>
+                              <div v-if="!package_detail.status_ticket">
+                                Không
+                              </div></div
+                            >
+                          </div>
+                        </div>
                         <div
-                          v-if="
-                            package_detail.package.status &&
-                              package_detail.package.status > 0 &&
-                              mapStatusWareHouse[package_detail.package.status]
-                          "
-                          >{{
-                            mapStatusWareHouse[package_detail.package.status]
-                              .value
-                          }}</div
+                          class="col-6"
+                          v-if="package_detail.package.package_return"
                         >
+                          <div class="mb-8"><b>Đơn hàng return</b></div>
+
+                          <div class="row">
+                            <div class="col pr-0 mb-8">Lý do trả hàng:</div>
+                            <div class="col pl-0"
+                              ><div>{{
+                                package_detail.package.package_return.reason
+                              }}</div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col pr-0 mb-8">Nguyên nhân:</div>
+                            <div class="col pl-0">
+                              <div>{{
+                                package_detail.package.package_return.content
+                              }}</div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col pr-0">Bằng chứng:</div>
+                            <div class="col pl-0">
+                              <div class="files">
+                                <div
+                                  class="file-item"
+                                  v-for="item in package_detail.package
+                                    .package_return.images"
+                                  :key="item.uid"
+                                >
+                                  <File :src="item" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-4">Trạng thái khiếu nại:</div>
-                      <div class="col-8">
-                        <div v-if="package_detail.status_ticket"> Có </div>
-                        <div v-if="!package_detail.status_ticket">
-                          Không
-                        </div></div
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="card-block">
-                  <div class="card-header">
-                    <div class="card-title">Thông tin hàng hóa</div>
-                  </div>
-                  <div class="card-content">
-                    <div class="row">
-                      <div class="col-4 mb-8">Chi tiết hàng hóa:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.detail')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Mã đơn hàng:</div>
-                      <div class="col-8"
-                        ><div>{{
-                          $evaluate('package_detail.package.order_number')
-                        }}</div></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Trọng lượng:</div>
-                      <div class="col-8"
-                        ><div
-                          >{{ $evaluate('package_detail.package.weight')
-                          }}<span v-if="isOverThanOld('weight')">
-                            ({{
-                              $evaluate('package_detail.package.actual_weight')
-                            }})
-                          </span></div
-                        ></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Dài:</div>
-                      <div class="col-8"
-                        ><div
-                          >{{ $evaluate('package_detail.package.length')
-                          }}<span v-if="isOverThanOld()">
-                            ({{
-                              $evaluate('package_detail.package.actual_length')
-                            }})
-                          </span></div
-                        ></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Rộng:</div>
-                      <div class="col-8"
-                        ><div
-                          >{{ $evaluate('package_detail.package.width')
-                          }}<span v-if="isOverThanOld()">
-                            ({{
-                              $evaluate('package_detail.package.actual_width')
-                            }})
-                          </span></div
-                        ></div
-                      >
-                    </div>
-                    <div class="row">
-                      <div class="col-4 mb-8">Cao:</div>
-                      <div class="col-8"
-                        ><div
-                          >{{ $evaluate('package_detail.package.height')
-                          }}<span v-if="isOverThanOld()">
-                            ({{
-                              $evaluate('package_detail.package.actual_height')
-                            }})
-                          </span></div
-                        ></div
-                      >
                     </div>
                   </div>
                 </div>
@@ -294,19 +355,19 @@
                 class="col-6"
                 style="padding: 0 30px 0 30px"
               >
-                <div class="row">
+                <div class="row" style="height: 100%">
                   <div class="col-12 p-0">
                     <div class="card-block">
                       <div class="card-header">
                         <div class="card-title">Hành trình đơn</div>
-                        <div class="card-action">
+                        <div class="card-action ml-24">
                           <a href="#" @click="changeDisplayDeliverDetail()"
                             >Lịch sử đơn</a
                           >
                         </div>
                       </div>
                       <div class="card-content deliver-log">
-                        <div class="timeline">
+                        <div class="timeline-new">
                           <div
                             v-for="(item, i) in displayDeliverLogs"
                             :key="i"
@@ -314,21 +375,27 @@
                               'first-item':
                                 i === 0 && timelinePagination.currentPage === 1,
                             }"
-                            class="timeline-item"
+                            class="timeline-item-new"
                           >
-                            <div class="timeline-item__left">
-                              <div>
-                                {{ item.ship_time | datetime('dd/MM/yyyy') }}
-                              </div>
-                              <div>
-                                {{ item.ship_time | datetime('HH:mm:ss') }}
-                              </div>
+                            <div class="item__right">
+                              <div class="title">{{ item.name }}</div>
                             </div>
-                            <div class="timeline-item__right">
-                              <div v-html="item.text"></div>
-                              <span v-if="item.location"
-                                ><i class="fa fa-map-marker mr-1"></i>
-                                {{ item.location }}</span
+                            <div
+                              v-for="(it, j) in item.data"
+                              :key="j"
+                              class="item__right__data"
+                              :class="{
+                                'first-data': j === 0,
+                              }"
+                            >
+                              <div class="time col-2 pl-0">
+                                {{ it.ship_time | datetime('HH:mm:ss') }}</div
+                              >
+                              <div class="des col-10 pl-0">
+                                <span v-html="it.text"></span>
+                                <span class="location" v-if="it.location">
+                                  ___{{ it.location }}</span
+                                ></div
                               >
                             </div>
                           </div>
@@ -371,7 +438,8 @@
                             >Hành trình đơn</a
                           ></div
                         >
-                        <div class="card-title">Lịch sử đơn</div>
+
+                        <div class="card-title ml-24">Lịch sử đơn</div>
                       </div>
                       <div class="card-content">
                         <template>
@@ -461,9 +529,8 @@
                 </div>
               </div>
               <div class="col-6 p-0 row fee">
-                <div class="fee-border"></div>
                 <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block">
+                  <div class="card-block" style="height: auto">
                     <div class="card-header">
                       <div class="card-title">Phí phát sinh</div>
                     </div>
@@ -484,7 +551,7 @@
                   </div>
                 </div>
                 <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block">
+                  <div class="card-block" style="height: auto">
                     <div class="card-header">
                       <div class="card-title">Phí</div>
                     </div>
@@ -625,11 +692,14 @@ import { cloneDeep } from '@core/utils'
 import { PackageAlertTypeHubReturn } from '../constants'
 import ModalReship from '../components/ModalReship'
 import OverLoading from '@components/shared/OverLoading'
+import File from '../../hub/components/File'
+import Uniq from 'lodash/uniq'
+import { datetime } from '../../../core/utils/datetime'
 
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading },
+  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading, File },
   data() {
     return {
       isFetching: true,
@@ -700,7 +770,7 @@ export default {
         (this.timelinePagination.currentPage - 1) *
         this.timelinePagination.itemsPerPage
 
-      return this.package_detail.deliver_logs
+      let logs = this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
         .filter((log) => {
           return log.type !== PackageStatusCreated
@@ -718,6 +788,22 @@ export default {
           }
           return { ship_time: log.ship_time, text, location: log.location }
         })
+
+      const times = logs.map((item) => datetime(item.ship_time, 'dd-MM-yyyy'))
+      let ConvertData = []
+      const uniqTimes = Uniq(times)
+      uniqTimes.forEach((element) =>
+        ConvertData.push({ name: element, data: [] })
+      )
+      ConvertData.forEach((x) =>
+        logs.forEach(function(it) {
+          if (datetime(it.ship_time, 'dd-MM-yyyy') == x.name) {
+            x.data.push(it)
+          }
+        })
+      )
+      console.log(ConvertData)
+      return ConvertData
     },
     displayAuditLogs() {
       const start =
