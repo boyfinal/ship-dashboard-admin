@@ -621,6 +621,7 @@ export default {
         address_2: this.form.address2,
         amount: parseFloat(amount),
         description: this.form.description,
+        is_reship: this.isReLabel,
       }
       // let result = await this[UPDATE_PACKAGE](params)
       // if (result.error) {
