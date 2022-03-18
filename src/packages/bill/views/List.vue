@@ -290,12 +290,14 @@
                 <div class="row">
                   <div class="col-5">Thời gian cho phép:</div>
                   <div class="col-7">
-                    Còn <br />{{
+                    {{
                       userInfo.user_info.debt_max_day > 0
                         ? `${userInfo.user_info.debt_max_day} ngày`
                         : '-'
-                    }}</div
-                  >
+                    }}
+                    <br />
+                    {{ debtDay }}
+                  </div>
                 </div>
               </div>
               <img v-else src="~@/assets/img/not-found.png" alt="" />
@@ -489,6 +491,24 @@ export default {
           total_amount: item.shipping_fee + item.extra_fee,
         }
       })
+    },
+    debtDay() {
+      var today = new Date().getTime()
+      if (this.userInfo.user_info && this.userInfo.user_info.debt_max_day > 0) {
+        var debt_day = ''
+        var date
+        var day_user = new Date(this.userInfo.user_info.debt_time).getTime()
+        if (!day_user) {
+          date = 0
+        } else {
+          var distance = today - day_user
+          date = Math.floor(distance / (1000 * 60 * 60 * 24))
+        }
+        debt_day = this.userInfo.user_info.debt_max_day - date
+
+        return debt_day > 0 ? ` (Còn ${debt_day} ngày)` : `(Còn 0 ngày)`
+      }
+      return ''
     },
     searchPlaceholder() {
       const maptext = {
