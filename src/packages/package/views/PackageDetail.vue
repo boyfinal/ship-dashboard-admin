@@ -260,87 +260,84 @@
                       <div class="card-title">Trạng thái</div>
                     </div>
                     <div class="card-content">
-                      <div class="row">
-                        <div class="col-6">
-                          <div class="row">
-                            <div class="col-8 mb-8">Trạng thái đơn:</div>
-                            <div class="col-4 pl-0"
-                              ><div
-                                v-if="
-                                  package_detail.package.status &&
-                                    package_detail.package.status > 0
-                                "
-                                >{{
-                                  mapStatus[package_detail.package.status].value
-                                }}</div
-                              >
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-8 mb-8">Trạng thái kho:</div>
-                            <div class="col-4 pl-0">
-                              <div
-                                v-if="
-                                  package_detail.package.status &&
-                                    package_detail.package.status > 0 &&
-                                    mapStatusWareHouse[
-                                      package_detail.package.status
-                                    ]
-                                "
-                                >{{
-                                  mapStatusWareHouse[
-                                    package_detail.package.status
-                                  ].value
-                                }}</div
-                              >
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-8">Trạng thái khiếu nại:</div>
-                            <div class="col-4 pl-0">
-                              <div v-if="package_detail.status_ticket">
-                                Có
-                              </div>
-                              <div v-if="!package_detail.status_ticket">
-                                Không
-                              </div></div
+                      <div class="mb-16">
+                        <div class="row">
+                          <div class="col-4 mb-8">Trạng thái đơn:</div>
+                          <div class="col-8 pl-0"
+                            ><div
+                              v-if="
+                                package_detail.package.status &&
+                                  package_detail.package.status > 0
+                              "
+                              >{{
+                                mapStatus[package_detail.package.status].value
+                              }}</div
                             >
                           </div>
                         </div>
-                        <div
-                          class="col-6"
-                          v-if="package_detail.package.package_return"
-                        >
-                          <div class="mb-8"><b>Đơn hàng return</b></div>
+                        <div class="row">
+                          <div class="col-4 mb-8">Trạng thái kho:</div>
+                          <div class="col-8 pl-0">
+                            <div
+                              v-if="
+                                package_detail.package.status &&
+                                  package_detail.package.status > 0 &&
+                                  mapStatusWareHouse[
+                                    package_detail.package.status
+                                  ]
+                              "
+                              >{{
+                                mapStatusWareHouse[
+                                  package_detail.package.status
+                                ].value
+                              }}</div
+                            >
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-4">Trạng thái khiếu nại:</div>
+                          <div class="col-8 pl-0">
+                            <div v-if="package_detail.status_ticket"> Có </div>
+                            <div v-if="!package_detail.status_ticket">
+                              Không
+                            </div></div
+                          >
+                        </div>
+                      </div>
+                      <div class="mb-16 sperate"></div>
+                      <div
+                        class=""
+                        v-if="package_detail.package.package_return"
+                      >
+                        <div class="mb-8"><b>Đơn hàng return</b></div>
 
-                          <div class="row">
-                            <div class="col pr-0 mb-8">Lý do trả hàng:</div>
-                            <div class="col pl-0"
-                              ><div>{{
-                                package_detail.package.package_return.reason
-                              }}</div>
-                            </div>
+                        <div class="row">
+                          <div class="col-4 pr-0 mb-8">Lý do trả hàng:</div>
+                          <div class="col-8 pl-0"
+                            ><div>{{
+                              package_detail.package.package_return.reason
+                            }}</div>
                           </div>
-                          <div class="row">
-                            <div class="col pr-0 mb-8">Nguyên nhân:</div>
-                            <div class="col pl-0">
-                              <div>{{
-                                package_detail.package.package_return.content
-                              }}</div>
-                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-4 pr-0 mb-8">Nguyên nhân:</div>
+                          <div class="col-8 pl-0">
+                            <div>{{
+                              package_detail.package.package_return.content
+                            }}</div>
                           </div>
-                          <div class="row">
-                            <div class="col pr-0">Bằng chứng:</div>
-                            <div class="col pl-0">
-                              <div class="files">
-                                <div
-                                  class="file-item"
-                                  v-for="item in package_detail.package
-                                    .package_return.images"
-                                  :key="item.uid"
-                                >
-                                  <File :src="item" />
-                                </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-4 pr-0">Bằng chứng:</div>
+                          <div class="col-8 pl-0">
+                            <div class="files">
+                              <div
+                                class="file-item"
+                                v-for="item in package_detail.package
+                                  .package_return.images"
+                                :key="item.uid"
+                              >
+                                <File :src="item" />
                               </div>
                             </div>
                           </div>
