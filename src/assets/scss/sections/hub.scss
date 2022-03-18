@@ -1,152 +1,179 @@
 ﻿//Import Hub
-.import__hub{
-  .list-container{
-    padding: 0;
-  }
-  .btn-scan-info{
-    width: 50%;
-  }
-  &-containers{
-    .container-code{
-     padding: 14px 16px;
-      border-bottom: 1px solid #CFD0D0;
-     color: $color-neutral-10;
-     &:last-child{
-       border: none;
-     }
+.import__hub {
+    .list-container {
+        padding: 0;
     }
-  }
-  .info-container{
-    margin-bottom: 10px;
-
-    .badge{
-      margin-left: 10px;
+    .btn-scan-info {
+        width: 50%;
     }
-  }
-
+    &-containers {
+        .container-code {
+            padding: 14px 16px;
+            border-bottom: 1px solid #CFD0D0;
+            color: $color-neutral-10;
+            &:last-child {
+                border: none;
+            }
+        }
+    }
+    .info-container {
+        margin-bottom: 10px;
+        .badge {
+            margin-left: 10px;
+        }
+    }
 }
 
-.export__hub{
-  .btn-scan-info{
-    width: 100%;
-  }
-  .p-select{
-    width: auto;
-  }
-  .list-container{
-    padding: 0;
-  }
-  &-containers{
-    .container-code{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 7px;
-      border-bottom: 1px solid #CFD0D0;
-      color: $color-neutral-10;
-     &:last-child{
-       border: none;
-     }
+.export__hub {
+    .btn-scan-info {
+        width: 100%;
     }
-  }
-  .btn-submit{
-    background: #FFFFFF;
-    border: 1px solid #00978C;
-    box-sizing: border-box;
-    border-radius: 8px;
-    width: 74px;
-    height: 44px;
-    color: #00978C;
-    transition: .3s;
-    &:hover{
-      background:#00978C ;
-      color: #fff;
+    .p-select {
+        width: auto;
     }
-  }
-  .hr{
-
-  }
-  .list-exported{
-    height: 365px;
-    overflow-y: auto;
-  }
-  .item-exported{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 7px;
-    border-bottom: 1px solid #CFD0D0;
-    color: $color-neutral-10;
-   &:last-child{
-     border: none;
-   }
-  }
-  .info-container{
-    margin-bottom: 10px;
-
-    .badge{
-      margin-left: 10px;
+    .list-container {
+        padding: 0;
     }
-
-  }
-
-
-  .list-export{
-    margin-top: 10px;
-  }
-
-  .empty {
-    height: 365px;
-    padding: 120px 0;
-    text-align: center;
-  }
-
-  .pagination-box {
-    margin-top : 0
-  }
-
-}
-.import__hub, .export__hub{
-  .card{
-    box-shadow: 0px 0px 2px rgba(17, 18, 18, 0.04), 0px 4px 8px rgba(17, 18, 18, 0.08);
-    border: none;
-    border-radius: 4px;
-
-    .card-body{
-      padding: 16px;
+    &-containers {
+        .container-code {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 7px;
+            border-bottom: 1px solid #CFD0D0;
+            color: $color-neutral-10;
+            &:last-child {
+                border: none;
+            }
+        }
     }
-  }
-  .card-title{
-    font-weight: 500;
-    color: #111212;
-  }
-
-  .card_input{
-    height: 128px;
-  }
-  .btn-scan-info{
-    background-color: #00978C;
-    color: white;
-    transition: .4s;
-    height: 44px;
-
-    &:hover{
-      opacity: .8;
+    .btn-submit {
+        background: #FFFFFF;
+        border: 1px solid #00978C;
+        box-sizing: border-box;
+        border-radius: 8px;
+        width: 74px;
+        height: 44px;
+        color: #00978C;
+        transition: .3s;
+        &:hover {
+            background: #00978C;
+            color: #fff;
+        }
     }
-
-    &:disabled{
-      color: #A9E0DE;
-      background: #F9FDFE;
-      border: none;
+    .hr {}
+    .list-exported {
+        height: 365px;
+        overflow-y: auto;
     }
-  }
-
-  .page-not-found{
-    height: 400px;
-    min-height: unset;
-    .content{
-      height: auto;
+    .item-exported {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 7px;
+        border-bottom: 1px solid #CFD0D0;
+        color: $color-neutral-10;
+        &:last-child {
+            border: none;
+        }
     }
-  }
+    .info-container {
+        margin-bottom: 10px;
+        .badge {
+            margin-left: 10px;
+        }
+    }
+    .list-export {
+        margin-top: 10px;
+    }
+    .empty {
+        height: 365px;
+        padding: 120px 0;
+        text-align: center;
+    }
+    .pagination-box {
+        margin-top: 0
+    }
 }
 
+.import__hub,
+.export__hub {
+    .card {
+        box-shadow: 0px 0px 2px rgba(17, 18, 18, 0.04), 0px 4px 8px rgba(17, 18, 18, 0.08);
+        border: none;
+        border-radius: 4px;
+        .card-body {
+            padding: 16px;
+        }
+    }
+    .card-title {
+        font-weight: 500;
+        color: #111212;
+    }
+    .card_input {
+        height: 128px;
+    }
+    .btn-scan-info {
+        background-color: #00978C;
+        color: white;
+        transition: .4s;
+        height: 44px;
+        &:hover {
+            opacity: .8;
+        }
+        &:disabled {
+            color: #A9E0DE;
+            background: #F9FDFE;
+            border: none;
+        }
+    }
+    .page-not-found {
+        height: 400px;
+        min-height: unset;
+        .content {
+            height: auto;
+        }
+    }
+}
+
+//search Hub 
+#tbl-shipments {
+    td {
+        border-bottom: none
+    }
+    .tbody-opened {
+        .opened {
+            background-color: $color-neutral-3;
+            td {
+                font-weight: 700;
+                font-size: 14px;
+                border-radius: unset;
+                a {
+                    color: $color-turquoise-9
+                }
+            }
+        }
+        .info {
+            background-color: $color-neutral-1;
+            td {
+                padding: 0;
+                border-radius: unset;
+            }
+            .table-container {
+                margin-bottom: 0;
+                thead th {
+                    font-weight: 500;
+                    font-size: 12px;
+                    color: $color-neutral-7;
+                }
+                tr:hover {
+                    box-shadow: none;
+                    background-color: transparent;
+                }
+                a {
+                    color: $color-neutral-9;
+                }
+            }
+        }
+    }
+}
