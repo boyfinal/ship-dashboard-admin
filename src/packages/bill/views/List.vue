@@ -496,7 +496,7 @@ export default {
       var today = new Date().getTime()
       if (this.userInfo.user_info && this.userInfo.user_info.debt_max_day > 0) {
         var debt_day = ''
-        var date = 0
+        var date
         var day_user = new Date(this.userInfo.user_info.debt_time).getTime()
         if (!day_user) {
           date = 0
