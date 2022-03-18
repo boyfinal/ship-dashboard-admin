@@ -33,6 +33,10 @@ export default {
       type: String,
       default: '',
     },
+    allowDownloadImg: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     isImage() {
@@ -65,6 +69,10 @@ export default {
       return `${URL_IMAGES}/${src}`
     },
     showContent() {
+      if (this.allowDownloadImg) {
+        this.download()
+        return
+      }
       if (this.isImage) {
         this.zoomImage()
       } else {
