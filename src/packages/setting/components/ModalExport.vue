@@ -2,7 +2,7 @@
   <p-modal
     class="modal-export"
     :active="visible"
-    :title="`Export file`"
+    :title="`Export công nợ`"
     @close="handleClose"
   >
     <div class="row mb-16">
