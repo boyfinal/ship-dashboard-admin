@@ -144,7 +144,7 @@
               </div>
               <div class="card__w" v-if="isReLabel">
                 <div class="card__w-header">
-                  Phí relabel
+                  Phí reship
                 </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
