@@ -3,34 +3,21 @@
     <div class="page-content">
       <div class="mb-24">
         <div class="row">
-          <div class="col-5">
+          <div class="col-4">
             <div class="card mb-16">
               <div class="card-body">
                 <div class="">
                   <div class="d-flex">
                     <p-input
                       prefixIcon="search"
-                      :placeholder="searchPlaceholder"
                       clearable
                       class="mb-8"
                       type="search"
                       :disabled="disableInput"
                       v-model="keyword"
                       @clear="clearInput"
+                      placeholder="Nhập mã kiện/ups, mã đơn/usps"
                     ></p-input>
-                    <p-select
-                      class="ml-8"
-                      placeholder="Please select"
-                      v-model="filter.type"
-                    >
-                      <option
-                        :value="key"
-                        v-for="(value, key) in searchBy"
-                        :key="key"
-                      >
-                        {{ value }}
-                      </option>
-                    </p-select>
                   </div>
                   <button
                     @click.prevent="searchHandle"
@@ -81,7 +68,7 @@
             <!--            </div>-->
           </div>
 
-          <div class="col-7">
+          <div class="col-8">
             <div
               v-if="filter.type == 'container' && current_container.code"
               class="card"
@@ -249,7 +236,7 @@ import PageLoading from '@components/shared/OverLoading'
 import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
 import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
-import { cloneDeep } from '../../../core/utils'
+
 import mixinRoute from '@core/mixins/route'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
@@ -392,8 +379,10 @@ export default {
         return
       }
 
+      console.log(this.filter.type)
       this.isFetchingImportHub = false
       this.isScan = false
+      this.filter.type = res.type
       if (this.filter.type == 'container') {
         this.current_container.code = this.current.code
         this.current_container.id = this.current.id
@@ -419,14 +408,14 @@ export default {
 
     async init() {
       this.isFetching = true
-      this.clearData()
+      // this.clearData()
       this.handleUpdateRouteQuery()
-      let payload = cloneDeep(this.filter)
-      const result = await this[FETCH_LIST_IMPORTED](payload)
-      this.isFetching = false
-      if (!result.success) {
-        this.$toast.error(result.message)
-      }
+      // let payload = cloneDeep(this.filter)
+      // const result = await this[FETCH_LIST_IMPORTED](payload)
+      // this.isFetching = false
+      // if (!result.success) {
+      //   this.$toast.error(result.message)
+      // }
     },
 
     clearData() {
