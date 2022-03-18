@@ -18,10 +18,7 @@
         @click="toggle(item.id)"
       >
         <td>
-          <router-link :to="item.route" v-if="$isAdmin()">
-            {{ item.id }}
-          </router-link>
-          <a href="#" v-else>
+          <a href="#">
             {{ item.id }}
           </a>
         </td>
