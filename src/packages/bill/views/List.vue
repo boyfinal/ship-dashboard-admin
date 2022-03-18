@@ -496,9 +496,14 @@ export default {
       var today = new Date().getTime()
       if (this.userInfo.user_info && this.userInfo.user_info.debt_max_day > 0) {
         var debt_day = ''
+        var date = 0
         var day_user = new Date(this.userInfo.user_info.debt_time).getTime()
-        var distance = today - day_user
-        var date = Math.floor(distance / (1000 * 60 * 60 * 24))
+        if (!day_user) {
+          date = 0
+        } else {
+          var distance = today - day_user
+          date = Math.floor(distance / (1000 * 60 * 60 * 24))
+        }
         debt_day = this.userInfo.user_info.debt_max_day - date
 
         return debt_day > 0 ? ` (Còn ${debt_day} ngày)` : `(Còn 0 ngày)`
