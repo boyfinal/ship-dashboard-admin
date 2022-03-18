@@ -175,5 +175,14 @@
                 }
             }
         }
+        .svg {
+            opacity: 0;
+        }
+        tr:hover .svg {
+            opacity: 1;
+        }
+        .p-tooltip::after {
+            width: auto;
+        }
     }
 }
