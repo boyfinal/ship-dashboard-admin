@@ -405,7 +405,7 @@ export default {
       return `Sửa đơn ${this.code}`
     },
     placeholder() {
-      return `Phí re-label cho đơn ${this.code}`
+      return `Phí reship cho đơn ${this.code}`
     },
   },
   data() {
