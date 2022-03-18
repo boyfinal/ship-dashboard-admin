@@ -135,6 +135,11 @@
             float: left;
         }
     }
+    .sperate {
+        height: 1px;
+        width: 64px;
+        background-color: $color-neutral-3
+    }
 }
 
 .modal__edit-order {
