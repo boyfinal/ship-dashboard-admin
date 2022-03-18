@@ -175,6 +175,7 @@
                     <tr v-for="(item, i) in containers" :key="i">
                       <td>
                         <router-link
+                          class="text-no-underline"
                           :to="{
                             name: 'container-detail',
                             params: {
