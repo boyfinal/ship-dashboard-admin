@@ -137,6 +137,9 @@
 }
 
 .page-hub-search{
+    .table-responsive{
+        overflow: visible;
+    }
     .p-tooltip::after {
         width: auto;
     }
