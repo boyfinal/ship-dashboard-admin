@@ -137,6 +137,9 @@
 }
 
 .page-hub-search{
+    .p-tooltip::after {
+        width: auto;
+    }
   .date-search {
     margin-left: 8px;
     width: 20%;
@@ -225,8 +228,22 @@
         tr:hover .svg {
             opacity: 1;
         }
+
         .p-tooltip::after {
             width: auto;
         }
+
     }
 }
+
+.download-manifest {
+    opacity: 0;
+}
+tr:hover .download-manifest {
+    opacity: 1;
+}
+
+
+
+
+
