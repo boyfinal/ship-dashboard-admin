@@ -12,7 +12,7 @@
           @clear="clearSearch"
         >
         </p-input>
-        <div class="d-flex date-search">
+        <div class="d-flex date-search" v-if="!isTabPending">
           <p-datepicker
             :format="'dd/mm/yyyy'"
             class="p-input-group input-group"
@@ -140,6 +140,13 @@ export default {
     isTabPending() {
       return this.checkStatus(HUB_ITEM_FILTER_STATUS_PENDING_TEXT)
     },
+    labelDate() {
+      if (this.isTabExportHub) {
+        return `Tìm theo ngày xuất hub`
+      }
+
+      return `Tìm theo ngày nhập hub`
+    },
   },
   data() {
     return {
@@ -155,7 +162,6 @@ export default {
       isFetching: false,
       isShowModalReturn: false,
       current: {},
-      labelDate: `Tìm theo ngày`,
     }
   },
   mounted() {
@@ -255,6 +261,14 @@ export default {
       this.searchHandle()
     },
     'filter.status': function() {
+      this.filter.page = 1
+      this.searchHandle()
+    },
+    'filter.start_date': function() {
+      this.filter.page = 1
+      this.searchHandle()
+    },
+    'filter.end_date': function() {
       this.filter.page = 1
       this.searchHandle()
     },
