@@ -12,6 +12,20 @@
           @clear="clearSearch"
         >
         </p-input>
+        <div class="d-flex date-search">
+          <p-datepicker
+            :format="'dd/mm/yyyy'"
+            class="p-input-group input-group"
+            @update="selectDate"
+            :label="labelDate"
+            id="date-search"
+            :value="{
+              startDate: filter.start_date,
+              endDate: filter.end_date,
+            }"
+            @clear="clearSearchDate"
+          ></p-datepicker>
+        </div>
         <p-button
           id="export-btn"
           @click="searchHandle"
@@ -92,6 +106,7 @@ import TabExportHub from '../components/TabExportHub'
 import TabReship from '../components/TabReship'
 import TabPending from '../components/TabPending'
 import mixinBarcode from '@core/mixins/barcode'
+import { date } from '@core/utils/datetime'
 
 export default {
   name: 'HubSearch',
@@ -132,12 +147,15 @@ export default {
         search: '',
         status: HUB_ITEM_FILTER_STATUS_IN_TEXT,
         limit: 20,
+        start_date: '',
+        end_date: '',
         page: 1,
       },
       tabStatus: HUB_TAB,
       isFetching: false,
       isShowModalReturn: false,
       current: {},
+      labelDate: `Tìm theo ngày`,
     }
   },
   mounted() {
@@ -151,6 +169,15 @@ export default {
       returnSubmit: HUB_RETURN,
       fetchPackageDetail: FETCH_PACKAGE_DETAIL,
     }),
+    selectDate(v) {
+      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
+    },
+    clearSearchDate() {
+      this.filter.end_date = ''
+      this.filter.start_date = ''
+      this.filter.page = 1
+    },
     barcodeSubmit(keyword) {
       keyword = keyword.trim()
 

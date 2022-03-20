@@ -8,6 +8,7 @@
           <th>LIONBAY TRACKING</th>
           <th>LAST MILE TRACKING</th>
           <th>NHÃN KIỆN</th>
+          <th>NGÀY NHẬP</th>
           <!-- <th>TRẠNG THÁI</th> -->
         </template>
       </tr>
@@ -26,12 +27,15 @@
         <td>{{ item.code }}</td>
         <td>{{ item.tracking_number }}</td>
         <td>{{ item.label_number }}</td>
+        <td>{{ item.date }}</td>
         <!-- <td>{{ item.status }}</td> -->
       </tr>
     </tbody>
   </table>
 </template>
 <script>
+import { datetime } from '@/core/utils/datetime'
+
 export default {
   name: 'ListInHub',
   props: {
@@ -52,6 +56,7 @@ export default {
             label_number: item.tracking_number,
             status: '',
             route: { name: 'container-detail', params: { code: item.code } },
+            date: datetime(item.hub_imported_at, 'dd/MM/yyyy'),
           }
         }
 
@@ -64,6 +69,7 @@ export default {
             label_number: 'N/A',
             status: '',
             route: { name: 'package-detail', params: { id: item.id } },
+            date: datetime(item.hub_imported_at, 'dd/MM/yyyy'),
           }
         }
 

@@ -150,3 +150,35 @@
   }
 }
 
+.page-hub-search{
+  .date-search {
+    margin-left: 8px;
+    width: 20%;
+  }
+  #date-search {
+    max-width: 300px;
+    &+.close {
+        width: 100px;
+        height: 44px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+    .calendars {
+        min-width: 400px;
+    }
+    .show-ranges {
+        min-width: 712px;
+    }
+    .reportrange-text>div {
+        line-height: 30px;
+        font-weight: normal;
+        .label-date-picker {
+            color: $color-neutral-5;
+        }
+    }
+    .reportrange-text {
+        min-width: max-content;
+    }
+  }
+}
+
