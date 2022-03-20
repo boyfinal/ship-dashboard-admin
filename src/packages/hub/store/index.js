@@ -198,6 +198,10 @@ export const actions = {
       }
       return result
     }
+    result = {
+      success: true,
+      type: response.container ? 'container' : 'package',
+    }
     commit(
       GET_IMPORT_HUB_DETAIL,
       response.container ? response.container : response.package

@@ -72,6 +72,10 @@
     .btn-danger {
         min-width: fit-content;
     }
+    .p-tooltip::after {
+        width: fit-content;
+        white-space: nowrap;
+    }
     @media screen and (max-width: 1400px) {
         #tbl-packages {
             width: 1000px;

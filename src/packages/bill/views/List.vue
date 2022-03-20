@@ -229,20 +229,37 @@
         </div>
         <div class="col-4">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header jc-sb">
               <span>Khách hàng</span>
               <div
                 class="icon"
                 v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
               >
-                <p-svg
-                  name="download"
-                  @click.prevent="handleShowModalExport"
-                ></p-svg>
-                <p-svg
-                  name="setting_user"
-                  @click.prevent="handleShowModalSetting"
-                ></p-svg>
+                <p-tooltip
+                  :label="'Export công nợ'"
+                  size="large"
+                  position="top"
+                  type="dark"
+                  :active="true"
+                >
+                  <p-svg
+                    name="download"
+                    @click.prevent="handleShowModalExport"
+                  ></p-svg
+                ></p-tooltip>
+
+                <p-tooltip
+                  :label="'Cài đặt'"
+                  size="large"
+                  position="top"
+                  type="dark"
+                  :active="true"
+                >
+                  <p-svg
+                    name="setting_user"
+                    @click.prevent="handleShowModalSetting"
+                  ></p-svg>
+                </p-tooltip>
               </div>
             </div>
             <div class="card-body">
