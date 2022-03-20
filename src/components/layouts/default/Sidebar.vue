@@ -132,11 +132,11 @@ export default {
               title: 'Topup',
               alias: ['/transactions', '/transactions/:id'],
             },
-            {
-              route: '/debt',
-              title: 'Người dùng',
-              alias: ['/debt'],
-            },
+            // {
+            //   route: '/debt',
+            //   title: 'Người dùng',
+            //   alias: ['/debt'],
+            // },
           ],
         },
         // {
