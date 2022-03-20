@@ -27,7 +27,7 @@
         <td>{{ item.code }}</td>
         <td
           >{{ item.tracking_number }}
-          <span class="download-manifest" v-if="item.tracking_number != 'N/A'">
+          <span class="download-label" v-if="item.tracking_number != 'N/A'">
             <p-tooltip
               class="item_name"
               :label="`Download`"
@@ -90,7 +90,9 @@ export default {
             label_number: item.tracking_number,
             status: '',
             route: { name: 'container-detail', params: { code: item.code } },
-            date: datetime(item.hub_imported_at, 'dd/MM/yyyy'),
+            date: item.hub_imported_at
+              ? datetime(item.hub_imported_at, 'dd/MM/yyyy')
+              : 'N/A',
           }
         }
 
@@ -103,7 +105,9 @@ export default {
             label_number: 'N/A',
             status: '',
             route: { name: 'package-detail', params: { id: item.id } },
-            date: datetime(item.hub_imported_at, 'dd/MM/yyyy'),
+            date: item.hub_imported_at
+              ? datetime(item.hub_imported_at, 'dd/MM/yyyy')
+              : 'N/A',
             label_url: item.label_url,
           }
         }

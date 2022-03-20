@@ -24,7 +24,7 @@
         </td>
         <td
           >{{ item.tracking_number }}
-          <span class="download-manifest" v-if="item.label_url">
+          <span class="download-label" v-if="item.label_url">
             <p-tooltip
               class="item_name"
               :label="`Download`"
