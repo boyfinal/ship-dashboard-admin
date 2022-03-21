@@ -35,7 +35,7 @@
               <tr>
                 <th>Mã kiện hàng</th>
                 <th>Ngày tạo</th>
-                <th>Nhãn kiện hàng</th>
+                <th colspan="2">Nhãn kiện hàng</th>
                 <th class="text-center">Số lượng</th>
                 <th class="text-center">Trọng lượng</th>
                 <th class="text-center">Dài x Rộng x Cao</th>
@@ -58,7 +58,7 @@
                   <span v-else>{{ item.code }}</span>
                 </td>
                 <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                <td>
+                <td class="align-center" colspan="2">
                   <a
                     class="mr-2"
                     v-if="item.tracking_number"
@@ -70,7 +70,7 @@
                     <p-tooltip
                       class="item_name"
                       :label="`Download`"
-                      position="top"
+                      position="bottom"
                       type="dark"
                     >
                       <a
@@ -100,7 +100,7 @@
                     <p-tooltip
                       class="item_name"
                       :label="` Track `"
-                      position="top"
+                      position="bottom"
                       type="dark"
                     >
                       <a
