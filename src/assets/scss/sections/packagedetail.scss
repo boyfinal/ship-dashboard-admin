@@ -107,8 +107,11 @@
         width: 100%;
         margin-bottom: 25px;
     }
-    .card-header .card-title {
-        font-weight: 500;
+    .card-header {
+        justify-content: start;
+        .card-title {
+            font-weight: 500;
+        }
     }
     .card-block {
         height: 100%;
