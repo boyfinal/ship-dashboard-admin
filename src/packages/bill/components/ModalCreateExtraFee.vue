@@ -214,7 +214,9 @@ export default {
     extra_fee_type_id: {
       handler: function(id) {
         const type = this.types.find((item) => item.id === id)
-        if (type.name.trim().toLowerCase() !== 'phí phát sinh khác') {
+        if (type.name.trim().toLowerCase() === 'phí phát sinh khác') {
+          this.$set(this, 'description', '')
+        } else {
           this.$set(this, 'description', type.name)
         }
       },
