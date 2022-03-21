@@ -45,6 +45,7 @@
               <tr v-for="(item, i) in item.containers" :key="i">
                 <td>
                   <router-link
+                    v-if="isAdmin"
                     :to="{
                       name: 'container-detail',
                       params: {
@@ -53,8 +54,9 @@
                     }"
                   >
                     {{ item.code }}
-                  </router-link></td
-                >
+                  </router-link>
+                  <span v-else>{{ item.code }}</span>
+                </td>
                 <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                 <td>
                   <a
@@ -185,6 +187,9 @@ export default {
         containers: [],
       }))
     },
+    isAdmin() {
+      return this.$isAdmin()
+    },
   },
 
   methods: {
@@ -207,7 +212,6 @@ export default {
             item.containers = [...this.shipment.containers]
           }
         })
-        console.log(this.displayItems)
         this.opened.push(id)
       }
     },
