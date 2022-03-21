@@ -167,6 +167,14 @@ export default {
         return false
       }
 
+      if (this.amount.trim() === '') {
+        this.$toast.open({
+          type: 'error',
+          message: 'Chưa nhập phí !',
+        })
+        return false
+      }
+
       let amount = this.amount.replace(/\s+/g, '').replaceAll(',', '')
       if (!isFinite(amount)) {
         this.$toast.open({
