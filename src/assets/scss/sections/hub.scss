@@ -136,42 +136,42 @@
     }
 }
 
-.page-hub-search{
-    .table-responsive{
+.page-hub-search {
+    .table-responsive {
         overflow: visible;
     }
     .p-tooltip::after {
         width: auto;
     }
-  .date-search {
-    margin-left: 8px;
-    width: 20%;
-  }
-  #date-search {
-    max-width: 300px;
-    &+.close {
-        width: 100px;
-        height: 44px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
+    .date-search {
+        margin-left: 8px;
+        width: 20%;
     }
-    .calendars {
-        min-width: 400px;
-    }
-    .show-ranges {
-        min-width: 712px;
-    }
-    .reportrange-text>div {
-        line-height: 30px;
-        font-weight: normal;
-        .label-date-picker {
-            color: $color-neutral-5;
+    #date-search {
+        max-width: 300px;
+        &+.close {
+            width: 100px;
+            height: 44px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .calendars {
+            min-width: 400px;
+        }
+        .show-ranges {
+            min-width: 712px;
+        }
+        .reportrange-text>div {
+            line-height: 30px;
+            font-weight: normal;
+            .label-date-picker {
+                color: $color-neutral-5;
+            }
+        }
+        .reportrange-text {
+            min-width: max-content;
         }
     }
-    .reportrange-text {
-        min-width: max-content;
-    }
-  }
 }
 
 //search Hub 
@@ -207,7 +207,6 @@
                 tbody {
                     display: block;
                     max-height: 480px;
-                    overflow: auto;
                 }
                 thead,
                 tbody tr {
@@ -224,6 +223,11 @@
                     color: $color-neutral-9;
                 }
             }
+            .table-scroll {
+                tbody {
+                    overflow: auto;
+                }
+            }
         }
         .svg {
             opacity: 0;
@@ -231,22 +235,16 @@
         tr:hover .svg {
             opacity: 1;
         }
-
         .p-tooltip::after {
             width: auto;
         }
-
     }
 }
 
 .download-label {
     opacity: 0;
 }
+
 tr:hover .download-label {
     opacity: 1;
 }
-
-
-
-
-
