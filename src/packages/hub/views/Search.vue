@@ -19,6 +19,7 @@
             @update="selectDate"
             :label="labelDate"
             id="date-search"
+            :ranges="true"
             :value="{
               startDate: filter.start_date,
               endDate: filter.end_date,
