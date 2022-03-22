@@ -18,6 +18,7 @@
     :linkedCalendars="linkedCalendars"
     :dateFormat="dateFormat"
     :close-on-esc="true"
+    :ranges="ranges"
   >
     <div slot="input" slot-scope="picker" style="width: 100%;">
       <p-svg
@@ -57,10 +58,12 @@
       </span>
       <span
         v-else-if="
-          singleDatePicker && dateRange.startDate && label != 'dd/mm/yyyy'
+          singleDatePicker &&
+            (dateRange.startDate || dateRange.endDate) &&
+            label != 'dd/mm/yyyy'
         "
       >
-        {{ dateRange.startDate | date('dd/MM/yyyy') }}
+        {{ dateRange.startDate || dateRange.endDate | date('dd/MM/yyyy') }}
       </span>
       <span class="label-date-picker" v-else>{{ label }}</span>
       <span
@@ -143,6 +146,10 @@ export default {
       default() {
         return {}
       },
+    },
+    ranges: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
