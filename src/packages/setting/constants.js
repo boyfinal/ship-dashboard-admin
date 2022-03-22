@@ -1,27 +1,42 @@
+import {
+  ROLE_ADMIN,
+  ROLE_ACCOUNTANT,
+  ROLE_WAREHOUSE,
+  ROLE_SUPPORT,
+  ROLE_HUB,
+} from '@core/constants'
+
 export const USER_STATUS_DEACTIVE = 0
 export const USER_STATUS_ACTIVE = 1
 
+export const HUB_TYPE = 1
+export const WAREHOUSE_TYPE = 2
+
 export const USER_STATUS_TAB = {
-  'Không kích hoạt': 0,
-  'Kích hoạt': 1,
+  'Không hoạt động': 0,
+  'Hoạt động': 1,
 }
 
 export const ROLE = [
   {
-    key: 'admin',
+    key: ROLE_ADMIN,
     name: 'Admin',
   },
   {
-    key: 'accountant',
+    key: ROLE_ACCOUNTANT,
     name: 'Kế toán',
   },
   {
-    key: 'warehouse',
+    key: ROLE_WAREHOUSE,
     name: 'Kho',
   },
   {
-    key: 'support',
+    key: ROLE_SUPPORT,
     name: 'Support',
+  },
+  {
+    key: ROLE_HUB,
+    name: 'Hub',
   },
 ]
 

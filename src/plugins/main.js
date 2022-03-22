@@ -18,6 +18,9 @@ const MainPlugin = {
     Vue.prototype.$isWarehouse = function() {
       return this.$store.getters['auth/isWarehouse']
     }
+    Vue.prototype.$isHub = function() {
+      return this.$store.getters['auth/isHub']
+    }
     Vue.prototype.$hasAuthorize = function(key) {
       if (typeof ACL[key] === 'undefined') {
         return false

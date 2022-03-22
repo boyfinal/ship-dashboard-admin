@@ -110,7 +110,7 @@ export default {
           route: { name: 'packages' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse(),
+          disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/packages',
@@ -118,25 +118,25 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
-              route: '/bills',
-              title: 'Hóa đơn',
-              alias: ['/bills', '/bills/:code'],
-            },
-            {
-              route: '/transactions',
-              title: 'Thanh toán ',
-              alias: ['/transactions', '/transactions/:id'],
-            },
-            {
-              route: '/debt',
-              title: 'Người dùng',
-              alias: ['/debt'],
-            },
-            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
             },
+            {
+              route: '/bills',
+              title: 'Tài chính',
+              alias: ['/bills', '/bills/:code'],
+            },
+            {
+              route: '/transactions',
+              title: 'Topup',
+              alias: ['/transactions', '/transactions/:id'],
+            },
+            // {
+            //   route: '/debt',
+            //   title: 'Người dùng',
+            //   alias: ['/debt'],
+            // },
           ],
         },
         // {
@@ -154,7 +154,7 @@ export default {
           route: '/bill',
           class: '',
           isOpen: false,
-          disable: this.$isSupport(),
+          disable: this.$isSupport() || this.$isHub(),
           sub: [
             {
               route: '/warehouse',
@@ -185,35 +185,45 @@ export default {
             },
           ],
         },
-        // {
-        //   title: 'Hub',
-        //   icon: 'warehouse',
-        //   iconActive: 'warehouseActive',
-        //   route: '#',
-        //   class: '',
-        //   isOpen: false,
-        //   disable: this.$isSupport() || this.$isAccountant(),
-        //   sub: [
-        //     {
-        //       route: '/hubs/search',
-        //       title: 'Tra cứu đơn',
-        //       alias: ['/hubs/search'],
-        //       disable: this.$isSupport() || this.$isAccountant(),
-        //     },
-        //     {
-        //       route: '/hub/import',
-        //       title: 'Quét nhập hub',
-        //       alias: ['/hub/import'],
-        //       disable: this.$isSupport() || this.$isAccountant(),
-        //     },
-        //     {
-        //       route: '/hub/export',
-        //       title: 'Quét xuất hub',
-        //       alias: ['/hub/export'],
-        //       disable: this.$isSupport() || this.$isAccountant(),
-        //     },
-        //   ],
-        // },
+        {
+          title: 'Hub',
+          icon: 'warehouse',
+          iconActive: 'warehouseActive',
+          route: '#',
+          class: '',
+          isOpen: false,
+          disable:
+            this.$isSupport() || this.$isAccountant() || this.$isWarehouse(),
+          sub: [
+            {
+              route: '/hubs/search',
+              title: 'Tra cứu đơn',
+              alias: ['/hubs/search'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+            {
+              route: '/hub/import',
+              title: 'Quét nhập',
+              alias: ['/hub/import'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+            {
+              route: '/hub/export',
+              title: 'Quét xuất',
+              alias: ['/hub/export'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+          ],
+        },
         {
           title: 'Quản trị',
           icon: 'setting',
@@ -221,7 +231,7 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isWarehouse(),
+          disable: this.$isSupport() || this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/account',

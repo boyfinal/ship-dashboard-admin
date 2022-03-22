@@ -34,14 +34,14 @@ const ToastProgrammatic = {
       propsData,
     })
   },
-  error(message) {
-    this.open({ type: 'error', message })
+  error(message, options = {}) {
+    this.open({ ...options, type: 'error', message })
   },
-  success(message) {
-    this.open({ type: 'success', message })
+  success(message, options = {}) {
+    this.open({ ...options, type: 'success', message })
   },
-  warning(message) {
-    this.open({ type: 'warning', message })
+  warning(message, options = {}) {
+    this.open({ ...options, type: 'warning', message })
   },
 }
 

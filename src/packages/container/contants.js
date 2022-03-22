@@ -30,14 +30,14 @@ export const CONTAINER_STATUS_TAB = [
     value: CONTAINER_CANCEL,
     text: 'Đã hủy',
   },
-  // {
-  //   value: CONTAINER_IMPORT_HUB,
-  //   text: 'Hub đã nhận',
-  // },
-  // {
-  //   value: CONTAINER_EXPORT_HUB,
-  //   text: 'Hub đã xuất',
-  // },
+  {
+    value: CONTAINER_IMPORT_HUB,
+    text: 'Hub đã nhận',
+  },
+  {
+    value: CONTAINER_EXPORT_HUB,
+    text: 'Hub đã xuất',
+  },
 ]
 
 export const MAP_TEXT_STATUS_CONTAINER = [

@@ -3,6 +3,7 @@ import {
   ROLE_ACCOUNTANT,
   ROLE_WAREHOUSE,
   ROLE_SUPPORT,
+  ROLE_HUB,
 } from '@core/constants'
 import api from '../api'
 import AuthService from '@core/services/auth'
@@ -209,6 +210,9 @@ export const getters = {
   },
   isWarehouse(state) {
     return state.user.role === ROLE_WAREHOUSE
+  },
+  isHub(state) {
+    return state.user.role === ROLE_HUB
   },
 }
 

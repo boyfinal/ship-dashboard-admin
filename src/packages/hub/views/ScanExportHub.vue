@@ -3,71 +3,76 @@
     <div class="page-content">
       <div class="mb-24">
         <div class="row">
-          <div class="col-9">
+          <div class="col-4">
             <div class="card mb-16">
               <div class="card-body">
-                <div class="d-flex">
-                  <p-input
-                    prefixIcon="search"
-                    clearable
-                    type="search"
-                    :disabled="disableInput"
-                    v-model="keyword"
-                    @clear="clearInput"
-                    @keydown.enter.prevent="searchHandle"
-                    placeholder="Nhập mã kiện, mã đơn"
-                  ></p-input>
+                <div class="">
+                  <div class="d-flex">
+                    <p-input
+                      prefixIcon="search"
+                      clearable
+                      class="mb-8"
+                      type="search"
+                      :disabled="disableInput"
+                      v-model="keyword"
+                      @clear="clearInput"
+                      placeholder="Nhập mã kiện/ups, mã đơn/usps"
+                    ></p-input>
+                  </div>
                   <button
                     @click.prevent="searchHandle"
                     :disabled="disableBtnScan"
-                    class="btn btn-scan-info ml-3 text-nowrap"
+                    class="btn btn-scan-info  text-nowrap"
                     >Quét</button
                   >
                 </div>
               </div>
             </div>
 
-            <div class="card mb-16">
-              <div class="card-body">
-                <export-hub-tab :type="typeTab" v-model="filter.type" />
-                <div class="card-header">
-                  <div class="card-title">MÃ KIỆN/ĐƠN</div>
-                </div>
-                <div class="card-body list-container">
-                  <div v-if="codes.length > 0" class="export__hub-containers">
-                    <div class="container-item">
-                      <div
-                        class="container-code"
-                        v-for="(item, i) in codes"
-                        :key="i"
-                      >
-                        {{ item }}
-                        <p-button
-                          class="mr-2 btn-submit"
-                          type="info"
-                          @click.prevent="handelModalConfirm(item)"
-                        >
-                          Xuất
-                        </p-button>
-                      </div>
-                    </div>
-                  </div>
-                  <empty-search-result v-else></empty-search-result>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <p-pagination
-                :total="count"
-                :perPage.sync="filter.limit"
-                :current.sync="filter.page"
-                size="sm"
-              ></p-pagination>
-            </div>
+            <!--            <div class="card mb-16">-->
+            <!--              <div class="card-body">-->
+            <!--                <export-hub-tab :type="typeTab" v-model="filter.type" />-->
+            <!--                <div class="card-header">-->
+            <!--                  <div class="card-title">MÃ KIỆN/ĐƠN</div>-->
+            <!--                </div>-->
+            <!--                <div class="card-body list-container">-->
+            <!--                  <div v-if="codes.length > 0" class="export__hub-containers">-->
+            <!--                    <div class="container-item">-->
+            <!--                      <div-->
+            <!--                        class="container-code"-->
+            <!--                        v-for="(item, i) in codes"-->
+            <!--                        :key="i"-->
+            <!--                      >-->
+            <!--                        {{ item }}-->
+            <!--                        <p-button-->
+            <!--                          class="mr-2 btn-submit"-->
+            <!--                          type="info"-->
+            <!--                          @click.prevent="handelModalConfirm(item)"-->
+            <!--                        >-->
+            <!--                          Xuất-->
+            <!--                        </p-button>-->
+            <!--                      </div>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+            <!--                  <empty-search-result v-else></empty-search-result>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div class="d-flex justify-content-between align-items-center">-->
+            <!--              <p-pagination-->
+            <!--                :total="count"-->
+            <!--                :perPage.sync="filter.limit"-->
+            <!--                :current.sync="filter.page"-->
+            <!--                size="sm"-->
+            <!--              ></p-pagination>-->
+            <!--            </div>-->
           </div>
 
-          <div class="col-3">
-            <div v-if="filter.type == 'container'" class="card">
+          <div class="col-8">
+            <div
+              v-if="filter.type == 'container' && current_container.code"
+              class="card"
+            >
               <div class="card-header">
                 <div class="card-title">Thông tin kiện hàng</div>
               </div>
@@ -97,10 +102,21 @@
                   <span>Trạng thái:</span>
                   <span v-status:status="currentStatus"></span>
                 </div>
+                <hr class="hr mb-24 mt-24" />
+                <p-button
+                  class="mr-2 btn-submit"
+                  type="info"
+                  @click.prevent="handelModalConfirm(current_container.code)"
+                >
+                  Xuất
+                </p-button>
               </div>
             </div>
 
-            <div v-if="filter.type == 'package'" class="card">
+            <div
+              v-else-if="filter.type == 'package' && current_package.code"
+              class="card"
+            >
               <div class="card-header">
                 <div class="card-title">Thông tin đơn hàng</div>
               </div>
@@ -130,50 +146,66 @@
                   <span>Trạng thái:</span>
                   <span v-status:status="currentStatus"></span>
                 </div>
+                <hr class="hr mb-24 mt-24" />
+                <p-button
+                  class="mr-2 btn-submit"
+                  type="info"
+                  @click.prevent="handelModalConfirm(current_package.code)"
+                >
+                  Xuất
+                </p-button>
               </div>
+            </div>
+            <div v-else class="card">
+              <div class="card-header">
+                <div class="card-title">{{ convertHeader }}</div>
+              </div>
+              <EmptySearchResult
+                :type="filter.type === 'container' ? 'kiện' : 'đơn'"
+              ></EmptySearchResult>
             </div>
 
-            <div class="card list-export" v-if="filter.type == 'container'">
-              <div class="card-header">
-                <div class="card-title">Danh sách xuất kiện hàng</div>
-              </div>
-              <div class="card-body">
-                <div class="empty" v-if="listExportedContainer.length == 0">
-                  <p-svg name="empty"></p-svg>
-                  <p>Chưa có đơn hàng được quét!</p>
-                </div>
-                <div class="list-exported" v-else>
-                  <div
-                    class="item-exported"
-                    v-for="(item, i) in listExportedContainer"
-                    :key="i"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="card list-export" v-if="filter.type == 'container'">-->
+            <!--              <div class="card-header">-->
+            <!--                <div class="card-title">Danh sách xuất kiện hàng</div>-->
+            <!--              </div>-->
+            <!--              <div class="card-body">-->
+            <!--                <div class="empty" v-if="listExportedContainer.length == 0">-->
+            <!--                  <p-svg name="empty"></p-svg>-->
+            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
+            <!--                </div>-->
+            <!--                <div class="list-exported" v-else>-->
+            <!--                  <div-->
+            <!--                    class="item-exported"-->
+            <!--                    v-for="(item, i) in listExportedContainer"-->
+            <!--                    :key="i"-->
+            <!--                  >-->
+            <!--                    {{ item }}-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
 
-            <div class="card list-export" v-if="filter.type == 'package'">
-              <div class="card-header">
-                <div class="card-title">Danh sách xuất đơn hàng</div>
-              </div>
-              <div class="card-body">
-                <div class="empty" v-if="listExportedPackage.length == 0">
-                  <p-svg name="empty"></p-svg>
-                  <p>Chưa có đơn hàng được quét!</p>
-                </div>
-                <div class="list-exported" v-else>
-                  <div
-                    class="item-exported"
-                    v-for="(item, i) in listExportedPackage"
-                    :key="i"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!--            <div class="card list-export" v-if="filter.type == 'package'">-->
+            <!--              <div class="card-header">-->
+            <!--                <div class="card-title">Danh sách xuất đơn hàng</div>-->
+            <!--              </div>-->
+            <!--              <div class="card-body">-->
+            <!--                <div class="empty" v-if="listExportedPackage.length == 0">-->
+            <!--                  <p-svg name="empty"></p-svg>-->
+            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
+            <!--                </div>-->
+            <!--                <div class="list-exported" v-else>-->
+            <!--                  <div-->
+            <!--                    class="item-exported"-->
+            <!--                    v-for="(item, i) in listExportedPackage"-->
+            <!--                    :key="i"-->
+            <!--                  >-->
+            <!--                    {{ item }}-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
@@ -190,8 +222,9 @@
   </div>
 </template>
 <script>
-import ExportHubTab from '../components/ExportHubTab.vue'
-import EmptySearchResult from '@components/shared/EmptySearchResult'
+// import ExportHubTab from '../components/ExportHubTab.vue'
+// import EmptySearchResult from '@components/shared/EmptySearchResult'
+import EmptySearchResult from '../components/Empty'
 import mixinBarcode from '@core/mixins/barcode'
 import { mapActions, mapState } from 'vuex'
 import {
@@ -203,13 +236,13 @@ import PageLoading from '@components/shared/OverLoading'
 import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
 import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
-import { cloneDeep } from '../../../core/utils'
+
 import mixinRoute from '@core/mixins/route'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'ExportHub',
-  components: { PageLoading, EmptySearchResult, ExportHubTab, ModalConfirm },
+  components: { PageLoading, ModalConfirm, EmptySearchResult },
   mixins: [mixinBarcode, mixinRoute],
   computed: {
     ...mapState('hub', {
@@ -233,6 +266,19 @@ export default {
         const allstatus = MAP_NAME_STATUS_WAREHOUSE
         return (allstatus[this.current_package.status] || {}).value
       }
+    },
+    convertHeader() {
+      return `Thông tin ${
+        this.filter.type == 'container' ? 'kiện' : 'đơn'
+      } hàng`
+    },
+    searchPlaceholder() {
+      const maptext = {
+        container: 'Nhập mã kiện/ups',
+        package: 'Nhập mã đơn/ups',
+      }
+
+      return maptext[this.filter.type] || maptext['container']
     },
   },
   data() {
@@ -272,6 +318,10 @@ export default {
       listExportedContainer: [],
       listExportedPackage: [],
       isScan: false,
+      searchBy: {
+        container: 'Kiện hàng',
+        package: 'Đơn hàng',
+      },
     }
   },
   created() {
@@ -287,7 +337,6 @@ export default {
 
     async searchHandle() {
       this.filter.page = 1
-      this.clearData()
       const keyword = this.keyword.trim()
       if (!keyword) {
         this.$toast.open({
@@ -319,30 +368,21 @@ export default {
         code: keyword,
       }
       const result = await this[FETCH_LIST_IMPORTED](params)
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
-
-      params = {
-        type: this.filter.type,
-        code: keyword,
-      }
 
       this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
-      if (!res.success) {
+      if (!res.success || !result.success) {
         this.isFetchingImportHub = false
         this.isScan = false
-        this.$toast.open({
-          type: 'error',
-          message: res.message,
-          duration: 3000,
-        })
+        this.$toast.error(res.message, { duration: 3000 })
         return
       }
 
+      console.log(this.filter.type)
       this.isFetchingImportHub = false
+      this.isScan = false
+      this.filter.type = res.type
       if (this.filter.type == 'container') {
         this.current_container.code = this.current.code
         this.current_container.id = this.current.id
@@ -361,21 +401,21 @@ export default {
         this.current_package.width = this.current.width
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
-        this.current_package.tracking_number = this.current.tracking_number
+        this.current_package.tracking_number = this.current.tracking.tracking_number
         this.current_package.status = this.current.status
       }
     },
 
     async init() {
       this.isFetching = true
-      this.clearInput()
+      // this.clearData()
       this.handleUpdateRouteQuery()
-      let payload = cloneDeep(this.filter)
-      const result = await this[FETCH_LIST_IMPORTED](payload)
-      this.isFetching = false
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
-      }
+      // let payload = cloneDeep(this.filter)
+      // const result = await this[FETCH_LIST_IMPORTED](payload)
+      // this.isFetching = false
+      // if (!result.success) {
+      //   this.$toast.error(result.message)
+      // }
     },
 
     clearData() {
@@ -402,6 +442,9 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
+      if (keyword.length > 22 && this.filter.type == 'package') {
+        keyword = keyword.slice(-22)
+      }
       this.keyword = keyword
       this.searchHandle()
       this.disableInput = false
@@ -431,10 +474,12 @@ export default {
         return
       }
       this.isSubmitting = false
-      this.$toast.success(`Kiện ${payload.code} quét thành công`)
+
       if (this.filter.type == 'container') {
+        this.$toast.success(`Kiện ${payload.code} đã quét xuất hub thành công`)
         this.listExportedContainer.push(this.currentCode)
       } else if (this.filter.type == 'package') {
+        this.$toast.success(`Đơn ${payload.code} đã quét xuất hub thành công`)
         this.listExportedPackage.push(this.currentCode)
       }
       this.isScan = false
@@ -473,15 +518,6 @@ export default {
     filter: {
       handler: function() {
         this.init()
-      },
-      deep: true,
-    },
-    keyword: {
-      handler: function() {
-        if (this.keyword == '') {
-          this.filter.code = ''
-          this.init()
-        }
       },
       deep: true,
     },

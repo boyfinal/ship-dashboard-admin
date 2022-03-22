@@ -1,6 +1,6 @@
 <template>
   <div class="modal__edit-order">
-    <p-modal :active="visible" @close="handleClose" :title="`Sửa đơn`">
+    <p-modal :active="visible" @close="handleClose" :title="title">
       <template>
         <div class="modal__edit-order-header">
           <span style="margin-bottom: 3px">
@@ -11,29 +11,6 @@
         <div class="modal__edit-order-content">
           <div class="row sm-gutters  flex-nowrap">
             <div class="col-lg-6 col-xl-6 item-gutters ">
-              <!--              <div class="card__w">-->
-              <!--                <div class="card__w-header">-->
-              <!--                  Người gửi-->
-              <!--                </div>-->
-              <!--                <div class="card__w-content">-->
-              <!--                  <div class="card__w-item">-->
-              <!--                    <label class="card__w-label">-->
-              <!--                      Họ và tên: <span>*</span>-->
-              <!--                    </label>-->
-              <!--                    <div class="card__w-input">-->
-              <!--                      <multiselect-->
-              <!--                        class="multiselect-custom dropdown-reason"-->
-              <!--                        v-model="sender"-->
-              <!--                        :options="senders"-->
-              <!--                        placeholder="Chọn một "-->
-              <!--                        @select="handleSelect"-->
-              <!--                        :custom-label="customLabel"-->
-              <!--                      ></multiselect>-->
-              <!--                    </div>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-
               <div class="card__w">
                 <div class="card__w-header">
                   Người nhận
@@ -50,6 +27,7 @@
                         v-model="form.fullname"
                         :input="form.fullname"
                         name="name"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('fullname')"
                       />
                     </div>
@@ -66,6 +44,7 @@
                         v-model="form.phone"
                         :input="form.phone"
                         name="phone"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('phone')"
                       />
                     </div>
@@ -163,6 +142,46 @@
                   </div>
                 </div>
               </div>
+              <div class="card__w" v-if="isReLabel">
+                <div class="card__w-header">
+                  Phí reship
+                </div>
+                <div class="card__w-content">
+                  <div class="card__w-item">
+                    <label class="card__w-label"> Phí($):</label>
+                    <div class="card__w-input">
+                      <p-input
+                        placeholder="0"
+                        type="text"
+                        v-model="form.amount"
+                        :input="form.amount"
+                        name="amount"
+                        :disabled="!isReLabel"
+                        @change="formatAmount"
+                        @input="inputAmount"
+                      />
+                      <span class="invalid-error" v-if="validErrors.amount">
+                        {{ validErrors.amount }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="card__w-item">
+                    <label class="card__w-label">
+                      Nội dung :
+                    </label>
+                    <div class="card__w-input">
+                      <p-input
+                        :placeholder="placeholder"
+                        type="textarea"
+                        v-model="form.description"
+                        :input="form.description"
+                        name="description"
+                        :disabled="!isReLabel"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
@@ -198,6 +217,7 @@
                         v-model="form.order_number"
                         :input="form.order_number"
                         name="order_number"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('order_number')"
                       />
                     </div>
@@ -213,6 +233,7 @@
                         v-model="form.detail"
                         :input="form.detail"
                         name="detail"
+                        :disabled="isEditOrderReturn"
                         :error="valider.error('detail')"
                       />
                     </div>
@@ -292,6 +313,7 @@
                     </label>
                     <div class="card__w-input">
                       <multiselect
+                        :disabled="isEditOrderReturn"
                         class="multiselect-custom dropdown-reason"
                         v-model="service"
                         :options="services"
@@ -350,9 +372,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    info_user: {
-      type: Object,
-      default: () => {},
+    isEditOrderReturn: {
+      type: Boolean,
+      default: false,
+    },
+    isReLabel: {
+      type: Boolean,
+      default: false,
     },
     total: {
       type: Number,
@@ -366,6 +392,21 @@ export default {
     ...mapGetters('package', {
       services: GET_SERVICE,
     }),
+    code() {
+      return this.package_detail && this.package_detail.package.package_code
+        ? this.package_detail.package.package_code.code
+        : ''
+    },
+    title() {
+      if (this.isReLabel) {
+        return `Reship đơn ${this.code}`
+      }
+
+      return `Sửa đơn ${this.code}`
+    },
+    placeholder() {
+      return `Phí reship cho đơn ${this.code}`
+    },
   },
   data() {
     return {
@@ -392,10 +433,14 @@ export default {
         detail: '',
         address: '',
         address2: '',
+        amount: '',
+        description: '',
       },
       isDisable: true,
       isUpdate: false,
       valider: null,
+      validErrors: {},
+      fixAmount: 0,
     }
   },
   created() {
@@ -518,6 +563,8 @@ export default {
       this.form.countrycode = ''
       this.form.service = ''
       this.form.address = ''
+      this.form.amount = ''
+      this.form.description = ''
       this.valider.errors = null
       this.$emit('update:visible', false)
     },
@@ -545,7 +592,14 @@ export default {
       if (!this.valider.check(this.form)) {
         return
       }
+      if (Object.keys(this.validErrors).length > 0) {
+        return
+      }
       this.isUpdate = true
+
+      let amount = (this.form.amount || '0').trim()
+      amount = parseFloat(amount.replace(/,/g, '')).toFixed(2)
+
       const { id } = this.$route.params
       const params = {
         id: id,
@@ -565,25 +619,84 @@ export default {
         service: this.form.service.name,
         note: this.form.note,
         address_2: this.form.address2,
+        amount: parseFloat(amount),
+        description: this.form.description,
+        is_reship: this.isReLabel,
       }
-      let result = await this[UPDATE_PACKAGE](params)
-      if (result.error) {
-        this.isUpdate = false
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
-        return
-      }
-      this.$toast.open({
-        type: 'success',
-        message: 'Sửa đơn thành công',
-        duration: 3000,
-      })
+      // let result = await this[UPDATE_PACKAGE](params)
+      // if (result.error) {
+      //   this.isUpdate = false
+      //   this.$toast.open({
+      //     type: 'error',
+      //     message: result.message,
+      //     duration: 3000,
+      //   })
+      //   return
+      // }
+      // this.$toast.open({
+      //   type: 'success',
+      //   message: 'Sửa đơn thành công',
+      //   duration: 3000,
+      // })
       this.isUpdate = false
       this.handleClose()
-      this.$emit('create', true)
+      this.$emit('submit', params)
+    },
+
+    formatAmount() {
+      this.form.amount = this.toPrice(this.form.amount)
+      this.validErrors = {}
+    },
+
+    inputAmount() {
+      const n = this.form.amount.split('.')
+      if (String(n[1]).length > 2 && n.length >= 2) {
+        this.form.amount = this.form.amount.slice(0, -1)
+        console.log(this.form.amount)
+      }
+      this.fixAmount = this.form.amount
+
+      this.validErrors = {}
+      this.form.amount = String(this.form.amount).replace(/[^0-9.]/g, '')
+
+      if (this.form.amount < 0) {
+        this.validErrors.amount = 'Phí phát sinh phải >= 0'
+      }
+
+      const re = /[^0-9.,]/g
+
+      if (re.test(this.form.amount) || n.length > 2) {
+        this.validErrors.amount = 'Phí phát sinh không đúng định dạng'
+      }
+    },
+
+    toNumber(amount) {
+      amount = ('' + amount).trim()
+      amount = amount.trim().replace(/[^0-9.,]/g, '')
+      if (!amount) return 0
+
+      amount = amount.replace(/,/g, '').replace(/^0+/g, '')
+      const arr = amount.split('.')
+
+      let number = arr[0]
+      let decimal = arr[1]
+
+      amount = decimal ? `${number}.${decimal}` : number
+
+      if (decimal !== undefined && decimal.length >= 2) {
+        amount = (Math.floor(parseFloat(amount) * 100) / 100).toFixed(2)
+        decimal = amount.split('.')[1]
+      }
+
+      amount = decimal ? `${number}.${decimal}` : number
+      return parseFloat(amount)
+    },
+
+    toPrice(amount) {
+      amount = this.toNumber(amount)
+      if (amount === 0) return ''
+
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
   },
   watch: {
@@ -593,3 +706,9 @@ export default {
   },
 }
 </script>
+<style>
+.multiselect--disabled .multiselect__tags,
+.multiselect--disabled .multiselect__single {
+  background-color: #eee;
+}
+</style>

@@ -3,7 +3,7 @@ export const routes = [
     path: '/bills',
     name: 'bill-list',
     meta: {
-      title: 'Danh sách hóa đơn',
+      title: 'Quản lý tài chính',
     },
     component: () => import(/* webpackChunkName: "bills" */ './views/List.vue'),
   },

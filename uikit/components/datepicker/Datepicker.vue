@@ -18,7 +18,6 @@
     :linkedCalendars="linkedCalendars"
     :dateFormat="dateFormat"
     :close-on-esc="true"
-    :ranges="false"
   >
     <div slot="input" slot-scope="picker" style="width: 100%;">
       <p-svg
@@ -58,14 +57,22 @@
       </span>
       <span
         v-else-if="
-          singleDatePicker &&
-            (dateRange.startDate || dateRange.endDate) &&
-            label != 'dd/mm/yyyy'
+          singleDatePicker && dateRange.startDate && label != 'dd/mm/yyyy'
         "
       >
-        {{ dateRange.startDate || dateRange.endDate | date('dd/MM/yyyy') }}
+        {{ dateRange.startDate | date('dd/MM/yyyy') }}
       </span>
       <span class="label-date-picker" v-else>{{ label }}</span>
+      <span
+        class="clear-date"
+        v-if="dateRange.startDate && dateRange.endDate"
+        @click="clear"
+      >
+        <p-svg
+          name="x-sm"
+          style="float: right; margin-left: 2px; margin-top: 9px; margin-right: 2px"
+        ></p-svg>
+      </span>
     </div>
   </date-range-picker>
 </template>
@@ -168,6 +175,10 @@ export default {
     checkOpen(e) {
       this.$emit('check-open', e)
     },
+    clear() {
+      this.dateRange = {}
+      this.$emit('clear')
+    },
   },
   watch: {
     value: function(value) {
@@ -176,3 +187,11 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.clear-date {
+  position: relative;
+  margin-top: 10px;
+  margin-left: 3px;
+  top: -1px;
+}
+</style>

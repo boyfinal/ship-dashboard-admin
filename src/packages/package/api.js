@@ -60,4 +60,7 @@ export default {
   cancelPackages(payload) {
     return http.put(`/packages/cancel`, payload)
   },
+  reshipPackage(payload) {
+    return http.post(`/packages/${payload.id}/reship`, payload)
+  },
 }

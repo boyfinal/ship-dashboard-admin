@@ -172,14 +172,10 @@ export const actions = {
     let result = { success: true }
 
     let res = await api.fetchListImported(payload)
-    if (!res.codes || res.count == null) {
+    if (!res || res.error) {
       res.count = 0
-      result = {
-        success: false,
-        message: res.errorMessage || '',
-      }
-
-      return result
+      res.codes = []
+      result = { success: false, message: res.errorMessage || '' }
     }
 
     commit(FETCH_LIST_IMPORTED, res.codes)
@@ -201,6 +197,10 @@ export const actions = {
         message: response.errorMessage,
       }
       return result
+    }
+    result = {
+      success: true,
+      type: response.container ? 'container' : 'package',
     }
     commit(
       GET_IMPORT_HUB_DETAIL,

@@ -48,10 +48,14 @@
 }
 
 // Margin Top
+.mt-8 {
+    margin-top: 8px;
+}
 
 .mt-16 {
     margin-top: 16px;
 }
+
 .mt-20 {
     margin-top: 20px;
 }
@@ -110,4 +114,12 @@
 .py-5 {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.pl-0 {
+    padding-left: 0;
+}
+
+.pr-0 {
+    padding-right: 0;
 }

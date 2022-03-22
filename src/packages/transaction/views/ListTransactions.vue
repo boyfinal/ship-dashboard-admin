@@ -2,7 +2,7 @@
   <div class="list-transactions pages">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12" id="search-bar">
-        <div class="col-9 pl-0">
+        <div style="flex: auto; margin-right: 16px">
           <p-input
             :placeholder="getPlaceHolder"
             prefixIcon="search"
@@ -18,7 +18,7 @@
               {{ value }}
             </option>
           </p-select>
-          <p-select
+          <!-- <p-select
             class="ml-8"
             placeholder="Please select"
             v-model="filter.type"
@@ -27,7 +27,7 @@
             <option :value="key" v-for="(value, key) in optionType" :key="key">
               {{ value }}
             </option>
-          </p-select>
+          </p-select> -->
         </div>
       </div>
       <div class="card">
@@ -51,7 +51,6 @@
                 <thead>
                   <tr>
                     <template>
-                      <th>Loại</th>
                       <th>Ngày tạo</th>
                       <th>Trạng thái</th>
                       <th>Khách hàng</th>
@@ -64,11 +63,6 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in transactions" :key="i">
-                    <td :title="transactionType[item.type]">
-                      <span class="tool-tip">{{
-                        transactionType[item.type]
-                      }}</span>
-                    </td>
                     <td :title="item.created_at | date('dd/MM/yyyy')"
                       ><span>{{
                         item.created_at | date('dd/MM/yyyy')
@@ -219,12 +213,12 @@ export default {
         limit: 30,
         status: '',
         search: '',
-        search_by: 'bill_code',
+        search_by: 'account',
         type: 1,
       },
       isFetching: false,
       searchBy: {
-        bill_code: 'Mã hoá đơn',
+        // bill_code: 'Mã hoá đơn',
         account: 'Tài khoản khách hàng',
         account_full_name: 'Tên khách hàng',
       },

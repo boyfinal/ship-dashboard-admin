@@ -38,7 +38,7 @@
                   </thead>
 
                   <tbody>
-                    <tr v-for="(item, i) in listclaim" :key="i">
+                    <tr v-for="(item, i) in displayClaims" :key="i">
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -55,14 +55,10 @@
                           class="text-no-underline"
                           :to="{
                             name: 'package-detail',
-                            params: { id: item.package.id },
+                            params: { id: item.package_id },
                           }"
                         >
-                          {{
-                            item.package.package_code
-                              ? item.package.package_code.code
-                              : ''
-                          }}
+                          {{ item.package_code }}
                         </router-link>
                       </td>
                       <td width="150">
@@ -76,17 +72,15 @@
                           {{ truncate(item.title, 15) }}
                         </p-tooltip>
                       </td>
-                      <td>{{ handler(item) }}</td>
+                      <td>{{ item.supports }}</td>
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
                       <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
                       <td>
-                        <span
-                          v-status:status="converStatus(item.status)"
-                        ></span>
+                        <span v-status:status="item.status"></span>
                       </td>
                       <td width="40">
                         <router-link
-                          v-if="item.status_rep == claimCustomerReply"
+                          v-if="item.isCustomerReply"
                           class="text-no-underline"
                           :to="{
                             name: 'claim-detail',
@@ -143,7 +137,6 @@ export default {
       },
       isFetching: false,
       claimStatus: CLAIM_STATUS,
-      claimCustomerReply: CLAIM_CUSTOMER_REPLY,
     }
   },
   created() {
@@ -158,6 +151,31 @@ export default {
       listclaim: (state) => state.claims,
       totalCount: (state) => state.totalCount,
     }),
+
+    displayClaims() {
+      return (this.listclaim || []).map((item) => {
+        const supports = (item.supports || []).map(({ full_name }) => full_name)
+        return {
+          id: item.id,
+          package_id: item.package ? item.package.id : 0,
+          package_code:
+            item.package && item.package.package_code
+              ? item.package.package_code.code
+              : '',
+          title: item.title,
+          supports: supports.join(', '),
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          status:
+            item.status == 1
+              ? 'Đang xử lý'
+              : item.status == 2
+              ? 'Đã xử lý'
+              : 'Unknown',
+          isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
+        }
+      })
+    },
   },
   methods: {
     ...mapActions('claim', [FETCH_CLAIMS]),
@@ -171,17 +189,6 @@ export default {
         return
       }
       this.isFetching = false
-    },
-    handler(item) {
-      return item.admin ? item.admin.full_name : ''
-    },
-    converStatus(status) {
-      switch (status) {
-        case 1:
-          return 'Đang xử lý'
-        case 2:
-          return 'Đã xử lý'
-      }
     },
   },
   watch: {

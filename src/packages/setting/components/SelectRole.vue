@@ -7,8 +7,10 @@
     :custom-label="customLabel"
     :loading="isLoading"
     :item="item"
+    :openDirection="'below'"
     @select="handleSelect"
     @remove="handleRemove"
+    :disabled="disabled"
   >
   </multiselect>
 </template>
@@ -41,23 +43,33 @@ export default {
       type: Object,
       default: () => {},
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       selected: {
         key: 'more-filter',
-        name: 'Quyền',
+        name: this.placeHolder,
       },
       isLoading: false,
       users: [],
     }
   },
   created() {
-    this.selected = this.item
-      ? this.optionSearch.find((item) => item.key == this.item.role)
-      : this.selected
+    this.update()
   },
   methods: {
+    update() {
+      this.selected = this.item
+        ? this.optionSearch.find(
+            ({ key }) => key == this.item.role || key == this.item.warehouse_id
+          )
+        : this.selected
+    },
+
     customLabel({ key, name }) {
       return typeof key !== 'undefined' ? `${name}` : ''
     },
@@ -68,6 +80,14 @@ export default {
 
     handleRemove() {
       this.$emit('unselected', true)
+    },
+  },
+  watch: {
+    item: {
+      handler: function() {
+        this.update()
+      },
+      deep: true,
     },
   },
 }

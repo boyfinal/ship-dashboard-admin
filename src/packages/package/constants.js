@@ -192,6 +192,7 @@ export const CHANGE_PACKAGE_TYPE = [
   'Phí phát sinh khác',
   'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
   'Bỏ qua kiểm tra địa chỉ bằng API',
+  'Reship',
   'Mã đơn hàng',
 ]
 
@@ -238,7 +239,7 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     class: 'badge-danger',
   },
   [PackageStatusDelivered]: {
-    value: 'Xuất kho',
+    value: 'Giao thành công',
     class: 'badge-success',
   },
   [PackageStatusImportHub]: {

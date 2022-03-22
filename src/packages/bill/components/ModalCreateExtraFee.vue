@@ -2,7 +2,9 @@
   <p-modal :active="visible" :title="`Tạo phí phát sinh`" @close="handleClose">
     <div class="row mb-16">
       <div class="col-12">
-        <label for=""><b>Khách hàng</b></label>
+        <label for=""
+          ><b>Khách hàng</b>&ensp;<span style="color:red">*</span></label
+        >
         <user-resource
           v-model="user_id"
           class="user-resource is-fullwidth"
@@ -13,7 +15,9 @@
     </div>
     <div class="row mb-16">
       <div class="col-6">
-        <label for=""><b>Loại phí</b></label>
+        <label for=""
+          ><b>Loại phí</b>&ensp;<span style="color:red">*</span></label
+        >
         <p-select class="floating" v-model="extra_fee_type_id">
           <option v-for="type in types" :key="type.id" :value="type.id">{{
             type.name
@@ -23,11 +27,15 @@
     </div>
     <div class="row mb-16">
       <div class="col-6">
-        <label for=""><b>LionBay tracking</b></label>
+        <label for=""
+          ><b>LionBay tracking</b>&ensp;<span style="color:red">*</span></label
+        >
         <p-input type="text" v-model="package_code"> </p-input>
       </div>
       <div class="col-6">
-        <label for=""><b>Phí</b> ($)</label>
+        <label for=""
+          ><b>Phí</b> ($)&ensp;<span style="color:red">*</span>
+        </label>
         <p-input
           type="text"
           v-model="amount"
@@ -41,7 +49,9 @@
     </div>
     <div class="row mb-16">
       <div class="col-12">
-        <label for=""><b>Nội dung</b></label>
+        <label for=""
+          ><b>Nội dung</b>&ensp;<span style="color:red">*</span></label
+        >
         <textarea
           class="form-control"
           rows="4"
@@ -107,9 +117,9 @@ export default {
       number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
       if (decimal !== undefined && decimal.length >= 2) {
-        let formated = (Math.floor(this.amount * 100) / 100).toFixed(2)
-        decimal = formated.split('.')[1]
+        decimal = decimal.toString().slice(0, 2)
       }
+
       if (this.amount.includes('.')) {
         this.amount =
           decimal === undefined ? `${number}.` : `${number}.${decimal}`
@@ -126,8 +136,9 @@ export default {
       }
       this.txtError = ''
       let decimal = this.amount.split('.')[1]
+      let number = this.amount.split('.')[0]
       if (decimal !== undefined && decimal.length >= 2) {
-        this.amount = (Math.floor(this.amount * 100) / 100).toFixed(2)
+        this.amount = `${number}.${decimal.toString().slice(0, 2)}`
       }
     },
     validateParams() {
@@ -155,6 +166,15 @@ export default {
         })
         return false
       }
+
+      if (this.amount.trim() === '') {
+        this.$toast.open({
+          type: 'error',
+          message: 'Chưa nhập phí !',
+        })
+        return false
+      }
+
       let amount = this.amount.replace(/\s+/g, '').replaceAll(',', '')
       if (!isFinite(amount)) {
         this.$toast.open({
@@ -163,6 +183,15 @@ export default {
         })
         return false
       }
+
+      if (this.description === '') {
+        this.$toast.open({
+          type: 'error',
+          message: 'Chưa nhập nội dung !',
+        })
+        return false
+      }
+
       return true
     },
     async handleSave() {
@@ -188,6 +217,16 @@ export default {
         this.extra_fee_type_id = 10
         this.amount = ''
         this.description = ''
+      },
+    },
+    extra_fee_type_id: {
+      handler: function(id) {
+        const type = this.types.find((item) => item.id === id)
+        if (type.name.trim().toLowerCase() === 'phí phát sinh khác') {
+          this.$set(this, 'description', '')
+        } else {
+          this.$set(this, 'description', type.name)
+        }
       },
     },
   },

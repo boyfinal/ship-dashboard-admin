@@ -44,7 +44,8 @@
               :remove="removeElement"
             >
               <span class="multiselect__tag" :key="index">
-                <span v-text="getOptionLabel(option)"></span>
+                <span v-if="option.full_name">{{ option.full_name }}</span>
+                <span v-else v-text="getOptionLabel(option)"></span>
                 <i
                   aria-hidden="true"
                   tabindex="1"

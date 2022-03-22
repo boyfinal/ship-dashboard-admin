@@ -4,6 +4,7 @@ export const ROLE_ACCOUNTANT = 'accountant'
 export const ROLE_WAREHOUSE = 'warehouse'
 export const ROLE_SUPPORT = 'support'
 export const ROLE_CUSTOMER = 'customer'
+export const ROLE_HUB = 'hub'
 
 export const ACL_KEYS = {
   setStatusPaid: 'setStatusPaid',

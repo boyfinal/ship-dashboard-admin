@@ -2,12 +2,11 @@
   <p-modal
     class="modal-export"
     :active="visible"
-    :title="`Export file`"
+    :title="`Export công nợ`"
     @close="handleClose"
-    :close-outside="true"
   >
     <div class="row mb-16">
-      <div class="col-6">
+      <div class="col-6" v-if="!user">
         <label for=""><b>Khách hàng:</b></label>
         <user-resource
           v-model="user_id"
@@ -16,7 +15,7 @@
           :label="`Tìm khách hàng`"
         />
       </div>
-      <div class="col-6">
+      <div class="col-6" :class="{ 'col-12': user }">
         <label for=""><b>Trạng thái đơn hàng:</b></label>
         <multiselect
           placeholder="Chọn trạng thái"
@@ -97,6 +96,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    user: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -104,13 +107,14 @@ export default {
       status: '',
       start_date: '',
       end_date: '',
-      labelStart: 'Chọn ngày bắt đầu',
-      labelEnd: 'Chọn ngày kết thúc',
+      labelStart: 'Chọn ngày tạo hóa đơn',
+      labelEnd: 'Chọn ngày tạo hóa đơn',
     }
   },
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
+      this.$emit('close', true)
     },
     validateParams() {
       if (this.status.length == 0) {
@@ -148,7 +152,7 @@ export default {
       }
 
       const payload = {
-        user_id: this.user_id,
+        user_id: this.user ? this.user.id : this.user_id,
         status: this.status.map((x) => x.value),
         start_date: date(this.start_date, 'yyyy-MM-dd'),
         end_date: date(this.end_date, 'yyyy-MM-dd'),
@@ -163,8 +167,8 @@ export default {
         this.status = ''
         this.start_date = ''
         this.end_date = ''
-        this.labelStart = 'Chọn ngày bắt đầu'
-        this.labelEnd = 'Chọn ngày kết thúc'
+        this.labelStart = 'Chọn ngày tạo hóa đơn'
+        this.labelEnd = 'Chọn ngày tạo hóa đơn'
       },
     },
   },

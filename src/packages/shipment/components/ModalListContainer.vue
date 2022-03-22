@@ -115,7 +115,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    warehouse: {
+    hub: {
       type: Number,
       default: 0,
     },
@@ -148,7 +148,7 @@ export default {
       this.filter.limit = 10
       let payload = cloneDeep(this.filter)
       payload.not_in_shipment = true
-      payload.warehouse = this.warehouse
+      payload.warehouse = this.hub
       payload.search = payload.search.toUpperCase()
       const result = await this[FETCH_LIST_CONTAINERS_NO_BOX](payload)
       this.isFetching = false
