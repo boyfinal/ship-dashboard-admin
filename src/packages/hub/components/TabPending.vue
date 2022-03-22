@@ -61,7 +61,10 @@
         v-show="opened.includes(item.id) && !isFetching && item.containers"
       >
         <td colspan="2">
-          <table class="table table-container">
+          <table
+            class="table table-container"
+            :class="{ 'table-scroll': item.containers.length > 10 }"
+          >
             <thead>
               <tr>
                 <th>Mã kiện hàng</th>
