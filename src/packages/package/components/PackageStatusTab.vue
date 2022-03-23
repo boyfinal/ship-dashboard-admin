@@ -1,5 +1,9 @@
 <template>
-  <div id="nav_container" class="p-tabs nav-tabs-horizontal mt-24">
+  <div
+    id="nav_container"
+    class="p-tabs nav-tabs-horizontal mt-24"
+    style="overflow: hidden;"
+  >
     <button class="icon-nav next" @click="clickLeftNav">
       <div class="left-nav">
         <p-svg name="left_nav"></p-svg>
