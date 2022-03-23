@@ -6,16 +6,17 @@
     @close="handleClose"
   >
     <div class="row mb-16">
-      <div class="col-6" v-if="!user">
+      <div class="col-6">
         <label for=""><b>Khách hàng:</b></label>
         <user-resource
           v-model="user_id"
           class="user-resource is-fullwidth"
           :filter="{ role: 'customer' }"
           :label="`Tìm khách hàng`"
+          :search="user.email"
         />
       </div>
-      <div class="col-6" :class="{ 'col-12': user }">
+      <div class="col-6">
         <label for=""><b>Trạng thái đơn hàng:</b></label>
         <multiselect
           placeholder="Chọn trạng thái"
