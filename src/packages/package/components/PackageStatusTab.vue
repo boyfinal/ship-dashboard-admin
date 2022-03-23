@@ -166,7 +166,7 @@ export default {
 }
 </script>
 <style>
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1666px) {
   .icon-nav {
     display: block !important;
   }
@@ -175,7 +175,7 @@ export default {
     width: 400%;
   }
 }
-@media only screen and (min-width: 1367px) {
+@media only screen and (min-width: 1667px) {
   ul#nav_packages {
     right: 0 !important;
   }
