@@ -57,11 +57,8 @@ export default {
   created() {
     this.handleSearch = debounce(async function(search = '') {
       this.isLoading = true
-      if (!this.emitID) {
-        this.filter.not_limit = true
-      }
       let response = await api.fetchUsersByRole(
-        Object.assign({}, this.filter, { search: search })
+        Object.assign({}, this.filter, { search: search, not_limit: true })
       )
       if (response && response.errorMessage) {
         this.users = []
@@ -73,6 +70,10 @@ export default {
       if (this.search != '') {
         this.selected = this.users.filter((x) => x.email == this.search)
         this.user = this.users.find((x) => x.email == this.search)
+        if (this.emitID) {
+          this.$emit('input', this.user && this.user.id ? this.user.id : 0)
+          return
+        }
         this.$emit('input', this.user)
       }
     }, 500)
@@ -108,6 +109,8 @@ export default {
         return
       }
       this.$emit('input', user)
+      // this.selected=user
+      // console.log(this.selected);
     },
 
     handleRemove() {
