@@ -13,7 +13,7 @@
           class="user-resource is-fullwidth"
           :filter="{ role: 'customer' }"
           :label="`Tìm khách hàng`"
-          :search="user.email"
+          :search="user ? user.email : ''"
         />
       </div>
       <div class="col-6">
@@ -153,7 +153,7 @@ export default {
       }
 
       const payload = {
-        user_id: this.user ? this.user.id : this.user_id,
+        user_id: this.user_id,
         status: this.status.map((x) => x.value),
         start_date: date(this.start_date, 'yyyy-MM-dd'),
         end_date: date(this.end_date, 'yyyy-MM-dd'),
