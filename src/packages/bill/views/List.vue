@@ -275,7 +275,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div v-if="userInfo">
+              <div v-if="filter.search_by == 'customer' && userInfo">
                 <div class="row">
                   <div class="col-5">Tên:</div>
                   <div class="col-7">{{ userInfo.full_name }}</div>
@@ -500,6 +500,9 @@ export default {
     }),
     ...mapState('shared', {
       user: (state) => state.user,
+    }),
+    ...mapState('setting', {
+      user_info: (state) => state.user_info,
     }),
 
     transBills() {
@@ -817,6 +820,7 @@ export default {
 
     updateSuccess() {
       this.isVisibleEditUser = false
+      this.userInfo.user_info = this.user_info
       if (this.filter.tab == 'topup') {
         this.initTopup()
       } else this.init()
