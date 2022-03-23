@@ -526,4 +526,10 @@ export default {
   pointer-events: none;
   z-index: 999;
 }
+.list-transactions .btn-info {
+  white-space: nowrap;
+}
+.list-transactions .btn-danger {
+  white-space: nowrap;
+}
 </style>
