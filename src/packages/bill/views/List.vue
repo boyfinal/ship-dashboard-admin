@@ -137,6 +137,7 @@
                             <th class="content">Nội dung</th>
                             <th>Hình thức</th>
                             <th>Giá trị</th>
+                            <th>Người xác nhận</th>
                             <th v-if="filter.type == 1">Thao tác</th>
                           </template>
                         </tr>
@@ -196,6 +197,7 @@
                               {{ Math.abs(item.amount) | formatPrice }}</span
                             >
                           </td>
+                          <td>{{ item.admin ? item.admin.full_name : '' }}</td>
                           <td class="btn-action" v-if="filter.type == 1">
                             <div v-if="showBtn(item)" style="display: flex">
                               <p-button
