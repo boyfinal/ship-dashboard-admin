@@ -9,6 +9,7 @@
     @search-change="fetchUsers"
     @select="handleSelect"
     @remove="handleRemove"
+    :emitID="emitID"
   >
   </multiselect>
 </template>
@@ -31,6 +32,14 @@ export default {
     label: {
       type: String,
       default: 'Search user',
+    },
+    emitID: {
+      type: Boolean,
+      default: true,
+    },
+    search: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -58,6 +67,7 @@ export default {
 
       this.users = response.users
       this.isLoading = false
+      this.selected = this.users.filter((x) => x.email == this.search)
     }, 500)
   },
   methods: {
@@ -85,12 +95,20 @@ export default {
         : `${full_name} - ${phone_number}`
     },
 
-    handleSelect(shop) {
-      this.$emit('input', shop && shop.id ? shop.id : 0)
+    handleSelect(user) {
+      if (this.emitID) {
+        this.$emit('input', user && user.id ? user.id : 0)
+        return
+      }
+      this.$emit('input', user && user.email ? user.email : '')
     },
 
     handleRemove() {
-      this.$emit('input', 0)
+      if (this.emitID) {
+        this.$emit('input', 0)
+        return
+      }
+      this.$emit('input', '')
     },
   },
   // watch: {
