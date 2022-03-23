@@ -225,7 +225,9 @@ export default {
 
       const payload = {
         id: this.current.id,
-        debt_max_amount: parseFloat(this.debt_max_amount.replaceAll(',', '')),
+        debt_max_amount: this.debt_max_amount
+          ? parseFloat(this.debt_max_amount.replaceAll(',', ''))
+          : 0,
         debt_max_day: parseInt(this.debt_max_day.value),
         class: parseInt(this.type.value),
       }
