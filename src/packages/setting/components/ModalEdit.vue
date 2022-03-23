@@ -213,13 +213,12 @@ export default {
         this.$toast.error('Hạng không được để trống')
         return
       }
-
-      if (!this.debt_max_amount && this.paymentType === 1) {
+      if (!this.debt_max_amount && this.paymentType == 1) {
         this.$toast.error('Hạn mức không được để trống')
         return
       }
 
-      if (this.debt_max_day == null && this.paymentType === 1) {
+      if (this.debt_max_day == null && this.paymentType == 1) {
         this.$toast.error('Thời gian nợ không được để trống')
         return
       }
