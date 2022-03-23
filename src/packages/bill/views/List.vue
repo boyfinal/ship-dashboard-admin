@@ -254,6 +254,7 @@
                   position="top"
                   type="dark"
                   :active="true"
+                  v-if="$isAdmin()"
                 >
                   <p-svg
                     name="setting_user"

@@ -58,22 +58,22 @@
               <label class="color-newtral-10 mb-5"
                 >Hạn mức nợ tối đa ($):</label
               >
-              <multiselect
+              <!-- <multiselect
                 placeholder="Chọn hạn mức"
                 v-model="debt_max_amount"
                 label="value"
                 track-by="value"
                 :options="debtLimit"
               >
-              </multiselect>
-              <!-- <p-input
+              </multiselect> -->
+              <p-input
                 type="text"
                 name="debt_max_amount"
                 @input="onChangeAmount"
-                :value="user.debt_max_amount"
+                :value="debt_max_amount"
                 min="0"
                 :error="valider.error('debt_max_amount')"
-              /> -->
+              />
             </div>
             <div class="col-6">
               <label class="color-newtral-10 mb-5"
@@ -125,6 +125,7 @@
 import { parseInt } from 'lodash'
 import { mapActions } from 'vuex'
 import { UPDATE_USER_INFO } from '../store/index'
+import valider from '@core/valider'
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -146,18 +147,18 @@ export default {
     },
   },
   created() {
-    // this.valider = valider.schema((y) => ({
-    //   debt_max_day: y
-    //     .number()
-    //     .typeError('Thời gian công nợ không hợp lệ')
-    //     .integer('Thời gian công nợ không hợp lệ')
-    //     .min(0, 'Thời gian công nợ không hợp lệ'),
-    //   debt_max_amount: y
-    //     .number()
-    //     .typeError('Hạn mức công nợ không hợp lệ')
-    //     .min(0, 'Hạn mức công nợ không hợp lệ'),
-    // }))
-    // this.valider.reset()
+    this.valider = valider.schema((y) => ({
+      // debt_max_day: y
+      //   .number()
+      //   .typeError('Thời gian công nợ không hợp lệ')
+      //   .integer('Thời gian công nợ không hợp lệ')
+      //   .min(0, 'Thời gian công nợ không hợp lệ'),
+      debt_max_amount: y
+        .number()
+        .typeError('Hạn mức công nợ không hợp lệ')
+        .min(0, 'Hạn mức công nợ không hợp lệ'),
+    }))
+    this.valider.reset()
   },
   data() {
     return {
@@ -224,7 +225,7 @@ export default {
 
       const payload = {
         id: this.current.id,
-        debt_max_amount: parseFloat(this.debt_max_amount.value),
+        debt_max_amount: parseFloat(this.debt_max_amount.replaceAll(',', '')),
         debt_max_day: parseInt(this.debt_max_day.value),
         class: parseInt(this.type.value),
       }
@@ -241,7 +242,13 @@ export default {
       this.$emit('success', true)
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
-
+    onChangeAmount(e) {
+      this.debt_max_amount = 0
+      let value = e.trim()
+      value = value.replace(/,/g, '').replace(/^0+/, '')
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      this.debt_max_amount = value
+    },
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close', true)
@@ -260,11 +267,10 @@ export default {
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
 
         if (this.paymentType == 1) {
-          this.debt_max_amount = info.debt_max_amount
-            ? this.debtLimit.find((i) => {
-                return i.value == info.debt_max_amount
-              })
-            : this.debtLimit[0]
+          this.debt_max_amount =
+            info.debt_max_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0
           this.debt_max_day = info.debt_max_day
             ? this.dayLimit.find((i) => {
                 return i.value == info.debt_max_day
