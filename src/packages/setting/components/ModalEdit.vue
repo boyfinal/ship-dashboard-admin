@@ -289,11 +289,10 @@ export default {
       if (val == 1) {
         const info = val.user_info || {}
 
-        this.debt_max_amount = info.debt_max_amount
-          ? this.debtLimit.find((i) => {
-              return i.value == info.debt_max_amount
-            })
-          : this.debtLimit[0]
+        this.debt_max_amount =
+          info.debt_max_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0
         this.debt_max_day = info.debt_max_day
           ? this.dayLimit.find((i) => {
               return i.value == info.debt_max_day
