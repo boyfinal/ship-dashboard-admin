@@ -213,12 +213,12 @@ export default {
         return
       }
 
-      if (this.debt_max_amount == null) {
+      if (!this.debt_max_amount && this.paymentType === 1) {
         this.$toast.error('Hạn mức không được để trống')
         return
       }
 
-      if (this.debt_max_day == null) {
+      if (this.debt_max_day == null && this.paymentType === 1) {
         this.$toast.error('Thời gian nợ không được để trống')
         return
       }
@@ -286,7 +286,7 @@ export default {
     paymentType(val) {
       if (val == 0) {
         this.debt_max_day = 0
-        this.debt_max_amount = 0
+        this.debt_max_amount = ''
       }
       if (val == 1) {
         const info = val.user_info || {}
