@@ -18,12 +18,12 @@
           class="btn btn-info ml-3 text-nowrap"
           >Export</p-button
         >
-        <p-button
+        <!-- <p-button
           id="export-btn"
           @click="handleShowModalCreateLabelPdf"
           class="btn btn-info ml-3 text-nowrap"
           >Create Labels PDF</p-button
-        >
+        > -->
       </div>
       <div class="card">
         <div class="card-body">
