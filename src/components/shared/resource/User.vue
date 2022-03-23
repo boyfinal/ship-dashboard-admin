@@ -22,7 +22,7 @@ export default {
   name: 'ResourceUser',
   props: {
     value: {
-      type: [Number, String],
+      type: [Number, String, Object],
       default: 0,
     },
     filter: {
@@ -58,7 +58,7 @@ export default {
     this.handleSearch = debounce(async function(search = '') {
       this.isLoading = true
       let response = await api.fetchUsersByRole(
-        Object.assign({}, this.filter, { search: search })
+        Object.assign({}, this.filter, { search: search, not_limit: true })
       )
       if (response && response.errorMessage) {
         this.users = []
@@ -67,7 +67,15 @@ export default {
 
       this.users = response.users
       this.isLoading = false
-      this.selected = this.users.filter((x) => x.email == this.search)
+      if (this.search != '') {
+        this.selected = this.users.filter((x) => x.email == this.search)
+        this.user = this.users.find((x) => x.email == this.search)
+        if (this.emitID) {
+          this.$emit('input', this.user && this.user.id ? this.user.id : 0)
+          return
+        }
+        this.$emit('input', this.user)
+      }
     }, 500)
   },
   methods: {
@@ -100,7 +108,9 @@ export default {
         this.$emit('input', user && user.id ? user.id : 0)
         return
       }
-      this.$emit('input', user && user.email ? user.email : '')
+      this.$emit('input', user)
+      // this.selected=user
+      // console.log(this.selected);
     },
 
     handleRemove() {
@@ -108,7 +118,7 @@ export default {
         this.$emit('input', 0)
         return
       }
-      this.$emit('input', '')
+      this.$emit('input', null)
     },
   },
   // watch: {

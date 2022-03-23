@@ -57,6 +57,7 @@ export const state = {
     service: 0,
   },
   rate_exchange: 0,
+  user_info: {},
 }
 
 /**
@@ -136,6 +137,9 @@ export const mutations = {
 
       return item
     })
+  },
+  [UPDATE_USER_INFO]: (state, payload) => {
+    state.user_info = payload
   },
 }
 
@@ -294,6 +298,7 @@ export const actions = {
       return { error: true, message: res.errorMessage || '' }
     }
 
+    commit(UPDATE_USER_INFO, res.user_info)
     return { error: false }
   },
 
