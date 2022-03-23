@@ -2,7 +2,8 @@
     .table-responsive {
         overflow-x: auto;
     }
-    #search {
+    #search,
+    #search>.multiselect__tags {
         border-top-right-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
     }

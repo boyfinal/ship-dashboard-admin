@@ -12,8 +12,20 @@
             v-model="filter.search"
             @keyup.enter="handleSearch"
             @clear="handleSearch"
+            v-if="filter.search_by != 'customer'"
           >
           </p-input>
+          <user-resource
+            id="search"
+            v-else
+            v-model="filter.search"
+            class="user-resource is-fullwidth"
+            :filter="{ role: 'customer' }"
+            :search="filter.search"
+            :label="`Tìm khách hàng`"
+            :emitID="false"
+            @input="handleSearch"
+          />
           <div class="">
             <select
               v-model="filter.search_by"
@@ -406,6 +418,7 @@ import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import { EXPORT_PACKAGE } from '../../setting/store/index'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { truncate } from '@core/utils/string'
+import UserResource from '@/components/shared/resource/User'
 
 export default {
   name: 'BillList',
@@ -416,6 +429,7 @@ export default {
     ModalConfirm,
     ModalEditUser,
     ModalExport,
+    UserResource,
   },
   data() {
     return {
@@ -666,13 +680,13 @@ export default {
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Thanh toán hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypeRefund:
           path = this.$router.resolve({
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Hoàn tiền  hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypePayoneer:
           return `#${transaction.description}`
         case TransactionLogTypePingPong:
