@@ -69,8 +69,9 @@
               <p-input
                 type="text"
                 name="debt_max_amount"
-                @input="onChangeAmount"
-                :value="debt_max_amount"
+                @input="validateAmount"
+                v-model="debt_max_amount"
+                @change="onChangeAmount"
                 min="0"
                 :error="valider.error('debt_max_amount')"
               />
@@ -244,12 +245,29 @@ export default {
       this.$emit('success', true)
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
-    onChangeAmount(e) {
-      this.debt_max_amount = 0
-      let value = e.trim()
+    onChangeAmount() {
+      let value = this.debt_max_amount
+      let decimal = value.split('.')[1]
+      let number = value.split('.')[0]
       value = value.replace(/,/g, '').replace(/^0+/, '')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      this.debt_max_amount = value
+      number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      if (value.includes('.')) {
+        this.debt_max_amount =
+          decimal === undefined ? `${number}.` : `${number}.${decimal}`
+      } else {
+        this.debt_max_amount = number
+      }
+    },
+    validateAmount() {
+      this.debt_max_amount = this.debt_max_amount
+        // eslint-disable-next-line no-useless-escape
+        .replace(/[^\d\.]+/g, '')
+        .replace(/(\..*)\./g, '$1')
+      let decimal = this.debt_max_amount.split('.')[1]
+      let number = this.debt_max_amount.split('.')[0]
+      if (decimal !== undefined && decimal.length >= 2) {
+        this.debt_max_amount = `${number}.${decimal.toString().slice(0, 2)}`
+      }
     },
     handleClose() {
       this.$emit('update:visible', false)
