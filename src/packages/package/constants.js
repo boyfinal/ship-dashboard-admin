@@ -14,6 +14,7 @@ export const PackageStatusDelivered = 60
 export const PackageStatusReturned = 40
 export const PackageStatusCancelled = 50
 export const PackageStatusExpired = 70
+export const PackageStatusUndelivered = 90
 
 export const PackageStatusCreatedText = 'pending'
 export const PackageStatusPendingPickupText = 'pre-transit'
@@ -25,6 +26,7 @@ export const PackageStatusDeliveredText = 'delivered'
 export const PackageStatusAlertText = 'alert'
 export const PackageStatusCancelledText = 'canceled'
 export const PackageStatusExpiredText = 'expired'
+export const PackageStatusUndeliveredText = 'undelivered'
 
 export const PackageAlertTypeOverPretransit = 1
 export const PackageAlertTypeWarehoseReturn = 2
@@ -66,6 +68,10 @@ export const PACKAGE_STATUS_TAB = [
   {
     value: PackageStatusExpiredText,
     text: 'Expired',
+  },
+  {
+    value: PackageStatusUndeliveredText,
+    text: 'Undelivered',
   },
 ]
 
@@ -126,6 +132,10 @@ export const MAP_NAME_STATUS_PACKAGE = {
     value: 'In-Transit',
     class: 'badge-success',
   },
+  [PackageStatusUndelivered]: {
+    value: 'Undelivered',
+    class: 'badge-danger',
+  },
 }
 
 export const MAP_NAME_STATUS_STRING_PACKAGE = {
@@ -163,6 +173,10 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   },
   [PackageStatusExpiredText]: {
     value: 'expired',
+    class: 'badge-expired',
+  },
+  [PackageStatusUndeliveredText]: {
+    value: 'undelivered',
     class: 'badge-expired',
   },
 }
@@ -249,5 +263,9 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
   [PackageStatusExportHub]: {
     value: 'Hub đã xuất',
     class: 'badge-success',
+  },
+  [PackageStatusUndelivered]: {
+    value: 'Giao không thành công',
+    class: 'badge-expired',
   },
 }
