@@ -22,7 +22,7 @@ export default {
   name: 'ResourceUser',
   props: {
     value: {
-      type: [Number, String],
+      type: [Number, String, Object],
       default: 0,
     },
     filter: {
@@ -100,7 +100,7 @@ export default {
         this.$emit('input', user && user.id ? user.id : 0)
         return
       }
-      this.$emit('input', user && user.email ? user.email : '')
+      this.$emit('input', user)
     },
 
     handleRemove() {
@@ -108,7 +108,7 @@ export default {
         this.$emit('input', 0)
         return
       }
-      this.$emit('input', '')
+      this.$emit('input', null)
     },
   },
   // watch: {
