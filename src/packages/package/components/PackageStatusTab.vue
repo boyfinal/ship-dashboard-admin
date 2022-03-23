@@ -180,4 +180,10 @@ export default {
     right: 0 !important;
   }
 }
+ul#nav_packages {
+  flex-wrap: nowrap;
+}
+ul#nav_packages .nav-item {
+  white-space: nowrap;
+}
 </style>
