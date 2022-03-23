@@ -108,6 +108,8 @@ export default {
         return
       }
       this.$emit('input', user)
+      // this.selected=user
+      // console.log(this.selected);
     },
 
     handleRemove() {
