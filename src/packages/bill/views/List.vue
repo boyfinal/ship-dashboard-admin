@@ -680,13 +680,13 @@ export default {
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Thanh toán hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypeRefund:
           path = this.$router.resolve({
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Hoàn tiền  hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypePayoneer:
           return `#${transaction.description}`
         case TransactionLogTypePingPong:
