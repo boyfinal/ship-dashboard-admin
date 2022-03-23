@@ -70,6 +70,10 @@ export default {
       if (this.search != '') {
         this.selected = this.users.filter((x) => x.email == this.search)
         this.user = this.users.find((x) => x.email == this.search)
+        if (this.emitID) {
+          this.$emit('input', this.user && this.user.id ? this.user.id : 0)
+          return
+        }
         this.$emit('input', this.user)
       }
     }, 500)
