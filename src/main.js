@@ -11,8 +11,6 @@ import store from './core/store'
 import '../uikit'
 import './core/icons'
 import { VclTable } from 'vue-content-loading'
-import InlineSvg from 'vue-inline-svg'
-Vue.component('inline-svg', InlineSvg)
 Vue.use(VueClipboard)
 
 Vue.use(Notifications)
