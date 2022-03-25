@@ -113,6 +113,7 @@ const getFormatStatus = (status) => {
     case 'Hết hạn':
     case 'expired':
     case 'undelivered':
+    case 'Giao không thành công':
       statusClass = 'expired'
       break
     case 'confirm payment':
