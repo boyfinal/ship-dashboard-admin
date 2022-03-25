@@ -18,7 +18,7 @@
           <user-resource
             id="search"
             v-else
-            v-model="filter.search"
+            v-model="userInfo"
             class="user-resource is-fullwidth"
             :filter="{ role: 'customer' }"
             :search="filter.search"
@@ -137,6 +137,7 @@
                             <th class="content">Nội dung</th>
                             <th>Hình thức</th>
                             <th>Giá trị</th>
+                            <th>Người xác nhận</th>
                             <th v-if="filter.type == 1">Thao tác</th>
                           </template>
                         </tr>
@@ -196,6 +197,7 @@
                               {{ Math.abs(item.amount) | formatPrice }}</span
                             >
                           </td>
+                          <td>{{ item.admin ? item.admin.full_name : '' }}</td>
                           <td class="btn-action" v-if="filter.type == 1">
                             <div v-if="showBtn(item)" style="display: flex">
                               <p-button
@@ -276,7 +278,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div v-if="userInfo">
+              <div v-if="filter.search_by == 'customer' && userInfo">
                 <div class="row">
                   <div class="col-5">Tên:</div>
                   <div class="col-7">{{ userInfo.full_name }}</div>
@@ -292,7 +294,7 @@
                 <div class="row">
                   <div class="col-5">Kiểu thanh toán:</div>
                   <div class="col-7">{{
-                    userInfo.user_info.debt_max_amount > 0
+                    userInfo.user_info && userInfo.user_info.debt_max_amount > 0
                       ? 'Trả sau'
                       : 'Trả trước'
                   }}</div>
@@ -314,14 +316,16 @@
                 <div class="row">
                   <div class="col-5">Công nợ cho phép:</div>
                   <div class="col-7">{{
-                    userInfo.user_info.debt_max_amount | formatPrice
+                    (userInfo.user_info
+                      ? userInfo.user_info.debt_max_amount
+                      : 0) | formatPrice
                   }}</div>
                 </div>
                 <div class="row">
                   <div class="col-5">Thời gian cho phép:</div>
                   <div class="col-7">
                     {{
-                      userInfo.user_info.debt_max_day > 0
+                      userInfo.user_info && userInfo.user_info.debt_max_day > 0
                         ? `${userInfo.user_info.debt_max_day} ngày`
                         : '-'
                     }}
@@ -500,6 +504,9 @@ export default {
     ...mapState('shared', {
       user: (state) => state.user,
     }),
+    ...mapState('setting', {
+      user_info: (state) => state.user_info,
+    }),
 
     transBills() {
       return this.bills.map((item) => {
@@ -612,9 +619,6 @@ export default {
         this.$toast.error(res.message)
         return
       }
-      if (this.filter.search_by == 'customer' && this.filter.search != '') {
-        this.userInfo = this.bills.length > 0 ? { ...this.bills[0].user } : null
-      } else this.userInfo = null
     },
     async initTopup() {
       this.isFetching = true
@@ -626,10 +630,6 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      if (this.filter.search_by == 'customer' && this.filter.search != '') {
-        this.userInfo =
-          this.transactions.length > 0 ? { ...this.transactions[0].user } : null
-      } else this.userInfo = null
     },
     async handleSubmitExtraFee(payload) {
       this.isSubmitting = true
@@ -652,6 +652,9 @@ export default {
     },
     handleSearch() {
       this.filter.page = 1
+      if (this.filter.search_by == 'customer') {
+        this.filter.search = this.userInfo ? this.userInfo.email : ''
+      }
       if (this.filter.tab == 'bill') {
         this.init()
       } else this.initTopup()
@@ -681,13 +684,13 @@ export default {
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Thanh toán hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Thanh toán hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypeRefund:
           path = this.$router.resolve({
             name: 'bill-detail',
             params: { code: transaction.bill.code },
           }).href
-          return `Hoàn tiền  hóa đơn <a href="${path}"><strong>#${transaction.bill.code}</strong></a>`
+          return `Hoàn tiền  hóa đơn <a class="text-no-underline" href="${path}"><strong>#${transaction.bill.code}</strong></a>`
         case TransactionLogTypePayoneer:
           return `#${transaction.description}`
         case TransactionLogTypePingPong:
@@ -820,6 +823,7 @@ export default {
 
     updateSuccess() {
       this.isVisibleEditUser = false
+      this.userInfo.user_info = this.user_info
       if (this.filter.tab == 'topup') {
         this.initTopup()
       } else this.init()

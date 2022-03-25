@@ -14,7 +14,7 @@ import '@assets/fonts/web-icons/web-icons.min.css'
 import PHeader from './Header'
 import PSidebar from './Sidebar'
 import { GET_USER } from '../../../packages/shared/store'
-
+import firebase from '../../../core/services/firebase'
 export default {
   name: 'Version2',
   components: {
@@ -34,6 +34,7 @@ export default {
   },
   mounted() {},
   created() {
+    firebase.setup()
     this.init()
   },
   methods: {

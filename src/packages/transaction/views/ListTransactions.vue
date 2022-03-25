@@ -57,6 +57,7 @@
                       <th class="content">Nội dung</th>
                       <th>Hình thức</th>
                       <th>Giá trị</th>
+                      <th>Người xác nhận</th>
                       <th>Thao tác</th>
                     </template>
                   </tr>
@@ -114,6 +115,7 @@
                         {{ Math.abs(item.amount) | formatPrice }}</span
                       >
                     </td>
+                    <td>{{ item.admin ? item.admin.full_name : '' }}</td>
                     <td class="btn-action">
                       <div v-if="showBtn(item)" style="display: flex">
                         <p-button
