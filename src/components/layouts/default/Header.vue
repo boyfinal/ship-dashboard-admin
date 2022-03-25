@@ -57,6 +57,8 @@
                   <p-dropdown-item
                     v-for="(item, i) in notifications"
                     :key="i"
+                    @click="handelReadNoti(item)"
+                    :class="{ unread: item.readed === NotificationUnread }"
                     class="noti__dropdown-item"
                   >
                     <div class="item-content">
