@@ -142,7 +142,10 @@
                       <span v-if="item.package_code" class="link-code">
                         {{ item.package_code.code }}
                       </span>
-                      <span v-else class="no-track-code">
+                      <span
+                        v-else
+                        :class="{ 'no-track-code': totalSelected <= 0 }"
+                      >
                         N/A
                       </span>
                       <span class="svg" v-if="item.package_code">
@@ -202,7 +205,11 @@
                       >
                         {{ item.tracking.tracking_number }}
                       </a>
-                      <span class="no-track-code" v-else>N/A</span>
+                      <span
+                        :class="{ 'no-track-code': totalSelected <= 0 }"
+                        v-else
+                        >N/A</span
+                      >
                     </td>
                     <td>
                       {{ item.user.full_name }}
