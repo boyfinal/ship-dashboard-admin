@@ -33,12 +33,18 @@
                   stroke-linejoin="round"
                 />
               </svg>
+              <div v-if="convertNumber > 0" class="noti__dropdown-count">{{
+                convertNumber
+              }}</div>
             </div>
 
             <div class="noti__dropdown">
               <div class="noti__dropdown-header d-flex">
                 <div class="noti__dropdown-label">Notifications</div>
-                <div v-if="count > 0" class="noti__dropdown-mark"
+                <div
+                  v-if="count > 0"
+                  class="noti__dropdown-mark"
+                  @click="handleReadAll"
                   >Đánh dấu là đã đọc</div
                 >
               </div>
@@ -67,7 +73,7 @@
               </div>
               <p-dropdown-item class="all">
                 <div class="noti__dropdown-footer d-flex">
-                  <div v-if="false" class="view-all">
+                  <div v-if="notifications.length > 0" class="view-all">
                     <router-link to="/notification"> Xem tất cả </router-link>
                   </div>
                 </div>
@@ -120,8 +126,8 @@ import {
   GET_COUNT,
   GET_NOTIFICATION,
 } from '../../../packages/shared/store'
-// eslint-disable-next-line no-unused-vars
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { numFormatter } from '@core/utils/formatter'
+import { mapActions, mapGetters } from 'vuex'
 import {
   // eslint-disable-next-line no-unused-vars
   NotificationRead,
@@ -140,13 +146,18 @@ export default {
       default: true,
     },
   },
-  mounted() {},
+  mounted() {
+    this.init()
+  },
   created() {},
   computed: {
     ...mapGetters('shared', {
       count: GET_COUNT,
       notifications: GET_NOTIFICATION,
     }),
+    convertNumber() {
+      return numFormatter(this.count)
+    },
     handleTitle() {
       return this.$route.meta.title || ''
     },
@@ -170,6 +181,33 @@ export default {
       READ_NOTIFICATIONS,
       READ_NOTIFICATION,
     ]),
+    async init() {
+      const result = await this[FETCH_NOTIFICATIONS](this.filter)
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+      }
+    },
+    async handleReadAll() {
+      const result = await this[READ_NOTIFICATIONS]()
+      if (!result.success) {
+        this.$toast.open({ message: result.message, type: 'error' })
+      }
+      this.init()
+    },
+    async handelReadNoti(item) {
+      if (item.link) {
+        // eslint-disable-next-line no-useless-escape
+        var url = item.link.replace(/(http[s]?:\/\/)?([^\/\s]+(\/)|^[\/])/, '')
+        this.$router.replace({ path: `/${url}` })
+      }
+      if (item.readed === NotificationRead) return
+      const arr = []
+      arr.push(item.id)
+      let read = await this[READ_NOTIFICATION](arr)
+      if (!read.success) {
+        this.$toast.open({ type: 'error', message: 'Có lỗi xảy ra' })
+      }
+    },
     toggleMenuUser() {
       this.showUserMenu = !this.showUserMenu
     },
