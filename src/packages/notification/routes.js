@@ -5,7 +5,7 @@ export const routes = [
     path: '/notification',
     name: 'notification',
     meta: {
-      title: 'Notifications',
+      title: 'Thông báo',
     },
     component: () =>
       lazyLoadView(
