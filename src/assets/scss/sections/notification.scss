@@ -14,10 +14,16 @@
         width: 0;
       }
     }
+    .item-text{
+      line-height: 20px;
+    }
   }
+
   .item-date{
     color: #B0B3B9;
     font-size: 12px;
+    line-height: 16px;
+    margin-top: 4px;
   }
   .page-footer{
     padding-bottom: 70px;

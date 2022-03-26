@@ -11,9 +11,9 @@
           class="noti__dropdown-item"
         >
           <div class="item-content">
-            <div class="item-text ml-7"
+            <div class="item-text"
               >{{ item.body }}
-              <div class="item-date mt-2">{{
+              <div class="item-date">{{
                 item.created_at | datetime('dd/MM/yyyy - HH:mm')
               }}</div>
             </div>
@@ -25,6 +25,7 @@
           :total="count"
           :perPage.sync="filter.limit"
           :current.sync="filter.page"
+          :filter-limit="true"
           size="sm"
         ></p-pagination>
       </div>
