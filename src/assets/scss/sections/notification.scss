@@ -1,0 +1,25 @@
+.notification__page{
+  .noti__dropdown-item{
+    background: white;
+    padding: 16px 14px;
+    cursor: pointer;
+    &:after{
+      width: 100%;
+    }
+    &:hover{
+      background-color: #f8f9fa;
+    }
+    &:last-child{
+      &:after{
+        width: 0;
+      }
+    }
+  }
+  .item-date{
+    color: #B0B3B9;
+    font-size: 12px;
+  }
+  .page-footer{
+    padding-bottom: 70px;
+  }
+}
