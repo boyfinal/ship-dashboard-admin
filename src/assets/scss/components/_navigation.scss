@@ -70,7 +70,7 @@
         border-radius: 4px;
         border: none;
         .dropdown-item {
-          padding: 10px 14px;
+          padding: 8px 24px 8px 14px;
           display: flex;
           align-items: center;
           .nav-item {
@@ -112,7 +112,7 @@
   }
 }
 .noti__dropdown{
-  min-width: 350px;
+  min-width: 370px;
   position: relative;
   .no-noti{
     font-size: 12px;
@@ -144,13 +144,15 @@
   &-label{
     color:$color-neutral-9;
     font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.2px;
   }
   &-mark{
     color:#004E41;
     cursor: pointer;
   }
   &-content{
-    max-height: 350px;
+    max-height: 600px;
     overflow-y: auto;
     &::-webkit-scrollbar-track
     {
@@ -179,12 +181,15 @@
   .item-text{
     max-width: max-content;
     white-space: pre-wrap;
+    line-height: 20px;
     color:$color-neutral-10;
   }
   .item-date{
     color: #B0B3B9;
     font-size: 12px;
     float: left;
+    font-weight: 400;
+    margin-top: 2px;
   }
 
   &-item{

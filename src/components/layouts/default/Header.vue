@@ -62,7 +62,7 @@
                     class="noti__dropdown-item"
                   >
                     <div class="item-content">
-                      <div class="item-text ml-7"
+                      <div class="item-text"
                         >{{ item.body }}
                         <div class="item-date">{{
                           item.created_at | datetime('dd/MM/yyyy - HH:mm')
