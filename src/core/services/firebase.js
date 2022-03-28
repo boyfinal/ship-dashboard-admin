@@ -60,7 +60,10 @@ const firebase = {
   },
 
   unsubscribe: async () => {
-    if (!firebase.messaging) return
+    if (!firebase.messaging) {
+      firebase.app = initializeApp(configFirebase.config)
+      firebase.messaging = getMessaging(firebase.app)
+    }
 
     try {
       await deleteToken(firebase.messaging)

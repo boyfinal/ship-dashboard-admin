@@ -6,8 +6,8 @@ const beforeEach = (router, store) => {
   router.beforeEach(async (to, from, next) => {
     // Logout
     if (to.fullPath.startsWith('/logout')) {
-      await firebase.unsubscribe()
       AuthService.clear()
+      await firebase.unsubscribe()
       Browser.redirect('/')
       return
     }
