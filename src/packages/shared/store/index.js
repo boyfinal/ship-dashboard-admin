@@ -7,6 +7,7 @@ export const FETCH_SERVICE = 'fetchService'
 export const FETCH_ESTIMATE_COST = 'fetchEstimateCost'
 export const FETCH_WAREHOUSE = 'fetchWareHouses'
 export const UPDATE_PROFILE = 'updateProfile'
+export const PUSH_NOTIFICATION = 'pushNotification'
 export const FETCH_NOTIFICATIONS = 'fetchNotifications'
 export const FETCH_NOTIFICATIONS_ALL = 'fetchNotificationsAll'
 export const COUNT_NOTIFICATIONS = 'countNotifications'
@@ -85,7 +86,11 @@ export const mutations = {
   [COUNT_NOTIFICATIONS_ALL]: (state, payload) => {
     state.countNotiAll = payload
   },
-
+  [PUSH_NOTIFICATION]: (state, payload) => {
+    state.countNoti++
+    state.notifications.unshift(payload)
+    state.notificationAll.unshift(payload)
+  },
   [READ_NOTIFICATION]: (state, ids) => {
     if (state.countNoti > 0) {
       state.countNoti = state.countNoti - parseInt(ids.length)
