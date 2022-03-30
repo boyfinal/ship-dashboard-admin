@@ -241,7 +241,7 @@ export default {
         return
       }
 
-      this.$emit('success', true)
+      this.$emit('success', payload.class,true)
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
     onChangeAmount() {
