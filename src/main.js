@@ -11,7 +11,6 @@ import store from './core/store'
 import '../uikit'
 import './core/icons'
 import { VclTable } from 'vue-content-loading'
-
 Vue.use(VueClipboard)
 
 Vue.use(Notifications)
