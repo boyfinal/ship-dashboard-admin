@@ -224,7 +224,8 @@ $width-sidebar: 240px;
   }
   .site-menubar-header{
     .logo-header{
-     opacity: 0;
+      transform: scale(0.4);
+      margin-left: -34px;
     }
   }
   .site-navbar{
@@ -241,7 +242,8 @@ $width-sidebar: 240px;
       visibility: visible;
     }
     .logo-header{
-      opacity: 1;
+      transform: scale(1);
+      margin-left: unset;
     }
     .icon {
       display: block !important;
