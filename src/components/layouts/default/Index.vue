@@ -1,7 +1,18 @@
 <template>
-  <div class="animsition dashboard site-menubar-unfold">
-    <p-sidebar />
-    <p-header :user="user" />
+  <div
+    class="animsition dashboard"
+    :class="{
+      'site-menubar-unfold': isSidebarOpen,
+      'site-menubar-hide': !isSidebarOpen,
+      'site-menubar-hover': isHoverSidebar,
+    }"
+  >
+    <p-sidebar
+      :isSidebarOpen="isSidebarOpen"
+      @onHoverSideBar="hoverSidebar"
+      @onOutSideBar="outSidebar"
+    />
+    <p-header :user="user" @toggleShowSidebar="toggleShowSidebar" />
     <router-view :key="$route.path"></router-view>
   </div>
 </template>
@@ -29,9 +40,11 @@ export default {
   data() {
     return {
       isSidebarOpen: true,
+      isHoverSidebar: false,
       isTicketOpen: false,
     }
   },
+
   mounted() {},
   created() {
     firebase.setup()
@@ -41,6 +54,15 @@ export default {
     ...mapActions('shared', [GET_USER]),
     async init() {
       await this.getUser()
+    },
+    toggleShowSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen
+    },
+    hoverSidebar() {
+      this.isHoverSidebar = true
+    },
+    outSidebar() {
+      this.isHoverSidebar = false
     },
   },
 }

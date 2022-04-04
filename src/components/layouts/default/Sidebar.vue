@@ -1,9 +1,9 @@
 <template>
-  <div class="site-menubar">
+  <div class="site-menubar" @mouseover="onHover()" @mouseleave="onOut()">
     <div class="site-menubar-header">
-      <span class="logo-header">
+      <div class="logo-header">
         <p-svg name="logo"></p-svg>
-      </span>
+      </div>
     </div>
     <div class="site-menubar-body">
       <ul class="site-menu">
@@ -293,6 +293,26 @@ export default {
 
     availableMenuSub(sub) {
       return sub.filter((item) => item.disable !== true)
+    },
+    onHover() {
+      this.$emit('onHoverSideBar')
+    },
+    onOut() {
+      this.$emit('onOutSideBar')
+      if (!this.isSidebarOpen) {
+        this.menus = this.menus.map((obj) =>
+          obj.isOpen == true ? { ...obj, isOpen: false } : obj
+        )
+      }
+    },
+  },
+  watch: {
+    isSidebarOpen: function (value) {
+      if (!value) {
+        this.menus = this.menus.map((obj) =>
+          obj.isOpen == true ? { ...obj, isOpen: false } : obj
+        )
+      }
     },
   },
 }
