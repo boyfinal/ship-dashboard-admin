@@ -57,7 +57,7 @@
                     <td>
                       <router-link
                         class="text-no-underline"
-                        v-if="admin"
+                        v-if="$isAdmin()"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -198,8 +198,8 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import {
   MAP_NAME_STATUS_WAREHOUSE,
-  PackageStatusImportHub,
-  PackageStatusExportHub,
+  PACKAGE_STATUS_IMPORT_HUB,
+  PACKAGE_STATUS_EXPORT_HUB,
 } from '@/packages/package/constants'
 import { cloneDeep } from '../../../core/utils'
 
@@ -244,8 +244,6 @@ export default {
       PackageWareHouseStatusPick: PACKAGE_WAREHOUSE_STATUS_PICK,
       PackageWareHouseStatusReturn: PACKAGE_WAREHOUSE_STATUS_RETURN,
       visibleExportModal: false,
-      PackageStatusImportHub: PackageStatusImportHub,
-      PackageStatusExportHub: PackageStatusExportHub,
     }
   },
   created() {
@@ -258,26 +256,20 @@ export default {
       packages: (state) => state.packages_in_warehouse,
       count: (state) => state.count_packages_in_warehouse,
       count_status: (state) => state.count_status,
-      hiddenClass() {
-        return this.action.selected.length > 0 || this.isAllChecked
-      },
-      isFilterInitTab() {
-        return this.filter.status === PACKAGE_WAREHOUSE_STATUS_PICK
-      },
-      items() {
-        return this.packages
-      },
-      admin() {
-        return this.$isAdmin()
-      },
     }),
+    hiddenClass() {
+      return this.action.selected.length > 0 || this.isAllChecked
+    },
+    items() {
+      return this.packages
+    },
     statusTab() {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
     },
     mapStatus() {
       let status = cloneDeep(MAP_NAME_STATUS_WAREHOUSE)
       Object.keys(status).map((x) => {
-        if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
+        if (x == PACKAGE_STATUS_EXPORT_HUB || x == PACKAGE_STATUS_IMPORT_HUB) {
           status[x].value = 'Đã giao'
         }
       })

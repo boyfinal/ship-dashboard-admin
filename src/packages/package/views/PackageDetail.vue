@@ -18,7 +18,7 @@
               <div class="package-code"
                 >{{
                   $evaluate('package_detail.package.package_code?.code') ||
-                    'N/A'
+                  'N/A'
                 }}
               </div>
             </div>
@@ -37,9 +37,7 @@
               <div>
                 <a
                   target="_blank"
-                  :href="
-                    `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`
-                  "
+                  :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`"
                 >
                   {{
                     $evaluate('package_detail.package.tracking.tracking_number')
@@ -62,10 +60,10 @@
               @click="handleCancelPackage"
               v-if="
                 package_detail.package.status != statusCancel &&
-                  package_detail.package.status != statusSuccess &&
-                  package_detail.package.status != statusShipping &&
-                  package_detail.package.status != statusExpired &&
-                  package_detail.package.status != statusImportHub
+                package_detail.package.status != statusSuccess &&
+                package_detail.package.status != statusShipping &&
+                package_detail.package.status != statusExpired &&
+                package_detail.package.status != statusImportHub
               "
             >
               <span>Hủy đơn</span>
@@ -267,7 +265,7 @@
                             ><div
                               v-if="
                                 package_detail.package.status &&
-                                  package_detail.package.status > 0
+                                package_detail.package.status > 0
                               "
                               >{{
                                 mapStatus[package_detail.package.status].value
@@ -281,10 +279,10 @@
                             <div
                               v-if="
                                 package_detail.package.status &&
-                                  package_detail.package.status > 0 &&
-                                  mapStatusWareHouse[
-                                    package_detail.package.status
-                                  ]
+                                package_detail.package.status > 0 &&
+                                mapStatusWareHouse[
+                                  package_detail.package.status
+                                ]
                               "
                               >{{
                                 mapStatusWareHouse[
@@ -670,15 +668,15 @@ import {
   MAP_NAME_STATUS_PACKAGE,
   CHANGE_PACKAGE_TYPE,
   DELIVER_LOG_PACKAGE,
-  PackageStatusCancelled,
-  PackageStatusDelivered,
-  PackageStatusInTransit,
-  PackageStatusImportHub,
-  PackageStatusReturned,
-  PackageStatusCreated,
-  PackageStatusExpired,
-  PackageStatusWareHouseInContainer,
-  PackageStatusWareHouseInShipment,
+  PACKAGE_STATUS_CANCELLED,
+  PACKAGE_STATUS_DELIVERED,
+  PACKAGE_STATUS_IN_TRANSIT,
+  PACKAGE_STATUS_IMPORT_HUB,
+  PACKAGE_STATUS_RETURNED,
+  PACKAGE_STATUS_CREATED,
+  PACKAGE_STATUS_EXPIRED,
+  PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
+  PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
   MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -686,7 +684,7 @@ import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
-import { PackageAlertTypeHubReturn } from '../constants'
+import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '../constants'
 import ModalReship from '../components/ModalReship'
 import OverLoading from '@components/shared/OverLoading'
 import File from '../../hub/components/File'
@@ -760,7 +758,7 @@ export default {
       )
     },
     isAlertReturn() {
-      return this.package_detail.package.alert === PackageAlertTypeHubReturn
+      return this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN
     },
     displayDeliverLogs() {
       const start =
@@ -770,12 +768,12 @@ export default {
       let logs = this.package_detail.deliver_logs
         .slice(start, start + this.timelinePagination.itemsPerPage)
         .filter((log) => {
-          return log.type !== PackageStatusCreated
+          return log.type !== PACKAGE_STATUS_CREATED
         })
         .map((log) => {
           let text = log.description
           switch (log.type) {
-            case PackageStatusReturned:
+            case PACKAGE_STATUS_RETURNED:
               text = `${DELIVER_LOG_PACKAGE[log.type]} <p>Lí do: ${
                 log.description
               }</p>`
@@ -793,7 +791,7 @@ export default {
         ConvertData.push({ name: element, data: [] })
       )
       ConvertData.forEach((x) =>
-        logs.forEach(function(it) {
+        logs.forEach(function (it) {
           if (datetime(it.ship_time, 'dd-MM-yyyy') == x.name) {
             x.data.push(it)
           }
@@ -846,19 +844,19 @@ export default {
       return CHANGE_PACKAGE_TYPE
     },
     statusCancel() {
-      return PackageStatusCancelled
+      return PACKAGE_STATUS_CANCELLED
     },
     statusSuccess() {
-      return PackageStatusDelivered
+      return PACKAGE_STATUS_DELIVERED
     },
     statusExpired() {
-      return PackageStatusExpired
+      return PACKAGE_STATUS_EXPIRED
     },
     statusShipping() {
-      return PackageStatusInTransit
+      return PACKAGE_STATUS_IN_TRANSIT
     },
     statusImportHub() {
-      return PackageStatusImportHub
+      return PACKAGE_STATUS_IMPORT_HUB
     },
     mapExtraFee() {
       let arr = cloneDeep(this.extraFee),
@@ -876,7 +874,7 @@ export default {
     },
     isReship() {
       return (
-        this.package_detail.package.alert === PackageAlertTypeHubReturn &&
+        this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
       )
     },
@@ -915,7 +913,7 @@ export default {
         this.isEditOrderReturn = true
       }
       if (
-        this.package_detail.package.alert === PackageAlertTypeHubReturn &&
+        this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
       ) {
         this.isReLabel = true
@@ -959,8 +957,9 @@ export default {
     async cancelPackageAction() {
       if (
         this.package_detail.package.status ==
-          PackageStatusWareHouseInContainer ||
-        this.package_detail.package.status == PackageStatusWareHouseInShipment
+          PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER ||
+        this.package_detail.package.status ==
+          PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT
       ) {
         this.visibleConfirmCancel = false
         return this.$toast.open({
@@ -1090,7 +1089,7 @@ export default {
 
   watch: {
     package_detail: {
-      handler: function(val) {
+      handler: function (val) {
         if (val.deliver_logs && val.deliver_logs.length > 0) {
           this.timelinePagination.numberPage = Math.ceil(
             val.deliver_logs.length / this.timelinePagination.itemsPerPage

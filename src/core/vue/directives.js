@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { domOn } from '../utils/dom'
 import { capitalize } from '@core/utils/string'
+import { MAP_PACKAGE_STATUS_CLASSNAMES } from '../../packages/package/constants'
 
 const nodeList = []
 const ctx = '@@clickoutsideContext'
@@ -17,7 +18,7 @@ let seed = 0
   })
 
 function createDocumentHandler(el, binding, vnode) {
-  return function(mouseup = {}, mousedown = {}) {
+  return function (mouseup = {}, mousedown = {}) {
     if (
       !vnode ||
       !vnode.context ||
@@ -79,132 +80,78 @@ export const clickoutside = {
 }
 
 const getFormatStatus = (status) => {
-  let statusClass = ''
-  switch (status) {
-    case 'draft':
-    case 'awaiting':
-    case 'in-Transit':
-      statusClass = 'default'
-      break
-    case 'process':
-    case 'active':
-    case 'balance':
-      statusClass = 'success'
-      break
-    case 'feedback':
-    case 'fulfilled':
-    case 'fulfill':
-      statusClass = 'primary'
-      break
-    case 'open':
-    case 'in-review':
-      statusClass = 'info'
-      break
-
-    case 'inactive':
-    case 'rejected':
-    case 'withdrew':
-    case 'canceled':
-      statusClass = 'danger'
-      break
-    case 'closed':
-      statusClass = 'dark'
-      break
-    case 'Hết hạn':
-    case 'expired':
-    case 'undelivered':
-    case 'Giao không thành công':
-      statusClass = 'expired'
-      break
-    case 'confirm payment':
-    case 'unpaid':
-    case 'Pre-Transit':
-      statusClass = 'pending'
-      break
-    case 'partially paid':
-      statusClass = 'partially-paid'
-      break
-    case 'paid':
-      statusClass = 'paid'
-      break
-    case 'awaiting payment':
-      statusClass = 'awaiting-payment'
-      break
-    case 'debt':
-      statusClass = 'debt'
-      break
-    case 'cancel':
-      statusClass = 'cancel'
-      break
-    case 'done':
-      statusClass = 'done'
-      break
-    case 'resolved':
-      statusClass = 'resolved'
-      break
-    case 'Tạo mới':
-    case 'Kiểm hàng':
-      statusClass = 'default'
-      break
-    case 'Chờ lấy':
-    case 'pending':
-      statusClass = 'await'
-      break
-    case 'Đã lấy':
-    case 'Đã dán nhãn':
-    case 'Đang giao':
-    case 'processing':
-    case 'Processing':
-      statusClass = 'primary'
-      break
-    case 'Giao thành công':
-    case 'Thành công':
-    case 'Xuất kho':
-    case 'delivered':
-      statusClass = 'success'
-      break
-    case 'Trả hàng':
-    case 'Đã giao':
-      statusClass = 'info'
-      break
-    case 'Hủy':
-    case 'Đã hủy':
-    case 'Thất bại':
-    case 'Từ chối':
-      statusClass = 'danger'
-      break
-    case 'Đang xử lý':
-    case 'Chờ xác nhận':
-      statusClass = 'pending'
-      break
-    case 'Đã xử lý':
-    case 'Đóng lô':
-      statusClass = 'done'
-      break
-    case 'Chưa thanh toán':
-    case 'Đóng kiện':
-      statusClass = 'unpaid'
-      break
-    case 'Hoàn tiền':
-      statusClass = 'refund'
-      break
-    case 'alert':
-    case 'Alert':
-      statusClass = 'alert'
-      break
-    case 'import-hub':
-    case 'Hub đã nhận':
-      statusClass = 'import-hub'
-      break
-    case 'export-hub':
-    case 'Hub đã xuất':
-      statusClass = 'export-hub'
-      break
+  // cSpell:disable
+  let defaults = {
+    draft: 'default',
+    awaiting: 'default',
+    'in-transit': 'default',
+    process: 'success',
+    active: 'success',
+    balance: 'success',
+    feedback: 'primary',
+    fulfilled: 'primary',
+    fulfill: 'primary',
+    open: 'info',
+    'in-review': 'info',
+    inactive: 'danger',
+    rejected: 'danger',
+    withdrew: 'danger',
+    canceled: 'danger',
+    closed: 'dark',
+    'hết hạn': 'expired',
+    expired: 'expired',
+    undelivered: 'expired',
+    'giao không thành công': 'expired',
+    'confirm payment': 'pending',
+    unpaid: 'pending',
+    'pre-transit': 'pending',
+    'partially paid': 'partially-paid',
+    paid: 'paid',
+    'awaiting payment': 'awaiting-payment',
+    debt: 'debt',
+    cancel: 'cancel',
+    done: 'done',
+    resolved: 'resolved',
+    'tạo mới': 'default',
+    'kiểm hàng': 'default',
+    'chờ lấy': 'await',
+    pending: 'await',
+    'đã lấy': 'primary',
+    'đã dán nhãn': 'primary',
+    'đang giao': 'primary',
+    processing: 'primary',
+    'giao thành công': 'success',
+    'thành công': 'success',
+    'xuất kho': 'success',
+    delivered: 'success',
+    'trả hàng': 'info',
+    'đã giao': 'info',
+    hủy: 'danger',
+    'đã hủy': 'danger',
+    'thất bại': 'danger',
+    'từ chối': 'danger',
+    'đang xử lý': 'pending',
+    'chờ xác nhận': 'pending',
+    'đã xử lý': 'done',
+    'đóng lô': 'done',
+    'chưa thanh toán': 'unpaid',
+    'đóng kiện': 'unpaid',
+    'hoàn tiền': 'refund',
+    alert: 'alert',
+    'import-hub': 'import-hub',
+    'hub đã nhận': 'import-hub',
+    'export-hub': 'export-hub',
+    'hub đã xuất': 'export-hub',
   }
+  // cSpell:enable
+
+  status = (status || '').toLowerCase()
+  const classLists = Object.assign(defaults, MAP_PACKAGE_STATUS_CLASSNAMES)
+  const className = classLists[status] || 'unknown'
 
   return {
     text: capitalize(status),
-    classList: `badge badge-round badge-${statusClass}`,
+    classList: `badge badge-round badge-${className}`,
   }
 }
 
