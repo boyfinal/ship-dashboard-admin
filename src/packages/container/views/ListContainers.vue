@@ -244,13 +244,16 @@ export default {
           .filter(
             (obj) =>
               obj.status == CONTAINER_IMPORT_HUB ||
-              obj.status == CONTAINER_EXPORT_HUB
+              obj.status == CONTAINER_EXPORT_HUB ||
+              obj.status == CONTAINER_DELIVERIED
           )
           .map((item) => item.count)
           .reduce((t, n) => t + n, 0)
         const temp = this.count_status.map((obj) =>
-          obj.status == CONTAINER_DELIVERIED
-            ? { ...obj, count: reduce + obj.count }
+          obj.status == CONTAINER_DELIVERIED ||
+          obj.status == CONTAINER_IMPORT_HUB ||
+          obj.status == CONTAINER_EXPORT_HUB
+            ? { status: CONTAINER_DELIVERIED, count: reduce }
             : obj
         )
         return temp
