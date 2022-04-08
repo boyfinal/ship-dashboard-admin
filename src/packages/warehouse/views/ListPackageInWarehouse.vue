@@ -278,7 +278,7 @@ export default {
       let status = cloneDeep(MAP_NAME_STATUS_WAREHOUSE)
       Object.keys(status).map((x) => {
         if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
-          status[x].value = 'Xuất kho'
+          status[x].value = 'Đã giao'
         }
       })
       return status
@@ -394,7 +394,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

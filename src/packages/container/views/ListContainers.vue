@@ -230,7 +230,14 @@ export default {
         wareHouses: (state) => state.wareHouses,
       }),
       mapStatus() {
-        return MAP_NAME_STATUS_CONTAINER
+        let status = cloneDeep(MAP_NAME_STATUS_CONTAINER)
+        Object.keys(status).map((x) => {
+          if (x == CONTAINER_EXPORT_HUB || x == CONTAINER_IMPORT_HUB) {
+            status[x].value = 'Đã giao'
+            status[x].class = 'badge-info'
+          }
+        })
+        return status
       },
       coverCountStatus() {
         const reduce = this.count_status
@@ -239,7 +246,8 @@ export default {
               obj.status == CONTAINER_IMPORT_HUB ||
               obj.status == CONTAINER_EXPORT_HUB
           )
-          .reduce((t, n) => t.count + n.count)
+          .map((item) => item.count)
+          .reduce((t, n) => t + n, 0)
         const temp = this.count_status.map((obj) =>
           obj.status == CONTAINER_DELIVERIED
             ? { ...obj, count: reduce + obj.count }
