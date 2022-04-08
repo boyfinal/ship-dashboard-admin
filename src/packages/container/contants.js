@@ -67,15 +67,45 @@ export const MAP_TEXT_STATUS_CONTAINER = [
   },
   {
     value: CONTAINER_IMPORT_HUB,
-    text: 'Hub đã nhận',
+    text: 'Đã giao ',
   },
   {
     value: CONTAINER_EXPORT_HUB,
-    text: 'Hub đã xuất',
+    text: 'Đã giao ',
   },
 ]
 
 export const MAP_NAME_STATUS_CONTAINER = {
+  [CONTAINER_WAITING_CLOSE]: {
+    value: 'Đang xử lý',
+    class: 'badge-await',
+  },
+  [CONTAINER_CLOSE]: {
+    value: 'Đã đóng ',
+    class: 'badge-success',
+  },
+  [CONTAINER_DELIVERIED]: {
+    value: 'Đã giao',
+    class: 'badge-info',
+  },
+  [CONTAINER_INTRANSIT]: {
+    value: 'Đang giao',
+    class: 'badge-primary',
+  },
+  [CONTAINER_CANCEL]: {
+    value: 'Đã hủy',
+    class: 'badge-danger',
+  },
+  [CONTAINER_IMPORT_HUB]: {
+    value: 'Đã giao',
+    class: 'badge-import-hub',
+  },
+  [CONTAINER_EXPORT_HUB]: {
+    value: 'Đã giao',
+    class: 'badge-export-hub',
+  },
+}
+export const MAP_NAME_STATUS_CONTAINER_HUB = {
   [CONTAINER_WAITING_CLOSE]: {
     value: 'Đang xử lý',
     class: 'badge-await',

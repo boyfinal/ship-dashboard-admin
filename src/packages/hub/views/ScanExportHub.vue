@@ -22,7 +22,7 @@
                   <button
                     @click.prevent="searchHandle"
                     :disabled="disableBtnScan"
-                    class="btn btn-scan-info  text-nowrap"
+                    class="btn btn-scan-info text-nowrap"
                     >Quét</button
                   >
                 </div>
@@ -233,7 +233,7 @@ import {
   SCAN_EXPORT_HUB,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
+import { MAP_NAME_STATUS_CONTAINER_HUB } from '../../container/contants'
 import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
 
@@ -260,7 +260,7 @@ export default {
 
     currentStatus() {
       if (this.filter.type == 'container') {
-        const allstatus = MAP_NAME_STATUS_CONTAINER
+        const allstatus = MAP_NAME_STATUS_CONTAINER_HUB
         return (allstatus[this.current_container.status] || {}).value
       } else {
         const allstatus = MAP_NAME_STATUS_WAREHOUSE
@@ -401,7 +401,8 @@ export default {
         this.current_package.width = this.current.width
         this.current_package.weight = this.current.weight
         this.current_package.order_number = this.current.order_number
-        this.current_package.tracking_number = this.current.tracking.tracking_number
+        this.current_package.tracking_number =
+          this.current.tracking.tracking_number
         this.current_package.status = this.current.status
       }
     },
@@ -516,7 +517,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
