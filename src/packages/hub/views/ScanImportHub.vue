@@ -17,17 +17,17 @@
                     v-model="keyword"
                     placeholder="Nhập mã ups hoặc mã kiện"
                   ></p-input>
-                  <div class=" d-flex">
+                  <div class="d-flex">
                     <button
                       @click.prevent="searchHandle"
                       :disabled="disableBtnScan"
-                      class="btn btn-scan-info mr-8  text-nowrap"
+                      class="btn btn-scan-info mr-8 text-nowrap"
                       >Quét</button
                     >
                     <button
                       :disabled="disableBtnAccept"
                       @click.prevent="acceptSubmit"
-                      class="btn btn-scan-info  text-nowrap"
+                      class="btn btn-scan-info text-nowrap"
                       >Xác nhận</button
                     >
                   </div>
@@ -111,7 +111,7 @@ import {
   SCAN_CONTAINER_IMPORT,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
+import { MAP_NAME_STATUS_CONTAINER_HUB } from '../../container/contants'
 // import { cloneDeep } from '../../../core/utils'
 import mixinRoute from '@core/mixins/route'
 
@@ -138,7 +138,7 @@ export default {
       )
     },
     currentStatus() {
-      const allstatus = MAP_NAME_STATUS_CONTAINER
+      const allstatus = MAP_NAME_STATUS_CONTAINER_HUB
       return (allstatus[this.current_status] || {}).value
     },
   },
@@ -282,7 +282,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
