@@ -256,7 +256,6 @@ export default {
             ? { status: CONTAINER_DELIVERIED, count: reduce }
             : obj
         )
-        console.log(temp)
         return temp
       },
     }),
