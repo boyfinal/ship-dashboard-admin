@@ -1,7 +1,7 @@
 <template>
   <div class="list-packages pages page__container">
     <div class="page-content">
-      <div class="mb-12 ">
+      <div class="mb-12">
         <div class="d-flex jc-sb row" id="search-box">
           <div class="page__container-warehouses col-6">
             <button
@@ -14,7 +14,7 @@
               HUB {{ warehouse ? warehouse.state : '' }}
             </button>
           </div>
-          <div class="page__container-search d-flex jc-sb col-6 ">
+          <div class="page__container-search d-flex jc-sb col-6">
             <p-input
               placeholder="Tìm theo mã kiện, nhãn kiện hoặc LionBay tracking"
               prefixIcon="search"
@@ -39,7 +39,7 @@
             :has-all="false"
             :status="statusTab"
             v-model="filter.status"
-            :count-status="count_status"
+            :count-status="coverCountStatus"
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="containers.length">
@@ -177,6 +177,9 @@ import {
   CONTAINER_STATUS_TAB,
   MAP_NAME_STATUS_CONTAINER,
   CONTAINER_CLOSE,
+  CONTAINER_DELIVERIED,
+  CONTAINER_IMPORT_HUB,
+  CONTAINER_EXPORT_HUB,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
@@ -228,6 +231,21 @@ export default {
       }),
       mapStatus() {
         return MAP_NAME_STATUS_CONTAINER
+      },
+      coverCountStatus() {
+        const reduce = this.count_status
+          .filter(
+            (obj) =>
+              obj.status == CONTAINER_IMPORT_HUB ||
+              obj.status == CONTAINER_EXPORT_HUB
+          )
+          .reduce((t, n) => t.count + n.count)
+        const temp = this.count_status.map((obj) =>
+          obj.status == CONTAINER_DELIVERIED
+            ? { ...obj, count: reduce + obj.count }
+            : obj
+        )
+        return temp
       },
     }),
   },
@@ -367,7 +385,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
