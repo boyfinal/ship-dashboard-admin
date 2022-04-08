@@ -233,7 +233,7 @@ import {
   SCAN_EXPORT_HUB,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER_HUB } from '../../container/contants'
+import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
 import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
 
@@ -260,7 +260,7 @@ export default {
 
     currentStatus() {
       if (this.filter.type == 'container') {
-        const allstatus = MAP_NAME_STATUS_CONTAINER_HUB
+        const allstatus = MAP_NAME_STATUS_CONTAINER
         return (allstatus[this.current_container.status] || {}).value
       } else {
         const allstatus = MAP_NAME_STATUS_WAREHOUSE

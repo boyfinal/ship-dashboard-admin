@@ -111,7 +111,7 @@ import {
   SCAN_CONTAINER_IMPORT,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER_HUB } from '../../container/contants'
+import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
 // import { cloneDeep } from '../../../core/utils'
 import mixinRoute from '@core/mixins/route'
 
@@ -138,7 +138,7 @@ export default {
       )
     },
     currentStatus() {
-      const allstatus = MAP_NAME_STATUS_CONTAINER_HUB
+      const allstatus = MAP_NAME_STATUS_CONTAINER
       return (allstatus[this.current_status] || {}).value
     },
   },
