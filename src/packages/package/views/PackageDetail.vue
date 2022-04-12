@@ -261,35 +261,27 @@
                       <div class="mb-16">
                         <div class="row">
                           <div class="col-4 mb-8">Trạng thái đơn:</div>
-                          <div class="col-8 pl-0"
-                            ><div
+                          <div class="col-8 pl-0">
+                            <span
                               v-if="
                                 package_detail.package.status &&
                                 package_detail.package.status > 0
                               "
-                              >{{
-                                mapStatus[package_detail.package.status].value
-                              }}</div
-                            >
+                              v-status="package_detail.package.status"
+                            ></span>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-4 mb-8">Trạng thái kho:</div>
                           <div class="col-8 pl-0">
-                            <div
+                            <span
                               v-if="
                                 package_detail.package.status &&
-                                package_detail.package.status > 0 &&
-                                mapStatusWareHouse[
-                                  package_detail.package.status
-                                ]
+                                package_detail.package.status > 0
                               "
-                              >{{
-                                mapStatusWareHouse[
-                                  package_detail.package.status
-                                ].value
-                              }}</div
-                            >
+                              v-status="package_detail.package.status"
+                              type="warehouse"
+                            ></span>
                           </div>
                         </div>
                         <div class="row">
@@ -665,7 +657,6 @@ import ModalEditOrder from '../components/ModalEditOrder'
 // import { LIST_SENDER } from '../../setting/store'
 import {
   PACKAGE_STATUS_TAB,
-  MAP_NAME_STATUS_PACKAGE,
   CHANGE_PACKAGE_TYPE,
   DELIVER_LOG_PACKAGE,
   PACKAGE_STATUS_CANCELLED,
@@ -677,7 +668,6 @@ import {
   PACKAGE_STATUS_EXPIRED,
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
-  MAP_NAME_STATUS_WAREHOUSE,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -797,7 +787,6 @@ export default {
           }
         })
       )
-      console.log(ConvertData)
       return ConvertData
     },
     displayAuditLogs() {
@@ -823,12 +812,6 @@ export default {
     },
     sumFee() {
       return this.package_detail.package.shipping_fee + this.sumExtraFee
-    },
-    mapStatus() {
-      return MAP_NAME_STATUS_PACKAGE
-    },
-    mapStatusWareHouse() {
-      return MAP_NAME_STATUS_WAREHOUSE
     },
     isImage() {
       const ext = extension(this.package_detail.package.label)

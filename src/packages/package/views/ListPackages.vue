@@ -209,9 +209,7 @@
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
-                      <span
-                        v-status:status="mapStatus[item.status_string].value"
-                      ></span>
+                      <span v-status="item.status"></span>
                       <span
                         v-if="item.alert > 0"
                         class="pull-right list-warning badge badge-round badge-warning-order"

@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import { domOn } from '../utils/dom'
 import { capitalize } from '@core/utils/string'
-import { MAP_PACKAGE_STATUS_CLASSNAMES } from '../../packages/package/constants'
+import {
+  MAP_PACKAGE_STATUS_CLASSNAMES,
+  MAP_NAME_STATUS_WAREHOUSE,
+} from '../../packages/package/constants'
+import { MAP_CLAIM_STATUS } from '../../packages/claim/constants'
+import { MAP_NAME_STATUS_TRANSACTION } from '../../packages/transaction/constants'
+import { MAP_NAME_STATUS_CONTAINER } from '../../packages/container/contants'
+import { MAP_NAME_STATUS_SHIPMENT } from '../../packages/shipment/constants'
 
 const nodeList = []
 const ctx = '@@clickoutsideContext'
@@ -79,90 +86,50 @@ export const clickoutside = {
   },
 }
 
-const getFormatStatus = (status) => {
-  // cSpell:disable
-  let defaults = {
-    draft: 'default',
-    awaiting: 'default',
-    'in-transit': 'default',
-    process: 'success',
-    active: 'success',
-    balance: 'success',
-    feedback: 'primary',
-    fulfilled: 'primary',
-    fulfill: 'primary',
-    open: 'info',
-    'in-review': 'info',
-    inactive: 'danger',
-    rejected: 'danger',
-    withdrew: 'danger',
-    canceled: 'danger',
-    closed: 'dark',
-    'hết hạn': 'expired',
-    expired: 'expired',
-    undelivered: 'expired',
-    'giao không thành công': 'expired',
-    'confirm payment': 'pending',
-    unpaid: 'pending',
-    'pre-transit': 'pending',
-    'partially paid': 'partially-paid',
-    paid: 'paid',
-    'awaiting payment': 'awaiting-payment',
-    debt: 'debt',
-    cancel: 'cancel',
-    done: 'done',
-    resolved: 'resolved',
-    'tạo mới': 'default',
-    'kiểm hàng': 'default',
-    'chờ lấy': 'await',
-    pending: 'await',
-    'đã lấy': 'primary',
-    'đã dán nhãn': 'primary',
-    'đang giao': 'primary',
-    processing: 'primary',
-    'giao thành công': 'success',
-    'thành công': 'success',
-    'xuất kho': 'success',
-    delivered: 'success',
-    'trả hàng': 'info',
-    'đã giao': 'info',
-    hủy: 'danger',
-    'đã hủy': 'danger',
-    'thất bại': 'danger',
-    'từ chối': 'danger',
-    'đang xử lý': 'pending',
-    'chờ xác nhận': 'pending',
-    'đã xử lý': 'done',
-    'đóng lô': 'done',
-    'chưa thanh toán': 'unpaid',
-    'đóng kiện': 'unpaid',
-    'hoàn tiền': 'refund',
-    alert: 'alert',
-    'import-hub': 'import-hub',
-    'hub đã nhận': 'import-hub',
-    'export-hub': 'export-hub',
-    'hub đã xuất': 'export-hub',
-  }
-  // cSpell:enable
+const getFormatStatus = (status, type) => {
+  type = type || 'package'
+  let value = { text: 'unknown', className: 'unknown' }
 
-  status = (status || '').toLowerCase()
-  const classLists = Object.assign(defaults, MAP_PACKAGE_STATUS_CLASSNAMES)
-  const className = classLists[status] || 'unknown'
+  if (type == 'package') {
+    value = MAP_PACKAGE_STATUS_CLASSNAMES[status] || {}
+  }
+
+  if (type == 'warehouse') {
+    value = MAP_NAME_STATUS_WAREHOUSE[status] || {}
+  }
+
+  if (type == 'claim') {
+    value = MAP_CLAIM_STATUS[status] || {}
+  }
+
+  if (type == 'transaction') {
+    value = MAP_NAME_STATUS_TRANSACTION[status] || {}
+  }
+
+  if (type == 'container') {
+    value = MAP_NAME_STATUS_CONTAINER[status] || {}
+  }
+
+  if (type == 'shipment') {
+    value = MAP_NAME_STATUS_SHIPMENT[status] || {}
+  }
 
   return {
-    text: capitalize(status),
-    classList: `badge badge-round badge-${className}`,
+    text: capitalize(value.text),
+    classList: `badge badge-round badge-${value.className}`,
   }
 }
 
 export const labelStatus = {
   update(el, binding) {
-    const { text, classList } = getFormatStatus(binding.value)
+    const type = el.getAttribute('type')
+    const { text, classList } = getFormatStatus(binding.value, type)
     el.classList = classList
     el.innerText = text
   },
   inserted(el, binding) {
-    const { text, classList } = getFormatStatus(binding.value)
+    const type = el.getAttribute('type')
+    const { text, classList } = getFormatStatus(binding.value, type)
     el.classList = classList
     el.innerText = text
   },

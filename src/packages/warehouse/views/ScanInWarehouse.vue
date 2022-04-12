@@ -122,7 +122,6 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 import { WAREHOUSE_CHECK_IN } from '../store/index'
 import mixinBarcode from '@core/mixins/barcode'
 import {
-  // PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
   PACKAGE_WAREHOUSE_STATUS_PICK,

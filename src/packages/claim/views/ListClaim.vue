@@ -20,7 +20,7 @@
               :status="claimStatus"
               :count="totalCount"
             />
-            <vcl-table class=" md-20" v-if="isFetching"></vcl-table>
+            <vcl-table class="md-20" v-if="isFetching"></vcl-table>
             <template v-else-if="listclaim.length > 0">
               <div class="table-responsive">
                 <table class="table table-hover">
@@ -76,7 +76,7 @@
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
                       <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
                       <td>
-                        <span v-status:status="item.status"></span>
+                        <span v-status="item.status" type="claim"></span>
                       </td>
                       <td width="40">
                         <router-link
@@ -166,12 +166,7 @@ export default {
           supports: supports.join(', '),
           created_at: item.created_at,
           updated_at: item.updated_at,
-          status:
-            item.status == 1
-              ? 'Đang xử lý'
-              : item.status == 2
-              ? 'Đã xử lý'
-              : 'Unknown',
+          status: item.status,
           isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
         }
       })
@@ -193,7 +188,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

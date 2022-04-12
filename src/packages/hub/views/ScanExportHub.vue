@@ -100,7 +100,7 @@
                 >
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
-                  <span v-status:status="currentStatus"></span>
+                  <span v-status="currentStatus" type="container"></span>
                 </div>
                 <hr class="hr mb-24 mt-24" />
                 <p-button
@@ -144,7 +144,7 @@
                 >
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
-                  <span v-status:status="currentStatus"></span>
+                  <span v-status="currentStatus"></span>
                 </div>
                 <hr class="hr mb-24 mt-24" />
                 <p-button
@@ -233,8 +233,6 @@ import {
   SCAN_EXPORT_HUB,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
-import { MAP_NAME_STATUS_WAREHOUSE } from '@/packages/package/constants'
 import { EXPORT_HUB_TAB } from '../constants'
 
 import mixinRoute from '@core/mixins/route'
@@ -260,12 +258,10 @@ export default {
 
     currentStatus() {
       if (this.filter.type == 'container') {
-        const allstatus = MAP_NAME_STATUS_CONTAINER
-        return (allstatus[this.current_container.status] || {}).value
-      } else {
-        const allstatus = MAP_NAME_STATUS_WAREHOUSE
-        return (allstatus[this.current_package.status] || {}).value
+        return this.current_container.status
       }
+
+      return this.current_package.status
     },
     convertHeader() {
       return `Thông tin ${

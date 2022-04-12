@@ -95,14 +95,66 @@ export const MAP_PACKAGE_STATUS_TEXT = {
 }
 
 export const MAP_PACKAGE_STATUS_CLASSNAMES = {
-  [PACKAGE_STATUS_CREATED_TEXT]: 'await',
-  [PACKAGE_STATUS_PENDING_PICKUP_TEXT]: 'pending',
-  [PACKAGE_STATUS_PROCESSING_TEXT]: 'primary',
-  [PACKAGE_STATUS_IN_TRANSIT_TEXT]: 'default',
-  [PACKAGE_STATUS_DELIVERED_TEXT]: 'success',
-  [PACKAGE_STATUS_CANCELLED_TEXT]: 'danger',
-  [PACKAGE_STATUS_EXPIRED_TEXT]: 'expired',
-  [PACKAGE_STATUS_UNDELIVERED_TEXT]: 'expired',
+  [PACKAGE_STATUS_CREATED]: {
+    text: PACKAGE_STATUS_CREATED_TEXT,
+    className: 'await',
+  },
+  [PACKAGE_STATUS_PENDING_PICKUP]: {
+    text: PACKAGE_STATUS_PENDING_PICKUP_TEXT,
+    className: 'pending',
+  },
+  [PACKAGE_STATUS_PICKED]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_WAREHOUSE_EXPORT]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_IN_TRANSIT]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
+  },
+  [PACKAGE_STATUS_DELIVERED]: {
+    text: PACKAGE_STATUS_DELIVERED_TEXT,
+    className: 'success',
+  },
+  [PACKAGE_STATUS_CANCELLED]: {
+    text: PACKAGE_STATUS_CANCELLED_TEXT,
+    className: 'danger',
+  },
+  [PACKAGE_STATUS_EXPIRED]: {
+    text: PACKAGE_STATUS_EXPIRED_TEXT,
+    className: 'expired',
+  },
+  [PACKAGE_STATUS_IMPORT_HUB]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
+  },
+  [PACKAGE_STATUS_EXPORT_HUB]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
+  },
+  [PACKAGE_STATUS_UNDELIVERED]: {
+    text: PACKAGE_STATUS_UNDELIVERED_TEXT,
+    className: 'expired',
+  },
+  [PACKAGE_STATUS_RESHIP]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
+  },
 }
 
 export const MAP_NAME_STATUS_STRING_PACKAGE = {
@@ -196,48 +248,52 @@ export const DELIVER_LOG_PACKAGE = {
 // cSpell:disable
 export const MAP_NAME_STATUS_WAREHOUSE = {
   [PACKAGE_STATUS_PICKED]: {
-    value: 'Đã lấy',
-    class: 'badge-primary',
+    text: 'Đã lấy',
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_PENDING_PICKUP]: {
+    text: 'Pre-Transit',
+    className: 'default',
   },
   [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
-    value: 'Kiểm hàng',
-    class: 'badge-success',
+    text: 'Kiểm hàng',
+    className: 'success',
   },
   [PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER]: {
-    value: 'Đóng kiện',
-    class: 'badge-success',
+    text: 'Đóng kiện',
+    className: 'success',
   },
   [PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT]: {
-    value: 'Đóng lô',
-    class: 'badge-primary',
+    text: 'Đóng lô',
+    className: 'primary',
   },
   [PACKAGE_STATUS_IN_TRANSIT]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
+    text: 'Xuất kho',
+    className: 'success',
   },
   [PACKAGE_STATUS_WAREHOUSE_EXPORT]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
+    text: 'Xuất kho',
+    className: 'success',
   },
   [PACKAGE_STATUS_CANCELLED]: {
-    value: 'Đã hủy',
-    class: 'badge-danger',
+    text: 'Đã hủy',
+    className: 'danger',
   },
   [PACKAGE_STATUS_DELIVERED]: {
-    value: 'Giao thành công',
-    class: 'badge-success',
+    text: 'Giao thành công',
+    className: 'success',
   },
   [PACKAGE_STATUS_IMPORT_HUB]: {
-    value: 'Hub đã nhận',
-    class: 'badge-success',
+    text: 'Hub đã nhận',
+    className: 'success',
   },
   [PACKAGE_STATUS_EXPORT_HUB]: {
-    value: 'Hub đã xuất',
-    class: 'badge-success',
+    text: 'Hub đã xuất',
+    className: 'success',
   },
   [PACKAGE_STATUS_UNDELIVERED]: {
-    value: 'Giao không thành công',
-    class: 'badge-expired',
+    text: 'Giao không thành công',
+    className: 'expired',
   },
 }
 // cSpell:enable

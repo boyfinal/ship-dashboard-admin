@@ -115,11 +115,7 @@
                     <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
                     <td>
-                      <span
-                        class="badge badge-round"
-                        :class="mapStatus[item.status].class"
-                        >{{ mapStatus[item.status].value }}</span
-                      >
+                      <span v-status="item.status" type="container"></span>
                     </td>
                     <td>
                       <p-button

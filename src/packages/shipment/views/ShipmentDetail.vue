@@ -39,9 +39,9 @@
             </div>
             <div class="info">
               <div>Trạng thái lô: </div>
-              <div>{{
-                shipment.status ? shipmentStatus[shipment.status].value : '-'
-              }}</div>
+              <div>
+                <span v-status="shipment.status" type="shipment"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -62,9 +62,9 @@
               @click="handleAppendShipment"
               v-if="
                 !isClosedShipment &&
-                  !isCanceledShipment &&
-                  !isDeliveredShipment &&
-                  !isIntransitShipment
+                !isCanceledShipment &&
+                !isDeliveredShipment &&
+                !isIntransitShipment
               "
             >
               <p-svg name="plus_blue"></p-svg>
@@ -74,9 +74,9 @@
               type="info"
               v-if="
                 !isClosedShipment &&
-                  !isCanceledShipment &&
-                  !isDeliveredShipment &&
-                  !isIntransitShipment
+                !isCanceledShipment &&
+                !isDeliveredShipment &&
+                !isIntransitShipment
               "
               :class="'btn-add-container ml-3'"
               @click="handleShowModalListContainer"
@@ -88,9 +88,9 @@
             class="page-header__action col-6 text-right"
             v-if="
               !isClosedShipment &&
-                !isCanceledShipment &&
-                !isDeliveredShipment &&
-                !isIntransitShipment
+              !isCanceledShipment &&
+              !isDeliveredShipment &&
+              !isIntransitShipment
             "
           >
             <p-button
@@ -234,9 +234,7 @@
                           >
                             <a
                               target="_blank"
-                              :href="
-                                `https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`
-                              "
+                              :href="`https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`"
                             >
                               <svg
                                 width="32"
@@ -280,8 +278,8 @@
                         <p-button
                           v-if="
                             !isClosedShipment &&
-                              !isDeliveredShipment &&
-                              !isIntransitShipment
+                            !isDeliveredShipment &&
+                            !isIntransitShipment
                           "
                           type="danger"
                           :class="`btn-cancel-container`"
@@ -668,7 +666,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

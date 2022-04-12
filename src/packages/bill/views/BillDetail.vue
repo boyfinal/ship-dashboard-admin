@@ -1,5 +1,5 @@
 <template>
-  <div class="pages bill__detail ">
+  <div class="pages bill__detail">
     <div class="page-header">
       <div class="page-header_back">
         <router-link :to="{ name: 'bill-list' }" class="text">
@@ -39,9 +39,9 @@
     </div>
     <div class="page-content">
       <div class="row">
-        <div class="col-12  item-gutters " v-if="feeCreate.length">
-          <div class="card-block ">
-            <div class="card-header ">
+        <div class="col-12 item-gutters" v-if="feeCreate.length">
+          <div class="card-block">
+            <div class="card-header">
               <div class="card-title">Phí vận đơn</div>
               <div class="card-pagi">
                 <div
@@ -103,13 +103,13 @@
             </div>
           </div>
         </div>
-        <div class="col-12  item-gutters " v-if="feeExtra.length">
-          <div class="card-block ">
+        <div class="col-12 item-gutters" v-if="feeExtra.length">
+          <div class="card-block">
             <div class="card-header">
               <div class="card-title">Phí phát sinh</div>
               <div class="card-pagi">
                 <div
-                  class="btn-pagi  mr-2"
+                  class="btn-pagi mr-2"
                   :class="{
                     'disable-next-page': filterExtra.page <= 1,
                   }"
@@ -141,7 +141,7 @@
                       <th
                         v-if="
                           user.role == ROLE_ADMIN ||
-                            user.role == ROLE_ACCOUNTANT
+                          user.role == ROLE_ACCOUNTANT
                         "
                         >Thao tác</th
                       >
@@ -189,7 +189,7 @@
                       <td
                         v-if="
                           user.role == ROLE_ADMIN ||
-                            user.role == ROLE_ACCOUNTANT
+                          user.role == ROLE_ACCOUNTANT
                         "
                       >
                         <a @click="handelModal(item.id)" class="btn btn-danger">
@@ -199,8 +199,9 @@
                       <td>
                         <span
                           v-if="item.status == 10"
-                          v-status:status="`Chưa thanh toán`"
-                        ></span>
+                          class="badge badge-round badge-unpaid"
+                          >Chưa thanh toán</span
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -392,7 +393,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

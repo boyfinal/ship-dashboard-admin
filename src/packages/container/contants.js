@@ -77,31 +77,31 @@ export const MAP_TEXT_STATUS_CONTAINER = [
 
 export const MAP_NAME_STATUS_CONTAINER = {
   [CONTAINER_WAITING_CLOSE]: {
-    value: 'Đang xử lý',
-    class: 'badge-await',
+    text: 'Đang xử lý',
+    className: 'await',
   },
   [CONTAINER_CLOSE]: {
-    value: 'Đã đóng ',
-    class: 'badge-success',
+    text: 'Đã đóng ',
+    className: 'success',
   },
   [CONTAINER_DELIVERIED]: {
-    value: 'Đã giao',
-    class: 'badge-info',
+    text: 'Đã giao',
+    className: 'info',
   },
   [CONTAINER_INTRANSIT]: {
-    value: 'Đang giao',
-    class: 'badge-primary',
+    text: 'Đang giao',
+    className: 'primary',
   },
   [CONTAINER_CANCEL]: {
-    value: 'Đã hủy',
-    class: 'badge-danger',
+    text: 'Đã hủy',
+    className: 'danger',
   },
   [CONTAINER_IMPORT_HUB]: {
-    value: 'Hub đã nhận',
-    class: 'badge-import-hub',
+    text: 'Đã giao',
+    className: 'primary',
   },
   [CONTAINER_EXPORT_HUB]: {
-    value: 'Hub đã xuất',
-    class: 'badge-export-hub',
+    text: 'Đã giao',
+    className: 'primary',
   },
 }

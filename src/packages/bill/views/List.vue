@@ -101,12 +101,7 @@
                     </table>
                   </div>
                   <div
-                    class="
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                      mb-16
-                    "
+                    class="d-flex justify-content-between align-items-center mb-16"
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -149,9 +144,10 @@
                               item.created_at | date('dd/MM/yyyy')
                             }}</span></td
                           >
-                          <td :title="mapStatus[item.status].value"
+                          <td
                             ><span
-                              v-status:status="mapStatus[item.status].value"
+                              v-status="item.status"
+                              type="transaction"
                             ></span
                           ></td>
                           <td :title="item.user.full_name">
@@ -220,12 +216,7 @@
                     </table>
                   </div>
                   <div
-                    class="
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                      mb-16
-                    "
+                    class="d-flex justify-content-between align-items-center mb-16"
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -409,7 +400,6 @@ import {
   TransactionStatusProcess,
   TransactionStatusSuccess,
   TransactionStatusFailure,
-  MAP_NAME_STATUS_TRANSACTION,
   TransactionLogTypeRefund,
   TransactionLogTypePayoneer,
   TransactionLogTypePingPong,
@@ -561,9 +551,6 @@ export default {
     },
     transactionType() {
       return TRANSACTION_TYPE
-    },
-    mapStatus() {
-      return MAP_NAME_STATUS_TRANSACTION
     },
     successStatus() {
       return TransactionStatusSuccess
@@ -784,7 +771,7 @@ export default {
         case TransactionStatusSuccess:
           validAmount = this.checkValidateMoneyAmount()
           if (!validAmount) {
-            this.$nextTick(function() {
+            this.$nextTick(function () {
               this.$refs['money_' + this.selectedItem.id][0].focus()
             })
             break
@@ -821,7 +808,7 @@ export default {
       this.isVisibleEditUser = true
     },
 
-    updateSuccess(value) {
+    updateSuccess() {
       this.isVisibleEditUser = false
       this.userInfo.user_info = this.user_info
       if (this.filter.tab == 'topup') {
@@ -850,16 +837,16 @@ export default {
     },
   },
   watch: {
-    'filter.status': function() {
+    'filter.status': function () {
       this.filter.page = 1
       this.init()
     },
-    'filter.page': function() {
+    'filter.page': function () {
       if (this.filter.tab == 'topup') {
         this.initTopup()
       } else this.init()
     },
-    'filter.search_by': function() {
+    'filter.search_by': function () {
       if (this.filter.search != '') {
         this.filter.page = 1
         if (this.filter.tab == 'bill') {
@@ -867,14 +854,14 @@ export default {
         } else this.initTopup()
       }
     },
-    'filter.tab': function() {
+    'filter.tab': function () {
       this.filter.page = 1
       if (this.filter.tab == 'topup') {
         this.filter.type = 1
         this.initTopup()
       } else this.init()
     },
-    'filter.type': function() {
+    'filter.type': function () {
       this.filter.page = 1
       this.initTopup()
     },

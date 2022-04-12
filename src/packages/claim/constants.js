@@ -16,3 +16,14 @@ export const CLAIM_CUSTOMER_REPLY = 0
 export const CLAIM_ADMIN_REPLY = 1
 
 export const MAXIMUM_SIZE = 5
+
+export const MAP_CLAIM_STATUS = {
+  [CLAIM_STATUS_PENDING]: {
+    text: 'Đang xử lý',
+    className: 'pending',
+  },
+  [CLAIM_STATUS_PROCESSED]: {
+    text: 'Đã xử lý',
+    className: 'done',
+  },
+}

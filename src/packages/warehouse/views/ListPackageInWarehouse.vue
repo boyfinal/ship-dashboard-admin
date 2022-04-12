@@ -73,7 +73,8 @@
                     </td>
                     <td>
                       <span
-                        v-status:status="mapStatus[item.status].value"
+                        v-status:status="item.status"
+                        type="warehouse"
                       ></span>
                     </td>
                     <td>
@@ -196,12 +197,6 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import {
-  MAP_NAME_STATUS_WAREHOUSE,
-  PACKAGE_STATUS_IMPORT_HUB,
-  PACKAGE_STATUS_EXPORT_HUB,
-} from '@/packages/package/constants'
-import { cloneDeep } from '../../../core/utils'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -265,15 +260,6 @@ export default {
     },
     statusTab() {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
-    },
-    mapStatus() {
-      let status = cloneDeep(MAP_NAME_STATUS_WAREHOUSE)
-      Object.keys(status).map((x) => {
-        if (x == PACKAGE_STATUS_EXPORT_HUB || x == PACKAGE_STATUS_IMPORT_HUB) {
-          status[x].value = 'Đã giao'
-        }
-      })
-      return status
     },
   },
   methods: {
