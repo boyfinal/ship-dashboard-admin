@@ -240,6 +240,7 @@ export default {
         return status
       },
       coverCountStatus() {
+        if (!this.count_status) return
         const reduce = this.count_status
           .filter(
             (obj) =>
@@ -396,7 +397,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,

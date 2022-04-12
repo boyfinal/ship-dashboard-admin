@@ -57,8 +57,6 @@ export const actions = {
         success: false,
         message: list.errorMessage || '',
       }
-
-      return result
     }
     commit(FETCH_LIST_CONTAINERS, list.containers)
     commit(FETCH_LIST_CONTAINER_BOXES, listBox.boxes)
