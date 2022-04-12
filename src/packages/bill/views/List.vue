@@ -386,7 +386,6 @@ import {
   CREATE_EXTRA_FEE,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
-import { BILL_MAP_NAME_STATUS } from '../constants'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 import {
@@ -563,14 +562,6 @@ export default {
     },
     statusPackage() {
       return PACKAGE_STATUS_TAB.filter((x) => x.value != 'alert')
-    },
-  },
-  filters: {
-    statusText(val) {
-      return (BILL_MAP_NAME_STATUS[val] || {}).value || 'unknown'
-    },
-    statusClass(val) {
-      return (BILL_MAP_NAME_STATUS[val] || {}).class || 'badge-default'
     },
   },
   methods: {
