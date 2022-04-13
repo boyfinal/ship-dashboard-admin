@@ -117,7 +117,7 @@ def getDeploySettings() {
         kubeConfig = "/var/lib/jenkins/.kube/lionnix-prod"
         dockerImageTag = "dev-${buildNumber}"
         mode = "development"
-        namespace = 'dev-${namespace}'
+        namespace = "dev-${namespace}"
         deploySettings['helm_release'] = "${serviceName}-dev"
     } 
 
