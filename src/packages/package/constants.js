@@ -295,5 +295,9 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     text: 'Giao không thành công',
     className: 'expired',
   },
+  [PACKAGE_STATUS_RESHIP]: {
+    text: 'Reship',
+    className: 'default',
+  },
 }
 // cSpell:enable
