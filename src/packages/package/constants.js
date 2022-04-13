@@ -284,11 +284,11 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     className: 'success',
   },
   [PACKAGE_STATUS_IMPORT_HUB]: {
-    text: 'Hub đã nhận',
+    text: 'Đã giao',
     className: 'success',
   },
   [PACKAGE_STATUS_EXPORT_HUB]: {
-    text: 'Hub đã xuất',
+    text: 'Đã giao',
     className: 'success',
   },
   [PACKAGE_STATUS_UNDELIVERED]: {
