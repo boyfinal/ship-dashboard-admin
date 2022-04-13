@@ -245,7 +245,6 @@ export const DELIVER_LOG_PACKAGE = {
   [PACKAGE_STATUS_WAREHOUSE_EXPORT]: 'Departed from LionBay Processing Center',
 }
 
-// cSpell:disable
 export const MAP_NAME_STATUS_WAREHOUSE = {
   [PACKAGE_STATUS_PICKED]: {
     text: 'Đã lấy',
@@ -284,12 +283,12 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     className: 'success',
   },
   [PACKAGE_STATUS_IMPORT_HUB]: {
-    text: 'Đã giao',
-    className: 'success',
+    text: 'Hub đã nhận',
+    className: 'primary',
   },
   [PACKAGE_STATUS_EXPORT_HUB]: {
-    text: 'Đã giao',
-    className: 'success',
+    text: 'Hub đã xuất',
+    className: 'primary',
   },
   [PACKAGE_STATUS_UNDELIVERED]: {
     text: 'Giao không thành công',
@@ -300,4 +299,3 @@ export const MAP_NAME_STATUS_WAREHOUSE = {
     className: 'default',
   },
 }
-// cSpell:enable
