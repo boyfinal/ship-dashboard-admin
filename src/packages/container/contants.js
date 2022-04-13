@@ -98,10 +98,10 @@ export const MAP_NAME_STATUS_CONTAINER = {
   },
   [CONTAINER_IMPORT_HUB]: {
     text: 'Đã giao',
-    className: 'primary',
+    className: 'info',
   },
   [CONTAINER_EXPORT_HUB]: {
     text: 'Đã giao',
-    className: 'primary',
+    className: 'info',
   },
 }
