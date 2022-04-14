@@ -92,7 +92,7 @@ export default {
     async fetchUsers(search = '') {
       this.isLoading = true
       const result = await api.fetchUsersByRole(
-        Object.assign({}, this.filter, { search: search })
+        Object.assign({}, this.filter, { search: search.trim() })
       )
       this.isLoading = false
 
