@@ -412,7 +412,7 @@ import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import { EXPORT_PACKAGE } from '../../setting/store/index'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { truncate } from '@core/utils/string'
-import UserResource from '@/components/shared/resource/User'
+import UserResource from '@/components/shared/resource/UsersActive'
 
 export default {
   name: 'BillList',

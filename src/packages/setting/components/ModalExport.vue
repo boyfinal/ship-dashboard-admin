@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import UserResource from '@/components/shared/resource/User'
+import UserResource from '@/components/shared/resource/UsersActive'
 import { date } from '@core/utils/datetime'
 
 export default {
@@ -163,7 +163,7 @@ export default {
   },
   watch: {
     visible: {
-      handler: function() {
+      handler: function () {
         this.user_id = 0
         this.status = ''
         this.start_date = ''
