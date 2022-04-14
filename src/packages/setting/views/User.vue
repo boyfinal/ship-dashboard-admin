@@ -2,7 +2,7 @@
   <div class="setting setting-account pages">
     <div class="page-content">
       <div class="mb-16">
-        <user-resource
+        <all-user
           id="search"
           class="user-resource is-fullwidth"
           :filter="{ role: 'customer' }"
@@ -125,7 +125,7 @@ import {
   USER_STATUS_ACTIVE,
   USER_STATUS_INACTIVE,
 } from '../constants'
-import UserResource from '@/components/shared/resource/User'
+import AllUser from '@/components/shared/resource/AllUser'
 import { ROLE_CUSTOMER } from '@core/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
@@ -134,7 +134,7 @@ export default {
   mixins: [mixinRoute, mixinTable],
   components: {
     EmptySearchResult,
-    UserResource,
+    AllUser,
     ModalConfirm,
   },
   data() {

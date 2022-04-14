@@ -3,7 +3,7 @@
     <div class="row mb-16">
       <div class="col-12">
         <label for=""
-          ><b>Khách hàng</b>&ensp;<span style="color:red">*</span></label
+          ><b>Khách hàng</b>&ensp;<span style="color: red">*</span></label
         >
         <user-resource
           v-model="user_id"
@@ -16,7 +16,7 @@
     <div class="row mb-16">
       <div class="col-6">
         <label for=""
-          ><b>Loại phí</b>&ensp;<span style="color:red">*</span></label
+          ><b>Loại phí</b>&ensp;<span style="color: red">*</span></label
         >
         <p-select class="floating" v-model="extra_fee_type_id">
           <option v-for="type in types" :key="type.id" :value="type.id">{{
@@ -28,13 +28,13 @@
     <div class="row mb-16">
       <div class="col-6">
         <label for=""
-          ><b>LionBay tracking</b>&ensp;<span style="color:red">*</span></label
+          ><b>LionBay tracking</b>&ensp;<span style="color: red">*</span></label
         >
         <p-input type="text" v-model="package_code"> </p-input>
       </div>
       <div class="col-6">
         <label for=""
-          ><b>Phí</b> ($)&ensp;<span style="color:red">*</span>
+          ><b>Phí</b> ($)&ensp;<span style="color: red">*</span>
         </label>
         <p-input
           type="text"
@@ -50,7 +50,7 @@
     <div class="row mb-16">
       <div class="col-12">
         <label for=""
-          ><b>Nội dung</b>&ensp;<span style="color:red">*</span></label
+          ><b>Nội dung</b>&ensp;<span style="color: red">*</span></label
         >
         <textarea
           class="form-control"
@@ -62,9 +62,7 @@
     <template slot="footer">
       <div></div>
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleClose">
-          Bỏ qua
-        </p-button>
+        <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button type="info" @click="handleSave" :loading="loading">
           Tạo
         </p-button>
@@ -74,7 +72,7 @@
 </template>
 
 <script>
-import UserResource from '@/components/shared/resource/User'
+import UserResource from '@/components/shared/resource/UsersActive'
 export default {
   name: 'ModalCreateExtraFee',
   components: { UserResource },
@@ -211,7 +209,7 @@ export default {
   },
   watch: {
     visible: {
-      handler: function() {
+      handler: function () {
         this.user_id = 0
         this.package_code = ''
         this.extra_fee_type_id = 10
@@ -220,7 +218,7 @@ export default {
       },
     },
     extra_fee_type_id: {
-      handler: function(id) {
+      handler: function (id) {
         const type = this.types.find((item) => item.id === id)
         if (type.name.trim().toLowerCase() === 'phí phát sinh khác') {
           this.$set(this, 'description', '')
