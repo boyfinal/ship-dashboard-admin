@@ -1,17 +1,27 @@
 <template>
-  <multiselect
-    class="multiselect-custom"
-    v-model="selected"
-    :options="users"
-    :placeholder="label"
-    :custom-label="customLabel"
-    :loading="isLoading"
-    @search-change="fetchUsers"
-    @select="handleSelect"
-    @remove="handleRemove"
-    :emitID="emitID"
-  >
-  </multiselect>
+  <div>
+    <multiselect
+      class="multiselect-custom"
+      v-model="selected"
+      :options="users"
+      :placeholder="label"
+      :custom-label="customLabel"
+      :loading="isLoading"
+      @search-change="fetchUsers"
+      @select="handleSelect"
+      @remove="handleRemove"
+      :emitID="emitID"
+      :showDropdown="false"
+    >
+    </multiselect>
+    <div
+      v-if="selected"
+      class="multiselect__clear"
+      @click.prevent="handleRemove"
+    >
+      <p-svg name="x"></p-svg>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -55,7 +65,7 @@ export default {
     }
   },
   created() {
-    this.handleSearch = debounce(async function(search = '') {
+    this.handleSearch = debounce(async function (search = '') {
       this.isLoading = true
       let response = await api.fetchUsersByRole(
         Object.assign({}, this.filter, { search: search, not_limit: true })
@@ -109,11 +119,10 @@ export default {
         return
       }
       this.$emit('input', user)
-      // this.selected=user
-      // console.log(this.selected);
     },
 
     handleRemove() {
+      this.selected = null
       if (this.emitID) {
         this.$emit('input', 0)
         return
@@ -131,3 +140,23 @@ export default {
   // },
 }
 </script>
+
+<style lang="scss">
+.user-resource {
+  width: 100%;
+  position: relative;
+}
+.multiselect__clear {
+  line-height: 40px;
+  display: block;
+  position: absolute;
+  top: 0;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  right: 1px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 4;
+}
+</style>

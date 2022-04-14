@@ -11,6 +11,9 @@
         border-top-left-radius: 0.215rem;
         border-top-right-radius: 0.215rem;
         position: relative;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
         &:hover,
         &:focus {
             background-color: transparent;
@@ -20,7 +23,7 @@
                 position: absolute;
                 border-bottom: 2px solid #ccd5db;
                 width: 100%;
-                top:106%;
+                top: 106%;
                 left: 0%;
             }
         }
@@ -31,16 +34,18 @@
         }
     }
     .nav-link.active {
-        color: $color-java-blue-10;
+        color: $color-neutral-10;
         background-color: transparent;
         transition: 0.25s;
-        // font-weight: 700;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
         &:after {
             content: "";
             position: absolute;
-            border-bottom: 2px solid $color-java-blue-10;
+            border-bottom: 2px solid $color-turquoise-4;
             width: 100%;
-           top: 106%;
+            top: 106%;
             left: 0;
         }
     }

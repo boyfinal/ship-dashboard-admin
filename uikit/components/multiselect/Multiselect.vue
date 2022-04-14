@@ -21,7 +21,7 @@
       v-show="isOpen"
       @click="deactivate()"
     ></div>
-    <slot name="caret" :toggle="toggle">
+    <slot name="caret" :toggle="toggle" v-if="showDropdown">
       <div @mousedown.prevent.stop="toggle()" class="multiselect__select">
         <p-svg name="Frame"></p-svg>
       </div>
@@ -191,9 +191,9 @@
           <li
             v-show="
               showNoResults &&
-                filteredOptions.length === 0 &&
-                search &&
-                !loading
+              filteredOptions.length === 0 &&
+              search &&
+              !loading
             "
           >
             <span class="multiselect__option">
@@ -365,6 +365,10 @@ export default {
     prefixIcon: {
       type: String,
       default: '',
+    },
+    showDropdown: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {
