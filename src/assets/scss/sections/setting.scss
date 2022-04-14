@@ -36,9 +36,9 @@
     }
     .card {
         .btn {
-            width: 67px;
+            min-width: 67px;
             border-radius: 4px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
             line-height: 22px;
             &.lock {
