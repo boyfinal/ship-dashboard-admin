@@ -77,3 +77,10 @@ export const DAY_LIMIT = [
   { id: 4, value: 90 },
   { id: 5, value: 180 },
 ]
+
+export const OPTIONS_PACKAGES = {
+  [1]: '> 6000 đơn',
+  [2]: '> 7000 đơn',
+  [3]: '> 8000 đơn',
+  [4]: '> 9000 đơn',
+}
