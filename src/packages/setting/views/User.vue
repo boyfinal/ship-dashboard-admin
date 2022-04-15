@@ -28,6 +28,7 @@
                     <th>Tên</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
+                    <th width="150" class="text-center">Quy mô</th>
                     <th>Ngày tạo</th>
                     <th width="150">Thao tác</th>
                   </tr>
@@ -59,6 +60,7 @@
                     <td>
                       <div> {{ item.phone_number || 'N/A' }}</div>
                     </td>
+                    <td class="text-center">{{ mapPackage[item.package] }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
                       <a
@@ -124,6 +126,7 @@ import {
   USER_STATUS_DEACTIVE,
   USER_STATUS_ACTIVE,
   USER_STATUS_INACTIVE,
+  OPTIONS_PACKAGES,
 } from '../constants'
 import AllUser from '@/components/shared/resource/AllUser'
 import { ROLE_CUSTOMER } from '@core/constants'
@@ -165,6 +168,9 @@ export default {
       users: (state) => state.users,
       count: (state) => state.count_user,
     }),
+    mapPackage() {
+      return OPTIONS_PACKAGES
+    },
   },
   methods: {
     truncate,
