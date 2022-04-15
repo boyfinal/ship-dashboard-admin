@@ -79,7 +79,7 @@
               <tr v-for="(item, i) in item.containers" :key="i">
                 <td>
                   <router-link
-                    v-if="isAdmin"
+                    v-if="$isAdmin()"
                     :to="{
                       name: 'container-detail',
                       params: {
@@ -139,9 +139,7 @@
                     >
                       <a
                         target="_blank"
-                        :href="
-                          `https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`
-                        "
+                        :href="`https://www.ups.com/track?loc=vi_VN&tracknum=${item.tracking_number}&requester=WT/`"
                       >
                         <svg
                           width="32"
@@ -221,9 +219,6 @@ export default {
         containers: [],
         label_url: item.label_url,
       }))
-    },
-    isAdmin() {
-      return this.$isAdmin()
     },
   },
 

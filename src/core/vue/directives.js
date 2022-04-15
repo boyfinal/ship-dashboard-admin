@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import { domOn } from '../utils/dom'
 import { capitalize } from '@core/utils/string'
+import {
+  MAP_PACKAGE_STATUS_CLASSNAMES,
+  MAP_NAME_STATUS_WAREHOUSE,
+} from '../../packages/package/constants'
+import { MAP_CLAIM_STATUS } from '../../packages/claim/constants'
+import { MAP_NAME_STATUS_TRANSACTION } from '../../packages/transaction/constants'
+import { MAP_NAME_STATUS_CONTAINER } from '../../packages/container/contants'
+import { MAP_NAME_STATUS_SHIPMENT } from '../../packages/shipment/constants'
 
 const nodeList = []
 const ctx = '@@clickoutsideContext'
@@ -17,7 +25,7 @@ let seed = 0
   })
 
 function createDocumentHandler(el, binding, vnode) {
-  return function(mouseup = {}, mousedown = {}) {
+  return function (mouseup = {}, mousedown = {}) {
     if (
       !vnode ||
       !vnode.context ||
@@ -78,144 +86,50 @@ export const clickoutside = {
   },
 }
 
-const getFormatStatus = (status) => {
-  let statusClass = ''
-  switch (status) {
-    case 'draft':
-    case 'awaiting':
-    case 'in-Transit':
-      statusClass = 'default'
-      break
-    case 'process':
-    case 'active':
-    case 'balance':
-      statusClass = 'success'
-      break
-    case 'feedback':
-    case 'fulfilled':
-    case 'fulfill':
-      statusClass = 'primary'
-      break
-    case 'open':
-    case 'in-review':
-      statusClass = 'info'
-      break
+const getFormatStatus = (status, type) => {
+  type = type || 'package'
+  let value = { text: 'unknown', className: 'unknown' }
 
-    case 'inactive':
-    case 'rejected':
-    case 'withdrew':
-    case 'canceled':
-      statusClass = 'danger'
-      break
-    case 'closed':
-      statusClass = 'dark'
-      break
-    case 'Hết hạn':
-    case 'expired':
-    case 'undelivered':
-    case 'Giao không thành công':
-      statusClass = 'expired'
-      break
-    case 'confirm payment':
-    case 'unpaid':
-    case 'Pre-Transit':
-      statusClass = 'pending'
-      break
-    case 'partially paid':
-      statusClass = 'partially-paid'
-      break
-    case 'paid':
-      statusClass = 'paid'
-      break
-    case 'awaiting payment':
-      statusClass = 'awaiting-payment'
-      break
-    case 'debt':
-      statusClass = 'debt'
-      break
-    case 'cancel':
-      statusClass = 'cancel'
-      break
-    case 'done':
-      statusClass = 'done'
-      break
-    case 'resolved':
-      statusClass = 'resolved'
-      break
-    case 'Tạo mới':
-    case 'Kiểm hàng':
-      statusClass = 'default'
-      break
-    case 'Chờ lấy':
-    case 'pending':
-      statusClass = 'await'
-      break
-    case 'Đã lấy':
-    case 'Đã dán nhãn':
-    case 'Đang giao':
-    case 'processing':
-    case 'Processing':
-      statusClass = 'primary'
-      break
-    case 'Giao thành công':
-    case 'Thành công':
-    case 'Xuất kho':
-    case 'delivered':
-      statusClass = 'success'
-      break
-    case 'Trả hàng':
-    case 'Đã giao':
-      statusClass = 'info'
-      break
-    case 'Hủy':
-    case 'Đã hủy':
-    case 'Thất bại':
-    case 'Từ chối':
-      statusClass = 'danger'
-      break
-    case 'Đang xử lý':
-    case 'Chờ xác nhận':
-      statusClass = 'pending'
-      break
-    case 'Đã xử lý':
-    case 'Đóng lô':
-      statusClass = 'done'
-      break
-    case 'Chưa thanh toán':
-    case 'Đóng kiện':
-      statusClass = 'unpaid'
-      break
-    case 'Hoàn tiền':
-      statusClass = 'refund'
-      break
-    case 'alert':
-    case 'Alert':
-      statusClass = 'alert'
-      break
-    case 'import-hub':
-    case 'Hub đã nhận':
-      statusClass = 'import-hub'
-      break
-    case 'export-hub':
-    case 'Hub đã xuất':
-      statusClass = 'export-hub'
-      break
+  if (type == 'package') {
+    value = MAP_PACKAGE_STATUS_CLASSNAMES[status] || {}
+  }
+
+  if (type == 'warehouse') {
+    value = MAP_NAME_STATUS_WAREHOUSE[status] || {}
+  }
+
+  if (type == 'claim') {
+    value = MAP_CLAIM_STATUS[status] || {}
+  }
+
+  if (type == 'transaction') {
+    value = MAP_NAME_STATUS_TRANSACTION[status] || {}
+  }
+
+  if (type == 'container') {
+    value = MAP_NAME_STATUS_CONTAINER[status] || {}
+  }
+
+  if (type == 'shipment') {
+    value = MAP_NAME_STATUS_SHIPMENT[status] || {}
   }
 
   return {
-    text: capitalize(status),
-    classList: `badge badge-round badge-${statusClass}`,
+    text: capitalize(value.text),
+    classList: `badge badge-round badge-${value.className}`,
   }
 }
 
 export const labelStatus = {
   update(el, binding) {
-    const { text, classList } = getFormatStatus(binding.value)
+    const type = el.getAttribute('type')
+    const { text, classList } = getFormatStatus(binding.value, type)
     el.classList = classList
     el.innerText = text
   },
   inserted(el, binding) {
-    const { text, classList } = getFormatStatus(binding.value)
+    const type = el.getAttribute('type')
+    const { text, classList } = getFormatStatus(binding.value, type)
     el.classList = classList
     el.innerText = text
   },

@@ -2,12 +2,14 @@ $width-sidebar: 240px;
 .site-navbar {
   position: fixed;
   z-index: 1000;
+  transition: width 0.2s
 }
 
 .site-menubar-header {
   height: 56px;
   padding: 20px 12px;
   position: relative;
+  transition: width 0.2s;
   &:after {
     content: '';
     position: absolute;
@@ -107,7 +109,7 @@ $width-sidebar: 240px;
   background: #242729;
   transition: width 0.2s;
   height: 100%;
-  z-index: 5;
+  z-index: 1000;
   box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04),
     0px 8px 16px rgba(96, 97, 112, 0.16);
 }
@@ -135,6 +137,7 @@ $width-sidebar: 240px;
       transition: 0.3s;
       color: #ffffff;
     }
+
   }
   .site-menu-icon {
     &.default {
@@ -164,8 +167,8 @@ $width-sidebar: 240px;
   opacity: 0;
 }
 
-//Logout
-.site-menubar-hide .site-menu-title {
+
+.site-menubar-hide .site-menu-title  {
   opacity: 0;
   visibility: hidden;
 }
@@ -200,7 +203,6 @@ $width-sidebar: 240px;
     }
   }
   .site-menu-icon {
-    //filter: invert(21%) sepia(63%) saturate(7174%) hue-rotate(221deg) brightness(98%) contrast(96%);
     &.default {
       display: none;
     }
@@ -220,16 +222,43 @@ $width-sidebar: 240px;
       opacity: 0;
     }
   }
+  .site-menubar-header{
+    .logo-header{
+      transform: scale(0.4);
+      margin-left: -34px;
+    }
+  }
+  .site-navbar{
+    width: calc(100% - 60px);
+  }
+  .icon-sub{
+    opacity: 0;
+  }
   .site-menubar:hover {
-    width: 14vw !important;
+    width: $width-sidebar !important;
     .site-menu-title {
       opacity: 1;
       transition: 0.5s;
       visibility: visible;
     }
+    .logo-header{
+      transform: scale(1);
+      margin-left: unset;
+    }
     .icon {
       display: block !important;
     }
+    .icon-sub{
+      opacity: 1;
+    }
+  }
+  .site-menu{
+    padding: 0 0px 0px 10px;
+  }
+}
+.site-menubar-hover{
+  .site-navbar{
+    width: calc(100% - 240px);
   }
 }
 

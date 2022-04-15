@@ -2,7 +2,7 @@
   <div
     id="nav_container"
     class="p-tabs nav-tabs-horizontal mt-24"
-    style="overflow: hidden;"
+    style="overflow: hidden"
   >
     <button class="icon-nav next" @click="clickLeftNav">
       <div class="left-nav">
@@ -43,7 +43,7 @@
 <script>
 import { capitalize } from '@core/utils/string'
 import { numFormatter } from '@core/utils/formatter'
-import { PackageStatusAlertText } from '../constants'
+import { PACKAGE_STATUS_ALERT_TEXT } from '../constants'
 
 export default {
   name: 'PackageStatusTab',
@@ -78,7 +78,7 @@ export default {
           let count
           let total = 0
           this.countStatus.forEach((obj) => {
-            if (obj.status !== PackageStatusAlertText) {
+            if (obj.status !== PACKAGE_STATUS_ALERT_TEXT) {
               total += parseInt(obj.count)
             }
             if (obj.status === item.value) {

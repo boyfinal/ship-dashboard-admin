@@ -161,7 +161,6 @@ import { printImage } from '@core/utils/print'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import http from '@core/services/http'
 import { FETCH_SERVICE, FETCH_WAREHOUSE } from '../../shared/store'
-import { MAP_NAME_STATUS_PACKAGE } from '@/packages/package/constants'
 
 export default {
   name: 'CheckPackage',
@@ -236,16 +235,6 @@ export default {
         !this.volume.width ||
         !this.volume.height
       )
-    },
-    statusText() {
-      if (!this.current.id) return ''
-      if (!MAP_NAME_STATUS_PACKAGE[this.current.status]) return 'unknown'
-      return MAP_NAME_STATUS_PACKAGE[this.current.status].value
-    },
-    statusClass() {
-      if (!this.current.id) return ''
-      if (!MAP_NAME_STATUS_PACKAGE[this.current.status]) return 'badge-default'
-      return MAP_NAME_STATUS_PACKAGE[this.current.status].class
     },
     tracking() {
       return this.current.tracking || {}

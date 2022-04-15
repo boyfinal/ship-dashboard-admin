@@ -69,10 +69,8 @@
                         item.created_at | date('dd/MM/yyyy')
                       }}</span></td
                     >
-                    <td :title="mapStatus[item.status].value"
-                      ><span
-                        v-status:status="mapStatus[item.status].value"
-                      ></span
+                    <td
+                      ><span v-status="item.status" type="transaction"></span
                     ></td>
                     <td :title="item.user.full_name">
                       <span class="tool-tip"> {{ item.user.full_name }}</span>
@@ -187,7 +185,6 @@ import {
   TransactionStatusProcess,
   TransactionStatusSuccess,
   TransactionStatusFailure,
-  MAP_NAME_STATUS_TRANSACTION,
   TransactionLogTypeRefund,
   TransactionLogTypePayoneer,
   TransactionLogTypePingPong,
@@ -256,9 +253,6 @@ export default {
     statusTab() {
       return TRANSACTION_STATUS_TAB
     },
-    mapStatus() {
-      return MAP_NAME_STATUS_TRANSACTION
-    },
     topupType() {
       return TransactionLogTypeTopup
     },
@@ -307,7 +301,7 @@ export default {
         case TransactionStatusSuccess:
           validAmount = this.checkValidateMoneyAmount()
           if (!validAmount) {
-            this.$nextTick(function() {
+            this.$nextTick(function () {
               this.$refs['money_' + this.selectedItem.id][0].focus()
             })
             break
@@ -453,7 +447,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

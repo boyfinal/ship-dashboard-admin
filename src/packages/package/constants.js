@@ -1,36 +1,37 @@
-export const PackageStatusDeactive = 0
-export const PackageStatusCreated = 1
-export const PackageStatusPendingPickup = 2
-export const PackageStatusRePendingPickup = 3
-export const PackageStatusPicked = 10
-export const PackageStatusWareHouseLabeled = 11
-export const PackageStatusWareHouseInContainer = 12
-export const PackageStatusWareHouseInShipment = 13
-export const PackageStatusWareHouseExport = 14
-export const PackageStatusImportHub = 15
-export const PackageStatusExportHub = 16
-export const PackageStatusInTransit = 30
-export const PackageStatusDelivered = 60
-export const PackageStatusReturned = 40
-export const PackageStatusCancelled = 50
-export const PackageStatusExpired = 70
-export const PackageStatusUndelivered = 90
+export const PACKAGE_STATUS_DEACTIVATE = 0
+export const PACKAGE_STATUS_CREATED = 1
+export const PACKAGE_STATUS_PENDING_PICKUP = 2
+export const PACKAGE_STATUS_RE_PENDING_PICKUP = 3
+export const PACKAGE_STATUS_PICKED = 10
+export const PACKAGE_STATUS_WAREHOUSE_LABELED = 11
+export const PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER = 12
+export const PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT = 13
+export const PACKAGE_STATUS_WAREHOUSE_EXPORT = 14
+export const PACKAGE_STATUS_IMPORT_HUB = 15
+export const PACKAGE_STATUS_EXPORT_HUB = 16
+export const PACKAGE_STATUS_IN_TRANSIT = 30
+export const PACKAGE_STATUS_DELIVERED = 60
+export const PACKAGE_STATUS_RETURNED = 40
+export const PACKAGE_STATUS_CANCELLED = 50
+export const PACKAGE_STATUS_EXPIRED = 70
+export const PACKAGE_STATUS_RESHIP = 80
+export const PACKAGE_STATUS_UNDELIVERED = 90
 
-export const PackageStatusCreatedText = 'pending'
-export const PackageStatusPendingPickupText = 'pre-transit'
-export const PackageStatusProcessingText = 'processing'
-export const PackageStatusInTransitText = 'in-transit'
-export const PackageStatusImportHubText = 'import-hub'
-export const PackageStatusExportHubText = 'export-hub'
-export const PackageStatusDeliveredText = 'delivered'
-export const PackageStatusAlertText = 'alert'
-export const PackageStatusCancelledText = 'canceled'
-export const PackageStatusExpiredText = 'expired'
-export const PackageStatusUndeliveredText = 'undelivered'
+export const PACKAGE_STATUS_CREATED_TEXT = 'pending'
+export const PACKAGE_STATUS_PENDING_PICKUP_TEXT = 'pre-transit'
+export const PACKAGE_STATUS_PROCESSING_TEXT = 'processing'
+export const PACKAGE_STATUS_IN_TRANSIT_TEXT = 'in-transit'
+export const PACKAGE_STATUS_IMPORT_HUB_TEXT = 'import-hub'
+export const PACKAGE_STATUS_EXPORT_HUB_TEXT = 'export-hub'
+export const PACKAGE_STATUS_DELIVERED_TEXT = 'delivered'
+export const PACKAGE_STATUS_ALERT_TEXT = 'alert'
+export const PACKAGE_STATUS_CANCELLED_TEXT = 'canceled'
+export const PACKAGE_STATUS_EXPIRED_TEXT = 'expired'
+export const PACKAGE_STATUS_UNDELIVERED_TEXT = 'undelivered'
 
-export const PackageAlertTypeOverPretransit = 1
-export const PackageAlertTypeWarehoseReturn = 2
-export const PackageAlertTypeHubReturn = 3
+export const PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT = 1
+export const PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN = 2
+export const PACKAGE_ALERT_TYPE_HUB_RETURN = 3
 
 export const PACKAGE_STATUS_TAB = [
   {
@@ -38,103 +39,121 @@ export const PACKAGE_STATUS_TAB = [
     text: 'All',
   },
   {
-    value: PackageStatusCreatedText,
+    value: PACKAGE_STATUS_CREATED_TEXT,
     text: 'Pending',
   },
   {
-    value: PackageStatusPendingPickupText,
+    value: PACKAGE_STATUS_PENDING_PICKUP_TEXT,
     text: 'Pre-Transit',
   },
   {
-    value: PackageStatusProcessingText,
+    value: PACKAGE_STATUS_PROCESSING_TEXT,
     text: 'Processing',
   },
   {
-    value: PackageStatusInTransitText,
+    value: PACKAGE_STATUS_IN_TRANSIT_TEXT,
     text: 'In-Transit',
   },
   {
-    value: PackageStatusDeliveredText,
+    value: PACKAGE_STATUS_DELIVERED_TEXT,
     text: 'Delivered',
   },
   {
-    value: PackageStatusAlertText,
+    value: PACKAGE_STATUS_ALERT_TEXT,
     text: 'Alert',
   },
   {
-    value: PackageStatusCancelledText,
+    value: PACKAGE_STATUS_CANCELLED_TEXT,
     text: 'Canceled',
   },
   {
-    value: PackageStatusExpiredText,
+    value: PACKAGE_STATUS_EXPIRED_TEXT,
     text: 'Expired',
   },
   {
-    value: PackageStatusUndeliveredText,
+    value: PACKAGE_STATUS_UNDELIVERED_TEXT,
     text: 'Undelivered',
   },
 ]
 
-export const MAP_NAME_STATUS_PACKAGE = {
-  ['']: {
-    value: '-',
-    class: '',
+export const MAP_PACKAGE_STATUS_TEXT = {
+  [PACKAGE_STATUS_CREATED]: PACKAGE_STATUS_CREATED_TEXT,
+  [PACKAGE_STATUS_PENDING_PICKUP]: PACKAGE_STATUS_PENDING_PICKUP_TEXT,
+  [PACKAGE_STATUS_PICKED]: PACKAGE_STATUS_PROCESSING_TEXT,
+  [PACKAGE_STATUS_WAREHOUSE_LABELED]: PACKAGE_STATUS_PROCESSING_TEXT,
+  [PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER]: PACKAGE_STATUS_PROCESSING_TEXT,
+  [PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT]: PACKAGE_STATUS_PROCESSING_TEXT,
+  [PACKAGE_STATUS_WAREHOUSE_EXPORT]: PACKAGE_STATUS_PROCESSING_TEXT,
+  [PACKAGE_STATUS_IN_TRANSIT]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+  [PACKAGE_STATUS_DELIVERED]: PACKAGE_STATUS_DELIVERED_TEXT,
+  [PACKAGE_STATUS_CANCELLED]: PACKAGE_STATUS_CANCELLED_TEXT,
+  [PACKAGE_STATUS_EXPIRED]: PACKAGE_STATUS_EXPIRED_TEXT,
+  [PACKAGE_STATUS_IMPORT_HUB]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+  [PACKAGE_STATUS_EXPORT_HUB]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+  [PACKAGE_STATUS_UNDELIVERED]: PACKAGE_STATUS_UNDELIVERED_TEXT,
+  [PACKAGE_STATUS_RESHIP]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+}
+
+export const MAP_PACKAGE_STATUS_CLASSNAMES = {
+  [PACKAGE_STATUS_CREATED]: {
+    text: PACKAGE_STATUS_CREATED_TEXT,
+    className: 'await',
   },
-  [PackageStatusCreated]: {
-    value: 'Pending',
-    class: 'badge-primary',
+  [PACKAGE_STATUS_PENDING_PICKUP]: {
+    text: PACKAGE_STATUS_PENDING_PICKUP_TEXT,
+    className: 'pending',
   },
-  [PackageStatusPendingPickup]: {
-    value: 'Pre-Transit',
-    class: 'badge-success',
+  [PACKAGE_STATUS_PICKED]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
   },
-  [PackageStatusPicked]: {
-    value: 'Processing',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
   },
-  [PackageStatusWareHouseLabeled]: {
-    value: 'Processing',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
   },
-  [PackageStatusWareHouseInContainer]: {
-    value: 'Processing',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
   },
-  [PackageStatusWareHouseInShipment]: {
-    value: 'Processing',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_EXPORT]: {
+    text: PACKAGE_STATUS_PROCESSING_TEXT,
+    className: 'primary',
   },
-  [PackageStatusWareHouseExport]: {
-    value: 'Processing',
-    class: 'badge-success',
+  [PACKAGE_STATUS_IN_TRANSIT]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
   },
-  [PackageStatusInTransit]: {
-    value: 'In-Transit',
-    class: 'badge-success',
+  [PACKAGE_STATUS_DELIVERED]: {
+    text: PACKAGE_STATUS_DELIVERED_TEXT,
+    className: 'success',
   },
-  [PackageStatusDelivered]: {
-    value: 'Delivered',
-    class: 'badge-success',
+  [PACKAGE_STATUS_CANCELLED]: {
+    text: PACKAGE_STATUS_CANCELLED_TEXT,
+    className: 'danger',
   },
-  [PackageStatusCancelled]: {
-    value: 'Canceled',
-    class: 'badge-success',
+  [PACKAGE_STATUS_EXPIRED]: {
+    text: PACKAGE_STATUS_EXPIRED_TEXT,
+    className: 'expired',
   },
-  [PackageStatusExpired]: {
-    value: 'Expired',
-    class: 'badge-success',
+  [PACKAGE_STATUS_IMPORT_HUB]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
   },
-  [PackageStatusImportHub]: {
-    value: 'In-Transit',
-    class: 'badge-success',
+  [PACKAGE_STATUS_EXPORT_HUB]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
   },
-  [PackageStatusExportHub]: {
-    value: 'In-Transit',
-    class: 'badge-success',
+  [PACKAGE_STATUS_UNDELIVERED]: {
+    text: PACKAGE_STATUS_UNDELIVERED_TEXT,
+    className: 'expired',
   },
-  [PackageStatusUndelivered]: {
-    value: 'Undelivered',
-    class: 'badge-danger',
+  [PACKAGE_STATUS_RESHIP]: {
+    text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+    className: 'default',
   },
 }
 
@@ -143,44 +162,45 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
     value: '-',
     class: '',
   },
-  [PackageStatusCreatedText]: {
+  [PACKAGE_STATUS_CREATED_TEXT]: {
     value: 'pending',
     class: 'badge-primary',
   },
-  [PackageStatusPendingPickupText]: {
+  [PACKAGE_STATUS_PENDING_PICKUP_TEXT]: {
     value: 'Pre-Transit',
     class: 'badge-success',
   },
-  [PackageStatusProcessingText]: {
+  [PACKAGE_STATUS_PROCESSING_TEXT]: {
     value: 'processing',
     class: 'badge-primary',
   },
-  [PackageStatusInTransitText]: {
+  [PACKAGE_STATUS_IN_TRANSIT_TEXT]: {
     value: 'in-Transit',
     class: 'badge-default',
   },
-  [PackageStatusDeliveredText]: {
+  [PACKAGE_STATUS_DELIVERED_TEXT]: {
     value: 'delivered',
     class: 'badge-success',
   },
-  [PackageStatusAlertText]: {
+  [PACKAGE_STATUS_ALERT_TEXT]: {
     value: 'alert',
     class: 'badge-alert',
   },
-  [PackageStatusCancelledText]: {
+  [PACKAGE_STATUS_CANCELLED_TEXT]: {
     value: 'canceled',
     class: 'badge-danger',
   },
-  [PackageStatusExpiredText]: {
+  [PACKAGE_STATUS_EXPIRED_TEXT]: {
     value: 'expired',
     class: 'badge-expired',
   },
-  [PackageStatusUndeliveredText]: {
+  [PACKAGE_STATUS_UNDELIVERED_TEXT]: {
     value: 'undelivered',
     class: 'badge-expired',
   },
 }
 
+// cSpell:disable
 export const CHANGE_PACKAGE_TYPE = [
   '',
   'Người nhận',
@@ -209,63 +229,73 @@ export const CHANGE_PACKAGE_TYPE = [
   'Reship',
   'Mã đơn hàng',
 ]
+// cSpell:enable
 
 export const DELIVER_LOG_PACKAGE = {
-  [PackageStatusInTransit]: 'Arriving at international airport to go abroad',
-  [PackageStatusCreated]: ' Shipping label created, LionBay awaiting item',
-  [PackageStatusPendingPickup]: 'Shipping label created, LionBay awaiting item',
-  [PackageStatusRePendingPickup]:
+  [PACKAGE_STATUS_IN_TRANSIT]: 'Arriving at international airport to go abroad',
+  [PACKAGE_STATUS_CREATED]: ' Shipping label created, LionBay awaiting item',
+  [PACKAGE_STATUS_PENDING_PICKUP]:
     'Shipping label created, LionBay awaiting item',
-  [PackageStatusPicked]: 'Accepted at LionBay Processing	Center',
-  [PackageStatusCancelled]: 'Label canceled',
-  [PackageStatusDelivered]: 'Delivered',
-  [PackageStatusReturned]: ' Package returned',
-  [PackageStatusWareHouseExport]: 'Departed from LionBay Processing Center',
+  [PACKAGE_STATUS_RE_PENDING_PICKUP]:
+    'Shipping label created, LionBay awaiting item',
+  [PACKAGE_STATUS_PICKED]: 'Accepted at LionBay Processing	Center',
+  [PACKAGE_STATUS_CANCELLED]: 'Label canceled',
+  [PACKAGE_STATUS_DELIVERED]: 'Delivered',
+  [PACKAGE_STATUS_RETURNED]: ' Package returned',
+  [PACKAGE_STATUS_WAREHOUSE_EXPORT]: 'Departed from LionBay Processing Center',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {
-  [PackageStatusPicked]: {
-    value: 'Đã lấy',
-    class: 'badge-primary',
+  [PACKAGE_STATUS_PICKED]: {
+    text: 'Đã lấy',
+    className: 'primary',
   },
-  [PackageStatusWareHouseLabeled]: {
-    value: 'Kiểm hàng',
-    class: 'badge-success',
+  [PACKAGE_STATUS_PENDING_PICKUP]: {
+    text: 'Pre-Transit',
+    className: 'default',
   },
-  [PackageStatusWareHouseInContainer]: {
-    value: 'Đóng kiện',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_LABELED]: {
+    text: 'Kiểm hàng',
+    className: 'success',
   },
-  [PackageStatusWareHouseInShipment]: {
-    value: 'Đóng lô',
-    class: 'badge-primary',
+  [PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER]: {
+    text: 'Đóng kiện',
+    className: 'success',
   },
-  [PackageStatusInTransit]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
+  [PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT]: {
+    text: 'Đóng lô',
+    className: 'primary',
   },
-  [PackageStatusWareHouseExport]: {
-    value: 'Xuất kho',
-    class: 'badge-success',
+  [PACKAGE_STATUS_IN_TRANSIT]: {
+    text: 'Xuất kho',
+    className: 'success',
   },
-  [PackageStatusCancelled]: {
-    value: 'Đã hủy',
-    class: 'badge-danger',
+  [PACKAGE_STATUS_WAREHOUSE_EXPORT]: {
+    text: 'Xuất kho',
+    className: 'success',
   },
-  [PackageStatusDelivered]: {
-    value: 'Giao thành công',
-    class: 'badge-success',
+  [PACKAGE_STATUS_CANCELLED]: {
+    text: 'Đã hủy',
+    className: 'danger',
   },
-  [PackageStatusImportHub]: {
-    value: 'Hub đã nhận',
-    class: 'badge-success',
+  [PACKAGE_STATUS_DELIVERED]: {
+    text: 'Giao thành công',
+    className: 'success',
   },
-  [PackageStatusExportHub]: {
-    value: 'Hub đã xuất',
-    class: 'badge-success',
+  [PACKAGE_STATUS_IMPORT_HUB]: {
+    text: 'Hub đã nhận',
+    className: 'primary',
   },
-  [PackageStatusUndelivered]: {
-    value: 'Giao không thành công',
-    class: 'badge-expired',
+  [PACKAGE_STATUS_EXPORT_HUB]: {
+    text: 'Hub đã xuất',
+    className: 'primary',
+  },
+  [PACKAGE_STATUS_UNDELIVERED]: {
+    text: 'Giao không thành công',
+    className: 'expired',
+  },
+  [PACKAGE_STATUS_RESHIP]: {
+    text: 'Reship',
+    className: 'default',
   },
 }

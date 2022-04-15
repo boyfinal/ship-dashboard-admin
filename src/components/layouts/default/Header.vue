@@ -3,7 +3,15 @@
     <div class="navbar__header">
       <div class="navbar__header-content">
         <div class="navbar__header-icon">
-          <p-svg name="humbeger-menu"></p-svg>
+          <div
+            @click="toggleIcon"
+            :class="{ 'active-ep': isExpand }"
+            class="hamburger-lines"
+          >
+            <span class="line line1"></span>
+            <span class="line line2"></span>
+            <span class="line line3"></span>
+          </div>
         </div>
         <div class="navbar__header-title">{{ handleTitle }}</div>
       </div>
@@ -174,6 +182,7 @@ export default {
           unread: 1,
         },
       },
+      isExpand: false,
       NotificationUnread: NotificationUnread,
     }
   },
@@ -215,6 +224,10 @@ export default {
     },
     hideMenuUser() {
       this.showUserMenu = false
+    },
+    toggleIcon() {
+      this.isExpand = !this.isExpand
+      this.$emit('toggleShowSidebar')
     },
   },
 }

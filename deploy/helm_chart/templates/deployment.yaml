@@ -54,3 +54,9 @@ spec:
         {{- end }}
       imagePullSecrets:
         - name: registry
+      {{- if .Values.app.node_selectors }}
+      nodeSelector: 
+        {{- range $key, $val := .Values.app.node_selectors }}
+        {{ $key }}: {{ $val }}
+        {{- end}}
+      {{- end}}

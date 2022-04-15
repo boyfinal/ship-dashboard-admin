@@ -14,7 +14,7 @@
         </p-input>
         <p-select
           class="ml-8"
-          style="width:20%"
+          style="width: 20%"
           placeholder="Please select"
           v-model="filter.search_by"
         >
@@ -33,7 +33,7 @@
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
-            <div class="table-responsive" style="overflow:unset">
+            <div class="table-responsive" style="overflow: unset">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <div
@@ -87,7 +87,8 @@
                       hover: isChecked(item),
                       deactive:
                         (item.package_code &&
-                          item.package_code.status == PackageStatusDeactive) ||
+                          item.package_code.status ==
+                            PackageStatusDeactivate) ||
                         item.status_string == PackageStatusExpiredText,
                     }"
                   >
@@ -122,11 +123,7 @@
                       <span
                         v-if="!item.validate_address"
                         @click="handleValidateAddress(item.id)"
-                        class="
-                            list-warning
-                            pull-right
-                            badge badge-round badge-warning-order
-                          "
+                        class="list-warning pull-right badge badge-round badge-warning-order"
                       >
                         <p-tooltip
                           class="item_name"
@@ -157,11 +154,9 @@
                         >
                           <a
                             target="_blank"
-                            :href="
-                              `https://t.17track.net/en#nums=${
-                                item.package_code ? item.package_code.code : ''
-                              }`
-                            "
+                            :href="`https://t.17track.net/en#nums=${
+                              item.package_code ? item.package_code.code : ''
+                            }`"
                           >
                             <svg
                               width="32"
@@ -198,10 +193,8 @@
                       <a
                         v-if="item.tracking"
                         target="_blank"
-                        class="on-hover "
-                        :href="
-                          `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
-                        "
+                        class="on-hover"
+                        :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`"
                       >
                         {{ item.tracking.tracking_number }}
                       </a>
@@ -216,16 +209,10 @@
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
-                      <span
-                        v-status:status="mapStatus[item.status_string].value"
-                      ></span>
+                      <span v-status="item.status"></span>
                       <span
                         v-if="item.alert > 0"
-                        class="
-                            pull-right
-                            list-warning
-                            badge badge-round badge-warning-order
-                          "
+                        class="pull-right list-warning badge badge-round badge-warning-order"
                       >
                         <p-tooltip
                           class="item_name"
@@ -269,13 +256,12 @@ import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
 import {
   PACKAGE_STATUS_TAB,
-  PackageStatusCreatedText,
   MAP_NAME_STATUS_STRING_PACKAGE,
-  PackageStatusDeactive,
-  PackageStatusExpiredText,
-  PackageAlertTypeOverPretransit,
-  PackageAlertTypeWarehoseReturn,
-  PackageAlertTypeHubReturn,
+  PACKAGE_STATUS_DEACTIVATE,
+  PACKAGE_STATUS_EXPIRED_TEXT,
+  PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT,
+  PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN,
+  PACKAGE_ALERT_TYPE_HUB_RETURN,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -323,8 +309,8 @@ export default {
         customer_full_name: 'Tên khách hàng',
         tracking: 'Last mile tracking',
       },
-      PackageStatusDeactive: PackageStatusDeactive,
-      PackageStatusExpiredText,
+      PackageStatusDeactivate: PACKAGE_STATUS_DEACTIVATE,
+      PackageStatusExpiredText: PACKAGE_STATUS_EXPIRED_TEXT,
     }
   },
   created() {
@@ -336,16 +322,14 @@ export default {
       packages: (state) => state.packages,
       count: (state) => state.countPackages,
       count_status: (state) => state.count_status,
-      hiddenClass() {
-        return this.action.selected.length > 0 || this.isAllChecked
-      },
-      isFilterInitTab() {
-        return this.filter.status_string === PackageStatusCreatedText
-      },
-      items() {
-        return this.packages
-      },
     }),
+
+    hiddenClass() {
+      return this.action.selected.length > 0 || this.isAllChecked
+    },
+    items() {
+      return this.packages
+    },
     showDetailPackage() {
       return !this.$isAccountant() && !this.$isSupport()
     },
@@ -416,18 +400,18 @@ export default {
     },
     description(alert) {
       switch (alert) {
-        case PackageAlertTypeOverPretransit:
+        case PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT:
           return 'Quá 7 ngày chờ lấy'
-        case PackageAlertTypeWarehoseReturn:
+        case PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN:
           return 'Bị kho trả lại'
-        case PackageAlertTypeHubReturn:
+        case PACKAGE_ALERT_TYPE_HUB_RETURN:
           return 'Hàng bị trả lại'
       }
     },
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

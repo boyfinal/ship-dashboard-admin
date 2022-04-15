@@ -8,6 +8,7 @@ import {
 
 export const USER_STATUS_DEACTIVE = 0
 export const USER_STATUS_ACTIVE = 1
+export const USER_STATUS_INACTIVE = 2
 
 export const HUB_TYPE = 1
 export const WAREHOUSE_TYPE = 2
@@ -15,6 +16,12 @@ export const WAREHOUSE_TYPE = 2
 export const USER_STATUS_TAB = {
   'Không hoạt động': 0,
   'Hoạt động': 1,
+}
+
+export const CUSTOMER_STATUS_TAB = {
+  'Chờ kích hoạt': 2,
+  'Tài khoản mở': 1,
+  'Tài khoản đóng': 0,
 }
 
 export const ROLE = [
@@ -70,3 +77,12 @@ export const DAY_LIMIT = [
   { id: 4, value: 90 },
   { id: 5, value: 180 },
 ]
+
+export const OPTIONS_PACKAGES = {
+  [1]: 'Không có nhu cầu thường xuyên',
+  [2]: '< 150 đơn',
+  [3]: '150 - 9000 đơn',
+  [4]: '900 - 3000 đơn',
+  [5]: '3000 - 6000 đơn',
+  [6]: '> 6000 đơn',
+}

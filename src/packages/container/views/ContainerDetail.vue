@@ -19,7 +19,7 @@
                 >{{ container_detail.code ? container_detail.code : '' }}
                 <span
                   class="page-header__barcode"
-                  style="vertical-align: bottom;"
+                  style="vertical-align: bottom"
                   @click="printBarcode"
                 >
                   <p-svg name="barcode"></p-svg>
@@ -34,11 +34,12 @@
             </div>
             <div>
               <div>Trạng thái kiện: </div>
-              <div>{{
-                container_detail.status
-                  ? statusContainer[container_detail.status].text
-                  : '-'
-              }}</div>
+              <div
+                ><span
+                  v-status="container_detail.status"
+                  type="container"
+                ></span
+              ></div>
             </div>
             <div>
               <div>Số lượng đơn: </div>
@@ -74,7 +75,7 @@
               :class="`mr-3`"
               v-if="
                 !isStartScan &&
-                  container_detail.status === CONTAINER_WAITING_CLOSE
+                container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStartScan"
             >
@@ -84,7 +85,7 @@
               id="stopScanButton"
               v-if="
                 isStartScan &&
-                  container_detail.status === CONTAINER_WAITING_CLOSE
+                container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStopScan"
               type="info"
@@ -225,7 +226,7 @@ import {
   GET_LABEL,
 } from '../store'
 
-import { CONTAINER_WAITING_CLOSE, MAP_TEXT_STATUS_CONTAINER } from '../contants'
+import { CONTAINER_WAITING_CLOSE } from '../contants'
 
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -266,9 +267,6 @@ export default {
         item.code = item.package_code ? item.package_code.code : ''
         return item
       })
-    },
-    statusContainer() {
-      return MAP_TEXT_STATUS_CONTAINER
     },
     isAdmin() {
       return this.$isAdmin()
@@ -492,7 +490,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

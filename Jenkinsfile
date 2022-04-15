@@ -30,7 +30,7 @@ node {
         // Build stage: build image then push to private registry. Only build on branch master
         image = "${deploySettings.image_name}:${deploySettings.image_tag}"
         stage ('Build') {
-            if (deploySettings.branch == 'master' || deploySettings.branch == 'dev') {
+            if (deploySettings.branch == 'master' || deploySettings.branch == 'dev' || deploySettings.branch == 'dev-eks') {
                 dir('shipping-admin') {
                     withDockerRegistry([
                         credentialsId: 'docker-registry-credentials',
@@ -62,7 +62,7 @@ node {
                 sh """
                     KUBECONFIG=${deploySettings.kube_config} helm upgrade --install -f ${deploySettings.helm_values_file} ${deploySettings.helm_release} --set image.tag=${deployTag} deploy/helm_chart
 
-                    KUBECONFIG=${deploySettings.kube_config} kubectl rollout status deployment ${deploySettings.service_name} -n shipment-web-ui
+                    KUBECONFIG=${deploySettings.kube_config} kubectl rollout status deployment ${deploySettings.service_name} -n ${deploySettings.namespace}
                 """
             }
         }
@@ -101,8 +101,7 @@ def getDeploySettings() {
         kubeConfig = "/var/lib/jenkins/.kube/lionnix-prod"
         dockerImageTag = "release-${buildNumber}"
         mode = "production"
-
-
+        deploySettings['helm_release'] = serviceName
 
     } else if (branchName == 'dev') {
         // deploy code on master branch to master
@@ -110,8 +109,17 @@ def getDeploySettings() {
         kubeConfig = "/var/lib/jenkins/.kube/lionnix-dev"
         dockerImageTag = "dev-${buildNumber}"
         mode = "development"
+        deploySettings['helm_release'] = serviceName
 
-    }
+    } else if (branchName == 'dev-eks') {
+        // deploy code on master branch to master
+        helmValueFile = "default.values.dev-eks.yaml"
+        kubeConfig = "/var/lib/jenkins/.kube/lionnix-prod"
+        dockerImageTag = "dev-${buildNumber}"
+        mode = "development"
+        namespace = "dev-${namespace}"
+        deploySettings['helm_release'] = "${serviceName}-dev"
+    } 
 
     // docker image info to build
     deploySettings['private_registry_address'] = privateRegistryAddress
@@ -122,7 +130,6 @@ def getDeploySettings() {
     deploySettings['mode'] = mode
 
     // k8s/helm info for deployment
-    deploySettings['helm_release'] = serviceName
     deploySettings['helm_values_file'] = "${helmValueFile}"
     deploySettings['kube_config'] = kubeConfig
     deploySettings['namespace'] = namespace

@@ -48,7 +48,8 @@
                   <span class="item-title">Trạng thái:</span>
                   <span
                     style="margin-left: 10px"
-                    v-status:status="formatStatus(claim.status)"
+                    v-status="claim.status"
+                    type="claim"
                   ></span>
                 </li>
                 <li class="item-note">
@@ -172,11 +173,7 @@ import {
   GET_FILE_TICKET,
 } from '../store'
 import { FETCH_TICKET } from '@/packages/claim/store'
-import {
-  CLAIM_STATUS,
-  CLAIM_STATUS_PENDING,
-  CLAIM_STATUS_PROCESSED,
-} from '../constants'
+import { CLAIM_STATUS_PENDING, CLAIM_STATUS_PROCESSED } from '../constants'
 import { truncate } from '@core/utils/string'
 
 export default {
@@ -222,7 +219,6 @@ export default {
       },
       styleObject: {},
       styleInfoObject: {},
-      claimStatus: CLAIM_STATUS,
       claimStatusPending: CLAIM_STATUS_PENDING,
       claimStatusProcessed: CLAIM_STATUS_PROCESSED,
     }
@@ -452,7 +448,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

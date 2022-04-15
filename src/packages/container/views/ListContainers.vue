@@ -1,7 +1,7 @@
 <template>
   <div class="list-packages pages page__container">
     <div class="page-content">
-      <div class="mb-12 ">
+      <div class="mb-12">
         <div class="d-flex jc-sb row" id="search-box">
           <div class="page__container-warehouses col-6">
             <button
@@ -14,7 +14,7 @@
               HUB {{ warehouse ? warehouse.state : '' }}
             </button>
           </div>
-          <div class="page__container-search d-flex jc-sb col-6 ">
+          <div class="page__container-search d-flex jc-sb col-6">
             <p-input
               placeholder="Tìm theo mã kiện, nhãn kiện hoặc LionBay tracking"
               prefixIcon="search"
@@ -39,7 +39,7 @@
             :has-all="false"
             :status="statusTab"
             v-model="filter.status"
-            :count-status="count_status"
+            :count-status="coverCountStatus"
           />
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="containers.length">
@@ -115,11 +115,7 @@
                     <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
                     <td>
-                      <span
-                        class="badge badge-round"
-                        :class="mapStatus[item.status].class"
-                        >{{ mapStatus[item.status].value }}</span
-                      >
+                      <span v-status="item.status" type="container"></span>
                     </td>
                     <td>
                       <p-button
@@ -177,6 +173,9 @@ import {
   CONTAINER_STATUS_TAB,
   MAP_NAME_STATUS_CONTAINER,
   CONTAINER_CLOSE,
+  CONTAINER_DELIVERIED,
+  CONTAINER_IMPORT_HUB,
+  CONTAINER_EXPORT_HUB,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
@@ -227,7 +226,34 @@ export default {
         wareHouses: (state) => state.wareHouses,
       }),
       mapStatus() {
-        return MAP_NAME_STATUS_CONTAINER
+        let status = cloneDeep(MAP_NAME_STATUS_CONTAINER)
+        Object.keys(status).map((x) => {
+          if (x == CONTAINER_EXPORT_HUB || x == CONTAINER_IMPORT_HUB) {
+            status[x].value = 'Đã giao'
+            status[x].class = 'badge-info'
+          }
+        })
+        return status
+      },
+      coverCountStatus() {
+        if (!this.count_status) return
+        const reduce = this.count_status
+          .filter(
+            (obj) =>
+              obj.status == CONTAINER_IMPORT_HUB ||
+              obj.status == CONTAINER_EXPORT_HUB ||
+              obj.status == CONTAINER_DELIVERIED
+          )
+          .map((item) => item.count)
+          .reduce((t, n) => t + n, 0)
+        const temp = this.count_status.map((obj) =>
+          obj.status == CONTAINER_DELIVERIED ||
+          obj.status == CONTAINER_IMPORT_HUB ||
+          obj.status == CONTAINER_EXPORT_HUB
+            ? { status: CONTAINER_DELIVERIED, count: reduce }
+            : obj
+        )
+        return temp
       },
     }),
   },

@@ -57,7 +57,7 @@
                     <td>
                       <router-link
                         class="text-no-underline"
-                        v-if="admin"
+                        v-if="$isAdmin()"
                         :to="{
                           name: 'package-detail',
                           params: {
@@ -73,7 +73,8 @@
                     </td>
                     <td>
                       <span
-                        v-status:status="mapStatus[item.status].value"
+                        v-status:status="item.status"
+                        type="warehouse"
                       ></span>
                     </td>
                     <td>
@@ -196,12 +197,6 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import {
-  MAP_NAME_STATUS_WAREHOUSE,
-  PackageStatusImportHub,
-  PackageStatusExportHub,
-} from '@/packages/package/constants'
-import { cloneDeep } from '../../../core/utils'
 
 export default {
   name: 'ListPackageInWarehouse',
@@ -244,8 +239,6 @@ export default {
       PackageWareHouseStatusPick: PACKAGE_WAREHOUSE_STATUS_PICK,
       PackageWareHouseStatusReturn: PACKAGE_WAREHOUSE_STATUS_RETURN,
       visibleExportModal: false,
-      PackageStatusImportHub: PackageStatusImportHub,
-      PackageStatusExportHub: PackageStatusExportHub,
     }
   },
   created() {
@@ -258,30 +251,15 @@ export default {
       packages: (state) => state.packages_in_warehouse,
       count: (state) => state.count_packages_in_warehouse,
       count_status: (state) => state.count_status,
-      hiddenClass() {
-        return this.action.selected.length > 0 || this.isAllChecked
-      },
-      isFilterInitTab() {
-        return this.filter.status === PACKAGE_WAREHOUSE_STATUS_PICK
-      },
-      items() {
-        return this.packages
-      },
-      admin() {
-        return this.$isAdmin()
-      },
     }),
+    hiddenClass() {
+      return this.action.selected.length > 0 || this.isAllChecked
+    },
+    items() {
+      return this.packages
+    },
     statusTab() {
       return PACKAGE_IN_WAREHOUSE_STATUS_TAB
-    },
-    mapStatus() {
-      let status = cloneDeep(MAP_NAME_STATUS_WAREHOUSE)
-      Object.keys(status).map((x) => {
-        if (x == PackageStatusExportHub || x == PackageStatusImportHub) {
-          status[x].value = 'Xuất kho'
-        }
-      })
-      return status
     },
   },
   methods: {
@@ -394,7 +372,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

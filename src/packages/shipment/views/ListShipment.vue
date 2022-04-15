@@ -85,11 +85,7 @@
                       {{ item.quantity }}
                     </td>
                     <td>
-                      <span
-                        class="badge badge-round"
-                        :class="mapStatus[item.status].class"
-                        >{{ mapStatus[item.status].value }}</span
-                      >
+                      <span v-status="item.status" type="shipment"></span>
                     </td>
                     <td>
                       <p-button
@@ -146,7 +142,6 @@ import {
   WareHouseStatusActive,
   WareHouseTypeInternational,
 } from '../constants'
-import { MAP_NAME_STATUS_SHIPMENT } from '../constants'
 import { mapState, mapActions } from 'vuex'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -204,9 +199,6 @@ export default {
       ...mapState('shared', {
         wareHouses: (state) => state.wareHouses,
       }),
-      mapStatus() {
-        return MAP_NAME_STATUS_SHIPMENT
-      },
     }),
   },
   methods: {
@@ -317,7 +309,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

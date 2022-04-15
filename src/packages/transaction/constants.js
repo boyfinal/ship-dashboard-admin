@@ -28,20 +28,20 @@ export const TRANSACTION_STATUS_TAB = [
 ]
 export const MAP_NAME_STATUS_TRANSACTION = {
   [TransactionStatusProcess]: {
-    value: 'Chờ xác nhận',
-    class: 'badge-primary',
+    text: 'Chờ xác nhận',
+    className: 'primary',
   },
   [TransactionStatusSuccess]: {
-    value: 'Thành công',
-    class: 'badge-success',
+    text: 'Thành công',
+    className: 'success',
   },
   [TransactionStatusFailure]: {
-    value: 'Từ chối',
-    class: 'badge-danger',
+    text: 'Từ chối',
+    className: 'danger',
   },
   [TransactionStatusReFund]: {
-    value: 'Hoàn tiền',
-    class: 'badge-danger',
+    text: 'Hoàn tiền',
+    className: 'danger',
   },
 }
 

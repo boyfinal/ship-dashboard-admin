@@ -9,13 +9,13 @@ export const routes = [
       import(/* webpackChunkName: "settings" */ './views/Account.vue'),
   },
   {
-    path: '/debt',
-    name: 'debt',
+    path: '/user',
+    name: 'user',
     meta: {
-      title: 'Quản lý người dùng',
+      title: 'Quản lý tài khoản khách hàng',
     },
     component: () =>
-      import(/* webpackChunkName: "settings" */ './views/Debt.vue'),
+      import(/* webpackChunkName: "settings" */ './views/User.vue'),
   },
   {
     path: '/prices',

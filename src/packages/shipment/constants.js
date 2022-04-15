@@ -34,24 +34,24 @@ export const SHIPMENT_STATUS_TAB = [
 ]
 export const MAP_NAME_STATUS_SHIPMENT = {
   [ShipmentWaitingClose]: {
-    value: 'Đang xử lý',
-    class: 'badge-await',
+    text: 'Đang xử lý',
+    className: 'await',
   },
   [ShipmentClosed]: {
-    value: 'Đã đóng ',
-    class: 'badge-success',
+    text: 'Đã đóng ',
+    className: 'success',
   },
 
   [ShipmentCanceled]: {
-    value: 'Đã hủy',
-    class: 'badge-danger',
+    text: 'Đã hủy',
+    className: 'danger',
   },
   [ShipmentDelivered]: {
-    value: 'Đã giao',
-    class: 'badge-info',
+    text: 'Đã giao',
+    className: 'info',
   },
   [ShipmentIntransit]: {
-    value: 'Đang giao',
-    class: 'badge-primary',
+    text: 'Đang giao',
+    className: 'primary',
   },
 }

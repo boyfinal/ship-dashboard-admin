@@ -66,7 +66,7 @@
                 </div>
                 <div class="d-flex">
                   <span>Trạng thái:</span>
-                  <span v-status:status="currentStatus"></span>
+                  <span v-status="current.status" type="warehouse"></span>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@
               </div>
             </div>
             <div class="card-footer pt-4">
-              <div class="d-flex" style="align-self: flex-start;">
+              <div class="d-flex" style="align-self: flex-start">
                 <span>Kết quả:</span>
                 <div class="messages pl-5">
                   <p v-if="!messages.length" class="mb-0 text-success"
@@ -260,7 +260,6 @@ import {
   PACKAGE_WAREHOUSE_STATUS_RETURN,
   PACKAGE_WAREHOUSE_STATUS_CANCELLED,
 } from '../constants'
-import { MAP_NAME_STATUS_WAREHOUSE } from '../../package/constants'
 import { yup } from '../../../core/valider'
 
 export default {
@@ -348,15 +347,6 @@ export default {
     },
     total() {
       return this.packages.length
-    },
-    currentStatus() {
-      const allstatus = MAP_NAME_STATUS_WAREHOUSE
-      allstatus[PACKAGE_STATUS_PENDING_PICKUP] = {
-        value: 'Pre-Transit',
-        class: 'badge-default',
-      }
-
-      return (allstatus[this.current.status] || {}).value
     },
     errors() {
       if (!this.current.id) return {}

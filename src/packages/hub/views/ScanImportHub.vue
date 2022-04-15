@@ -17,17 +17,17 @@
                     v-model="keyword"
                     placeholder="Nhập mã ups hoặc mã kiện"
                   ></p-input>
-                  <div class=" d-flex">
+                  <div class="d-flex">
                     <button
                       @click.prevent="searchHandle"
                       :disabled="disableBtnScan"
-                      class="btn btn-scan-info mr-8  text-nowrap"
+                      class="btn btn-scan-info mr-8 text-nowrap"
                       >Quét</button
                     >
                     <button
                       :disabled="disableBtnAccept"
                       @click.prevent="acceptSubmit"
-                      class="btn btn-scan-info  text-nowrap"
+                      class="btn btn-scan-info text-nowrap"
                       >Xác nhận</button
                     >
                   </div>
@@ -84,7 +84,7 @@
                 <div class="info-container">Số đơn : {{ current_count }}</div>
                 <div class="info-container d-flex">
                   <span>Trạng thái:</span>
-                  <span v-status:status="currentStatus"></span>
+                  <span v-status="current_status" type="container"></span>
                 </div>
               </div>
             </div>
@@ -111,8 +111,6 @@ import {
   SCAN_CONTAINER_IMPORT,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { MAP_NAME_STATUS_CONTAINER } from '../../container/contants'
-// import { cloneDeep } from '../../../core/utils'
 import mixinRoute from '@core/mixins/route'
 
 export default {
@@ -136,10 +134,6 @@ export default {
         !this.current_tracking_number ||
         this.isCancel
       )
-    },
-    currentStatus() {
-      const allstatus = MAP_NAME_STATUS_CONTAINER
-      return (allstatus[this.current_status] || {}).value
     },
   },
   data() {
@@ -282,7 +276,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
