@@ -60,7 +60,9 @@
                     <td>
                       <div> {{ item.phone_number || 'N/A' }}</div>
                     </td>
-                    <td class="text-center">{{ mapPackage[item.package] }}</td>
+                    <td class="text-center">{{
+                      mapPackage[item.package] || 'N/A'
+                    }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                     <td>
                       <a
