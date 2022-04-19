@@ -70,19 +70,19 @@
             </p-button>
             <p-button
               type="info"
+              v-if="showButtonEdit"
               @click="handleModal"
               class="btn-primary-custom ml-7"
-              v-if="showButtonEdit && !isReship"
             >
-              Sửa đơn
+              {{ isReturnPackage ? `Re-label` : `Sửa đơn` }}
             </p-button>
             <p-button
               type="info"
-              @click="handleModal"
+              v-if="isReturnPackage"
+              @click="showModalExtraFee"
               class="btn-primary-custom ml-7"
-              v-if="showButtonEdit && isReship"
             >
-              Reship
+              Tạo phí phát sinh
             </p-button>
           </div>
         </div>
@@ -300,12 +300,15 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col" v-if="package_detail.package.package_return">
+                  <div class="col">
                     <div class="card-block mb-0">
                       <div class="card-header">
                         <div class="card-title">Đơn hàng return</div>
                       </div>
-                      <div class="card-content">
+                      <div
+                        class="card-content"
+                        v-if="package_detail.package.package_return"
+                      >
                         <div class="mb-16">
                           <div class="row mb-8">
                             <div class="col-4 pr-0">Ngày trả hàng:</div>
@@ -358,6 +361,9 @@
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div class="card-content text-center" v-else>
+                        <img src="@assets/img/no_data.png" />
                       </div>
                     </div>
                   </div>
@@ -600,7 +606,6 @@
       </div>
     </div>
     <modal-edit-order
-      :is-edit-order-return="isEditOrderReturn"
       :is-re-label="isReLabel"
       :visible.sync="isVisibleModal"
       @submit="handleUpdate"
@@ -631,13 +636,12 @@
       :loading="actions.cancelPackage.loading"
       @action="cancelPackageAction"
     ></modal-confirm>
-
-    <modal-reship
-      :visible.sync="isVisibleModalReship"
-      :current="package_detail.package"
-      @submit="reshipHandle"
-    ></modal-reship>
-
+    <modal-create-extra-fee
+      :visible.sync="isVisibleModalExtraFee"
+      :package-code="$evaluate('package_detail.package.package_code?.code')"
+      :loading="isSubmitting"
+      @save="handleSubmitExtraFee"
+    ></modal-create-extra-fee>
     <OverLoading :is-loading="isSubmitting" />
   </div>
 </template>
@@ -678,9 +682,9 @@ import {
   RESHIP_PACKAGE,
   UPDATE_PACKAGE,
 } from '../store/index'
+import { CREATE_EXTRA_FEE } from '../../bill/store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
 import ModalEditOrder from '../components/ModalEditOrder'
-// import { LIST_SENDER } from '../../setting/store'
 import {
   PACKAGE_STATUS_TAB,
   CHANGE_PACKAGE_TYPE,
@@ -701,7 +705,7 @@ import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
 import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '../constants'
-import ModalReship from '../components/ModalReship'
+import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
@@ -709,7 +713,12 @@ import Browser from '@core/helpers/browser'
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading },
+  components: {
+    ModalEditOrder,
+    ModalConfirm,
+    ModalCreateExtraFee,
+    OverLoading,
+  },
   data() {
     return {
       isFetching: true,
@@ -719,9 +728,8 @@ export default {
       isVisibleModal: false,
       isVisiblePopupMoreExtraFee: false,
       isVisibleConfirmWayBill: false,
-      isEditOrderReturn: false,
       isReLabel: false,
-      isVisibleModalReship: false,
+      isVisibleModalExtraFee: false,
       timelinePagination: {
         numberPage: 0,
         itemsPerPage: 10,
@@ -767,13 +775,8 @@ export default {
           this.package_detail.package.status !== this.statusShipping &&
           !this.package_detail.package.tracking &&
           this.package_detail.package.status !== this.statusExpired) ||
-        (this.statusShipping &&
-          (this.$isSupport() || this.$isAdmin()) &&
-          this.isAlertReturn)
+        this.isReturnPackage
       )
-    },
-    isAlertReturn() {
-      return this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN
     },
     displayDeliverLogs() {
       const start =
@@ -879,7 +882,7 @@ export default {
       }
       return result
     },
-    isReship() {
+    isReturnPackage() {
       return (
         this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
@@ -900,8 +903,8 @@ export default {
       RESHIP_PACKAGE,
       UPDATE_PACKAGE,
     ]),
+    ...mapActions('bill', [CREATE_EXTRA_FEE]),
     truncate,
-    // ...mapActions('setting', [LIST_SENDER]),
     async init() {
       this.isFetching = true
       await this.fetchPackage(this.packageID)
@@ -925,9 +928,6 @@ export default {
     },
     handleModal() {
       this.isVisibleModal = true
-      if (this.statusShipping && this.isAlertReturn) {
-        this.isEditOrderReturn = true
-      }
       if (
         this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
@@ -1057,36 +1057,37 @@ export default {
       )
     },
 
-    showModalReship() {
-      this.isVisibleModalReship = true
+    showModalExtraFee() {
+      this.isVisibleModalExtraFee = true
     },
-    async reshipHandle({ amount, description }) {
-      this.isVisibleModalReship = false
-
-      if (this.isSubmitting) return
-
+    async handleSubmitExtraFee(param) {
+      const payload = {
+        ...param,
+        ...{
+          package_code: this.package_detail.package.package_code.code,
+          user_id: this.package_detail.package.user_id,
+        },
+      }
       this.isSubmitting = true
-
-      const res = await this.reshipPackage({
-        id: this.packageID,
-        amount,
-        description,
-      })
-      if (res.error) {
-        this.$toast.error(res.message, { duration: 3000 })
-        this.isSubmitting = false
+      const result = await this[CREATE_EXTRA_FEE](payload)
+      this.isSubmitting = false
+      this.isVisibleModalExtraFee = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
         return
       }
-
-      this.$toast.success('Reship đơn hàng thành công', { duration: 3000 })
-      await this.init()
-
-      this.isSubmitting = false
+      this.$toast.open({
+        type: 'success',
+        message: 'Tạo phí phát sinh thành công',
+      })
+      this.init()
     },
 
     async handleUpdate(params) {
       this.isVisibleModal = false
-      console.log(params)
 
       if (this.isSubmitting) return
 

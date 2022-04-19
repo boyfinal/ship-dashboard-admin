@@ -9,12 +9,10 @@
           <b>Lưu ý:</b> <i>(<span>*</span>) Là các trường bắt buộc nhập.</i>
         </div>
         <div class="modal__edit-order-content">
-          <div class="row sm-gutters  flex-nowrap">
-            <div class="col-lg-6 col-xl-6 item-gutters ">
+          <div class="row sm-gutters flex-nowrap">
+            <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
-                <div class="card__w-header">
-                  Người nhận
-                </div>
+                <div class="card__w-header"> Người nhận </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label">
@@ -27,15 +25,13 @@
                         v-model="form.fullname"
                         :input="form.fullname"
                         name="name"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('fullname')"
                       />
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Điện thoại:
-                    </label>
+                    <label class="card__w-label"> Điện thoại: </label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="Nhập số điện thoại"
@@ -44,7 +40,7 @@
                         v-model="form.phone"
                         :input="form.phone"
                         name="phone"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('phone')"
                       />
                     </div>
@@ -80,9 +76,7 @@
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Địa chỉ phụ:
-                    </label>
+                    <label class="card__w-label"> Địa chỉ phụ: </label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="Nhập địa chỉ phụ"
@@ -143,9 +137,7 @@
                 </div>
               </div>
               <div class="card__w" v-if="isReLabel">
-                <div class="card__w-header">
-                  Phí reship
-                </div>
+                <div class="card__w-header"> Phí relabel </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label"> Phí($):</label>
@@ -166,9 +158,7 @@
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Nội dung :
-                    </label>
+                    <label class="card__w-label"> Nội dung : </label>
                     <div class="card__w-input">
                       <p-input
                         :placeholder="placeholder"
@@ -185,14 +175,10 @@
             </div>
             <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
-                <div class="card__w-header">
-                  Thông tin hàng hóa
-                </div>
+                <div class="card__w-header"> Thông tin hàng hóa </div>
                 <div class="card__w-content">
                   <div class="card__w-item" v-if="false">
-                    <label class="card__w-label">
-                      Danh sách đơn hàng:
-                    </label>
+                    <label class="card__w-label"> Danh sách đơn hàng: </label>
                     <div class="card__w-input">
                       <multiselect
                         class="multiselect-custom dropdown-reason"
@@ -217,7 +203,7 @@
                         v-model="form.order_number"
                         :input="form.order_number"
                         name="order_number"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('order_number')"
                       />
                     </div>
@@ -233,7 +219,7 @@
                         v-model="form.detail"
                         :input="form.detail"
                         name="detail"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('detail')"
                       />
                     </div>
@@ -303,9 +289,7 @@
                 </div>
               </div>
               <div class="card__w">
-                <div class="card__w-header">
-                  Dịch vụ gửi
-                </div>
+                <div class="card__w-header"> Dịch vụ gửi </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label">
@@ -313,7 +297,7 @@
                     </label>
                     <div class="card__w-input">
                       <multiselect
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         class="multiselect-custom dropdown-reason"
                         v-model="service"
                         :options="services"
@@ -372,10 +356,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    isEditOrderReturn: {
-      type: Boolean,
-      default: false,
-    },
     isReLabel: {
       type: Boolean,
       default: false,
@@ -399,13 +379,13 @@ export default {
     },
     title() {
       if (this.isReLabel) {
-        return `Reship đơn ${this.code}`
+        return `Relabel đơn ${this.code}`
       }
 
       return `Sửa đơn ${this.code}`
     },
     placeholder() {
-      return `Phí reship cho đơn ${this.code}`
+      return `Phí re-label cho đơn ${this.code}`
     },
   },
   data() {
@@ -700,7 +680,7 @@ export default {
     },
   },
   watch: {
-    visible: function() {
+    visible: function () {
       this.init()
     },
   },
