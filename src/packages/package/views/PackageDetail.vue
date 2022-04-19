@@ -72,7 +72,7 @@
               type="info"
               v-if="showButtonEdit"
               @click="handleModal"
-              class="btn-primary-custom ml-7"
+              class="ml-7"
             >
               {{ isReturnPackage ? `Re-label` : `Sửa đơn` }}
             </p-button>
@@ -80,7 +80,7 @@
               type="info"
               v-if="isReturnPackage"
               @click="showModalExtraFee"
-              class="btn-primary-custom ml-7"
+              class="ml-7"
             >
               Tạo phí phát sinh
             </p-button>
@@ -252,7 +252,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mb-24">
                   <div class="col">
                     <div class="card-block mb-0">
                       <div class="card-header">
@@ -303,7 +303,7 @@
                   <div class="col">
                     <div class="card-block mb-0">
                       <div class="card-header">
-                        <div class="card-title">Đơn hàng return</div>
+                        <div class="card-title">Hàng return</div>
                       </div>
                       <div
                         class="card-content"
@@ -364,6 +364,71 @@
                       </div>
                       <div class="card-content text-center" v-else>
                         <img src="@assets/img/no_data.png" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row fee">
+                  <div class="col-6">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Phí phát sinh</div>
+                      </div>
+                      <div class="card-content" v-if="mapExtraFee.length">
+                        <div
+                          class="row"
+                          v-for="(item, i) in mapExtraFee"
+                          :key="i"
+                        >
+                          <div class="col-8 mb-8"
+                            >{{ item.extra_fee_types.name }} :</div
+                          >
+                          <div class="col-4 text-right"
+                            ><div>{{ item.amount | formatPrice }}</div></div
+                          >
+                        </div>
+                      </div>
+                      <div class="card-content text-center" v-else>
+                        <img src="@assets/img/no_data.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Phí</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="row">
+                          <div class="col-8 mb-8">Phí giao hàng:</div>
+                          <div class="col-4 text-right"
+                            ><div>{{
+                              $evaluate('package_detail.package?.shipping_fee')
+                                | formatPrice
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-8 mb-8">Phí phát sinh:</div>
+                          <div class="col-4 more-extra-fee text-right"
+                            ><div>{{ sumExtraFee | formatPrice }}</div></div
+                          >
+                        </div>
+                        <hr
+                          style="
+                            background-color: #e1e2e2;
+                            margin-top: 16px;
+                            margin-bottom: 12px;
+                          "
+                        />
+                        <div class="row sum-price">
+                          <div class="col-8" style="font-weight: 400"
+                            >Tổng cước:</div
+                          >
+                          <div class="col-4 text-right"
+                            ><div>{{ sumFee | formatPrice }}</div></div
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -547,59 +612,6 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 p-0 row fee">
-                <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block" style="height: auto">
-                    <div class="card-header">
-                      <div class="card-title">Phí phát sinh</div>
-                    </div>
-                    <div class="card-content" v-if="mapExtraFee.length">
-                      <div
-                        class="row"
-                        v-for="(item, i) in mapExtraFee"
-                        :key="i"
-                      >
-                        <div class="col-8 mb-8"
-                          >{{ item.extra_fee_types.name }} :</div
-                        >
-                        <div class="col-4"
-                          ><div>{{ item.amount | formatPrice }}</div></div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block" style="height: auto">
-                    <div class="card-header">
-                      <div class="card-title">Phí</div>
-                    </div>
-                    <div class="card-content">
-                      <div class="row">
-                        <div class="col-8 mb-8">Phí giao hàng:</div>
-                        <div class="col-4"
-                          ><div>{{
-                            $evaluate('package_detail.package?.shipping_fee')
-                              | formatPrice
-                          }}</div></div
-                        >
-                      </div>
-                      <div class="row">
-                        <div class="col-8 mb-8">Phí phát sinh:</div>
-                        <div class="col-4 more-extra-fee"
-                          ><div>{{ sumExtraFee | formatPrice }}</div></div
-                        >
-                      </div>
-                      <div class="row sum-price">
-                        <div class="col-8">Tổng cước:</div>
-                        <div class="col-4"
-                          ><div>{{ sumFee | formatPrice }}</div></div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -647,12 +659,6 @@
 </template>
 
 <style scoped>
-.sum-price {
-  border-top: 1px solid #cfd0d0;
-  margin-top: 16px;
-  padding-top: 16px;
-}
-
 .sum-price:last-child {
   font-weight: bold;
   font-size: 14px;

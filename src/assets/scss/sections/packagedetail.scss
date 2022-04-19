@@ -59,11 +59,6 @@
             }
         }
     }
-    .more-extra-fee {
-        display: flex;
-        align-items: baseline;
-        position: relative;
-    }
     .more-extra-fee img {
         cursor: pointer;
         width: 18px;
@@ -102,10 +97,15 @@
         font-size: 24px !important;
         line-height: 28px !important;
     }
-    .fee {
-        padding-top: 24px !important;
-        margin-left: 12px;
-        margin-right: 24px;
+    .fee{
+        font-family: $font-family-sans-serif;
+        .card-content{
+            line-height: 22px;
+        }
+        .card-block{
+            height: auto;
+            min-height: 192px;
+        }
     }
     .fee-border {
         margin-right: 25px;
