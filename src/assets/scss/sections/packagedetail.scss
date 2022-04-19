@@ -114,6 +114,7 @@
         margin-bottom: 25px;
     }
     .card-header {
+        font-family: $font-family-sans-serif;
         padding: 10px 16px;
         justify-content: start;
         .card-title {
@@ -122,6 +123,11 @@
             line-height: 28px;
             letter-spacing: 0.2px;
             color: $color-neutral-10;
+        }
+    }
+    .logs{
+        .card-header {
+            font-family: $default-font-bevn-pro;
         }
     }
     .card-content{

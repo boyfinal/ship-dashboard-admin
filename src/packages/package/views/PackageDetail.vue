@@ -436,7 +436,7 @@
               </div>
               <div
                 v-if="!displayDeliverDetail"
-                class="col-6"
+                class="col-6 logs"
                 style="padding: 0 30px 0 30px"
               >
                 <div class="row" style="height: 100%">
@@ -510,7 +510,7 @@
               </div>
               <div
                 v-if="displayDeliverDetail"
-                class="col-6"
+                class="col-6 logs"
                 style="padding: 0 30px 0 30px"
               >
                 <div class="row">
