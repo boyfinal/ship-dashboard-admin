@@ -1,6 +1,7 @@
 .package-detail {
+    font-family:$default-font-bevn-pro;
     .page-header {
-        margin: 24px 0 18px 0;
+        margin-bottom: 16px;
         &__barcode {
             img {
                 margin: 0 0 5px 8px;
@@ -17,7 +18,12 @@
             letter-spacing: 0.2px;
             color: $color-neutral-7;
             span {
-                margin-left: 10px;
+                display: inline-block;
+                margin-left: 8px;
+                color: $color-neutral-7;
+                letter-spacing: 0.2px;
+                line-height: 22px;
+                font-size: 14px;
             }
         }
     }
@@ -108,10 +114,21 @@
         margin-bottom: 25px;
     }
     .card-header {
+        padding: 10px 16px;
         justify-content: start;
         .card-title {
             font-weight: 500;
+            font-size: 18px;
+            line-height: 28px;
+            letter-spacing: 0.2px;
+            color: $color-neutral-10;
         }
+    }
+    .card-content{
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $color-neutral-9;
     }
     .card-block {
         height: 100%;

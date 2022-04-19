@@ -63,4 +63,10 @@ export default {
   reshipPackage(payload) {
     return http.post(`/packages/${payload.id}/reship`, payload)
   },
+  fetchFile(payload) {
+    return http.get(
+      `/uploads/file-export/download?${buildQueryString(payload)}`,
+      RESPONSE_TYPE_BLOB
+    )
+  },
 }
