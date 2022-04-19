@@ -252,83 +252,109 @@
                     </div>
                   </div>
                 </div>
-                <div>
-                  <div class="card-block mb-0">
-                    <div class="card-header">
-                      <div class="card-title">Trạng thái</div>
-                    </div>
-                    <div class="card-content">
-                      <div class="mb-16">
-                        <div class="row">
-                          <div class="col-4 mb-8">Trạng thái đơn:</div>
-                          <div class="col-8 pl-0">
-                            <span
-                              v-if="
-                                package_detail.package.status &&
-                                package_detail.package.status > 0
-                              "
-                              v-status="package_detail.package.status"
-                            ></span>
+                <div class="row">
+                  <div class="col">
+                    <div class="card-block mb-0">
+                      <div class="card-header">
+                        <div class="card-title">Trạng thái</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="mb-16">
+                          <div class="row">
+                            <div class="col-5 mb-8">Trạng thái đơn:</div>
+                            <div class="col-7">
+                              <span
+                                v-if="
+                                  package_detail.package.status &&
+                                  package_detail.package.status > 0
+                                "
+                                v-status="package_detail.package.status"
+                              ></span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 mb-8">Trạng thái kho:</div>
-                          <div class="col-8 pl-0">
-                            <span
-                              v-if="
-                                package_detail.package.status &&
-                                package_detail.package.status > 0
-                              "
-                              v-status="package_detail.package.status"
-                              type="warehouse"
-                            ></span>
+                          <div class="row">
+                            <div class="col-5 mb-8">Trạng thái kho:</div>
+                            <div class="col-7">
+                              <span
+                                v-if="
+                                  package_detail.package.status &&
+                                  package_detail.package.status > 0
+                                "
+                                v-status="package_detail.package.status"
+                                type="warehouse"
+                              ></span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4">Trạng thái khiếu nại:</div>
-                          <div class="col-8 pl-0">
-                            <div v-if="package_detail.status_ticket"> Có </div>
-                            <div v-if="!package_detail.status_ticket">
-                              Không
-                            </div></div
-                          >
+                          <div class="row">
+                            <div class="col-5">Trạng thái khiếu nại:</div>
+                            <div class="col-7">
+                              <div v-if="package_detail.status_ticket">
+                                Có
+                              </div>
+                              <div v-if="!package_detail.status_ticket">
+                                Không
+                              </div></div
+                            >
+                          </div>
                         </div>
                       </div>
-                      <div class="mb-16 sperate"></div>
-                      <div
-                        class=""
-                        v-if="package_detail.package.package_return"
-                      >
-                        <div class="mb-8"><b>Đơn hàng return</b></div>
-
-                        <div class="row">
-                          <div class="col-4 pr-0 mb-8">Lý do trả hàng:</div>
-                          <div class="col-8 pl-0"
-                            ><div>{{
-                              package_detail.package.package_return.reason
-                            }}</div>
+                    </div>
+                  </div>
+                  <div class="col" v-if="package_detail.package.package_return">
+                    <div class="card-block mb-0">
+                      <div class="card-header">
+                        <div class="card-title">Đơn hàng return</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="mb-16">
+                          <div class="row mb-8">
+                            <div class="col-4 pr-0">Ngày trả hàng:</div>
+                            <div class="col-8 pl-0"
+                              ><div>{{
+                                package_detail.package.package_return.created_at
+                                  | datetime('dd/MM/yyyy')
+                              }}</div>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 pr-0 mb-8">Nguyên nhân:</div>
-                          <div class="col-8 pl-0">
-                            <div>{{
-                              package_detail.package.package_return.content
-                            }}</div>
+                          <div class="row mb-8">
+                            <div class="col-4 pr-0">Lý do trả hàng:</div>
+                            <div class="col-8 pl-0"
+                              ><div>{{
+                                package_detail.package.package_return.reason
+                              }}</div>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 pr-0">Bằng chứng:</div>
-                          <div class="col-8 pl-0">
-                            <div class="files">
-                              <div
-                                class="file-item"
+                          <div class="row mb-16">
+                            <div class="col-4 pr-0">Nguyên nhân:</div>
+                            <div class="col-8 pl-0">
+                              <div>{{
+                                package_detail.package.package_return.content
+                              }}</div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <p style="margin-bottom: 8px"
+                                ><strong>Bằng chứng:</strong></p
+                              >
+                              <p
+                                style="margin-bottom: 4px"
                                 v-for="item in package_detail.package
                                   .package_return.images"
                                 :key="item.uid"
                               >
-                                <File :src="item" />
-                              </div>
+                                <a
+                                  style="
+                                    text-decoration: underline;
+                                    color: #004e41;
+                                  "
+                                  href="javascript:void(0)"
+                                  @click="downloadReturnFile(item)"
+                                  >{{
+                                    item.substring(item.lastIndexOf('/') + 1)
+                                  }}</a
+                                >
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -677,14 +703,13 @@ import { cloneDeep } from '@core/utils'
 import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '../constants'
 import ModalReship from '../components/ModalReship'
 import OverLoading from '@components/shared/OverLoading'
-import File from '../../hub/components/File'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
-
+import Browser from '@core/helpers/browser'
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading, File },
+  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading },
   data() {
     return {
       isFetching: true,
@@ -798,7 +823,6 @@ export default {
         start + this.auditPagination.itemsPerPage
       )
     },
-
     sumExtraFee() {
       if (
         !this.package_detail.extra_fee ||
@@ -886,6 +910,15 @@ export default {
     },
     init2() {
       location.reload()
+    },
+    async downloadReturnFile(file) {
+      const res = await api.fetchFile({
+        url: file,
+        type: 'return_packages',
+      })
+      if (res && !res.error) {
+        Browser.downloadBlob(res, file.split('/').pop())
+      }
     },
     changeDisplayDeliverDetail() {
       this.displayDeliverDetail = !this.displayDeliverDetail
