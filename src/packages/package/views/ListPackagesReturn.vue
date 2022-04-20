@@ -89,7 +89,12 @@
                     <td>
                       {{ item.full_name }}
                     </td>
-                    <td></td>
+                    <td>
+                      <span v-if="item.returned_at">
+                        {{ item.returned_at | date('dd/MM/yyyy') }}
+                      </span>
+                      <span v-else>N/A</span>
+                    </td>
                     <td>
                       <span v-if="item.hub_imported_at">{{
                         item.hub_imported_at | date('dd/MM/yyyy')
