@@ -339,18 +339,24 @@
         </div>
       </template>
     </p-modal>
+    <OverLoading :is-loading="loading" />
   </div>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
-import { FETCH_LIST_PRODUCTS, GET_SERVICE, UPDATE_PACKAGE } from '../store'
+import {
+  FETCH_LIST_PRODUCTS,
+  GET_SERVICE,
+  UPDATE_PACKAGE,
+  FETCH_PACKAGE_DETAIL,
+} from '../store'
 import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
-// import {GET_SENDER, LIST_SENDER} from "../../../setting/store";
+import OverLoading from '@components/shared/OverLoading'
 
 export default {
   name: 'ModalEditOrder',
-  components: { PButton },
+  components: { PButton, OverLoading },
   props: {
     visible: {
       type: Boolean,
@@ -362,6 +368,10 @@ export default {
     },
     total: {
       type: Number,
+    },
+    packageId: {
+      type: Number,
+      default: 0,
     },
   },
   computed: {
@@ -416,6 +426,7 @@ export default {
         amount: '',
         description: '',
       },
+      loading: false,
       isDisable: true,
       isUpdate: false,
       valider: null,
@@ -497,9 +508,18 @@ export default {
     }))
   },
   methods: {
-    ...mapActions('package', [FETCH_LIST_PRODUCTS, UPDATE_PACKAGE]),
+    ...mapActions('package', [
+      FETCH_LIST_PRODUCTS,
+      UPDATE_PACKAGE,
+      FETCH_PACKAGE_DETAIL,
+    ]),
     async init() {
+      this.loading = true
+      if (this.packageId) {
+        await this.fetchPackage(this.packageId)
+      }
       await this[FETCH_LIST_PRODUCTS]()
+      this.loading = false
       this.form.fullname = this.package_detail.package.recipient
       this.form.phone = this.package_detail.package.phone_number
       this.form.city = this.package_detail.package.city
@@ -603,21 +623,6 @@ export default {
         description: this.form.description,
         is_reship: this.isReLabel,
       }
-      // let result = await this[UPDATE_PACKAGE](params)
-      // if (result.error) {
-      //   this.isUpdate = false
-      //   this.$toast.open({
-      //     type: 'error',
-      //     message: result.message,
-      //     duration: 3000,
-      //   })
-      //   return
-      // }
-      // this.$toast.open({
-      //   type: 'success',
-      //   message: 'Sửa đơn thành công',
-      //   duration: 3000,
-      // })
       this.isUpdate = false
       this.handleClose()
       this.$emit('submit', params)
@@ -680,7 +685,10 @@ export default {
     },
   },
   watch: {
-    visible: function () {
+    visible: function (val) {
+      if (!val) {
+        return
+      }
       this.init()
     },
   },

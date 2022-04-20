@@ -69,4 +69,10 @@ export default {
       RESPONSE_TYPE_BLOB
     )
   },
+  fetchListPackagesReturn(payload) {
+    return http.get(`/packages/returned?${buildQueryString(payload)}`)
+  },
+  countListPackagesReturn(payload) {
+    return http.get(`/packages/returned/count?${buildQueryString(payload)}`)
+  },
 }

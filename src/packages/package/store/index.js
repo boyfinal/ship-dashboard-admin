@@ -13,6 +13,8 @@ export const IMPORT_PACKAGE = 'importPackage'
 export const UPDATE_PACKAGE = 'updatePackage'
 export const PROCESS_PACKAGE = 'processPackage'
 export const CANCEL_PACKAGES = 'cancelPackages'
+export const FETCH_LIST_PACKAGES_RETURN = 'fetchListPackagesReturn'
+export const COUNT_LIST_PACKAGES_RETURN = 'countListPackagesReturn'
 
 export const EXPORT_PACKAGE = 'exportPackage'
 export const GET_SERVICE = 'getService'
@@ -30,6 +32,8 @@ export const state = {
   },
   packages: [],
   countPackages: 0,
+  returnPackages: [],
+  countReturnPackages: 0,
   count_status: [],
   products: [],
   service: [],
@@ -66,6 +70,12 @@ export const mutations = {
     state.countPackages = payload.count
     state.count_status = payload.status_count
   },
+  [FETCH_LIST_PACKAGES_RETURN]: (state, payload) => {
+    state.returnPackages = payload
+  },
+  [COUNT_LIST_PACKAGES_RETURN]: (state, payload) => {
+    state.countReturnPackages = payload.count
+  },
 }
 
 /**
@@ -98,6 +108,24 @@ export const actions = {
     }
     commit(FETCH_LIST_PACKAGES, list.packages)
     commit(COUNT_LIST_PACKAGES, count)
+    return result
+  },
+  // eslint-disable-next-line no-unused-vars
+  async fetchListPackagesReturn({ commit }, payload) {
+    let result = { success: true }
+    let [list, count] = await Promise.all([
+      api.fetchListPackagesReturn(payload),
+      api.countListPackagesReturn(payload),
+    ])
+    if (!list.packages || !count) {
+      count = { count: 0 }
+      result = {
+        success: false,
+        message: list.errorMessage || '',
+      }
+    }
+    commit(FETCH_LIST_PACKAGES_RETURN, list.packages)
+    commit(COUNT_LIST_PACKAGES_RETURN, count)
     return result
   },
   // eslint-disable-next-line no-unused-vars
