@@ -4,7 +4,9 @@
       <tr>
         <template>
           <th>MÃ LÔ</th>
+          <th>TỔNG KIỆN HÀNG</th>
           <th>MANIFEST</th>
+          <th>NGÀY TẠO</th>
         </template>
       </tr>
     </thead>

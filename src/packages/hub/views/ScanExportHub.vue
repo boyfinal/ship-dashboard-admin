@@ -19,205 +19,80 @@
                       placeholder="Nhập mã kiện/ups, mã đơn/usps"
                     ></p-input>
                   </div>
-                  <button
-                    @click.prevent="searchHandle"
-                    :disabled="disableBtnScan"
-                    class="btn btn-scan-info text-nowrap"
-                    >Quét</button
-                  >
+                  <div class="d-flex">
+                    <button
+                      @click.prevent="searchHandle"
+                      :disabled="disableBtnScan"
+                      class="btn btn-scan-info text-nowrap mr-8"
+                      >Quét</button
+                    >
+                    <button
+                      :disabled="!listExported.length"
+                      @click.prevent="acceptSubmit"
+                      class="btn btn-scan-info text-nowrap"
+                      >Xác nhận</button
+                    >
+                  </div>
                 </div>
               </div>
             </div>
-
-            <!--            <div class="card mb-16">-->
-            <!--              <div class="card-body">-->
-            <!--                <export-hub-tab :type="typeTab" v-model="filter.type" />-->
-            <!--                <div class="card-header">-->
-            <!--                  <div class="card-title">MÃ KIỆN/ĐƠN</div>-->
-            <!--                </div>-->
-            <!--                <div class="card-body list-container">-->
-            <!--                  <div v-if="codes.length > 0" class="export__hub-containers">-->
-            <!--                    <div class="container-item">-->
-            <!--                      <div-->
-            <!--                        class="container-code"-->
-            <!--                        v-for="(item, i) in codes"-->
-            <!--                        :key="i"-->
-            <!--                      >-->
-            <!--                        {{ item }}-->
-            <!--                        <p-button-->
-            <!--                          class="mr-2 btn-submit"-->
-            <!--                          type="info"-->
-            <!--                          @click.prevent="handelModalConfirm(item)"-->
-            <!--                        >-->
-            <!--                          Xuất-->
-            <!--                        </p-button>-->
-            <!--                      </div>-->
-            <!--                    </div>-->
-            <!--                  </div>-->
-            <!--                  <empty-search-result v-else></empty-search-result>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            <div class="d-flex justify-content-between align-items-center">-->
-            <!--              <p-pagination-->
-            <!--                :total="count"-->
-            <!--                :perPage.sync="filter.limit"-->
-            <!--                :current.sync="filter.page"-->
-            <!--                size="sm"-->
-            <!--              ></p-pagination>-->
-            <!--            </div>-->
           </div>
 
           <div class="col-8">
-            <div
-              v-if="filter.type == 'container' && current_container.code"
-              class="card"
-            >
+            <div v-if="listExported.length" class="card">
               <div class="card-header">
                 <div class="card-title">Thông tin kiện hàng</div>
               </div>
               <div class="card-body">
-                <div class="info-container"
-                  >Mã kiện : {{ current_container.code }}</div
-                >
-                <div class="info-container"
-                  >Nhãn kiện : {{ current_container.tracking_number }}</div
-                >
-                <div class="info-container"
-                  >Dài : {{ current_container.length }}</div
-                >
-                <div class="info-container"
-                  >Rộng : {{ current_container.width }}</div
-                >
-                <div class="info-container"
-                  >Cao : {{ current_container.height }}</div
-                >
-                <div class="info-container"
-                  >Cân nặng : {{ current_container.weight }}</div
-                >
-                <div class="info-container"
-                  >Số đơn : {{ current_container.count }}</div
-                >
-                <div class="info-container d-flex">
-                  <span>Trạng thái:</span>
-                  <span v-status="currentStatus" type="container"></span>
-                </div>
-                <hr class="hr mb-24 mt-24" />
-                <p-button
-                  class="mr-2 btn-submit"
-                  type="info"
-                  @click.prevent="handelModalConfirm(current_container.code)"
-                >
-                  Xuất
-                </p-button>
+                <template>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr v-for="(item, i) in listExported" :key="i">
+                          <td width="200">{{ item.code }}</td>
+                          <td>{{ item.type }}</td>
+                          <td>
+                            <p-svg
+                              @click="handelModalConfirm(item)"
+                              name="x"
+                            ></p-svg
+                          ></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </template>
               </div>
             </div>
 
-            <div
-              v-else-if="filter.type == 'package' && current_package.code"
-              class="card"
-            >
-              <div class="card-header">
-                <div class="card-title">Thông tin đơn hàng</div>
-              </div>
-              <div class="card-body">
-                <div class="info-container"
-                  >Mã đơn : {{ current_package.code }}</div
-                >
-                <div class="info-container"
-                  >Order number : {{ current_package.order_number }}</div
-                >
-                <div class="info-container"
-                  >Mã tracking : {{ current_package.tracking_number }}</div
-                >
-                <div class="info-container"
-                  >Dài : {{ current_package.length }}</div
-                >
-                <div class="info-container"
-                  >Rộng : {{ current_package.width }}</div
-                >
-                <div class="info-container"
-                  >Cao : {{ current_package.height }}</div
-                >
-                <div class="info-container"
-                  >Cân nặng : {{ current_package.weight }}</div
-                >
-                <div class="info-container d-flex">
-                  <span>Trạng thái:</span>
-                  <span v-status="currentStatus"></span>
-                </div>
-                <hr class="hr mb-24 mt-24" />
-                <p-button
-                  class="mr-2 btn-submit"
-                  type="info"
-                  @click.prevent="handelModalConfirm(current_package.code)"
-                >
-                  Xuất
-                </p-button>
-              </div>
-            </div>
             <div v-else class="card">
               <div class="card-header">
-                <div class="card-title">{{ convertHeader }}</div>
+                <div class="card-title"> Thông tin hàng xuất</div>
               </div>
-              <EmptySearchResult
-                :type="filter.type === 'container' ? 'kiện' : 'đơn'"
-              ></EmptySearchResult>
+              <EmptySearchResult :type="`xuất`"></EmptySearchResult>
             </div>
-
-            <!--            <div class="card list-export" v-if="filter.type == 'container'">-->
-            <!--              <div class="card-header">-->
-            <!--                <div class="card-title">Danh sách xuất kiện hàng</div>-->
-            <!--              </div>-->
-            <!--              <div class="card-body">-->
-            <!--                <div class="empty" v-if="listExportedContainer.length == 0">-->
-            <!--                  <p-svg name="empty"></p-svg>-->
-            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
-            <!--                </div>-->
-            <!--                <div class="list-exported" v-else>-->
-            <!--                  <div-->
-            <!--                    class="item-exported"-->
-            <!--                    v-for="(item, i) in listExportedContainer"-->
-            <!--                    :key="i"-->
-            <!--                  >-->
-            <!--                    {{ item }}-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
-
-            <!--            <div class="card list-export" v-if="filter.type == 'package'">-->
-            <!--              <div class="card-header">-->
-            <!--                <div class="card-title">Danh sách xuất đơn hàng</div>-->
-            <!--              </div>-->
-            <!--              <div class="card-body">-->
-            <!--                <div class="empty" v-if="listExportedPackage.length == 0">-->
-            <!--                  <p-svg name="empty"></p-svg>-->
-            <!--                  <p>Chưa có đơn hàng được quét!</p>-->
-            <!--                </div>-->
-            <!--                <div class="list-exported" v-else>-->
-            <!--                  <div-->
-            <!--                    class="item-exported"-->
-            <!--                    v-for="(item, i) in listExportedPackage"-->
-            <!--                    :key="i"-->
-            <!--                  >-->
-            <!--                    {{ item }}-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
           </div>
         </div>
       </div>
     </div>
     <PageLoading :is-loading="isFetchingImportHub" />
     <modal-confirm
-      :visible.sync="visibleConfirm"
-      :actionConfirm="`Có`"
-      :cancel="`Không`"
-      :description="`Bạn có chắc chắn muốn xuất đơn/kiện này ?`"
-      :title="`Xác nhận xuất`"
+      :visible.sync="visibleConfirmAccept"
+      :actionConfirm="`Xác nhận`"
+      :cancel="`Bỏ qua`"
+      :description="`Vui lòng xác nhận xuất hub trước khi thoát trang`"
+      :title="`Xác nhận xuất hub`"
       @action="acceptSubmit"
+      :type="`danger`"
+    ></modal-confirm>
+    <modal-confirm
+      :visible.sync="visibleConfirmRemove"
+      :actionConfirm="`Xóa`"
+      :cancel="`Bỏ qua`"
+      :description="`Bạn có chắc chắn muốn xoá?`"
+      :title="`Xác nhận`"
+      @action="handleRemove"
+      :type="`danger`"
     ></modal-confirm>
   </div>
 </template>
@@ -233,7 +108,6 @@ import {
   SCAN_EXPORT_HUB,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
-import { EXPORT_HUB_TAB } from '../constants'
 
 import mixinRoute from '@core/mixins/route'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -249,25 +123,11 @@ export default {
       count: (state) => state.coutListImported,
       codes: (state) => state.listImported,
     }),
-    typeTab() {
-      return EXPORT_HUB_TAB
-    },
+
     disableBtnScan() {
       return !this.keyword || this.isFetchingImportHub || this.isScan
     },
 
-    currentStatus() {
-      if (this.filter.type == 'container') {
-        return this.current_container.status
-      }
-
-      return this.current_package.status
-    },
-    convertHeader() {
-      return `Thông tin ${
-        this.filter.type == 'container' ? 'kiện' : 'đơn'
-      } hàng`
-    },
     searchPlaceholder() {
       const maptext = {
         container: 'Nhập mã kiện/ups',
@@ -287,32 +147,14 @@ export default {
         type: 'container',
       },
       isFetchingImportHub: false,
+      visibleConfirmAccept: false,
       currentCode: '',
-      current_container: {
-        code: '',
-        width: '',
-        length: '',
-        weight: '',
-        height: '',
-        id: '',
-        tracking_number: '',
-        status: '',
-      },
-      current_package: {
-        code: '',
-        width: '',
-        length: '',
-        weight: '',
-        height: '',
-        id: '',
-        order_number: '',
-        tracking_number: '',
-        status: '',
-      },
+      currentType: '',
+      removeCode: {},
       visibleConfirm: false,
+      visibleConfirmRemove: false,
       isSubmitting: false,
-      listExportedContainer: [],
-      listExportedPackage: [],
+      listExported: [],
       isScan: false,
       searchBy: {
         container: 'Kiện hàng',
@@ -321,8 +163,10 @@ export default {
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
     this.init()
+  },
+  mounted() {
+    this.beforeLeaveHandle()
   },
   methods: {
     ...mapActions('hub', [
@@ -350,57 +194,43 @@ export default {
         return
       }
 
-      if (
-        this.keyword == this.current_container.code ||
-        this.keyword == this.current_package.code ||
-        this.keyword == this.tracking_number
+      const index = this.listExported.findIndex(
+        (item) => item.code === this.keyword
       )
-        return
+      if (index != -1) return
 
       this.handleUpdateRouteQuery()
 
       let params = {
-        type: this.filter.type,
         code: keyword,
       }
-      const result = await this[FETCH_LIST_IMPORTED](params)
 
       this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
-      if (!res.success || !result.success) {
+      if (!res.success) {
         this.isFetchingImportHub = false
         this.isScan = false
         this.$toast.error(res.message, { duration: 3000 })
         return
       }
 
-      console.log(this.filter.type)
       this.isFetchingImportHub = false
       this.isScan = false
       this.filter.type = res.type
+      this.keyword = ''
       if (this.filter.type == 'container') {
-        this.current_container.code = this.current.code
-        this.current_container.id = this.current.id
-        this.current_container.height = this.current.height
-        this.current_container.length = this.current.length
-        this.current_container.width = this.current.width
-        this.current_container.weight = this.current.weight
-        this.current_container.tracking_number = this.current.tracking_number
-        this.current_container.status = this.current.status
-        this.current_container.count = this.countPackage
+        this.currentCode = this.current.code
+        this.currentType = `Kiện hàng`
       } else if (this.filter.type == 'package') {
-        this.current_package.code = this.current.package_code.code
-        this.current_package.id = this.current.id
-        this.current_package.height = this.current.height
-        this.current_package.length = this.current.length
-        this.current_package.width = this.current.width
-        this.current_package.weight = this.current.weight
-        this.current_package.order_number = this.current.order_number
-        this.current_package.tracking_number =
-          this.current.tracking.tracking_number
-        this.current_package.status = this.current.status
+        this.currentCode = this.current.package_code.code
+        this.currentType = `Đơn hàng`
       }
+      this.listExported.push({
+        code: this.currentCode,
+        type: this.currentType,
+        id: this.current.id,
+      })
     },
 
     async init() {
@@ -417,24 +247,8 @@ export default {
 
     clearData() {
       this.current_container.code = ''
-      this.current_container.id = ''
-      this.current_container.height = ''
-      this.current_container.length = ''
-      this.current_container.width = ''
-      this.current_container.weight = ''
-      this.current_container.tracking_number = ''
-      this.current_container.status = ''
-      this.current_container.count = ''
 
       this.current_package.code = ''
-      this.current_package.id = ''
-      this.current_package.height = ''
-      this.current_package.length = ''
-      this.current_package.width = ''
-      this.current_package.weight = ''
-      this.current_package.order_number = ''
-      this.current_package.tracking_number = ''
-      this.current_package.status = ''
     },
 
     barcodeSubmit(keyword) {
@@ -448,10 +262,17 @@ export default {
     },
 
     handelModalConfirm(code) {
-      this.visibleConfirm = true
-      this.currentCode = code
+      this.visibleConfirmRemove = true
+      this.removeCode = code
     },
-
+    async handleRemove() {
+      this.visibleConfirmRemove = false
+      this.listExported = this.listExported.filter(
+        (element) => element != this.removeCode
+      )
+      this.keyword = ''
+      this.isSubmitting = false
+    },
     async acceptSubmit() {
       if (!this.currentCode || this.isSubmitting) {
         return
@@ -459,57 +280,51 @@ export default {
 
       this.isSubmitting = true
       let payload = {
-        code: this.currentCode,
-        type: this.filter.type,
+        containers: this.listExported
+          .filter((item) => item.type == `Kiện hàng`)
+          .map((ele) => ele.code),
+        packages: this.listExported
+          .filter((item) => item.type == `Đơn hàng`)
+          .map((ele) => ele.id),
       }
+
       const res = await this[SCAN_EXPORT_HUB](payload)
 
       if (!res.success) {
         this.isScan = false
-        this.$toast.error(res.message)
+        this.$toast.success(`Quét xuất  thất bại`, { duration: 3000 })
         this.isSubmitting = false
         return
       }
+      this.$toast.success(`Quét xuất  thành công`, { duration: 3000 })
+      this.listExported = []
       this.isSubmitting = false
-
-      if (this.filter.type == 'container') {
-        this.$toast.success(`Kiện ${payload.code} đã quét xuất hub thành công`)
-        this.listExportedContainer.push(this.currentCode)
-      } else if (this.filter.type == 'package') {
-        this.$toast.success(`Đơn ${payload.code} đã quét xuất hub thành công`)
-        this.listExportedPackage.push(this.currentCode)
-      }
       this.isScan = false
       this.visibleConfirm = false
-      this.init()
+      this.visibleConfirmAccept = false
     },
 
     clearInput() {
       this.keyword = ''
       this.isScan = false
       this.currentCode = ''
-      if (this.filter.type == 'container') {
-        this.current_container.code = ''
-        this.current_container.id = ''
-        this.current_container.height = ''
-        this.current_container.length = ''
-        this.current_container.width = ''
-        this.current_container.weight = ''
-        this.current_container.tracking_number = ''
-        this.current_container.status = ''
-        this.current_container.count = ''
-      } else if (this.filter.type == 'package') {
-        this.current_package.code = ''
-        this.current_package.id = ''
-        this.current_package.height = ''
-        this.current_package.length = ''
-        this.current_package.width = ''
-        this.current_package.weight = ''
-        this.current_package.order_number = ''
-        this.current_package.tracking_number = ''
-        this.current_package.status = ''
-      }
     },
+    beforeLeaveHandle() {
+      window.addEventListener('beforeunload', () => {
+        if (this.hasChangePrice) {
+          return 'Thông tin chưa được lưu, bạn có muốn thoát khỏi page'
+        }
+
+        return null
+      })
+    },
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.listExported.length) {
+      this.visibleConfirmAccept = true
+      return
+    }
+    next()
   },
   watch: {
     filter: {
