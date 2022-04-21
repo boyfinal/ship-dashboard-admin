@@ -72,7 +72,7 @@
             </p-button>
             <p-button
               type="info"
-              v-if="package_detail.package.status != statusShipping"
+              v-if="package_detail.package.status != statusCreated"
               @click="showModalExtraFee"
               class="ml-7"
             >
@@ -539,10 +539,7 @@
                                   :key="i"
                                 >
                                   <td>
-                                    {{
-                                      item.created_at
-                                        | datetime('dd/MM/yyyy - HH:mm')
-                                    }}
+                                    {{ item }}
                                   </td>
                                   <td>{{ item.updated_user_name }}</td>
                                   <td>
@@ -855,6 +852,9 @@ export default {
     },
     extraFee() {
       return this.package_detail.extra_fee ? this.package_detail.extra_fee : []
+    },
+    statusCreated() {
+      return PACKAGE_STATUS_CREATED
     },
     packageStatus() {
       return PACKAGE_STATUS_TAB
