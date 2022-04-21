@@ -782,8 +782,9 @@ export default {
       ]
 
       return (
-        (listStatus.includes(status) == false && !tracking) ||
-        ((this.$isSupport() || this.$isAdmin()) && this.isAlertReturn)
+        (this.$isSupport() || this.$isAdmin()) &&
+        ((listStatus.includes(status) == false && !tracking) ||
+          this.isAlertReturn)
       )
     },
     displayDeliverLogs() {
