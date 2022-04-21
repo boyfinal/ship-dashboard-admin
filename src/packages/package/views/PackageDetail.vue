@@ -78,7 +78,7 @@
             </p-button>
             <p-button
               type="info"
-              v-if="isReturnPackage"
+              v-if="package_detail.package.status != statusShipping"
               @click="showModalExtraFee"
               class="ml-7"
             >
