@@ -25,7 +25,6 @@
                         v-model="form.fullname"
                         :input="form.fullname"
                         name="name"
-                        :disabled="isReLabel"
                         :error="valider.error('fullname')"
                       />
                     </div>
@@ -40,7 +39,6 @@
                         v-model="form.phone"
                         :input="form.phone"
                         name="phone"
-                        :disabled="isReLabel"
                         :error="valider.error('phone')"
                       />
                     </div>
