@@ -784,7 +784,7 @@ export default {
       return (
         (this.$isSupport() || this.$isAdmin()) &&
         ((listStatus.includes(status) == false && !tracking) ||
-          this.isAlertReturn)
+          this.isReturnPackage)
       )
     },
     displayDeliverLogs() {
