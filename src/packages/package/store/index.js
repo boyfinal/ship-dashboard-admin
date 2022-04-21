@@ -117,14 +117,14 @@ export const actions = {
       api.fetchListPackagesReturn(payload),
       api.countListPackagesReturn(payload),
     ])
-    if (!list.packages || !count) {
+    if (list.error || list.errorMessage || !count) {
       count = { count: 0 }
       result = {
         success: false,
         message: list.errorMessage || '',
       }
     }
-    commit(FETCH_LIST_PACKAGES_RETURN, list.packages)
+    commit(FETCH_LIST_PACKAGES_RETURN, list.packages || [])
     commit(COUNT_LIST_PACKAGES_RETURN, count)
     return result
   },
