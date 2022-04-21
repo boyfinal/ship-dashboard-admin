@@ -539,7 +539,10 @@
                                   :key="i"
                                 >
                                   <td>
-                                    {{ item }}
+                                    {{
+                                      item.created_at
+                                        | datetime('dd/MM/yyyy - HH:mm')
+                                    }}
                                   </td>
                                   <td>{{ item.updated_user_name }}</td>
                                   <td>
