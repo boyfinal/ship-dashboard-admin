@@ -58,13 +58,7 @@
               type="danger"
               class="btn btn-danger"
               @click="handleCancelPackage"
-              v-if="
-                package_detail.package.status != statusCancel &&
-                package_detail.package.status != statusSuccess &&
-                package_detail.package.status != statusShipping &&
-                package_detail.package.status != statusExpired &&
-                package_detail.package.status != statusImportHub
-              "
+              v-if="isHasCancel"
             >
               <span>Hủy đơn</span>
             </p-button>
@@ -704,13 +698,14 @@ import {
   PACKAGE_STATUS_EXPIRED,
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
+  PACKAGE_ALERT_TYPE_HUB_RETURN,
+  PACKAGE_STATUS_ARCHIVED,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
-import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '../constants'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
@@ -775,13 +770,20 @@ export default {
       package_detail: (state) => state.package_detail,
     }),
     showButtonEdit() {
+      const { status, tracking } = (this.package_detail || {}).package || {}
+      if (!status) return false
+
+      const listStatus = [
+        PACKAGE_STATUS_CANCELLED,
+        PACKAGE_STATUS_ARCHIVED,
+        PACKAGE_STATUS_DELIVERED,
+        PACKAGE_STATUS_IN_TRANSIT,
+        PACKAGE_STATUS_EXPIRED,
+      ]
+
       return (
-        (this.package_detail.package.status !== this.statusCancel &&
-          this.package_detail.package.status !== this.statusSuccess &&
-          this.package_detail.package.status !== this.statusShipping &&
-          !this.package_detail.package.tracking &&
-          this.package_detail.package.status !== this.statusExpired) ||
-        this.isReturnPackage
+        (listStatus.includes(status) == false && !tracking) ||
+        ((this.$isSupport() || this.$isAdmin()) && this.isAlertReturn)
       )
     },
     displayDeliverLogs() {
@@ -892,6 +894,21 @@ export default {
       return (
         this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
+      )
+    },
+    isHasCancel() {
+      const status = ((this.package_detail || {}).package || {}).status
+      if (!status) return false
+
+      return (
+        [
+          PACKAGE_STATUS_CANCELLED,
+          PACKAGE_STATUS_ARCHIVED,
+          PACKAGE_STATUS_DELIVERED,
+          PACKAGE_STATUS_IN_TRANSIT,
+          PACKAGE_STATUS_EXPIRED,
+          PACKAGE_STATUS_IMPORT_HUB,
+        ].includes(status) == false
       )
     },
   },
