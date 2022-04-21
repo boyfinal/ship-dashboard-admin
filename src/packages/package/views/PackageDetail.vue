@@ -901,6 +901,7 @@ export default {
       if (!status) return false
 
       return (
+        (this.$isAdmin() || this.$isSupport()) &&
         [
           PACKAGE_STATUS_CANCELLED,
           PACKAGE_STATUS_ARCHIVED,
