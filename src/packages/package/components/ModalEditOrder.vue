@@ -9,12 +9,10 @@
           <b>Lưu ý:</b> <i>(<span>*</span>) Là các trường bắt buộc nhập.</i>
         </div>
         <div class="modal__edit-order-content">
-          <div class="row sm-gutters  flex-nowrap">
-            <div class="col-lg-6 col-xl-6 item-gutters ">
+          <div class="row sm-gutters flex-nowrap">
+            <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
-                <div class="card__w-header">
-                  Người nhận
-                </div>
+                <div class="card__w-header"> Người nhận </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label">
@@ -27,15 +25,12 @@
                         v-model="form.fullname"
                         :input="form.fullname"
                         name="name"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('fullname')"
                       />
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Điện thoại:
-                    </label>
+                    <label class="card__w-label"> Điện thoại: </label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="Nhập số điện thoại"
@@ -44,7 +39,6 @@
                         v-model="form.phone"
                         :input="form.phone"
                         name="phone"
-                        :disabled="isEditOrderReturn"
                         :error="valider.error('phone')"
                       />
                     </div>
@@ -80,9 +74,7 @@
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Địa chỉ phụ:
-                    </label>
+                    <label class="card__w-label"> Địa chỉ phụ: </label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="Nhập địa chỉ phụ"
@@ -143,9 +135,7 @@
                 </div>
               </div>
               <div class="card__w" v-if="isReLabel">
-                <div class="card__w-header">
-                  Phí reship
-                </div>
+                <div class="card__w-header"> Phí relabel </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label"> Phí($):</label>
@@ -157,6 +147,7 @@
                         :input="form.amount"
                         name="amount"
                         :disabled="!isReLabel"
+                        :error="valider.error('amount')"
                         @change="formatAmount"
                         @input="inputAmount"
                       />
@@ -166,9 +157,7 @@
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label">
-                      Nội dung :
-                    </label>
+                    <label class="card__w-label"> Nội dung : </label>
                     <div class="card__w-input">
                       <p-input
                         :placeholder="placeholder"
@@ -177,6 +166,7 @@
                         :input="form.description"
                         name="description"
                         :disabled="!isReLabel"
+                        :error="valider.error('description')"
                       />
                     </div>
                   </div>
@@ -185,14 +175,10 @@
             </div>
             <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
-                <div class="card__w-header">
-                  Thông tin hàng hóa
-                </div>
+                <div class="card__w-header"> Thông tin hàng hóa </div>
                 <div class="card__w-content">
                   <div class="card__w-item" v-if="false">
-                    <label class="card__w-label">
-                      Danh sách đơn hàng:
-                    </label>
+                    <label class="card__w-label"> Danh sách đơn hàng: </label>
                     <div class="card__w-input">
                       <multiselect
                         class="multiselect-custom dropdown-reason"
@@ -217,7 +203,7 @@
                         v-model="form.order_number"
                         :input="form.order_number"
                         name="order_number"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('order_number')"
                       />
                     </div>
@@ -233,7 +219,7 @@
                         v-model="form.detail"
                         :input="form.detail"
                         name="detail"
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         :error="valider.error('detail')"
                       />
                     </div>
@@ -303,9 +289,7 @@
                 </div>
               </div>
               <div class="card__w">
-                <div class="card__w-header">
-                  Dịch vụ gửi
-                </div>
+                <div class="card__w-header"> Dịch vụ gửi </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label">
@@ -313,7 +297,7 @@
                     </label>
                     <div class="card__w-input">
                       <multiselect
-                        :disabled="isEditOrderReturn"
+                        :disabled="isReLabel"
                         class="multiselect-custom dropdown-reason"
                         v-model="service"
                         :options="services"
@@ -355,24 +339,26 @@
         </div>
       </template>
     </p-modal>
+    <OverLoading :is-loading="loading" />
   </div>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
-import { FETCH_LIST_PRODUCTS, GET_SERVICE, UPDATE_PACKAGE } from '../store'
+import {
+  FETCH_LIST_PRODUCTS,
+  GET_SERVICE,
+  UPDATE_PACKAGE,
+  FETCH_PACKAGE_DETAIL,
+} from '../store'
 import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
-// import {GET_SENDER, LIST_SENDER} from "../../../setting/store";
+import OverLoading from '@components/shared/OverLoading'
 
 export default {
   name: 'ModalEditOrder',
-  components: { PButton },
+  components: { PButton, OverLoading },
   props: {
     visible: {
-      type: Boolean,
-      default: false,
-    },
-    isEditOrderReturn: {
       type: Boolean,
       default: false,
     },
@@ -382,6 +368,10 @@ export default {
     },
     total: {
       type: Number,
+    },
+    packageId: {
+      type: Number,
+      default: 0,
     },
   },
   computed: {
@@ -399,13 +389,13 @@ export default {
     },
     title() {
       if (this.isReLabel) {
-        return `Reship đơn ${this.code}`
+        return `Relabel đơn ${this.code}`
       }
 
       return `Sửa đơn ${this.code}`
     },
     placeholder() {
-      return `Phí reship cho đơn ${this.code}`
+      return `Phí re-label cho đơn ${this.code}`
     },
   },
   data() {
@@ -436,6 +426,7 @@ export default {
         amount: '',
         description: '',
       },
+      loading: false,
       isDisable: true,
       isUpdate: false,
       valider: null,
@@ -445,81 +436,102 @@ export default {
   },
   created() {
     this.init()
-    this.valider = valider.schema((y) => ({
-      fullname: y
-        .string()
-        .required('Tên không để trống')
-        .matches(
-          /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
-          'Tên không hợp lệ'
-        ),
-      phone: y
-        .string()
-        .notRequired()
-        .matches(
-          /^$|^[0-9+()-. ]+$/,
-          'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
-        ),
-      city: y
-        .string()
-        .required('Thành phố không để trống')
-        .matches(
-          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
-          'Thành phố không hợp lệ'
-        ),
-      state: y
-        .string()
-        .required('Mã vùng không để trống')
-        .matches(
-          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
-          'Mã vùng không hợp lệ'
-        ),
-      postcode: y
-        .string()
-        .required('Mã bưu điện không để trống')
-        .matches(/^[0-9\-_ ]{1,15}$/, 'Mã bưu điện không hợp lệ'),
-      weight: y
-        .string()
-        .required('Số cân nặng không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số  cân nặng không hợp lệ'
-        ),
-      length: y
-        .string()
-        .required('Số đo chiều dài không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều dài không hợp lệ'
-        ),
-      width: y
-        .string()
-        .required('Số đo chiều rộng không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều rộng không hợp lệ'
-        ),
-      height: y
-        .string()
-        .required('Số đo chiều cao không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều cao không hợp lệ'
-        ),
-      address: y
-        .string()
-        .required('Địa chỉ không để trống')
-        .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
-      address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
-        message: 'Địa chỉ phụ không hợp lệ',
-        excludeEmptyString: true,
-      }),
-    }))
+    this.valider = valider.schema((y) => {
+      let fields = {
+        fullname: y
+          .string()
+          .required('Tên không để trống')
+          .matches(
+            /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
+            'Tên không hợp lệ'
+          ),
+        phone: y
+          .string()
+          .notRequired()
+          .matches(
+            /^$|^[0-9+()-. ]+$/,
+            'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
+          ),
+        city: y
+          .string()
+          .required('Thành phố không để trống')
+          .matches(
+            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
+            'Thành phố không hợp lệ'
+          ),
+        state: y
+          .string()
+          .required('Mã vùng không để trống')
+          .matches(
+            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
+            'Mã vùng không hợp lệ'
+          ),
+        postcode: y
+          .string()
+          .required('Mã bưu điện không để trống')
+          .matches(/^[0-9\-_ ]{1,15}$/, 'Mã bưu điện không hợp lệ'),
+        weight: y
+          .string()
+          .required('Số cân nặng không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số  cân nặng không hợp lệ'
+          ),
+        length: y
+          .string()
+          .required('Số đo chiều dài không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều dài không hợp lệ'
+          ),
+        width: y
+          .string()
+          .required('Số đo chiều rộng không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều rộng không hợp lệ'
+          ),
+        height: y
+          .string()
+          .required('Số đo chiều cao không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều cao không hợp lệ'
+          ),
+        address: y
+          .string()
+          .required('Địa chỉ không để trống')
+          .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
+        address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
+          message: 'Địa chỉ phụ không hợp lệ',
+          excludeEmptyString: true,
+        }),
+      }
+      if (this.isReLabel) {
+        fields = {
+          ...fields,
+          ...{
+            description: y.string().required('Nội dung không để trống'),
+            amount: y.string().required('Phí relabel không để trống'),
+          },
+        }
+      }
+      return fields
+    })
   },
   methods: {
-    ...mapActions('package', [FETCH_LIST_PRODUCTS, UPDATE_PACKAGE]),
+    ...mapActions('package', [
+      FETCH_LIST_PRODUCTS,
+      UPDATE_PACKAGE,
+      FETCH_PACKAGE_DETAIL,
+    ]),
     async init() {
+      this.loading = true
+      if (this.packageId) {
+        await this.fetchPackage(this.packageId)
+      }
       await this[FETCH_LIST_PRODUCTS]()
+      this.loading = false
       this.form.fullname = this.package_detail.package.recipient
       this.form.phone = this.package_detail.package.phone_number
       this.form.city = this.package_detail.package.city
@@ -623,21 +635,6 @@ export default {
         description: this.form.description,
         is_reship: this.isReLabel,
       }
-      // let result = await this[UPDATE_PACKAGE](params)
-      // if (result.error) {
-      //   this.isUpdate = false
-      //   this.$toast.open({
-      //     type: 'error',
-      //     message: result.message,
-      //     duration: 3000,
-      //   })
-      //   return
-      // }
-      // this.$toast.open({
-      //   type: 'success',
-      //   message: 'Sửa đơn thành công',
-      //   duration: 3000,
-      // })
       this.isUpdate = false
       this.handleClose()
       this.$emit('submit', params)
@@ -700,7 +697,10 @@ export default {
     },
   },
   watch: {
-    visible: function() {
+    visible: function (val) {
+      if (!val) {
+        return
+      }
       this.init()
     },
   },

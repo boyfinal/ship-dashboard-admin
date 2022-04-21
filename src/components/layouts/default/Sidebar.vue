@@ -118,6 +118,11 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
+              route: '/packages/return',
+              title: ' Đơn hàng trả về',
+              alias: ['/packages/return'],
+            },
+            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],

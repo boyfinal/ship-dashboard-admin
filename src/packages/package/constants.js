@@ -16,6 +16,7 @@ export const PACKAGE_STATUS_CANCELLED = 50
 export const PACKAGE_STATUS_EXPIRED = 70
 export const PACKAGE_STATUS_RESHIP = 80
 export const PACKAGE_STATUS_UNDELIVERED = 90
+export const PACKAGE_STATUS_ARCHIVED = 55
 
 export const PACKAGE_STATUS_CREATED_TEXT = 'pending'
 export const PACKAGE_STATUS_PENDING_PICKUP_TEXT = 'pre-transit'
@@ -28,6 +29,7 @@ export const PACKAGE_STATUS_ALERT_TEXT = 'alert'
 export const PACKAGE_STATUS_CANCELLED_TEXT = 'canceled'
 export const PACKAGE_STATUS_EXPIRED_TEXT = 'expired'
 export const PACKAGE_STATUS_UNDELIVERED_TEXT = 'undelivered'
+export const PACKAGE_STATUS_ARCHIVED_TEXT = 'archived'
 
 export const PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT = 1
 export const PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN = 2
@@ -74,6 +76,10 @@ export const PACKAGE_STATUS_TAB = [
     value: PACKAGE_STATUS_UNDELIVERED_TEXT,
     text: 'Undelivered',
   },
+  {
+    value: PACKAGE_STATUS_ARCHIVED_TEXT,
+    text: 'Archive',
+  },
 ]
 
 export const MAP_PACKAGE_STATUS_TEXT = {
@@ -92,6 +98,7 @@ export const MAP_PACKAGE_STATUS_TEXT = {
   [PACKAGE_STATUS_EXPORT_HUB]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
   [PACKAGE_STATUS_UNDELIVERED]: PACKAGE_STATUS_UNDELIVERED_TEXT,
   [PACKAGE_STATUS_RESHIP]: PACKAGE_STATUS_IN_TRANSIT_TEXT,
+  [PACKAGE_STATUS_ARCHIVED]: PACKAGE_STATUS_ARCHIVED_TEXT,
 }
 
 export const MAP_PACKAGE_STATUS_CLASSNAMES = {
@@ -155,6 +162,10 @@ export const MAP_PACKAGE_STATUS_CLASSNAMES = {
     text: PACKAGE_STATUS_IN_TRANSIT_TEXT,
     className: 'default',
   },
+  [PACKAGE_STATUS_ARCHIVED]: {
+    text: PACKAGE_STATUS_ARCHIVED_TEXT,
+    className: 'danger',
+  },
 }
 
 export const MAP_NAME_STATUS_STRING_PACKAGE = {
@@ -197,6 +208,10 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
   [PACKAGE_STATUS_UNDELIVERED_TEXT]: {
     value: 'undelivered',
     class: 'badge-expired',
+  },
+  [PACKAGE_STATUS_ARCHIVED_TEXT]: {
+    value: 'archived',
+    class: 'badge-danger',
   },
 }
 
@@ -243,6 +258,7 @@ export const DELIVER_LOG_PACKAGE = {
   [PACKAGE_STATUS_DELIVERED]: 'Delivered',
   [PACKAGE_STATUS_RETURNED]: ' Package returned',
   [PACKAGE_STATUS_WAREHOUSE_EXPORT]: 'Departed from LionBay Processing Center',
+  [PACKAGE_STATUS_ARCHIVED]: 'Package archived',
 }
 
 export const MAP_NAME_STATUS_WAREHOUSE = {

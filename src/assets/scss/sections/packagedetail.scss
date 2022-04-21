@@ -1,6 +1,7 @@
 .package-detail {
+    font-family:$default-font-bevn-pro;
     .page-header {
-        margin: 24px 0 18px 0;
+        margin-bottom: 16px;
         &__barcode {
             img {
                 margin: 0 0 5px 8px;
@@ -17,7 +18,12 @@
             letter-spacing: 0.2px;
             color: $color-neutral-7;
             span {
-                margin-left: 10px;
+                display: inline-block;
+                margin-left: 8px;
+                color: $color-neutral-7;
+                letter-spacing: 0.2px;
+                line-height: 22px;
+                font-size: 14px;
             }
         }
     }
@@ -52,11 +58,6 @@
                 }
             }
         }
-    }
-    .more-extra-fee {
-        display: flex;
-        align-items: baseline;
-        position: relative;
     }
     .more-extra-fee img {
         cursor: pointer;
@@ -96,10 +97,15 @@
         font-size: 24px !important;
         line-height: 28px !important;
     }
-    .fee {
-        padding-top: 24px !important;
-        margin-left: 12px;
-        margin-right: 24px;
+    .fee{
+        font-family: $font-family-sans-serif;
+        .card-content{
+            line-height: 22px;
+        }
+        .card-block{
+            height: auto;
+            min-height: 192px;
+        }
     }
     .fee-border {
         margin-right: 25px;
@@ -108,10 +114,27 @@
         margin-bottom: 25px;
     }
     .card-header {
+        font-family: $font-family-sans-serif;
+        padding: 10px 16px;
         justify-content: start;
         .card-title {
             font-weight: 500;
+            font-size: 18px;
+            line-height: 28px;
+            letter-spacing: 0.2px;
+            color: $color-neutral-10;
         }
+    }
+    .logs{
+        .card-header {
+            font-family: $default-font-bevn-pro;
+        }
+    }
+    .card-content{
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $color-neutral-9;
     }
     .card-block {
         height: 100%;
