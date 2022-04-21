@@ -4,7 +4,7 @@
       <div class="content_404">
         <div class="content_404-img">
           <p-svg name="empty_container" class="mb-16"></p-svg>
-          <div class="empty-content">Chưa có thông tin {{ type }} hàng</div>
+          <div class="empty-content">Chưa có thông tin hàng {{ type }}</div>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'kiện',
+      default: 'nhâp',
     },
   },
 }

@@ -16,12 +16,7 @@
             }
         }
     }
-    .info-container {
-        margin-bottom: 10px;
-        .badge {
-            margin-left: 10px;
-        }
-    }
+
 }
 
 .export__hub {
@@ -77,12 +72,7 @@
             border: none;
         }
     }
-    .info-container {
-        margin-bottom: 10px;
-        .badge {
-            margin-left: 10px;
-        }
-    }
+
     .list-export {
         margin-top: 10px;
     }
@@ -122,8 +112,8 @@
             opacity: .8;
         }
         &:disabled {
-            color: #A9E0DE;
-            background: #F9FDFE;
+            color: #DDF2F2;
+            background: #00978C;
             border: none;
         }
     }
@@ -132,6 +122,26 @@
         min-height: unset;
         .content {
             height: auto;
+        }
+    }
+    .table{
+        td{
+            border-bottom: 1px solid #dee2e6;
+            border-top: unset;
+
+            svg{
+                float: right;
+                cursor: pointer;
+            }
+
+            &:first-child{
+                min-width: 300px;
+            }
+        }
+        tr:last-child{
+            td{
+                border-bottom: unset;
+            }
         }
     }
 }
