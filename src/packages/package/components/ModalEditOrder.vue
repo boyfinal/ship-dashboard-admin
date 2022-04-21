@@ -149,6 +149,7 @@
                         :input="form.amount"
                         name="amount"
                         :disabled="!isReLabel"
+                        :error="valider.error('amount')"
                         @change="formatAmount"
                         @input="inputAmount"
                       />
@@ -167,6 +168,7 @@
                         :input="form.description"
                         name="description"
                         :disabled="!isReLabel"
+                        :error="valider.error('description')"
                       />
                     </div>
                   </div>
@@ -436,76 +438,88 @@ export default {
   },
   created() {
     this.init()
-    this.valider = valider.schema((y) => ({
-      fullname: y
-        .string()
-        .required('Tên không để trống')
-        .matches(
-          /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
-          'Tên không hợp lệ'
-        ),
-      phone: y
-        .string()
-        .notRequired()
-        .matches(
-          /^$|^[0-9+()-. ]+$/,
-          'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
-        ),
-      city: y
-        .string()
-        .required('Thành phố không để trống')
-        .matches(
-          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
-          'Thành phố không hợp lệ'
-        ),
-      state: y
-        .string()
-        .required('Mã vùng không để trống')
-        .matches(
-          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
-          'Mã vùng không hợp lệ'
-        ),
-      postcode: y
-        .string()
-        .required('Mã bưu điện không để trống')
-        .matches(/^[0-9\-_ ]{1,15}$/, 'Mã bưu điện không hợp lệ'),
-      weight: y
-        .string()
-        .required('Số cân nặng không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số  cân nặng không hợp lệ'
-        ),
-      length: y
-        .string()
-        .required('Số đo chiều dài không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều dài không hợp lệ'
-        ),
-      width: y
-        .string()
-        .required('Số đo chiều rộng không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều rộng không hợp lệ'
-        ),
-      height: y
-        .string()
-        .required('Số đo chiều cao không để trống')
-        .matches(
-          /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
-          'Số đo chiều cao không hợp lệ'
-        ),
-      address: y
-        .string()
-        .required('Địa chỉ không để trống')
-        .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
-      address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
-        message: 'Địa chỉ phụ không hợp lệ',
-        excludeEmptyString: true,
-      }),
-    }))
+    this.valider = valider.schema((y) => {
+      let fields = {
+        fullname: y
+          .string()
+          .required('Tên không để trống')
+          .matches(
+            /^[a-zA-z0-9 \u00A1-\uFFFF!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]{0,150}$/,
+            'Tên không hợp lệ'
+          ),
+        phone: y
+          .string()
+          .notRequired()
+          .matches(
+            /^$|^[0-9+()-. ]+$/,
+            'Nhập số điện thoại từ 10 đến 11 chữ số, bắt đầu bằng 0,84 hoặc +84'
+          ),
+        city: y
+          .string()
+          .required('Thành phố không để trống')
+          .matches(
+            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
+            'Thành phố không hợp lệ'
+          ),
+        state: y
+          .string()
+          .required('Mã vùng không để trống')
+          .matches(
+            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
+            'Mã vùng không hợp lệ'
+          ),
+        postcode: y
+          .string()
+          .required('Mã bưu điện không để trống')
+          .matches(/^[0-9\-_ ]{1,15}$/, 'Mã bưu điện không hợp lệ'),
+        weight: y
+          .string()
+          .required('Số cân nặng không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số  cân nặng không hợp lệ'
+          ),
+        length: y
+          .string()
+          .required('Số đo chiều dài không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều dài không hợp lệ'
+          ),
+        width: y
+          .string()
+          .required('Số đo chiều rộng không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều rộng không hợp lệ'
+          ),
+        height: y
+          .string()
+          .required('Số đo chiều cao không để trống')
+          .matches(
+            /^\s*(?=.*[1-9])\d*(?:\.\d{1,20})?\s*$/,
+            'Số đo chiều cao không hợp lệ'
+          ),
+        address: y
+          .string()
+          .required('Địa chỉ không để trống')
+          .matches(/[A-Za-z0-9'.\-\s,]/, 'Địa chỉ không hợp lệ'),
+        address2: y.string().matches(/[A-Za-z0-9'.\-\s,]/, {
+          message: 'Địa chỉ phụ không hợp lệ',
+          excludeEmptyString: true,
+        }),
+      }
+      if (this.isReLabel) {
+        fields = {
+          ...fields,
+          ...{
+            description: y.string().required('Nội dung không để trống'),
+            amount: y.string().required('Phí relabel không để trống'),
+          },
+        }
+      }
+      return fields
+    })
   },
   methods: {
     ...mapActions('package', [
