@@ -51,7 +51,16 @@
                     </td>
                     <td>{{ item.code }}</td>
                     <td>
-                      {{ item.tracking_number }}
+                      <a
+                        v-if="item.tracking_number"
+                        target="_blank"
+                        class="on-hover tracking"
+                        :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking_number}`"
+                      >
+                        {{ item.tracking_number }}
+                        <p-svg name="arright"> </p-svg>
+                      </a>
+
                       <span
                         class="download-label"
                         v-if="item.tracking_number != 'N/A'"
@@ -124,10 +133,11 @@ import Browser from '@core/helpers/browser'
 import { HUB_COUNT_SEARCH_ITEMS, HUB_SEARCH_ITEMS } from '../store'
 import { HUB_TAB_IDS } from '../constants'
 import ModalReturn from '../components/ModalReturn'
+import PSvg from '../../../../uikit/components/svg/svg'
 export default {
   name: 'ListReturn',
   mixins: [mixinRoute, mixinTable],
-  components: { EmptySearchResult, ModalReturn },
+  components: { PSvg, EmptySearchResult, ModalReturn },
   data() {
     return {
       isFetching: false,
