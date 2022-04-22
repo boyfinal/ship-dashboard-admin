@@ -81,16 +81,6 @@
       @action="handleRemove"
       :type="`danger`"
     ></modal-confirm>
-    <modal-confirm
-      :visible.sync="visibleConfirmAccept"
-      :actionConfirm="`Xác nhận`"
-      :cancel="`Bỏ qua`"
-      :description="`Vui lòng xác nhận nhập hub trước khi thoát trang`"
-      :title="`Xác nhận nhập hub`"
-      @action="acceptSubmit"
-      @leave="leavePage"
-      :type="`danger`"
-    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -169,7 +159,7 @@ export default {
         return
       }
       const index = this.listContainer.findIndex(
-        (item) => item.code === this.keyword
+        (item) => item.code == this.keyword || item.keyword == this.keyword
       )
       if (index != -1) return
       this.isScan = true
@@ -195,6 +185,7 @@ export default {
       this.listContainer.push({
         code: this.current_code,
         status: this.current.status,
+        keyword: keyword,
       })
       this.keyword = ''
       this.isScan = false
@@ -263,14 +254,22 @@ export default {
         return null
       }
     },
-    leavePage() {
-      this.$router.go({ name: this.toRouter })
-    },
   },
   beforeRouteLeave(to, from, next) {
-    this.toRouter = to.name
     if (this.listContainer.length) {
-      this.visibleConfirmAccept = true
+      this.$confirm({
+        title: `Xác nhận`,
+        message: `Vui lòng xác nhận nhập hub trước khi thoát trang`,
+        confirmText: `Xác nhận`,
+        cancelText: `Bỏ qua`,
+        type: `danger`,
+        onConfirm: () => {
+          this.acceptSubmit()
+        },
+        onCancel: () => {
+          next()
+        },
+      })
       return
     }
     next()

@@ -85,16 +85,6 @@
       @action="acceptSubmit"
       :type="`danger`"
     ></modal-confirm>
-    <modal-confirm
-      :visible.sync="visibleConfirmRemove"
-      :actionConfirm="`Xóa`"
-      :cancel="`Bỏ qua`"
-      :description="`Bạn có chắc chắn muốn xoá?`"
-      :title="`Xác nhận`"
-      @action="handleRemove"
-      @leave="leavePage"
-      :type="`danger`"
-    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -320,14 +310,22 @@ export default {
         return null
       }
     },
-    leavePage() {
-      this.$router.go({ name: this.toRouter })
-    },
   },
   beforeRouteLeave(to, from, next) {
-    this.toRouter = to.name
     if (this.listExported.length) {
-      this.visibleConfirmAccept = true
+      this.$confirm({
+        title: `Xác nhận`,
+        message: `Vui lòng xác nhận xuất hub trước khi thoát trang`,
+        confirmText: `Xác nhận`,
+        cancelText: `Bỏ qua`,
+        type: `danger`,
+        onConfirm: () => {
+          this.acceptSubmit()
+        },
+        onCancel: () => {
+          next()
+        },
+      })
       return
     }
     next()

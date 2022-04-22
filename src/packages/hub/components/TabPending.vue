@@ -125,6 +125,7 @@
                         code: item.code,
                       },
                     }"
+                    class="code"
                   >
                     {{ item.code }}
                   </router-link>
