@@ -276,7 +276,7 @@ export default {
 
 <style scoped lang="scss">
 .p-tooltip::after {
-  width: auto !important;
+  z-index: 9999;
   white-space: pre;
 }
 td.code {
