@@ -45,12 +45,6 @@
           <template v-else-if="items.length">
             <div class="table-responsive">
               <TabPending v-if="isTabPending" :items="items" />
-              <TabReturn
-                v-if="isTabReturn"
-                :items="items"
-                @select="showModalReturnHandle"
-              />
-              <TabReship v-if="isTabReship" :items="items" />
               <TabInHub v-if="isTabInHub" :items="items" />
               <TabExportHub v-if="isTabExportHub" :items="items" />
             </div>
@@ -72,12 +66,6 @@
         </div>
       </div>
     </div>
-
-    <ModalReturn
-      :visible.sync="isShowModalReturn"
-      :submit="returnHandle"
-      :current="current"
-    />
   </div>
 </template>
 <script>
@@ -86,7 +74,6 @@ import {
   HUB_TAB_IDS,
   HUB_ITEM_FILTER_STATUS_EXPORT_TEXT,
   HUB_ITEM_FILTER_STATUS_RESHIP_TEXT,
-  HUB_ITEM_FILTER_STATUS_RETURN_TEXT,
   HUB_ITEM_FILTER_STATUS_IN_TEXT,
   HUB_ITEM_FILTER_STATUS_PENDING_TEXT,
 } from '../constants'
@@ -100,11 +87,8 @@ import {
   FETCH_PACKAGE_DETAIL,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
-import TabReturn from '../components/TabReturn'
-import ModalReturn from '../components/ModalReturn'
 import TabInHub from '../components/TabInHub'
 import TabExportHub from '../components/TabExportHub'
-import TabReship from '../components/TabReship'
 import TabPending from '../components/TabPending'
 import mixinBarcode from '@core/mixins/barcode'
 import { date } from '@core/utils/datetime'
@@ -113,11 +97,8 @@ export default {
   name: 'HubSearch',
   components: {
     EmptySearchResult,
-    TabReturn,
-    ModalReturn,
     TabInHub,
     TabExportHub,
-    TabReship,
     TabPending,
   },
   mixins: [mixinRoute, mixinTable, mixinBarcode],
@@ -131,9 +112,6 @@ export default {
     },
     isTabExportHub() {
       return this.checkStatus(HUB_ITEM_FILTER_STATUS_EXPORT_TEXT)
-    },
-    isTabReturn() {
-      return this.checkStatus(HUB_ITEM_FILTER_STATUS_RETURN_TEXT)
     },
     isTabReship() {
       return this.checkStatus(HUB_ITEM_FILTER_STATUS_RESHIP_TEXT)
@@ -217,39 +195,6 @@ export default {
 
     checkStatus(status) {
       return status == this.filter.status
-    },
-
-    async showModalReturnHandle(item) {
-      const res = await this.fetchPackageDetail(item.id)
-      if (res.error) {
-        this.$toast.error(res.message)
-        return false
-      }
-
-      if (item.id != res.package.id) return
-
-      this.current = {
-        id: item.id,
-        code: item.code,
-        package_return: res.package.package_return,
-      }
-
-      this.isShowModalReturn = true
-    },
-    async returnHandle(payload) {
-      const res = await this.returnSubmit(payload)
-      if (res.error) {
-        this.$toast.error(res.message)
-        return false
-      }
-
-      this.isShowModalReturn = false
-      this.current = {}
-      this.$toast.success('Thêm lý do trả hàng thành công')
-
-      await this.searchHandle()
-
-      return true
     },
   },
 

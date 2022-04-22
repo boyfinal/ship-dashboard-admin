@@ -15,7 +15,7 @@
                     :disabled="disableInput"
                     @clear="clearInput"
                     v-model="keyword"
-                    placeholder="Nhập mã ups hoặc mã kiện"
+                    placeholder="Nhập mã kiện/ups hoặc mã đơn/usps"
                   ></p-input>
                   <div class="d-flex">
                     <button
@@ -88,6 +88,7 @@
       :description="`Vui lòng xác nhận nhập hub trước khi thoát trang`"
       :title="`Xác nhận nhập hub`"
       @action="acceptSubmit"
+      @leave="leavePage"
       :type="`danger`"
     ></modal-confirm>
   </div>
@@ -134,6 +135,7 @@ export default {
       visibleConfirmAccept: false,
       removeCode: {},
       current_code: '',
+      toRouter: '',
     }
   },
   created() {},
@@ -253,16 +255,20 @@ export default {
       this.isSubmitting = false
     },
     beforeLeaveHandle() {
-      window.addEventListener('beforeunload', () => {
-        if (this.hasChangePrice) {
+      window.onbeforeunload = () => {
+        if (this.listContainer.length) {
           return 'Thông tin chưa được lưu, bạn có muốn thoát khỏi page'
         }
 
         return null
-      })
+      }
+    },
+    leavePage() {
+      this.$router.go({ name: this.toRouter })
     },
   },
   beforeRouteLeave(to, from, next) {
+    this.toRouter = to.name
     if (this.listContainer.length) {
       this.visibleConfirmAccept = true
       return

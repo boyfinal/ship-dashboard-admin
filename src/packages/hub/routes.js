@@ -25,4 +25,22 @@ export const routes = [
     component: () =>
       import(/* webpackChunkName: "sign-in" */ './views/ScanExportHub'),
   },
+  {
+    path: '/hub/return',
+    name: 'hub-return',
+    meta: {
+      title: 'Hàng return',
+    },
+    component: () =>
+      import(/* webpackChunkName: "sign-in" */ './views/PackageReturn'),
+  },
+  {
+    path: '/hub/reship',
+    name: 'hub-reship',
+    meta: {
+      title: 'Hàng reship',
+    },
+    component: () =>
+      import(/* webpackChunkName: "sign-in" */ './views/PackageReship'),
+  },
 ]

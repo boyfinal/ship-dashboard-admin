@@ -6,7 +6,7 @@
         <span
           v-if="link != ''"
           v-html="link"
-          style="padding-left: .5rem"
+          style="padding-left: 0.5rem"
         ></span>
       </template>
       <template slot="footer">
@@ -104,6 +104,7 @@ export default {
       this.$emit('reset', true)
       this.$emit('close', true)
       this.$emit('update:error', '')
+      this.$emit('leave')
       this.$emit('update:errorUrl', '')
     },
     handleAction(id) {
