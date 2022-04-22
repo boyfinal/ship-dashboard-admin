@@ -35,7 +35,7 @@
         >
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="">
           <StatusTab
             :status="tabStatus"
             v-model="filter.status"
@@ -254,22 +254,22 @@ export default {
   },
 
   watch: {
-    'filter.page': function() {
+    'filter.page': function () {
       this.searchHandle()
     },
-    'filter.limit': function() {
+    'filter.limit': function () {
       this.filter.page = 1
       this.searchHandle()
     },
-    'filter.status': function() {
+    'filter.status': function () {
       this.filter.page = 1
       this.searchHandle()
     },
-    'filter.start_date': function() {
+    'filter.start_date': function () {
       this.filter.page = 1
       this.searchHandle()
     },
-    'filter.end_date': function() {
+    'filter.end_date': function () {
       this.filter.page = 1
       this.searchHandle()
     },

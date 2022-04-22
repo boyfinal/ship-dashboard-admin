@@ -150,6 +150,40 @@
     .table-responsive {
         overflow: visible;
     }
+    .p-tabs{
+        padding: 1.25rem 1.25rem 0 1.25rem !important;
+    }
+    table{
+        thead{
+            th{
+                letter-spacing: 0.75px;
+                color: #111212;
+
+                &:first-child{
+                    padding-left: 1.25rem;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    &:first-child{
+                        padding-left: 1.25rem;
+                    }
+                    &:last-child{
+                        padding-right: 1.25rem;
+                    }
+                }
+
+                &:first-child{
+                    td{
+                        border-top: 1px solid #E1E2E2;
+                    }
+
+                }
+            }
+        }
+    }
     .p-tooltip::after {
         width: auto;
     }
@@ -186,8 +220,54 @@
 
 //search Hub 
 #tbl-shipments {
+    .item-shipment{
+        background: #004E41;
+        td, a{
+            color: white;
+            font-weight: bold;
+        }
+        .btn-detail{
+            border: 1px solid white;
+            background: #004E41;
+            color: white;
+
+            &:hover{
+                background: white;
+                color: #004E41;
+            }
+        }
+        &:hover{
+            box-shadow: none;
+
+            td:first-child{
+                border-left: 1px solid transparent;
+            }
+            td:last-child{
+                border-right: 1px solid transparent;
+            }
+        }
+    }
     td {
         border-bottom: none
+    }
+    thead{
+        th{
+            letter-spacing: 0.75px;
+            color: $color-neutral-10;
+        }
+    }
+    .btn-detail{
+        color: #00978C;
+        background: #DDF2F2;
+        transition: .3s;
+        &:hover{
+            color: #DDF2F2;
+            background: #00978C;
+        }
+        &:focus{
+            outline: none;
+            box-shadow: none;
+        }
     }
     .tbody-opened {
         .opened {
@@ -202,17 +282,29 @@
             }
         }
         .info {
-            background-color: $color-neutral-1;
+            background-color: white;
             td {
                 padding: 0;
                 border-radius: unset;
+                border-left: none;
+                border-right: none;
+                span{
+                    padding-left: 10px;
+                }
             }
             .table-container {
                 margin-bottom: 0;
                 thead th {
-                    font-weight: 500;
+                    font-weight: 700;
                     font-size: 12px;
-                    color: $color-neutral-7;
+                    color: $color-neutral-5;
+                    height: 48px;
+                    &:first-child{
+                        border-left: 1px solid #004E41;
+                    }
+                    &:last-child{
+                        border-right: 1px solid #004E41;
+                    }
                 }
                 tbody {
                     display: block;
@@ -223,7 +315,27 @@
                     display: table;
                     width: 100%;
                     table-layout: fixed;
-                    /* even columns width , fix width of table too*/
+
+                    td{
+
+                        &:first-child{
+                            border-left: 1px solid #004E41;
+                        }
+                        &:last-child{
+                            border-right: 1px solid #004E41;
+                        }
+
+
+                    }
+
+                    &:last-child{
+                        td{
+                            border-bottom: 1px solid #004E41;
+                        }
+                    }
+
+
+
                 }
                 tr:hover {
                     box-shadow: none;
@@ -257,4 +369,33 @@
 
 tr:hover .download-label {
     opacity: 1;
+}
+
+.faq-fade {
+    &-enter {
+        max-height: 0;
+        display: block;
+    }
+    &-enter-to {
+    }
+    &-enter-active {
+        animation: accordeonAni 400ms ease-out;
+        overflow: hidden;
+    }
+    &-leave {
+        display: block;
+    }
+    &-leave-to {
+        display: block;
+    }
+    &-leave-active {
+        animation: accordeonAni 400ms ease-out;
+        animation-direction: reverse;
+        overflow: hidden;
+    }
+}
+@keyframes accordeonAni {
+    0% {
+        max-height: 0;
+    }
 }

@@ -4,9 +4,10 @@
       <tr>
         <template>
           <th>MÃ LÔ</th>
-          <th>TỔNG KIỆN HÀNG</th>
+          <th class="text-center">TỔNG KIỆN HÀNG</th>
           <th>MANIFEST</th>
           <th>NGÀY TẠO</th>
+          <th></th>
         </template>
       </tr>
     </thead>
@@ -15,14 +16,14 @@
       :key="i"
       :class="{ 'tbody-opened': opened.includes(item.id) }"
     >
-      <tr
-        :class="{ opened: opened.includes(item.id) }"
-        @click="toggle(item.id)"
-      >
+      <tr>
         <td>
           <a href="#">
             {{ item.id }}
           </a>
+        </td>
+        <td class="text-center">
+          {{ item.count_container }}
         </td>
         <td
           >{{ item.tracking_number }}
@@ -56,13 +57,49 @@
             </p-tooltip>
           </span>
         </td>
+        <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+        <td>
+          <p-button
+            class="btn btn-detail"
+            :loading="isLoading(item.id)"
+            @click="toggle(item.id)"
+            :type="`java-blue`"
+          >
+            Chi tiết
+          </p-button>
+        </td>
+      </tr>
+
+      <tr
+        v-if="item.containers.length > 0"
+        v-show="opened.includes(item.id) && !isFetching && item.containers"
+        class="item-shipment"
+      >
+        <td>
+          <a href="#">
+            {{ item.id }}
+          </a>
+        </td>
+        <td class="text-center">
+          {{ item.count_container }}
+        </td>
+        <td>{{ item.tracking_number }} </td>
+        <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+        <td>
+          <p-button
+            class="btn btn-detail"
+            @click="close(item.id)"
+            :type="`java-blue`"
+          >
+            Thu gọn
+          </p-button>
+        </td>
       </tr>
       <tr
         class="info"
-        v-if="item.containers.length > 0"
         v-show="opened.includes(item.id) && !isFetching && item.containers"
       >
-        <td colspan="2">
+        <td colspan="5">
           <table
             class="table table-container"
             :class="{ 'table-scroll': item.containers.length > 10 }"
@@ -207,6 +244,8 @@ export default {
     return {
       opened: [],
       isFetching: false,
+      idLoading: null,
+      currentFaq: -10,
     }
   },
   computed: {
@@ -220,6 +259,8 @@ export default {
         route: { name: 'shipment-detail', params: { id: item.id } },
         containers: [],
         label_url: item.label_url,
+        count_container: item.count_container,
+        created_at: item.created_at,
       }))
     },
   },
@@ -231,11 +272,13 @@ export default {
     async toggle(id) {
       const index = this.opened.indexOf(id)
       if (index > -1) {
-        this.opened.splice(index, 1)
+        return
       } else {
         this.isFetching = true
+        this.idLoading = id
         const result = await this[FETCH_SHIPMENT_DETAIL]({ id: id })
         this.isFetching = false
+        this.idLoading = null
         if (!result.success) {
           this.$toast.open({ message: result.message, type: 'error' })
         }
@@ -247,9 +290,18 @@ export default {
         this.opened.push(id)
       }
     },
+    close(id) {
+      const index = this.opened.indexOf(id)
+      if (index > -1) {
+        this.opened.splice(index, 1)
+      }
+    },
 
     getBoxInfo(container) {
       return `${container.length} x ${container.width}  x ${container.height}`
+    },
+    isLoading(id) {
+      return this.idLoading == id
     },
 
     async downloadLabel(labelUrl) {
