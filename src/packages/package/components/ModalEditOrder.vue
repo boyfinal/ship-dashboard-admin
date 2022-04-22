@@ -138,7 +138,7 @@
                 <div class="card__w-header"> Phí relabel </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
-                    <label class="card__w-label"> Phí($):</label>
+                    <label class="card__w-label"> Phí($): <span>*</span></label>
                     <div class="card__w-input">
                       <p-input
                         placeholder="0"
@@ -157,7 +157,9 @@
                     </div>
                   </div>
                   <div class="card__w-item">
-                    <label class="card__w-label"> Nội dung : </label>
+                    <label class="card__w-label">
+                      Nội dung: <span>*</span></label
+                    >
                     <div class="card__w-input">
                       <p-input
                         :placeholder="placeholder"
@@ -529,6 +531,8 @@ export default {
       this.loading = true
       if (this.packageId) {
         await this.fetchPackage(this.packageId)
+        this.$set(this.form, 'description', `Phí re-label cho đơn ${this.code}`)
+        this.$set(this.form, 'amount', 0)
       }
       await this[FETCH_LIST_PRODUCTS]()
       this.loading = false

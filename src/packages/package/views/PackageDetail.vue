@@ -72,7 +72,7 @@
             </p-button>
             <p-button
               type="info"
-              v-if="isReturnPackage"
+              v-if="package_detail.package.status != statusCreated"
               @click="showModalExtraFee"
               class="ml-7"
             >
@@ -782,8 +782,9 @@ export default {
       ]
 
       return (
-        (listStatus.includes(status) == false && !tracking) ||
-        ((this.$isSupport() || this.$isAdmin()) && this.isAlertReturn)
+        (this.$isSupport() || this.$isAdmin()) &&
+        ((listStatus.includes(status) == false && !tracking) ||
+          this.isReturnPackage)
       )
     },
     displayDeliverLogs() {
@@ -855,6 +856,9 @@ export default {
     extraFee() {
       return this.package_detail.extra_fee ? this.package_detail.extra_fee : []
     },
+    statusCreated() {
+      return PACKAGE_STATUS_CREATED
+    },
     packageStatus() {
       return PACKAGE_STATUS_TAB
     },
@@ -901,6 +905,7 @@ export default {
       if (!status) return false
 
       return (
+        (this.$isAdmin() || this.$isSupport()) &&
         [
           PACKAGE_STATUS_CANCELLED,
           PACKAGE_STATUS_ARCHIVED,
