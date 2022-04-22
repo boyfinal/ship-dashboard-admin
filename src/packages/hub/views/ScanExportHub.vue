@@ -92,6 +92,7 @@
       :description="`Bạn có chắc chắn muốn xoá?`"
       :title="`Xác nhận`"
       @action="handleRemove"
+      @leave="leavePage"
       :type="`danger`"
     ></modal-confirm>
   </div>
@@ -160,6 +161,7 @@ export default {
         container: 'Kiện hàng',
         package: 'Đơn hàng',
       },
+      toRouter: '',
     }
   },
   created() {
@@ -310,16 +312,20 @@ export default {
       this.currentCode = ''
     },
     beforeLeaveHandle() {
-      window.addEventListener('beforeunload', () => {
-        if (this.hasChangePrice) {
+      window.onbeforeunload = () => {
+        if (this.listExported.length) {
           return 'Thông tin chưa được lưu, bạn có muốn thoát khỏi page'
         }
 
         return null
-      })
+      }
+    },
+    leavePage() {
+      this.$router.go({ name: this.toRouter })
     },
   },
   beforeRouteLeave(to, from, next) {
+    this.toRouter = to.name
     if (this.listExported.length) {
       this.visibleConfirmAccept = true
       return

@@ -17,14 +17,7 @@ export const HUB_TAB = [
     value: HUB_ITEM_FILTER_STATUS_PENDING_TEXT,
     text: 'Lô hàng sắp đến',
   },
-  {
-    value: HUB_ITEM_FILTER_STATUS_RETURN_TEXT,
-    text: 'Hàng return',
-  },
-  {
-    value: HUB_ITEM_FILTER_STATUS_RESHIP_TEXT,
-    text: 'Hàng reship',
-  },
+
   {
     value: HUB_ITEM_FILTER_STATUS_IN_TEXT,
     text: 'Đơn/kiện trong hub',
@@ -72,4 +65,5 @@ export const ALLOW_MIME_TYPE_FILE_RETURN = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ]
 
-export const REGEX_ALLOW_FILE_RETURN_EXTENSION = /(\.jpg|\.jpeg|\.png|\.csv|\.xlsx)$/i
+export const REGEX_ALLOW_FILE_RETURN_EXTENSION =
+  /(\.jpg|\.jpeg|\.png|\.csv|\.xlsx)$/i

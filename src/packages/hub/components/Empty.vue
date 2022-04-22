@@ -17,7 +17,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'nhâp',
+      default: 'nhập',
     },
   },
 }
