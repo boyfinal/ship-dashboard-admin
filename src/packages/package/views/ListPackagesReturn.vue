@@ -27,7 +27,7 @@
         <div class="card-body">
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: unset">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <tr>
@@ -38,7 +38,7 @@
                     <th>Ngày trả hàng</th>
                     <th>Ngày kho nhận</th>
                     <th>Trạng thái</th>
-                    <th></th>
+                    <th v-if="showBtn"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,7 +104,7 @@
                     <td>{{
                       item.package_return_id ? `Đã gửi lý do` : `Chưa gửi lý do`
                     }}</td>
-                    <td>
+                    <td v-if="showBtn">
                       <p-button
                         type="info"
                         class="ml-7"
@@ -206,6 +206,9 @@ export default {
     },
     mapStatus() {
       return MAP_NAME_STATUS_STRING_PACKAGE
+    },
+    showBtn() {
+      return this.$isAdmin() || this.$isSupport()
     },
     searchPlaceholder() {
       const maptext = {

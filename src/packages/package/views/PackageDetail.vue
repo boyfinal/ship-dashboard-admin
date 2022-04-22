@@ -68,7 +68,7 @@
               @click="handleModal"
               class="ml-7"
             >
-              {{ isReturnPackage ? `Re-label` : `Sửa đơn` }}
+              {{ isReturnPackage ? `Re-Ship` : `Sửa đơn` }}
             </p-button>
             <p-button
               type="info"
