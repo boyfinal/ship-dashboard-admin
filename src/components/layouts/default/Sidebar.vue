@@ -228,6 +228,24 @@ export default {
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
+            {
+              route: '/hub/return',
+              title: 'Hàng return',
+              alias: ['/hub/return'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+            {
+              route: '/hub/reship',
+              title: 'Hàng reship',
+              alias: ['/hub/reship'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
           ],
         },
         {

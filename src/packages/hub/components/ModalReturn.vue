@@ -104,11 +104,11 @@
       </div>
     </div>
     <template slot="footer">
-      <div>
-        <p-svg name="InfoCircle"></p-svg>
-        <b>Lưu ý:</b> (<span class="text-danger">*</span>)
-        <i>Là các trường bắt buộc nhập.</i>
-      </div>
+      <!--      <div>-->
+      <!--        <p-svg name="InfoCircle"></p-svg>-->
+      <!--        <b>Lưu ý:</b> (<span class="text-danger">*</span>)-->
+      <!--        <i>Là các trường bắt buộc nhập.</i>-->
+      <!--      </div>-->
       <div class="group-button modal-confirm">
         <p-button type="default" @click="handleClose">Hủy</p-button>
         <p-button
@@ -164,7 +164,7 @@ export default {
       return [...new Set(this.fileErrors)]
     },
     title() {
-      return `Lý do trả hàng của đơn ${this.current.code || ''}`
+      return `Lý do`
     },
     isReturned() {
       return this.current.package_return && this.current.package_return.id > 0
@@ -313,7 +313,7 @@ export default {
   },
   watch: {
     current: {
-      handler: function(val) {
+      handler: function (val) {
         this.reason = 'Sai đia chỉ'
         this.content = ''
         this.urls = []
