@@ -531,9 +531,9 @@ export default {
       this.loading = true
       if (this.packageId) {
         await this.fetchPackage(this.packageId)
-        this.$set(this.form, 'description', `Phí Re-ship cho đơn ${this.code}`)
-        this.$set(this.form, 'amount', 0)
       }
+      this.$set(this.form, 'description', `Phí Re-ship cho đơn ${this.code}`)
+      this.$set(this.form, 'amount', 0)
       await this[FETCH_LIST_PRODUCTS]()
       this.loading = false
       this.form.fullname = this.package_detail.package.recipient
