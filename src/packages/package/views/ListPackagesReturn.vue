@@ -278,6 +278,7 @@ export default {
 .p-tooltip::after {
   z-index: 9999;
   white-space: pre;
+  width: auto;
 }
 td.code {
   max-width: 20vw !important;
