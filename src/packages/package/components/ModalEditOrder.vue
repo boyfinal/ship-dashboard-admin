@@ -135,7 +135,7 @@
                 </div>
               </div>
               <div class="card__w" v-if="isReLabel">
-                <div class="card__w-header"> Phí relabel </div>
+                <div class="card__w-header"> Phí reship </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
                     <label class="card__w-label"> Phí($): <span>*</span></label>
@@ -391,13 +391,13 @@ export default {
     },
     title() {
       if (this.isReLabel) {
-        return `Relabel đơn ${this.code}`
+        return `Reship đơn ${this.code}`
       }
 
       return `Sửa đơn ${this.code}`
     },
     placeholder() {
-      return `Phí re-label cho đơn ${this.code}`
+      return `Phí Re-ship cho đơn ${this.code}`
     },
   },
   data() {
@@ -514,7 +514,7 @@ export default {
           ...fields,
           ...{
             description: y.string().required('Nội dung không để trống'),
-            amount: y.string().required('Phí relabel không để trống'),
+            amount: y.string().required('Phí Re-ship không để trống'),
           },
         }
       }
@@ -531,7 +531,7 @@ export default {
       this.loading = true
       if (this.packageId) {
         await this.fetchPackage(this.packageId)
-        this.$set(this.form, 'description', `Phí re-label cho đơn ${this.code}`)
+        this.$set(this.form, 'description', `Phí Re-ship cho đơn ${this.code}`)
         this.$set(this.form, 'amount', 0)
       }
       await this[FETCH_LIST_PRODUCTS]()
