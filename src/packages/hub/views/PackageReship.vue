@@ -94,7 +94,12 @@
                         </p-tooltip>
                       </span>
                     </td>
-                    <td>123123</td>
+                    <td>
+                      <span v-if="item.reship_at">{{
+                        item.reship_at | date('dd/MM/yyyy')
+                      }}</span>
+                      <span v-else>N/A</span></td
+                    >
                   </tr>
                 </tbody>
               </table>

@@ -288,7 +288,7 @@
                 border-radius: unset;
                 border-left: none;
                 border-right: none;
-                span{
+                span, .code{
                     padding-left: 10px;
                 }
             }
@@ -369,33 +369,4 @@
 
 tr:hover .download-label {
     opacity: 1;
-}
-
-.faq-fade {
-    &-enter {
-        max-height: 0;
-        display: block;
-    }
-    &-enter-to {
-    }
-    &-enter-active {
-        animation: accordeonAni 400ms ease-out;
-        overflow: hidden;
-    }
-    &-leave {
-        display: block;
-    }
-    &-leave-to {
-        display: block;
-    }
-    &-leave-active {
-        animation: accordeonAni 400ms ease-out;
-        animation-direction: reverse;
-        overflow: hidden;
-    }
-}
-@keyframes accordeonAni {
-    0% {
-        max-height: 0;
-    }
 }
