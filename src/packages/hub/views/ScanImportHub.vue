@@ -47,7 +47,7 @@
                       <tbody>
                         <tr v-for="(item, i) in listContainer" :key="i">
                           <td width="200">{{ item.code }}</td>
-                          <td>Kiện hàng</td>
+                          <td>{{ item.type }}</td>
                           <td>
                             <p-svg
                               @click="handelModalConfirm(item)"
@@ -125,7 +125,7 @@ export default {
       visibleConfirmAccept: false,
       removeCode: {},
       current_code: '',
-      toRouter: '',
+      currentType: '',
     }
   },
   created() {},
@@ -181,11 +181,19 @@ export default {
         return
       }
       this.isFetchingContainer = false
-      this.current_code = this.current.code
+      this.filter.type = res.type
+      if (this.filter.type == 'container') {
+        this.current_code = this.current.code
+        this.currentType = `Kiện hàng`
+      } else if (this.filter.type == 'package') {
+        this.current_code = this.current.package_code.code
+        this.currentType = `Đơn hàng`
+      }
       this.listContainer.push({
         code: this.current_code,
-        status: this.current.status,
+        type: this.currentType,
         keyword: keyword,
+        id: this.current.id,
       })
       this.keyword = ''
       this.isScan = false
@@ -204,9 +212,13 @@ export default {
     async acceptSubmit() {
       if (!this.listContainer.length || this.isSubmitting || this.isCancel)
         return
-
       let params = {
-        codes: this.listContainer.map((item) => item.code),
+        containers: this.listContainer
+          .filter((item) => item.type == `Kiện hàng`)
+          .map((ele) => ele.code),
+        packages: this.listContainer
+          .filter((item) => item.type == `Đơn hàng`)
+          .map((ele) => ele.id),
       }
       this.isSubmitting = true
       const res = await this[SCAN_CONTAINER_IMPORT](params)
