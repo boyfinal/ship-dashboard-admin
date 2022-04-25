@@ -72,7 +72,7 @@
                       <th width="100" :class="{ hidden: hiddenClass }"
                         >created date
                       </th>
-                      <th width="110" :class="{ hidden: hiddenClass }"
+                      <th width="150" :class="{ hidden: hiddenClass }"
                         >status</th
                       >
                       <th :class="{ hidden: hiddenClass }">Total fee</th>
