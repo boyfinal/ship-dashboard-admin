@@ -277,6 +277,7 @@ export default {
         type: `danger`,
         onConfirm: () => {
           this.acceptSubmit()
+          next()
         },
         onCancel: () => {
           next()

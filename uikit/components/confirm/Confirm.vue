@@ -7,6 +7,16 @@
           <div class="modal-content">
             <header class="modal-header" v-if="title">
               <h4 class="modal-title">{{ title }}</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                @click="closeModal"
+              >
+                <span aria-hidden="true" :disabled="disableClose">
+                  <p-svg name="x"></p-svg>
+                </span>
+              </button>
             </header>
             <section class="modal-body">
               <span v-html="message"></span>
@@ -138,6 +148,13 @@ export default {
       }
       this.close()
       this.onConfirm(this.prompt)
+    },
+    closeModal() {
+      this.isActive = false
+      setTimeout(() => {
+        this.$destroy()
+        removeElement(this.$el)
+      }, 150)
     },
 
     /**
