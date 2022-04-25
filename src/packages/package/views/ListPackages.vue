@@ -113,6 +113,7 @@
                           {{ item.order_number }}
                         </router-link>
                         <span
+                          v-if="!item.validate_address"
                           @click="handleValidateAddress(item.id)"
                           class="list-warning pull-right badge badge-round badge-warning-order"
                         >
