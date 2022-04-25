@@ -187,7 +187,7 @@ export default {
       }
 
       const index = this.listExported.findIndex(
-        (item) => item.code === this.keyword
+        (item) => item.code == this.keyword || item.keyword == this.keyword
       )
       if (index != -1) return
 
@@ -222,6 +222,7 @@ export default {
         code: this.currentCode,
         type: this.currentType,
         id: this.current.id,
+        keyword: keyword,
       })
     },
 
