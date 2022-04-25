@@ -28,9 +28,9 @@
                     <th>Tên</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
-                    <th width="300" class="text-center">Quy mô</th>
+                    <th width="250" class="text-center">Quy mô</th>
                     <th>Ngày tạo</th>
-                    <th width="100">Thao tác</th>
+                    <th width="150">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
