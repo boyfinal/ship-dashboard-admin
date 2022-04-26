@@ -158,10 +158,7 @@ export default {
         })
         return
       }
-      const index = this.listContainer.findIndex(
-        (item) => item.code == this.keyword || item.keyword == this.keyword
-      )
-      if (index != -1) return
+
       this.isScan = true
       this.isCancel = false
       const params = {
@@ -188,6 +185,19 @@ export default {
       } else if (this.filter.type == 'package') {
         this.current_code = this.current.package_code.code
         this.currentType = `Đơn hàng`
+      }
+      const index = this.listContainer.findIndex(
+        (item) => item.code == this.current_code
+      )
+      if (index != -1) {
+        this.$toast.open({
+          type: 'error',
+          message: `${this.currentType} đã tồn tại`,
+          duration: 3000,
+        })
+        this.isScan = false
+        this.isCancel = false
+        return
       }
       this.listContainer.push({
         code: this.current_code,
