@@ -316,7 +316,7 @@
                                     | datetime('dd/MM/yyyy')
                                 }}</div
                               >
-                              <span v-else></span>
+                              <span v-else>N/A</span>
                             </div>
                           </div>
                           <div class="row mb-8">
