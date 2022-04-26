@@ -319,7 +319,10 @@
                               <span v-else>N/A</span>
                             </div>
                           </div>
-                          <div class="row mb-8">
+                          <div
+                            class="row mb-8"
+                            v-if="package_detail.package.package_return"
+                          >
                             <div class="col-4 pr-0">Lý do trả hàng:</div>
                             <div class="col-8 pl-0"
                               ><div>{{
@@ -327,7 +330,10 @@
                               }}</div>
                             </div>
                           </div>
-                          <div class="row mb-16">
+                          <div
+                            class="row mb-16"
+                            v-if="package_detail.package.package_return"
+                          >
                             <div class="col-4 pr-0">Nguyên nhân:</div>
                             <div class="col-8 pl-0">
                               <div>{{
@@ -335,7 +341,10 @@
                               }}</div>
                             </div>
                           </div>
-                          <div class="row">
+                          <div
+                            class="row"
+                            v-if="package_detail.package.package_return"
+                          >
                             <div class="col-12">
                               <p style="margin-bottom: 8px"
                                 ><strong>Bằng chứng:</strong></p
