@@ -309,11 +309,14 @@
                         <div class="mb-16">
                           <div class="row mb-8">
                             <div class="col-4 pr-0">Ngày trả hàng:</div>
-                            <div class="col-8 pl-0"
-                              ><div>{{
-                                package_detail.package.returned_at
-                                  | datetime('dd/MM/yyyy')
-                              }}</div>
+                            <div class="col-8 pl-0">
+                              <div v-if="package_detail.package.returned_at">
+                                {{
+                                  package_detail.package.returned_at
+                                    | datetime('dd/MM/yyyy')
+                                }}</div
+                              >
+                              <span v-else></span>
                             </div>
                           </div>
                           <div class="row mb-8">
