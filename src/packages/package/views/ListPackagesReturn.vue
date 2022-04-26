@@ -44,26 +44,17 @@
                 <tbody>
                   <tr v-for="(item, i) in packages" :key="i">
                     <td>
-                      <p-tooltip
-                        :label="item.order_number"
-                        v-if="item.order_number"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.order_number.length > 20"
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'package-detail',
+                          params: {
+                            id: item.package_id,
+                          },
+                        }"
                       >
-                        <router-link
-                          class="text-no-underline"
-                          :to="{
-                            name: 'package-detail',
-                            params: {
-                              id: item.package_id,
-                            },
-                          }"
-                        >
-                          {{ truncate(item.order_number, 20) }}
-                        </router-link>
-                      </p-tooltip>
+                        {{ item.order_number }}
+                      </router-link>
                     </td>
                     <td class="text-nowrap code">
                       <span v-if="item.package_code">
