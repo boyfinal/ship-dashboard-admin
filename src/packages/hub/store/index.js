@@ -117,14 +117,30 @@ export const actions = {
     let result = { success: true }
 
     let response = await api.getContainerImport(payload)
-    if (!response || !response.container) {
+    if (
+      (!response || !response.container) &&
+      (!response || !response.package)
+    ) {
       result = {
         success: false,
         message: response.errorMessage,
       }
       return result
     }
-    commit(GET_CONTAINER_IMPORT, response.container)
+
+    result = {
+      success: true,
+      type: response.container ? 'container' : 'package',
+    }
+    commit(
+      GET_IMPORT_HUB_DETAIL,
+      response.container ? response.container : response.package
+    )
+
+    commit(
+      GET_CONTAINER_IMPORT,
+      response.container ? response.container : response.package
+    )
     return result
   },
   // eslint-disable-next-line no-unused-vars
