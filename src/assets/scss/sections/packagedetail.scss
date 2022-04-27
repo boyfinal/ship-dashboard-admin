@@ -166,6 +166,10 @@
         width: 64px;
         background-color: $color-neutral-3
     }
+    #btn_ex_fee{
+        width: auto;
+        white-space: nowrap;
+    }
 }
 
 .modal__edit-order {

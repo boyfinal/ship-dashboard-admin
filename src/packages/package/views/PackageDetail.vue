@@ -72,9 +72,13 @@
             </p-button>
             <p-button
               type="info"
-              v-if="package_detail.package.status != statusCreated"
+              v-if="
+                package_detail.package.status != statusCreated &&
+                package_detail.package.status != statusArchived
+              "
               @click="showModalExtraFee"
               class="ml-7"
+              id="btn_ex_fee"
             >
               Tạo phí phát sinh
             </p-button>
@@ -710,11 +714,11 @@ import {
   PACKAGE_STATUS_IMPORT_HUB,
   PACKAGE_STATUS_RETURNED,
   PACKAGE_STATUS_CREATED,
+  PACKAGE_STATUS_ARCHIVED,
   PACKAGE_STATUS_EXPIRED,
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
-  PACKAGE_STATUS_ARCHIVED,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -873,6 +877,9 @@ export default {
     },
     statusCreated() {
       return PACKAGE_STATUS_CREATED
+    },
+    statusArchived() {
+      return PACKAGE_STATUS_ARCHIVED
     },
     packageStatus() {
       return PACKAGE_STATUS_TAB
