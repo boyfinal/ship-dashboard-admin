@@ -234,14 +234,18 @@ export default {
           .map((ele) => ele.id),
       }
       this.isSubmitting = true
+      this.isFetchingContainer = true
       const res = await this[SCAN_CONTAINER_IMPORT](params)
 
       if (!res.success) {
+        this.isFetchingContainer = false
         this.$toast.error(`Quét nhập thất bại`, { duration: 3000 })
         this.isSubmitting = false
         this.isScan = false
         return
       }
+      this.isFetchingContainer = false
+
       this.isSubmitting = false
       this.isScan = false
       this.isCancel = true
