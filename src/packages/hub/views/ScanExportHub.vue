@@ -302,7 +302,7 @@ export default {
 
       if (!res.success) {
         this.isScan = false
-        this.$toast.success(`Quét xuất  thất bại`, { duration: 3000 })
+        this.$toast.error(`Quét xuất  thất bại`, { duration: 3000 })
         this.isSubmitting = false
         return
       }
