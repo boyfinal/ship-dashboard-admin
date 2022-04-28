@@ -174,6 +174,68 @@
                   </div>
                 </div>
               </div>
+              <div class="card__w">
+                <div class="card__w-header">
+                  Sản phẩm
+                </div>
+                <div class="card__w-content">
+                  <div class="card__w-item">
+                    <div class="card__w-input">
+                      <div
+                        class="d-flex product-item"
+                        v-for="(prod, index) in package_prods"
+                        :key="index"
+                      >
+                        <div class="row product-info">
+                          <div class="select-product col-md-7 ">
+                            <multiselect
+                              class="multiselect-custom dropdown-reason"
+                              v-model="product_sku[index]"
+                              :options="products"
+                              placeholder="Chọn sản phẩm"
+                              @select="handleSelectProd($event, index)"
+                              @remove="handleRemove(index)"
+                              :custom-label="customLabelProd"
+                            ></multiselect>
+                          </div>
+                          <div class="select-product col-md-5">
+                            <div class="product-name">
+                              {{ prod.name }}
+                            </div>
+                          </div>
+                          <span class="err-span" v-if="prod.err != ''">
+                            {{ prod.err }}
+                          </span>
+                        </div>
+
+                        <input
+                          placeholder="Số lượng"
+                          v-model="prod.quantity"
+                          :input="prod.quantity"
+                          class="form-control select-product product-quantity"
+                          name="quantity"
+                        />
+                        <div
+                          class="add-product"
+                          v-if="index == package_prods.length - 1"
+                        >
+                          <a @click="handleAddProduct" class="btn btn-add">
+                            <img src="~@assets/img/Add 20px.png" />
+                          </a>
+                        </div>
+                        <div class="add-product" v-else>
+                          <a
+                            @click="handleRemoveProduct(index)"
+                            class="btn btn-remove"
+                          >
+                            <img src="~@assets/img/X 20px.png" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-lg-6 col-xl-6 item-gutters">
               <div class="card__w">
@@ -434,6 +496,8 @@ export default {
       valider: null,
       validErrors: {},
       fixAmount: 0,
+      package_prods: [],
+      product_sku: [],
     }
   },
   created() {
@@ -534,7 +598,11 @@ export default {
       }
       this.$set(this.form, 'description', `Phí Re-ship cho đơn ${this.code}`)
       this.$set(this.form, 'amount', 0)
-      await this[FETCH_LIST_PRODUCTS]()
+      const payload = {
+        user_id: this.package_detail.package.user_id,
+      }
+      console.log(this.package_detail.package)
+      await this[FETCH_LIST_PRODUCTS](payload)
       this.loading = false
       this.form.fullname = this.package_detail.package.recipient
       this.form.phone = this.package_detail.package.phone_number
@@ -562,7 +630,74 @@ export default {
       this.form.order_number = this.package_detail.package.order_number
       this.form.detail = this.package_detail.package.detail
       this.service = this.form.service
+
+      this.package_prods = []
+      this.product_sku = []
+
+      if (this.package_detail.package.package_products) {
+        for (
+          let i = 0;
+          i < this.package_detail.package.package_products.length;
+          i++
+        ) {
+          let prod = this.products.find(
+            (prod) =>
+              prod.id ==
+              this.package_detail.package.package_products[i].product_id
+          )
+
+          this.package_prods.push({
+            product_id: this.package_detail.package.package_products[i]
+              .product_id,
+            sku: prod.sku,
+            quantity: this.package_detail.package.package_products[i].quantity,
+            name: prod.name,
+            err: '',
+          })
+
+          this.product_sku.push(prod)
+        }
+      }
+
+      this.package_prods.push({
+        product_id: 0,
+        sku: 'Chọn sản phẩm',
+        quantity: '',
+        name: 'Tên sản phẩm',
+        err: '',
+      })
+
+      this.product_sku.push({
+        product_id: 0,
+        sku: 'Chọn sản phẩm',
+        quantity: '',
+        name: 'Tên sản phẩm',
+      })
+
+      console.log(this.package_prods)
     },
+
+    handleSelectProd(value, index) {
+      this.package_prods[index].product_id = value.id
+      this.package_prods[index].sku = value.sku
+      this.package_prods[index].name = value.name
+
+      this.product_sku[index] = value
+
+      console.log(this.product_sku)
+    },
+
+    handleRemoveProd(index) {
+      this.package_prods[index].product_id = 0
+      this.package_prods[index].sku = 'Chọn sản phẩm'
+      this.package_prods[index].quantity = ''
+      this.package_prods[index].name = 'Tên sản phẩm'
+    },
+
+    customLabelProd(item) {
+      return item.sku
+    },
+
     handleClose() {
       this.form.fullname = ''
       this.form.phone = ''
@@ -582,6 +717,8 @@ export default {
       this.form.amount = ''
       this.form.description = ''
       this.valider.errors = null
+      this.package_prods = []
+      this.product_sku = []
       this.$emit('update:visible', false)
     },
     customLabel(item) {
@@ -605,10 +742,54 @@ export default {
       this.form.height = this.package_detail.package.height
     },
     async handleUpdate() {
-      if (!this.valider.check(this.form)) {
+      let invalidProd = true
+
+      const regex = new RegExp(/^[0-9]{1,4}$/)
+
+      for (let i = 0; i < this.package_prods.length; i++) {
+        this.package_prods[i].quantity = String(
+          this.package_prods[i].quantity
+        ).trim()
+
+        if (
+          (this.package_prods[i].product_id < 1 &&
+            this.package_prods[i].quantity != '') ||
+          (this.package_prods[i].quantity == '' &&
+            this.package_prods[i].product_id > 0)
+        ) {
+          this.package_prods[i].err = 'Vui lòng chọn SKU hoặc Tên sản phẩm'
+          invalidProd = false
+          continue
+        }
+
+        if (
+          (!regex.test(this.package_prods[i].quantity) ||
+            this.package_prods[i].quantity < 1) &&
+          this.package_prods[i].quantity != ''
+        ) {
+          this.package_prods[i].err = 'Số lượng sản phẩm không hợp lệ'
+          invalidProd = false
+          continue
+        }
+
+        this.package_prods[i].err = ''
+      }
+
+      let package_products = []
+
+      this.package_prods
+        .filter((prod) => prod.product_id > 0 && prod.err == '')
+        .forEach((prod) => {
+          package_products.push({
+            product_id: prod.product_id,
+            quantity: parseInt(prod.quantity),
+          })
+        })
+
+      if (!this.valider.check(this.form) || !invalidProd) {
         return
       }
-      if (Object.keys(this.validErrors).length > 0) {
+      if (Object.keys(this.validErrors).length > 0 || !invalidProd) {
         return
       }
       this.isUpdate = true
@@ -638,6 +819,7 @@ export default {
         amount: parseFloat(amount),
         description: this.form.description,
         is_reship: this.isReLabel,
+        package_products: package_products,
       }
       this.isUpdate = false
       this.handleClose()
@@ -699,9 +881,31 @@ export default {
 
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
+
+    handleAddProduct() {
+      this.package_prods.push({
+        product_id: 0,
+        sku: 'Chọn sản phẩm',
+        quantity: '',
+        name: 'Tên sản phẩm',
+        err: '',
+      })
+
+      this.product_sku.push({
+        product_id: 0,
+        sku: 'Chọn sản phẩm',
+        quantity: '',
+        name: 'Tên sản phẩm',
+      })
+    },
+
+    handleRemoveProduct(index) {
+      this.package_prods.splice(index, 1)
+      this.product_sku.splice(index, 1)
+    },
   },
   watch: {
-    visible: function (val) {
+    visible: function(val) {
       if (!val) {
         return
       }

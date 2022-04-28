@@ -1,5 +1,23 @@
 .package-detail {
     font-family:$default-font-bevn-pro;
+    .product-info {
+        margin-left: 15px;
+        margin-right: 15px;
+        width: 100%;
+
+        .product-quantity {
+            text-align: center;
+        }
+
+        .product-item{
+            margin-top: 8px;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+        }
+    }
+
+    .product-title{
+        font-weight: 600;
+    }
     .page-header {
         margin-bottom: 16px;
         &__barcode {
@@ -58,6 +76,8 @@
                 }
             }
         }
+
+
     }
     .more-extra-fee img {
         cursor: pointer;
@@ -286,4 +306,82 @@
             }
         }
     }
+    .select-product {
+        margin-right: 8px;
+        width: 100%;
+        .multiselect__tags {
+          padding: 5px 30px 0 12px;
+        }
+      }
+    
+      
+    
+      .add-product {
+          width: 40px;
+          height: 40px;
+          .btn-add{
+              padding: 10px;
+              width: 40px;
+              height: 40px;
+              line-height: 0px;
+              background: #DDF2F2;
+              border-radius: 8px;
+              img{
+                  width: 100%;
+                  margin: 0px;
+              }
+          }
+    
+        .btn-remove {
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            line-height: 0px;
+            background: #F6F7F7;
+            border-radius: 8px;
+            img{
+                width: 100%;
+                margin: 0px;
+            }
+        }
+      }
+    
+    
+      .product-quantity {
+          width: 93px;
+      }
+    
+      .product-info {
+        width: 100%;
+        margin: 0px;
+        .multiselect-custom {
+            padding: 0px;
+        }
+        .select-product {
+            margin: 0px;
+            padding-left: 0px;
+            padding-right: 8px;
+        }
+        .product-name {
+            width: 100%;
+            padding: 8px 17px 8px 17px;
+            border-radius: 8px;
+            border: 1px solid #cfd0d0;
+            min-height: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .multiselect__placeholder{
+            color: #35495e;
+            padding-left: 5px;
+            padding-top: 3px;
+            margin-bottom: 8px;
+            line-height: 20px;
+        }
+      }
+    
+      .product-item {
+          margin-bottom: 9px;
+      }
 }

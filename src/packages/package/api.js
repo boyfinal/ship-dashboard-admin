@@ -17,8 +17,9 @@ export default {
    * @param payload
    * @return {*}
    */
-  fetchListProduct() {
-    return http.get(`/products`)
+  fetchListProduct(payload) {
+    console.log(payload)
+    return http.get(`/products?${buildQueryString(payload)}`)
   },
   /**
    * fetch list service
