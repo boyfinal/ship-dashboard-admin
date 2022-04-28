@@ -289,6 +289,8 @@ export default {
       }
 
       this.isSubmitting = true
+      this.isFetchingImportHub = true
+
       let payload = {
         containers: this.listExported
           .filter((item) => item.type == `Kiện hàng`)
@@ -301,11 +303,13 @@ export default {
       const res = await this[SCAN_EXPORT_HUB](payload)
 
       if (!res.success) {
+        this.isFetchingImportHub = false
         this.isScan = false
         this.$toast.error(`Quét xuất  thất bại`, { duration: 3000 })
         this.isSubmitting = false
         return
       }
+      this.isFetchingImportHub = false
       this.$toast.success(`Quét xuất  thành công`, { duration: 3000 })
       this.listExported = []
       this.isSubmitting = false
