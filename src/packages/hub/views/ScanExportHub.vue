@@ -275,7 +275,7 @@ export default {
       let payload = {
         containers: this.listExported
           .filter((item) => item.type == `Kiện hàng`)
-          .map((ele) => ele.code),
+          .map((ele) => ele.id),
         packages: this.listExported
           .filter((item) => item.type == `Đơn hàng`)
           .map((ele) => ele.id),
