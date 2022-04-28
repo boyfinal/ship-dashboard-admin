@@ -223,7 +223,7 @@ export default {
         this.currentType = `Đơn hàng`
       }
       const index = this.listExported.findIndex(
-        (item) => item.code == this.current_code
+        (item) => item.code == this.currentCode
       )
       if (index != -1) {
         this.$toast.open({
