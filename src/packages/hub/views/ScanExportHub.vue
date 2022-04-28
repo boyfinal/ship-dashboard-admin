@@ -85,6 +85,15 @@
       @action="acceptSubmit"
       :type="`danger`"
     ></modal-confirm>
+    <modal-confirm
+      :visible.sync="visibleConfirmRemove"
+      :actionConfirm="`Xóa`"
+      :cancel="`Bỏ qua`"
+      :description="`Bạn có chắc chắn muốn xoá?`"
+      :title="`Xác nhận`"
+      @action="handleRemove"
+      :type="`danger`"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -186,11 +195,6 @@ export default {
         return
       }
 
-      const index = this.listExported.findIndex(
-        (item) => item.code == this.keyword || item.keyword == this.keyword
-      )
-      if (index != -1) return
-
       this.handleUpdateRouteQuery()
 
       let params = {
@@ -217,6 +221,19 @@ export default {
       } else if (this.filter.type == 'package') {
         this.currentCode = this.current.package_code.code
         this.currentType = `Đơn hàng`
+      }
+      const index = this.listExported.findIndex(
+        (item) => item.code == this.current_code
+      )
+      if (index != -1) {
+        this.$toast.open({
+          type: 'error',
+          message: `${this.currentType} đã tồn tại`,
+          duration: 3000,
+        })
+        this.isScan = false
+        this.isCancel = false
+        return
       }
       this.listExported.push({
         code: this.currentCode,
@@ -246,7 +263,7 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
-      if (keyword.length > 22 && this.filter.type == 'package') {
+      if (keyword.length > 22) {
         keyword = keyword.slice(-22)
       }
       this.keyword = keyword
