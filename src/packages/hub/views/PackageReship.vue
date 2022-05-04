@@ -212,6 +212,7 @@ export default {
         keyword = keyword.slice(-22)
       }
       this.keyword = keyword
+      this.filter.search = this.keyword
       this.searchHandle()
     },
     async downloadLabel(labelUrl) {

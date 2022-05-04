@@ -178,7 +178,9 @@ export default {
     },
     async searchHandle() {
       this.handleUpdateRouteQuery()
-      this.filter.search = this.barcode
+      if (this.barcode) {
+        this.filter.search = this.barcode
+      }
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
       this.isFetching = true
@@ -188,7 +190,7 @@ export default {
       ])
 
       this.isFetching = false
-
+      this.barcode = ''
       for (const v of res) {
         if (v.error) {
           this.$toast.error(v.message)
