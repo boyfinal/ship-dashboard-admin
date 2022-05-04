@@ -130,7 +130,7 @@ export const actions = {
   },
   // eslint-disable-next-line no-unused-vars
   async fetchListProducts({ commit }, payload) {
-    const res = await api.fetchListProduct()
+    const res = await api.fetchListProduct(payload)
     if (!res.products) {
       return { error: true, message: res.errorMessage || '' }
     }

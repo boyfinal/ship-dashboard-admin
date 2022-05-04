@@ -18,7 +18,7 @@
               <div class="package-code"
                 >{{
                   $evaluate('package_detail.package.package_code?.code') ||
-                  'N/A'
+                    'N/A'
                 }}
               </div>
             </div>
@@ -37,7 +37,9 @@
               <div>
                 <a
                   target="_blank"
-                  :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`"
+                  :href="
+                    `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`
+                  "
                 >
                   {{
                     $evaluate('package_detail.package.tracking.tracking_number')
@@ -74,7 +76,7 @@
               type="info"
               v-if="
                 package_detail.package.status != statusCreated &&
-                package_detail.package.status != statusArchived
+                  package_detail.package.status != statusArchived
               "
               @click="showModalExtraFee"
               class="ml-7"
@@ -264,7 +266,7 @@
                               <span
                                 v-if="
                                   package_detail.package.status &&
-                                  package_detail.package.status > 0
+                                    package_detail.package.status > 0
                                 "
                                 v-status="package_detail.package.status"
                               ></span>
@@ -276,7 +278,7 @@
                               <span
                                 v-if="
                                   package_detail.package.status &&
-                                  package_detail.package.status > 0
+                                    package_detail.package.status > 0
                                 "
                                 v-status="package_detail.package.status"
                                 type="warehouse"
@@ -307,7 +309,7 @@
                         class="card-content"
                         v-if="
                           package_detail.package.package_return ||
-                          package_detail.package.returned_at
+                            package_detail.package.returned_at
                         "
                       >
                         <div class="mb-16">
@@ -442,6 +444,37 @@
                             ><div>{{ sumFee | formatPrice }}</div></div
                           >
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-24">
+                  <div class="card-block product-info">
+                    <div class="card-header">
+                      <div class="card-title">Thông tin sản phẩm</div>
+                    </div>
+                    <div class="card-content">
+                      <div class="row product-title">
+                        <div class="col-5 mb-8">SKU</div>
+                        <div class="col-5">Tên sản phẩm</div>
+                        <div class="col-2 mb-8 product-quantity">Số lượng</div>
+                      </div>
+                      <div
+                        class="row product-item"
+                        v-for="(prod, index) in package_detail.package
+                          .package_products"
+                        :key="index"
+                      >
+                        <div class="col-5 mb-8">{{
+                          mapProduct(prod.product_id).sku
+                        }}</div>
+                        <div class="col-5">{{
+                          mapProduct(prod.product_id).name
+                        }}</div>
+                        <div class="col-2 mb-8 product-quantity">{{
+                          prod.quantity
+                        }}</div>
                       </div>
                     </div>
                   </div>
@@ -700,6 +733,7 @@ import {
   CANCEL_PACKAGES,
   RESHIP_PACKAGE,
   UPDATE_PACKAGE,
+  FETCH_LIST_PRODUCTS,
 } from '../store/index'
 import { CREATE_EXTRA_FEE } from '../../bill/store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
@@ -787,7 +821,9 @@ export default {
   computed: {
     ...mapState('package', {
       package_detail: (state) => state.package_detail,
+      products: (state) => state.products,
     }),
+
     showButtonEdit() {
       const { status, tracking } = (this.package_detail || {}).package || {}
       if (!status) return false
@@ -837,7 +873,7 @@ export default {
         ConvertData.push({ name: element, data: [] })
       )
       ConvertData.forEach((x) =>
-        logs.forEach(function (it) {
+        logs.forEach(function(it) {
           if (datetime(it.ship_time, 'dd-MM-yyyy') == x.name) {
             x.data.push(it)
           }
@@ -947,6 +983,7 @@ export default {
   },
   methods: {
     ...mapActions('package', [
+      FETCH_LIST_PRODUCTS,
       FETCH_PACKAGE_DETAIL,
       FETCH_LIST_SERVICE,
       CANCEL_PACKAGES,
@@ -959,6 +996,10 @@ export default {
       this.isFetching = true
       await this.fetchPackage(this.packageID)
       await this[FETCH_LIST_SERVICE]()
+      const payload = {
+        user_id: this.package_detail.package.user_id,
+      }
+      await this[FETCH_LIST_PRODUCTS](payload)
       this.isFetching = false
     },
     init2() {
@@ -1152,11 +1193,14 @@ export default {
       this.$toast.success('Sửa đơn hàng thành công', { duration: 3000 })
       await this.init2()
     },
+    mapProduct(productID) {
+      return this.products.find((prod) => prod.id == productID)
+    },
   },
 
   watch: {
     package_detail: {
-      handler: function (val) {
+      handler: function(val) {
         if (val.deliver_logs && val.deliver_logs.length > 0) {
           this.timelinePagination.numberPage = Math.ceil(
             val.deliver_logs.length / this.timelinePagination.itemsPerPage
