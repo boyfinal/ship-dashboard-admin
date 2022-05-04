@@ -138,10 +138,11 @@ import Browser from '@core/helpers/browser'
 import { HUB_COUNT_SEARCH_ITEMS, HUB_SEARCH_ITEMS } from '../store'
 import { HUB_TAB_IDS } from '../constants'
 import ModalReturn from '../components/ModalReturn'
+import mixinBarcode from '@core/mixins/barcode'
 import PSvg from '../../../../uikit/components/svg/svg'
 export default {
   name: 'ListReturn',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinBarcode],
   components: { PSvg, EmptySearchResult, ModalReturn },
   data() {
     return {
@@ -201,6 +202,17 @@ export default {
           this.$toast.error(v.message)
         }
       }
+    },
+    clearSearch() {
+      this.filter.search = ''
+      this.searchHandle()
+    },
+    barcodeSubmit(keyword) {
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+      this.keyword = keyword
+      this.searchHandle()
     },
     async downloadLabel(labelUrl) {
       if (labelUrl == '') {

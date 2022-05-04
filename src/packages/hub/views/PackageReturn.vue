@@ -206,6 +206,17 @@ export default {
 
       this.isShowModalReturn = true
     },
+    clearSearch() {
+      this.filter.search = ''
+      this.searchHandle()
+    },
+    barcodeSubmit(keyword) {
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+      this.keyword = keyword
+      this.searchHandle()
+    },
     async returnHandle(payload) {
       const res = await this.returnSubmit(payload)
       if (res.error) {

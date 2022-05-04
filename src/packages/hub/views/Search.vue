@@ -163,9 +163,15 @@ export default {
       this.filter.start_date = ''
       this.filter.page = 1
     },
+    clearSearch() {
+      this.filter.search = ''
+      this.searchHandle()
+    },
     barcodeSubmit(keyword) {
       keyword = keyword.trim()
-
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       if (keyword != '' && this.filter.search != keyword) {
         this.filter.search = keyword.trim()
         this.searchHandle()
