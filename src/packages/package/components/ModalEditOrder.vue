@@ -194,7 +194,7 @@
                               :options="products"
                               placeholder="Chọn sản phẩm"
                               @select="handleSelectProd($event, index)"
-                              @remove="handleRemove(index)"
+                              @remove="handleRemoveProd(index)"
                               :custom-label="customLabelProd"
                             ></multiselect>
                           </div>
