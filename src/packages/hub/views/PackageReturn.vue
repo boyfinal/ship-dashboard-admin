@@ -217,7 +217,6 @@ export default {
         keyword = keyword.slice(-22)
       }
       this.keyword = keyword
-      console.log(this.keyword)
       this.filter.search = this.keyword
       this.searchHandle()
     },

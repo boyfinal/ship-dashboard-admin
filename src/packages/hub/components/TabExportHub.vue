@@ -52,6 +52,7 @@ export default {
             code: 'N/A',
             tracking_number: 'N/A',
             label_number: item.tracking_number,
+            label_url: item.label_url || 'N/A',
             date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
             route: { name: 'container-detail', params: { code: item.code } },
           }
@@ -64,6 +65,7 @@ export default {
             code: item.code,
             tracking_number: item.tracking_number,
             label_number: 'N/A',
+            label_url: item.label_url || 'N/A',
             date: datetime(item.hub_exported_at, 'dd/MM/yyyy'),
             route: { name: 'package-detail', params: { id: item.id } },
           }

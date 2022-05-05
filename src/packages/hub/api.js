@@ -45,11 +45,7 @@ export default {
     return http.get(`/hubs/list-import?${buildQueryString(payload)}`)
   },
   getImportHubDetail(payload) {
-    let param = new Object()
-    param.type = payload.type
-    return http.get(
-      `/hubs/import-detail/${payload.code}?${buildQueryString(param)}`
-    )
+    return http.post(`/hubs/import-detail/${payload.code}`, payload.codes)
   },
   scanExportHub(payload) {
     return http.post(`/hubs/export/scan`, payload)

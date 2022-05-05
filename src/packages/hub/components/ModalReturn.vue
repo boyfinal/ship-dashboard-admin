@@ -11,9 +11,8 @@
         >Lý do trả hàng: <span class="text-danger">*</span></label
       >
       <select v-model="reason" class="form-control">
-        <option value="">-- Chọn lý do trả hàng --</option>
-        <option v-for="item in reasons" :key="item" :value="item">
-          {{ item }}
+        <option v-for="(item, i) in reasons" :key="i" :value="item.text">
+          {{ item.text }}
         </option>
       </select>
       <span class="invalid-error" v-if="validErrors.reason">
@@ -185,10 +184,23 @@ export default {
       fileErrors: [],
       files: [],
       urls: [],
-      reason: 'Sai đia chỉ',
+      reason: 'Sai địa chỉ',
       content: '',
       errors: {},
-      reasons: ['Sai địa chỉ', 'Hàng hư hỏng', 'Khác'],
+      reasons: [
+        {
+          text: 'Sai địa chỉ',
+          value: 'A',
+        },
+        {
+          text: 'Hàng hư hỏng',
+          value: 'B',
+        },
+        {
+          text: 'Khác',
+          value: 'C',
+        },
+      ],
       validErrors: {},
       isSubmitting: false,
     }
@@ -314,10 +326,8 @@ export default {
   watch: {
     current: {
       handler: function (val) {
-        this.reason = 'Sai đia chỉ'
         this.content = ''
         this.urls = []
-
         if (!val.package_return || !val.package_return.id) return
 
         const { reason, content, images } = val.package_return
@@ -327,6 +337,15 @@ export default {
         this.urls = images
       },
       deep: true,
+    },
+    visible: {
+      handler: function (val) {
+        if (!val) {
+          this.reason = 'Sai địa chỉ'
+          this.content = ''
+          this.urls = []
+        }
+      },
     },
   },
 }

@@ -199,8 +199,13 @@ export default {
 
       let params = {
         code: keyword,
+        codes: {
+          container_code: this.listExported
+            .filter((item) => item.type == `Kiện hàng`)
+            .map((ele) => ele.code),
+        },
       }
-
+      console.log(params)
       this.isScan = true
       this.isFetchingImportHub = true
       const res = await this[GET_IMPORT_HUB_DETAIL](params)
