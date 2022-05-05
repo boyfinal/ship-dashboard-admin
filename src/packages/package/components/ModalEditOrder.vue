@@ -138,7 +138,9 @@
                 <div class="card__w-header"> Phí reship </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
-                    <label class="card__w-label"> Phí($): <span>*</span></label>
+                    <label class="card__w-label">
+                      Phí ($): <span>*</span></label
+                    >
                     <div class="card__w-input">
                       <p-input
                         placeholder="0"
@@ -174,7 +176,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card__w">
+              <div class="card__w" v-if="!isReLabel">
                 <div class="card__w-header">
                   Sản phẩm
                 </div>
