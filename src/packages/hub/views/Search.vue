@@ -137,6 +137,7 @@ export default {
         end_date: '',
         page: 1,
       },
+      barcode: '',
       tabStatus: HUB_TAB,
       isFetching: false,
       isShowModalReturn: false,
@@ -163,29 +164,33 @@ export default {
       this.filter.start_date = ''
       this.filter.page = 1
     },
+    clearSearch() {
+      this.filter.search = ''
+      this.searchHandle()
+    },
     barcodeSubmit(keyword) {
       keyword = keyword.trim()
-
-      if (keyword != '' && this.filter.search != keyword) {
-        this.filter.search = keyword.trim()
-        this.searchHandle()
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
       }
+      this.barcode = keyword.trim()
+      this.searchHandle()
     },
     async searchHandle() {
       this.handleUpdateRouteQuery()
-
+      if (this.barcode) {
+        this.filter.search = this.barcode
+      }
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
-
       this.isFetching = true
-
       const res = await Promise.all([
         this.searchSubmit(filters),
         this.countSearchSubmit(filters),
       ])
 
       this.isFetching = false
-
+      this.barcode = ''
       for (const v of res) {
         if (v.error) {
           this.$toast.error(v.message)

@@ -112,6 +112,8 @@
 import { mapActions, mapState } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import mixinBarcode from '@core/mixins/barcode'
+
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import {
   FETCH_PACKAGE_DETAIL,
@@ -123,7 +125,7 @@ import { HUB_TAB_IDS } from '../constants'
 import ModalReturn from '../components/ModalReturn'
 export default {
   name: 'ListReturn',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinBarcode],
   components: { EmptySearchResult, ModalReturn },
   data() {
     return {
@@ -205,6 +207,19 @@ export default {
       }
 
       this.isShowModalReturn = true
+    },
+    clearSearch() {
+      this.filter.search = ''
+      this.searchHandle()
+    },
+    barcodeSubmit(keyword) {
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+      this.keyword = keyword
+      console.log(this.keyword)
+      this.filter.search = this.keyword
+      this.searchHandle()
     },
     async returnHandle(payload) {
       const res = await this.returnSubmit(payload)
