@@ -176,7 +176,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card__w" v-if="!isReLabel">
+              <div class="card__w">
                 <div class="card__w-header">
                   Sản phẩm
                 </div>
@@ -197,6 +197,7 @@
                               placeholder="Chọn sản phẩm"
                               @select="handleSelectProd($event, index)"
                               @remove="handleRemoveProd(index)"
+                              :disabled="isReLabel"
                               :custom-label="customLabelProd"
                             ></multiselect>
                           </div>
@@ -216,16 +217,20 @@
                           :input="prod.quantity"
                           class="form-control select-product product-quantity"
                           name="quantity"
+                          :disabled="isReLabel"
                         />
                         <div
                           class="add-product"
-                          v-if="index == package_prods.length - 1"
+                          v-if="index == package_prods.length - 1 && !isReLabel"
                         >
                           <a @click="handleAddProduct" class="btn btn-add">
                             <img src="~@assets/img/Add 20px.png" />
                           </a>
                         </div>
-                        <div class="add-product" v-else>
+                        <div
+                          class="add-product"
+                          v-if="index != package_prods.length - 1 && !isReLabel"
+                        >
                           <a
                             @click="handleRemoveProduct(index)"
                             class="btn btn-remove"
@@ -419,6 +424,7 @@ import {
 import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
 import OverLoading from '@components/shared/OverLoading'
+import { PRODUCT_STATUS_ACTIVATE } from '@/packages/package/constants'
 
 export default {
   name: 'ModalEditOrder',
@@ -602,8 +608,9 @@ export default {
       this.$set(this.form, 'amount', 0)
       const payload = {
         user_id: this.package_detail.package.user_id,
+        status: PRODUCT_STATUS_ACTIVATE,
       }
-      console.log(this.package_detail.package)
+
       await this[FETCH_LIST_PRODUCTS](payload)
       this.loading = false
       this.form.fullname = this.package_detail.package.recipient
@@ -675,8 +682,6 @@ export default {
         quantity: '',
         name: 'Tên sản phẩm',
       })
-
-      console.log(this.package_prods)
     },
 
     handleSelectProd(value, index) {
@@ -685,8 +690,6 @@ export default {
       this.package_prods[index].name = value.name
 
       this.product_sku[index] = value
-
-      console.log(this.product_sku)
     },
 
     handleRemoveProd(index) {
@@ -837,7 +840,6 @@ export default {
       const n = this.form.amount.split('.')
       if (String(n[1]).length > 2 && n.length >= 2) {
         this.form.amount = this.form.amount.slice(0, -1)
-        console.log(this.form.amount)
       }
       this.fixAmount = this.form.amount
 
