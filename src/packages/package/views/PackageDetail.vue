@@ -58,31 +58,30 @@
               type="danger"
               class="btn btn-danger"
               @click="handleCancelPackage"
-              v-if="
-                package_detail.package.status != statusCancel &&
-                package_detail.package.status != statusSuccess &&
-                package_detail.package.status != statusShipping &&
-                package_detail.package.status != statusExpired &&
-                package_detail.package.status != statusImportHub
-              "
+              v-if="isHasCancel"
             >
               <span>Hủy đơn</span>
             </p-button>
             <p-button
               type="info"
+              v-if="showButtonEdit"
               @click="handleModal"
-              class="btn-primary-custom ml-7"
-              v-if="showButtonEdit && !isReship"
+              class="ml-7"
             >
-              Sửa đơn
+              {{ isReturnPackage ? `Re-Ship` : `Sửa đơn` }}
             </p-button>
             <p-button
               type="info"
-              @click="handleModal"
-              class="btn-primary-custom ml-7"
-              v-if="showButtonEdit && isReship"
+              v-if="
+                package_detail.package.status != statusCreated &&
+                package_detail.package.status != statusArchived &&
+                user.role != roleSupport
+              "
+              @click="showModalExtraFee"
+              class="ml-7"
+              id="btn_ex_fee"
             >
-              Reship
+              Tạo phí phát sinh
             </p-button>
           </div>
         </div>
@@ -252,86 +251,229 @@
                     </div>
                   </div>
                 </div>
-                <div>
-                  <div class="card-block mb-0">
-                    <div class="card-header">
-                      <div class="card-title">Trạng thái</div>
-                    </div>
-                    <div class="card-content">
-                      <div class="mb-16">
-                        <div class="row">
-                          <div class="col-4 mb-8">Trạng thái đơn:</div>
-                          <div class="col-8 pl-0">
-                            <span
-                              v-if="
-                                package_detail.package.status &&
-                                package_detail.package.status > 0
-                              "
-                              v-status="package_detail.package.status"
-                            ></span>
+                <div class="row mb-24">
+                  <div class="col">
+                    <div class="card-block mb-0">
+                      <div class="card-header">
+                        <div class="card-title">Trạng thái</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="mb-16">
+                          <div class="row">
+                            <div class="col-5 mb-8">Trạng thái đơn:</div>
+                            <div class="col-7">
+                              <span
+                                v-if="
+                                  package_detail.package.status &&
+                                  package_detail.package.status > 0
+                                "
+                                v-status="package_detail.package.status"
+                              ></span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 mb-8">Trạng thái kho:</div>
-                          <div class="col-8 pl-0">
-                            <span
-                              v-if="
-                                package_detail.package.status &&
-                                package_detail.package.status > 0
-                              "
-                              v-status="package_detail.package.status"
-                              type="warehouse"
-                            ></span>
+                          <div class="row">
+                            <div class="col-5 mb-8">Trạng thái kho:</div>
+                            <div class="col-7">
+                              <span
+                                v-if="
+                                  package_detail.package.status &&
+                                  package_detail.package.status > 0
+                                "
+                                v-status="package_detail.package.status"
+                                type="warehouse"
+                              ></span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4">Trạng thái khiếu nại:</div>
-                          <div class="col-8 pl-0">
-                            <div v-if="package_detail.status_ticket"> Có </div>
-                            <div v-if="!package_detail.status_ticket">
-                              Không
-                            </div></div
-                          >
+                          <div class="row">
+                            <div class="col-5">Trạng thái khiếu nại:</div>
+                            <div class="col-7">
+                              <div v-if="package_detail.status_ticket">
+                                Có
+                              </div>
+                              <div v-if="!package_detail.status_ticket">
+                                Không
+                              </div></div
+                            >
+                          </div>
                         </div>
                       </div>
-                      <div class="mb-16 sperate"></div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card-block mb-0">
+                      <div class="card-header">
+                        <div class="card-title">Hàng return</div>
+                      </div>
                       <div
-                        class=""
-                        v-if="package_detail.package.package_return"
+                        class="card-content"
+                        v-if="
+                          package_detail.package.package_return ||
+                          package_detail.package.returned_at
+                        "
                       >
-                        <div class="mb-8"><b>Đơn hàng return</b></div>
-
-                        <div class="row">
-                          <div class="col-4 pr-0 mb-8">Lý do trả hàng:</div>
-                          <div class="col-8 pl-0"
-                            ><div>{{
-                              package_detail.package.package_return.reason
-                            }}</div>
+                        <div class="mb-16">
+                          <div class="row mb-8">
+                            <div class="col-4 pr-0">Ngày trả hàng:</div>
+                            <div class="col-8 pl-0">
+                              <div v-if="package_detail.package.returned_at">
+                                {{
+                                  package_detail.package.returned_at
+                                    | datetime('dd/MM/yyyy')
+                                }}</div
+                              >
+                              <span v-else>N/A</span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 pr-0 mb-8">Nguyên nhân:</div>
-                          <div class="col-8 pl-0">
-                            <div>{{
-                              package_detail.package.package_return.content
-                            }}</div>
+                          <div
+                            class="row mb-8"
+                            v-if="package_detail.package.package_return"
+                          >
+                            <div class="col-4 pr-0">Lý do trả hàng:</div>
+                            <div class="col-8 pl-0"
+                              ><div>{{
+                                package_detail.package.package_return.reason
+                              }}</div>
+                            </div>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-4 pr-0">Bằng chứng:</div>
-                          <div class="col-8 pl-0">
-                            <div class="files">
-                              <div
-                                class="file-item"
+                          <div
+                            class="row mb-16"
+                            v-if="package_detail.package.package_return"
+                          >
+                            <div class="col-4 pr-0">Nguyên nhân:</div>
+                            <div class="col-8 pl-0">
+                              <div>{{
+                                package_detail.package.package_return.content
+                              }}</div>
+                            </div>
+                          </div>
+                          <div
+                            class="row"
+                            v-if="package_detail.package.package_return"
+                          >
+                            <div class="col-12">
+                              <p style="margin-bottom: 8px"
+                                ><strong>Bằng chứng:</strong></p
+                              >
+                              <p
+                                style="margin-bottom: 4px"
                                 v-for="item in package_detail.package
                                   .package_return.images"
                                 :key="item.uid"
                               >
-                                <File :src="item" />
-                              </div>
+                                <a
+                                  style="
+                                    text-decoration: underline;
+                                    color: #004e41;
+                                  "
+                                  href="javascript:void(0)"
+                                  @click="downloadReturnFile(item)"
+                                  >{{
+                                    item.substring(item.lastIndexOf('/') + 1)
+                                  }}</a
+                                >
+                              </p>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div class="card-content text-center" v-else>
+                        <img src="@assets/img/no_data.png" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row fee">
+                  <div class="col-6">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Phí phát sinh</div>
+                      </div>
+                      <div class="card-content" v-if="mapExtraFee.length">
+                        <div
+                          class="row"
+                          v-for="(item, i) in mapExtraFee"
+                          :key="i"
+                        >
+                          <div class="col-8 mb-8"
+                            >{{ item.extra_fee_types.name }} :</div
+                          >
+                          <div class="col-4 text-right"
+                            ><div>{{ item.amount | formatPrice }}</div></div
+                          >
+                        </div>
+                      </div>
+                      <div class="card-content text-center" v-else>
+                        <img src="@assets/img/no_data.png" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="card-block">
+                      <div class="card-header">
+                        <div class="card-title">Phí</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="row">
+                          <div class="col-8 mb-8">Phí giao hàng:</div>
+                          <div class="col-4 text-right"
+                            ><div>{{
+                              $evaluate('package_detail.package?.shipping_fee')
+                                | formatPrice
+                            }}</div></div
+                          >
+                        </div>
+                        <div class="row">
+                          <div class="col-8 mb-8">Phí phát sinh:</div>
+                          <div class="col-4 more-extra-fee text-right"
+                            ><div>{{ sumExtraFee | formatPrice }}</div></div
+                          >
+                        </div>
+                        <hr
+                          style="
+                            background-color: #e1e2e2;
+                            margin-top: 16px;
+                            margin-bottom: 12px;
+                          "
+                        />
+                        <div class="row sum-price">
+                          <div class="col-8" style="font-weight: 400"
+                            >Tổng cước:</div
+                          >
+                          <div class="col-4 text-right"
+                            ><div>{{ sumFee | formatPrice }}</div></div
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-24">
+                  <div class="card-block product-info">
+                    <div class="card-header">
+                      <div class="card-title">Thông tin sản phẩm</div>
+                    </div>
+                    <div class="card-content">
+                      <div class="row product-title">
+                        <div class="col-5 mb-8">SKU</div>
+                        <div class="col-5">Tên sản phẩm</div>
+                        <div class="col-2 mb-8 product-quantity">Số lượng</div>
+                      </div>
+                      <div
+                        class="row product-item"
+                        v-for="(prod, index) in package_detail.package
+                          .package_products"
+                        :key="index"
+                      >
+                        <div class="col-5 mb-8">{{
+                          mapProduct(prod.product_id).sku
+                        }}</div>
+                        <div class="col-5">{{
+                          mapProduct(prod.product_id).name
+                        }}</div>
+                        <div class="col-2 mb-8 product-quantity">{{
+                          prod.quantity
+                        }}</div>
                       </div>
                     </div>
                   </div>
@@ -339,7 +481,7 @@
               </div>
               <div
                 v-if="!displayDeliverDetail"
-                class="col-6"
+                class="col-6 logs"
                 style="padding: 0 30px 0 30px"
               >
                 <div class="row" style="height: 100%">
@@ -413,7 +555,7 @@
               </div>
               <div
                 v-if="displayDeliverDetail"
-                class="col-6"
+                class="col-6 logs"
                 style="padding: 0 30px 0 30px"
               >
                 <div class="row">
@@ -515,66 +657,12 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 p-0 row fee">
-                <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block" style="height: auto">
-                    <div class="card-header">
-                      <div class="card-title">Phí phát sinh</div>
-                    </div>
-                    <div class="card-content" v-if="mapExtraFee.length">
-                      <div
-                        class="row"
-                        v-for="(item, i) in mapExtraFee"
-                        :key="i"
-                      >
-                        <div class="col-8 mb-8"
-                          >{{ item.extra_fee_types.name }} :</div
-                        >
-                        <div class="col-4"
-                          ><div>{{ item.amount | formatPrice }}</div></div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6" style="padding: 0px 25px 0px 0px">
-                  <div class="card-block" style="height: auto">
-                    <div class="card-header">
-                      <div class="card-title">Phí</div>
-                    </div>
-                    <div class="card-content">
-                      <div class="row">
-                        <div class="col-8 mb-8">Phí giao hàng:</div>
-                        <div class="col-4"
-                          ><div>{{
-                            $evaluate('package_detail.package?.shipping_fee')
-                              | formatPrice
-                          }}</div></div
-                        >
-                      </div>
-                      <div class="row">
-                        <div class="col-8 mb-8">Phí phát sinh:</div>
-                        <div class="col-4 more-extra-fee"
-                          ><div>{{ sumExtraFee | formatPrice }}</div></div
-                        >
-                      </div>
-                      <div class="row sum-price">
-                        <div class="col-8">Tổng cước:</div>
-                        <div class="col-4"
-                          ><div>{{ sumFee | formatPrice }}</div></div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <modal-edit-order
-      :is-edit-order-return="isEditOrderReturn"
       :is-re-label="isReLabel"
       :visible.sync="isVisibleModal"
       @submit="handleUpdate"
@@ -605,24 +693,17 @@
       :loading="actions.cancelPackage.loading"
       @action="cancelPackageAction"
     ></modal-confirm>
-
-    <modal-reship
-      :visible.sync="isVisibleModalReship"
-      :current="package_detail.package"
-      @submit="reshipHandle"
-    ></modal-reship>
-
+    <modal-create-extra-fee
+      :visible.sync="isVisibleModalExtraFee"
+      :package-code="$evaluate('package_detail.package.package_code?.code')"
+      :loading="isSubmitting"
+      @save="handleSubmitExtraFee"
+    ></modal-create-extra-fee>
     <OverLoading :is-loading="isSubmitting" />
   </div>
 </template>
 
 <style scoped>
-.sum-price {
-  border-top: 1px solid #cfd0d0;
-  margin-top: 16px;
-  padding-top: 16px;
-}
-
 .sum-price:last-child {
   font-weight: bold;
   font-size: 14px;
@@ -651,10 +732,11 @@ import {
   CANCEL_PACKAGES,
   RESHIP_PACKAGE,
   UPDATE_PACKAGE,
+  FETCH_LIST_PRODUCTS,
 } from '../store/index'
+import { CREATE_EXTRA_FEE } from '../../bill/store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
 import ModalEditOrder from '../components/ModalEditOrder'
-// import { LIST_SENDER } from '../../setting/store'
 import {
   PACKAGE_STATUS_TAB,
   CHANGE_PACKAGE_TYPE,
@@ -665,26 +747,33 @@ import {
   PACKAGE_STATUS_IMPORT_HUB,
   PACKAGE_STATUS_RETURNED,
   PACKAGE_STATUS_CREATED,
+  PACKAGE_STATUS_ARCHIVED,
   PACKAGE_STATUS_EXPIRED,
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
+  PACKAGE_ALERT_TYPE_HUB_RETURN,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
 import { cloneDeep } from '@core/utils'
-import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '../constants'
-import ModalReship from '../components/ModalReship'
+import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import OverLoading from '@components/shared/OverLoading'
-import File from '../../hub/components/File'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
+import Browser from '@core/helpers/browser'
+import { ROLE_SUPPORT } from '@core/constants'
 
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
-  components: { ModalEditOrder, ModalConfirm, ModalReship, OverLoading, File },
+  components: {
+    ModalEditOrder,
+    ModalConfirm,
+    ModalCreateExtraFee,
+    OverLoading,
+  },
   data() {
     return {
       isFetching: true,
@@ -694,9 +783,8 @@ export default {
       isVisibleModal: false,
       isVisiblePopupMoreExtraFee: false,
       isVisibleConfirmWayBill: false,
-      isEditOrderReturn: false,
       isReLabel: false,
-      isVisibleModalReship: false,
+      isVisibleModalExtraFee: false,
       timelinePagination: {
         numberPage: 0,
         itemsPerPage: 10,
@@ -729,26 +817,35 @@ export default {
       visibleConfirmCancel: false,
       isVisibleModalLabel: false,
       blob: null,
+      roleSupport: ROLE_SUPPORT,
     }
   },
   computed: {
     ...mapState('package', {
       package_detail: (state) => state.package_detail,
+      products: (state) => state.products,
     }),
+    ...mapState('shared', {
+      user: (state) => state.user,
+    }),
+
     showButtonEdit() {
+      const { status, tracking } = (this.package_detail || {}).package || {}
+      if (!status) return false
+
+      const listStatus = [
+        PACKAGE_STATUS_CANCELLED,
+        PACKAGE_STATUS_ARCHIVED,
+        PACKAGE_STATUS_DELIVERED,
+        PACKAGE_STATUS_IN_TRANSIT,
+        PACKAGE_STATUS_EXPIRED,
+      ]
+
       return (
-        (this.package_detail.package.status !== this.statusCancel &&
-          this.package_detail.package.status !== this.statusSuccess &&
-          this.package_detail.package.status !== this.statusShipping &&
-          !this.package_detail.package.tracking &&
-          this.package_detail.package.status !== this.statusExpired) ||
-        (this.statusShipping &&
-          (this.$isSupport() || this.$isAdmin()) &&
-          this.isAlertReturn)
+        (this.$isSupport() || this.$isAdmin()) &&
+        ((listStatus.includes(status) == false && !tracking) ||
+          this.isReturnPackage)
       )
-    },
-    isAlertReturn() {
-      return this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN
     },
     displayDeliverLogs() {
       const start =
@@ -798,7 +895,6 @@ export default {
         start + this.auditPagination.itemsPerPage
       )
     },
-
     sumExtraFee() {
       if (
         !this.package_detail.extra_fee ||
@@ -819,6 +915,12 @@ export default {
     },
     extraFee() {
       return this.package_detail.extra_fee ? this.package_detail.extra_fee : []
+    },
+    statusCreated() {
+      return PACKAGE_STATUS_CREATED
+    },
+    statusArchived() {
+      return PACKAGE_STATUS_ARCHIVED
     },
     packageStatus() {
       return PACKAGE_STATUS_TAB
@@ -855,10 +957,26 @@ export default {
       }
       return result
     },
-    isReship() {
+    isReturnPackage() {
       return (
         this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
+      )
+    },
+    isHasCancel() {
+      const status = ((this.package_detail || {}).package || {}).status
+      if (!status) return false
+
+      return (
+        (this.$isAdmin() || this.$isSupport()) &&
+        [
+          PACKAGE_STATUS_CANCELLED,
+          PACKAGE_STATUS_ARCHIVED,
+          PACKAGE_STATUS_DELIVERED,
+          PACKAGE_STATUS_IN_TRANSIT,
+          PACKAGE_STATUS_EXPIRED,
+          PACKAGE_STATUS_IMPORT_HUB,
+        ].includes(status) == false
       )
     },
   },
@@ -870,31 +988,42 @@ export default {
   },
   methods: {
     ...mapActions('package', [
+      FETCH_LIST_PRODUCTS,
       FETCH_PACKAGE_DETAIL,
       FETCH_LIST_SERVICE,
       CANCEL_PACKAGES,
       RESHIP_PACKAGE,
       UPDATE_PACKAGE,
     ]),
+    ...mapActions('bill', [CREATE_EXTRA_FEE]),
     truncate,
-    // ...mapActions('setting', [LIST_SENDER]),
     async init() {
       this.isFetching = true
       await this.fetchPackage(this.packageID)
       await this[FETCH_LIST_SERVICE]()
+      const payload = {
+        user_id: this.package_detail.package.user_id,
+      }
+      await this[FETCH_LIST_PRODUCTS](payload)
       this.isFetching = false
     },
     init2() {
       location.reload()
+    },
+    async downloadReturnFile(file) {
+      const res = await api.fetchFile({
+        url: file,
+        type: 'return_packages',
+      })
+      if (res && !res.error) {
+        Browser.downloadBlob(res, file.split('/').pop())
+      }
     },
     changeDisplayDeliverDetail() {
       this.displayDeliverDetail = !this.displayDeliverDetail
     },
     handleModal() {
       this.isVisibleModal = true
-      if (this.statusShipping && this.isAlertReturn) {
-        this.isEditOrderReturn = true
-      }
       if (
         this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
         (this.$isAdmin() || this.$isSupport())
@@ -1024,36 +1153,37 @@ export default {
       )
     },
 
-    showModalReship() {
-      this.isVisibleModalReship = true
+    showModalExtraFee() {
+      this.isVisibleModalExtraFee = true
     },
-    async reshipHandle({ amount, description }) {
-      this.isVisibleModalReship = false
-
-      if (this.isSubmitting) return
-
+    async handleSubmitExtraFee(param) {
+      const payload = {
+        ...param,
+        ...{
+          package_code: this.package_detail.package.package_code.code,
+          user_id: this.package_detail.package.user_id,
+        },
+      }
       this.isSubmitting = true
-
-      const res = await this.reshipPackage({
-        id: this.packageID,
-        amount,
-        description,
-      })
-      if (res.error) {
-        this.$toast.error(res.message, { duration: 3000 })
-        this.isSubmitting = false
+      const result = await this[CREATE_EXTRA_FEE](payload)
+      this.isSubmitting = false
+      this.isVisibleModalExtraFee = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
         return
       }
-
-      this.$toast.success('Reship đơn hàng thành công', { duration: 3000 })
-      await this.init()
-
-      this.isSubmitting = false
+      this.$toast.open({
+        type: 'success',
+        message: 'Tạo phí phát sinh thành công',
+      })
+      this.init()
     },
 
     async handleUpdate(params) {
       this.isVisibleModal = false
-      console.log(params)
 
       if (this.isSubmitting) return
 
@@ -1067,6 +1197,9 @@ export default {
       }
       this.$toast.success('Sửa đơn hàng thành công', { duration: 3000 })
       await this.init2()
+    },
+    mapProduct(productID) {
+      return this.products.find((prod) => prod.id == productID)
     },
   },
 

@@ -17,8 +17,9 @@ export default {
    * @param payload
    * @return {*}
    */
-  fetchListProduct() {
-    return http.get(`/products`)
+  fetchListProduct(payload) {
+    console.log(payload)
+    return http.get(`/products?${buildQueryString(payload)}`)
   },
   /**
    * fetch list service
@@ -62,5 +63,17 @@ export default {
   },
   reshipPackage(payload) {
     return http.post(`/packages/${payload.id}/reship`, payload)
+  },
+  fetchFile(payload) {
+    return http.get(
+      `/uploads/file-export/download?${buildQueryString(payload)}`,
+      RESPONSE_TYPE_BLOB
+    )
+  },
+  fetchListPackagesReturn(payload) {
+    return http.get(`/packages/returned?${buildQueryString(payload)}`)
+  },
+  countListPackagesReturn(payload) {
+    return http.get(`/packages/returned/count?${buildQueryString(payload)}`)
   },
 }

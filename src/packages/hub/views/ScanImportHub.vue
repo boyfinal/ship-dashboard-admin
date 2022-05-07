@@ -15,7 +15,7 @@
                     :disabled="disableInput"
                     @clear="clearInput"
                     v-model="keyword"
-                    placeholder="Nhập mã ups hoặc mã kiện"
+                    placeholder="Nhập mã kiện/ups hoặc mã đơn/usps"
                   ></p-input>
                   <div class="d-flex">
                     <button
@@ -25,7 +25,7 @@
                       >Quét</button
                     >
                     <button
-                      :disabled="disableBtnAccept"
+                      :disabled="!listContainer.length"
                       @click.prevent="acceptSubmit"
                       class="btn btn-scan-info text-nowrap"
                       >Xác nhận</button
@@ -34,63 +34,36 @@
                 </div>
               </div>
             </div>
-
-            <!--            <div class="card mb-16">-->
-            <!--              <div class="card-header">-->
-            <!--                <div class="card-title">Danh sách</div>-->
-            <!--              </div>-->
-            <!--              <div class="card-body list-container">-->
-            <!--                <div-->
-            <!--                  v-if="containers.length > 0"-->
-            <!--                  class="import__hub-containers"-->
-            <!--                >-->
-            <!--                  <div class="container-item">-->
-            <!--                    <div-->
-            <!--                      class="container-code"-->
-            <!--                      v-for="(item, i) in containers"-->
-            <!--                      :key="i"-->
-            <!--                      >{{ item.code }}</div-->
-            <!--                    >-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--                <empty-search-result v-else></empty-search-result>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            <div class="d-flex justify-content-between align-items-center">-->
-            <!--              <p-pagination-->
-            <!--                :total="count"-->
-            <!--                :perPage.sync="filter.limit"-->
-            <!--                :current.sync="filter.page"-->
-            <!--                size="sm"-->
-            <!--              ></p-pagination>-->
-            <!--            </div>-->
           </div>
           <div class="col-8">
-            <div v-if="current_code" class="card">
+            <div v-if="listContainer.length" class="card">
               <div class="card-header">
-                <div class="card-title">Thông tin kiện hàng</div>
+                <div class="card-title">Thông tin hàng nhập</div>
               </div>
-              <div class="card-body">
-                <div class="info-container">Mã kiện : {{ current_code }}</div>
-                <div class="info-container"
-                  >Nhãn kiện : {{ current_tracking_number }}</div
-                >
-                <div class="info-container">Dài : {{ current_length }}</div>
-                <div class="info-container">Rộng : {{ current_width }}</div>
-                <div class="info-container">Cao : {{ current_height }}</div>
-                <div class="info-container"
-                  >Cân nặng : {{ current_weight }}</div
-                >
-                <div class="info-container">Số đơn : {{ current_count }}</div>
-                <div class="info-container d-flex">
-                  <span>Trạng thái:</span>
-                  <span v-status="current_status" type="container"></span>
-                </div>
+              <div class="card-content">
+                <template>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <tbody>
+                        <tr v-for="(item, i) in listContainer" :key="i">
+                          <td width="200">{{ item.code }}</td>
+                          <td>{{ item.type }}</td>
+                          <td>
+                            <p-svg
+                              @click="handelModalConfirm(item)"
+                              name="x"
+                            ></p-svg
+                          ></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </template>
               </div>
             </div>
             <div v-else class="card">
               <div class="card-header">
-                <div class="card-title">Thông tin kiện hàng</div>
+                <div class="card-title">Thông tin hàng nhập</div>
               </div>
               <EmptySearchResult></EmptySearchResult>
             </div>
@@ -99,6 +72,15 @@
       </div>
     </div>
     <PageLoading :is-loading="isFetchingContainer" />
+    <modal-confirm
+      :visible.sync="visibleConfirm"
+      :actionConfirm="`Xóa`"
+      :cancel="`Bỏ qua`"
+      :description="`Bạn có chắc chắn muốn xoá?`"
+      :title="`Xác nhận`"
+      @action="handleRemove"
+      :type="`danger`"
+    ></modal-confirm>
   </div>
 </template>
 <script>
@@ -109,13 +91,15 @@ import {
   GET_CONTAINER_IMPORT,
   FETCH_LIST_CONTAINER_IMPORTED,
   SCAN_CONTAINER_IMPORT,
+  REMOVE_CONTAINER_IMPORT,
 } from '../store'
 import PageLoading from '@components/shared/OverLoading'
 import mixinRoute from '@core/mixins/route'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 
 export default {
   name: 'ImportHub',
-  components: { PageLoading, EmptySearchResult },
+  components: { PageLoading, EmptySearchResult, ModalConfirm },
   mixins: [mixinBarcode, mixinRoute],
   computed: {
     ...mapState('hub', {
@@ -127,47 +111,34 @@ export default {
     disableBtnScan() {
       return !this.keyword || this.isFetchingContainer || this.isScan
     },
-    disableBtnAccept() {
-      return (
-        this.isFetchingContainer ||
-        !this.current_code ||
-        !this.current_tracking_number ||
-        this.isCancel
-      )
-    },
   },
   data() {
     return {
       disableInput: false,
       keyword: '',
-      filter: {
-        limit: 10,
-        page: 1,
-      },
-      isFetchingContainer: false,
-      current_code: '',
-      current_width: '',
-      current_length: '',
-      current_weight: '',
-      current_height: '',
-      current_id: '',
-      current_status: '',
-      current_count: 0,
-      current_tracking_number: '',
       isSubmitting: false,
       isCancel: false,
       isScan: false,
+      listContainer: [],
+      isFetchingContainer: false,
+      visibleConfirm: false,
+      visibleConfirmAccept: false,
+      removeCode: {},
+      current_code: '',
+      currentType: '',
     }
   },
-  created() {
-    this.filter = this.getRouteQuery()
-    this.init()
+  created() {},
+  mounted() {
+    this.beforeLeaveHandle()
   },
+
   methods: {
     ...mapActions('hub', [
       GET_CONTAINER_IMPORT,
       FETCH_LIST_CONTAINER_IMPORTED,
       SCAN_CONTAINER_IMPORT,
+      REMOVE_CONTAINER_IMPORT,
     ]),
 
     async searchHandle() {
@@ -187,11 +158,7 @@ export default {
         })
         return
       }
-      if (
-        this.keyword == this.current_code ||
-        this.keyword == this.current_tracking_number
-      )
-        return
+
       this.isScan = true
       this.isCancel = false
       const params = {
@@ -205,82 +172,138 @@ export default {
         this.isCancel = true
         this.$toast.open({
           type: 'error',
-          message: res.message,
+          message: `${res.message}`,
           duration: 3000,
         })
         return
       }
       this.isFetchingContainer = false
-      this.current_code = this.current.code
-      this.current_id = this.current.id
-      this.current_height = this.current.height
-      this.current_length = this.current.length
-      this.current_width = this.current.width
-      this.current_weight = this.current.weight
-      this.current_status = this.current.status
-      this.current_count = this.countPackage
-      this.current_tracking_number = this.current.tracking_number
+      this.filter.type = res.type
+      if (this.filter.type == 'container') {
+        this.current_code = this.current.code
+        this.currentType = `Kiện hàng`
+      } else if (this.filter.type == 'package') {
+        this.current_code = this.current.package_code.code
+        this.currentType = `Đơn hàng`
+      }
+      const index = this.listContainer.findIndex(
+        (item) => item.code == this.current_code
+      )
+      if (index != -1) {
+        this.$toast.open({
+          type: 'error',
+          message: `${this.currentType} đã tồn tại`,
+          duration: 3000,
+        })
+        this.isScan = false
+        this.isCancel = false
+        return
+      }
+      this.listContainer.push({
+        code: this.current_code,
+        type: this.currentType,
+        keyword: keyword,
+        id: this.current.id,
+      })
+      this.keyword = ''
+      this.isScan = false
+      this.isCancel = false
     },
-    async init() {
-      // this.isFetching = true
-      this.handleUpdateRouteQuery()
-      // let payload = cloneDeep(this.filter)
-      // const result = await this[FETCH_LIST_CONTAINER_IMPORTED](payload)
-      // this.isFetching = false
-      // if (!result.success) {
-      //   this.$toast.open({ message: result.message, type: 'error' })
-      // }
+    handelModalConfirm(item) {
+      this.visibleConfirm = true
+      this.removeCode = item
     },
     barcodeSubmit(keyword) {
       this.disableInput = true
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       this.keyword = keyword
       this.searchHandle()
       this.disableInput = false
     },
     async acceptSubmit() {
-      if (!this.current_code || this.isSubmitting || this.isCancel) return
-
-      this.isSubmitting = true
+      if (!this.listContainer.length || this.isSubmitting || this.isCancel)
+        return
       let params = {
-        code: this.current_code,
+        containers: this.listContainer
+          .filter((item) => item.type == `Kiện hàng`)
+          .map((ele) => ele.id),
+        packages: this.listContainer
+          .filter((item) => item.type == `Đơn hàng`)
+          .map((ele) => ele.id),
       }
+      this.isSubmitting = true
+      this.isFetchingContainer = true
       const res = await this[SCAN_CONTAINER_IMPORT](params)
 
       if (!res.success) {
-        this.$toast.error(res.message)
+        this.isFetchingContainer = false
+        this.$toast.error(`Quét nhập thất bại`, { duration: 3000 })
         this.isSubmitting = false
         this.isScan = false
         return
       }
+      this.isFetchingContainer = false
+
       this.isSubmitting = false
       this.isScan = false
       this.isCancel = true
-      this.$toast.success(
-        `Kiện ${this.current_code}  đã quét nhập hub thành công`
-      )
-      this.init()
+      this.listContainer = []
+      this.current_code = ''
+      this.visibleConfirmAccept = false
+      this.$toast.success(`Quét nhập  thành công`, { duration: 3000 })
     },
     clearInput() {
       this.keyword = ''
       this.isScan = false
-      this.current_code = ''
-      this.current_tracking_number = ''
       this.isCancel = false
-      this.current_height = ''
-      this.current_length = ''
-      this.current_width = ''
-      this.current_weight = ''
-      this.current_status = ''
-      this.current_count = 0
+    },
+    async handleRemove() {
+      // this.isSubmitting = true
+      // const res = await this[REMOVE_CONTAINER_IMPORT](this.removeCode)
+      // if (!res.success) {
+      //   this.$toast.error(`Bỏ nhập thất bại`,{ duration: 3000 })
+      //   this.isSubmitting = false
+      //   return
+      // }
+      this.visibleConfirm = false
+      this.listContainer = this.listContainer.filter(
+        (element) => element != this.removeCode
+      )
+      this.keyword = ''
+      this.isSubmitting = false
+    },
+    beforeLeaveHandle() {
+      window.onbeforeunload = () => {
+        if (this.listContainer.length) {
+          return 'Thông tin chưa được lưu, bạn có muốn thoát khỏi page'
+        }
+
+        return null
+      }
     },
   },
-  watch: {
-    filter: {
-      handler: function () {
-        this.init()
-      },
-      deep: true,
-    },
+  beforeRouteLeave(to, from, next) {
+    if (this.listContainer.length) {
+      this.$confirm({
+        title: `Xác nhận`,
+        message: `Vui lòng xác nhận nhập hub trước khi thoát trang`,
+        confirmText: `Xác nhận`,
+        cancelText: `Bỏ qua`,
+        type: `danger`,
+        onConfirm: () => {
+          this.acceptSubmit()
+          next()
+        },
+        onCancel: () => {
+          next()
+        },
+      })
+      return
+    }
+    next()
   },
+  watch: {},
 }
 </script>

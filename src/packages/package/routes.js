@@ -9,6 +9,17 @@ export const routes = [
       import(/* webpackChunkName: "package" */ './views/ListPackages.vue'),
   },
   {
+    path: '/packages/return',
+    name: 'list-package-return',
+    meta: {
+      title: 'Quản lý đơn hàng trả về',
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "package" */ './views/ListPackagesReturn.vue'
+      ),
+  },
+  {
     path: '/packages/:id',
     name: 'package-detail',
     meta: {

@@ -118,6 +118,11 @@ export default {
               alias: ['/packages', '/packages/:id'],
             },
             {
+              route: '/packages/return',
+              title: ' Đơn hàng trả về',
+              alias: ['/packages/return'],
+            },
+            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
@@ -218,6 +223,24 @@ export default {
               route: '/hub/export',
               title: 'Quét xuất',
               alias: ['/hub/export'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+            {
+              route: '/hub/return',
+              title: 'Hàng return',
+              alias: ['/hub/return'],
+              disable:
+                this.$isSupport() ||
+                this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+            {
+              route: '/hub/reship',
+              title: 'Hàng reship',
+              alias: ['/hub/reship'],
               disable:
                 this.$isSupport() ||
                 this.$isAccountant() ||
