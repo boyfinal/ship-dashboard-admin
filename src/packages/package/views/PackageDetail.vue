@@ -18,7 +18,7 @@
               <div class="package-code"
                 >{{
                   $evaluate('package_detail.package.package_code?.code') ||
-                    'N/A'
+                  'N/A'
                 }}
               </div>
             </div>
@@ -37,9 +37,7 @@
               <div>
                 <a
                   target="_blank"
-                  :href="
-                    `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`
-                  "
+                  :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`"
                 >
                   {{
                     $evaluate('package_detail.package.tracking.tracking_number')
@@ -76,7 +74,8 @@
               type="info"
               v-if="
                 package_detail.package.status != statusCreated &&
-                  package_detail.package.status != statusArchived
+                package_detail.package.status != statusArchived &&
+                user.role != roleSupport
               "
               @click="showModalExtraFee"
               class="ml-7"
@@ -266,7 +265,7 @@
                               <span
                                 v-if="
                                   package_detail.package.status &&
-                                    package_detail.package.status > 0
+                                  package_detail.package.status > 0
                                 "
                                 v-status="package_detail.package.status"
                               ></span>
@@ -278,7 +277,7 @@
                               <span
                                 v-if="
                                   package_detail.package.status &&
-                                    package_detail.package.status > 0
+                                  package_detail.package.status > 0
                                 "
                                 v-status="package_detail.package.status"
                                 type="warehouse"
@@ -309,7 +308,7 @@
                         class="card-content"
                         v-if="
                           package_detail.package.package_return ||
-                            package_detail.package.returned_at
+                          package_detail.package.returned_at
                         "
                       >
                         <div class="mb-16">
@@ -764,6 +763,8 @@ import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
+import { ROLE_SUPPORT } from '@core/constants'
+
 export default {
   name: 'PackageDetail',
   mixins: [mixinChaining],
@@ -816,12 +817,16 @@ export default {
       visibleConfirmCancel: false,
       isVisibleModalLabel: false,
       blob: null,
+      roleSupport: ROLE_SUPPORT,
     }
   },
   computed: {
     ...mapState('package', {
       package_detail: (state) => state.package_detail,
       products: (state) => state.products,
+    }),
+    ...mapState('shared', {
+      user: (state) => state.user,
     }),
 
     showButtonEdit() {
@@ -873,7 +878,7 @@ export default {
         ConvertData.push({ name: element, data: [] })
       )
       ConvertData.forEach((x) =>
-        logs.forEach(function(it) {
+        logs.forEach(function (it) {
           if (datetime(it.ship_time, 'dd-MM-yyyy') == x.name) {
             x.data.push(it)
           }
@@ -1200,7 +1205,7 @@ export default {
 
   watch: {
     package_detail: {
-      handler: function(val) {
+      handler: function (val) {
         if (val.deliver_logs && val.deliver_logs.length > 0) {
           this.timelinePagination.numberPage = Math.ceil(
             val.deliver_logs.length / this.timelinePagination.itemsPerPage
