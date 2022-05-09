@@ -429,7 +429,8 @@ export default {
       return (
         (transaction.type === TransactionLogTypePayoneer ||
           transaction.type === TransactionLogTypePingPong) &&
-        transaction.status === TransactionStatusProcess
+        transaction.status === TransactionStatusProcess &&
+        transaction.amount <= 0
       )
     },
     getTextType(transaction) {
