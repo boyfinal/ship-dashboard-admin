@@ -334,18 +334,7 @@ export default {
       this.money[transaction.id] = value
     },
     checkValidateMoneyAmount() {
-      const transaction = this.selectedItem
       this.resetErrors()
-      if (
-        transaction.type !== TransactionLogTypePayoneer &&
-        transaction.type !== TransactionLogTypePingPong
-      ) {
-        return true
-      }
-      if (!this.money[transaction.id]) {
-        this.validateErrors[transaction.id] = true
-        return false
-      }
       return true
     },
     async changeStatusTransactionHandle(status) {
