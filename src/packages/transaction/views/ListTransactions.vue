@@ -342,9 +342,6 @@ export default {
       const payload = {
         id: this.selectedItem.id,
         status: status,
-        amount: this.money[this.selectedItem.id]
-          ? parseFloat(this.money[this.selectedItem.id].replaceAll(',', ''))
-          : 0,
       }
       const result = await this[CHANGE_STATUS_TRANSACTION](payload)
       this.isChangingStatus = false
