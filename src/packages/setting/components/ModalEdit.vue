@@ -130,7 +130,7 @@ import valider from '@core/valider'
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
-  USER_CLASS_PARTNER,
+  // USER_CLASS_PARTNER,
   DEBT_LIMIT,
   DAY_LIMIT,
 } from '../constants'
@@ -176,10 +176,10 @@ export default {
           text: 'Priority',
           value: USER_CLASS_PRIORITY,
         },
-        {
-          text: 'Partner',
-          value: USER_CLASS_PARTNER,
-        },
+        // {
+        //   text: 'Partner',
+        //   value: USER_CLASS_PARTNER,
+        // },
       ].find((i) => {
         return i.value == this.current.class
       }),
@@ -192,10 +192,10 @@ export default {
           text: 'Priority',
           value: USER_CLASS_PRIORITY,
         },
-        {
-          text: 'Partner',
-          value: USER_CLASS_PARTNER,
-        },
+        // {
+        //   text: 'Partner',
+        //   value: USER_CLASS_PARTNER,
+        // },
       ],
       debtLimit: DEBT_LIMIT,
       dayLimit: DAY_LIMIT,
@@ -241,7 +241,7 @@ export default {
         return
       }
 
-      this.$emit('success', payload.class,true)
+      this.$emit('success', payload.class, true)
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
     onChangeAmount() {
@@ -275,13 +275,13 @@ export default {
   },
   watch: {
     visible: {
-      handler: function(val) {
+      handler: function (val) {
         this.isVisible = val
       },
       deep: true,
     },
     current: {
-      handler: function(val) {
+      handler: function (val) {
         const info = val.user_info || {}
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
 
