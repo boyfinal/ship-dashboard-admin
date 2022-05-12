@@ -60,7 +60,7 @@ export const MAP_USER_CLASS_ICON = {
 export const MAP_USER_CLASS_TEXT = {
   [USER_CLASS_PUBLIC]: 'Public',
   [USER_CLASS_PRIORITY]: 'Priority',
-  [USER_CLASS_PARTNER]: 'Partner',
+  // [USER_CLASS_PARTNER]: 'Partner',
 }
 
 export const DEBT_LIMIT = [

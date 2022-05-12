@@ -362,6 +362,9 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            background: #e9ecef;
+            cursor: not-allowed;
+            color: #313232;
         }
         .multiselect__placeholder {
             color: #35495e;

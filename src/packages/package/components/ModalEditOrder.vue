@@ -177,8 +177,15 @@
                 </div>
               </div>
               <div class="card__w">
-                <div class="card__w-header">
+                <div
+                  class="card__w-header d-flex justify-content-between align-items-center"
+                >
                   Sản phẩm
+                  <div class="add-product" v-if="!isReLabel">
+                    <a @click="handleAddProduct" class="btn btn-add">
+                      <img src="~@assets/img/Add 20px.png" />
+                    </a>
+                  </div>
                 </div>
                 <div class="card__w-content">
                   <div class="card__w-item">
@@ -189,12 +196,12 @@
                         :key="index"
                       >
                         <div class="row product-info">
-                          <div class="select-product col-md-7 ">
+                          <div class="select-product col-md-7">
                             <multiselect
                               class="multiselect-custom dropdown-reason"
                               v-model="product_sku[index]"
-                              :options="products"
-                              placeholder="Chọn sản phẩm"
+                              :options="product_option"
+                              placeholder="Chọn SKU"
                               @select="handleSelectProd($event, index)"
                               @remove="handleRemoveProd(index)"
                               :disabled="isReLabel"
@@ -219,18 +226,8 @@
                           name="quantity"
                           :disabled="isReLabel"
                         />
-                        <div
-                          class="add-product"
-                          v-if="index == package_prods.length - 1 && !isReLabel"
-                        >
-                          <a @click="handleAddProduct" class="btn btn-add">
-                            <img src="~@assets/img/Add 20px.png" />
-                          </a>
-                        </div>
-                        <div
-                          class="add-product"
-                          v-if="index != package_prods.length - 1 && !isReLabel"
-                        >
+
+                        <div class="add-product" v-if="!isReLabel">
                           <a
                             @click="handleRemoveProduct(index)"
                             class="btn btn-remove"
@@ -425,6 +422,7 @@ import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
 import OverLoading from '@components/shared/OverLoading'
 import { PRODUCT_STATUS_ACTIVATE } from '@/packages/package/constants'
+import { cloneDeep } from '@core/utils'
 
 export default {
   name: 'ModalEditOrder',
@@ -506,6 +504,7 @@ export default {
       fixAmount: 0,
       package_prods: [],
       product_sku: [],
+      product_option: [],
     }
   },
   created() {
@@ -612,6 +611,7 @@ export default {
       }
 
       await this[FETCH_LIST_PRODUCTS](payload)
+      this.product_option = cloneDeep(this.products)
       this.loading = false
       this.form.fullname = this.package_detail.package.recipient
       this.form.phone = this.package_detail.package.phone_number
@@ -656,8 +656,8 @@ export default {
           )
 
           this.package_prods.push({
-            product_id: this.package_detail.package.package_products[i]
-              .product_id,
+            product_id:
+              this.package_detail.package.package_products[i].product_id,
             sku: prod.sku,
             quantity: this.package_detail.package.package_products[i].quantity,
             name: prod.name,
@@ -665,6 +665,11 @@ export default {
           })
 
           this.product_sku.push(prod)
+
+          let index = this.product_option.findIndex((ele) => ele.id == prod.id)
+          if (index >= 0) {
+            this.product_option.splice(index, 1)
+          }
         }
       }
 
@@ -685,6 +690,17 @@ export default {
     },
 
     handleSelectProd(value, index) {
+      let i = this.products.findIndex(
+        (ele) => ele.id == this.package_prods[index].product_id
+      )
+      if (i >= 0) {
+        this.product_option.push(this.products[i])
+      }
+
+      i = this.product_option.findIndex((ele) => ele.id == value.id)
+      if (i >= 0) {
+        this.product_option.splice(i, 1)
+      }
       this.package_prods[index].product_id = value.id
       this.package_prods[index].sku = value.sku
       this.package_prods[index].name = value.name
@@ -693,6 +709,12 @@ export default {
     },
 
     handleRemoveProd(index) {
+      let i = this.products.findIndex(
+        (ele) => ele.id == this.package_prods[index].product_id
+      )
+      if (i >= 0) {
+        this.product_option.push(this.products[i])
+      }
       this.package_prods[index].product_id = 0
       this.package_prods[index].sku = 'Chọn sản phẩm'
       this.package_prods[index].quantity = ''
@@ -762,7 +784,8 @@ export default {
           (this.package_prods[i].quantity == '' &&
             this.package_prods[i].product_id > 0)
         ) {
-          this.package_prods[i].err = 'Vui lòng chọn SKU hoặc Tên sản phẩm'
+          this.package_prods[i].err =
+            'Vui lòng chọn SKU và nhập số lượng sản phẩm'
           invalidProd = false
           continue
         }
@@ -904,12 +927,18 @@ export default {
     },
 
     handleRemoveProduct(index) {
+      let i = this.products.findIndex(
+        (ele) => ele.id == this.package_prods[index].product_id
+      )
+      if (i >= 0) {
+        this.product_option.push(this.products[i])
+      }
       this.package_prods.splice(index, 1)
       this.product_sku.splice(index, 1)
     },
   },
   watch: {
-    visible: function(val) {
+    visible: function (val) {
       if (!val) {
         return
       }
