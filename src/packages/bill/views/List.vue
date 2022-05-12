@@ -799,8 +799,9 @@ export default {
       this.isVisibleEditUser = true
     },
 
-    updateSuccess() {
+    updateSuccess(value) {
       this.isVisibleEditUser = false
+      this.userInfo.class = value
       this.userInfo.user_info = this.user_info
       if (this.filter.tab == 'topup') {
         this.initTopup()
