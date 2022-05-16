@@ -176,13 +176,17 @@ export default {
               route: '/warehouse/scan-in',
               title: 'Quét nhận hàng',
               alias: ['/warehouse/scan-in'],
+              disable: this.$isSupportLeader(),
             },
             {
               route: '/warehouse/check-package',
               title: 'Dán nhãn',
               alias: ['/warehouse/check-package'],
               disable:
-                this.$isAccountant() || this.$isSupport() || this.$isHub(),
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
             {
               route: '/containers',
