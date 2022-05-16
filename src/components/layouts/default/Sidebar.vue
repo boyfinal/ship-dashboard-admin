@@ -121,6 +121,7 @@ export default {
               route: '/packages/return',
               title: ' Đơn hàng trả về',
               alias: ['/packages/return'],
+              disable: this.$isSupportLeader(),
             },
             {
               route: '/claims',
@@ -131,11 +132,13 @@ export default {
               route: '/bills',
               title: 'Tài chính',
               alias: ['/bills', '/bills/:code'],
+              disable: this.$isSupportLeader(),
             },
             {
               route: '/transactions',
               title: 'Topup',
               alias: ['/transactions', '/transactions/:id'],
+              disable: this.$isSupportLeader(),
             },
             {
               route: '/user',
@@ -166,7 +169,8 @@ export default {
               route: '/warehouse',
               title: 'Tra cứu đơn',
               alias: ['/warehouse'],
-              disable: this.$isAccountant(),
+              disable:
+                this.$isAccountant() || this.$isSupport() || this.$isHub(),
             },
             {
               route: '/warehouse/scan-in',
@@ -177,7 +181,8 @@ export default {
               route: '/warehouse/check-package',
               title: 'Dán nhãn',
               alias: ['/warehouse/check-package'],
-              disable: this.$isAccountant(),
+              disable:
+                this.$isAccountant() || this.$isSupport() || this.$isHub(),
             },
             {
               route: '/containers',
@@ -199,7 +204,10 @@ export default {
           class: '',
           isOpen: false,
           disable:
-            this.$isSupport() || this.$isAccountant() || this.$isWarehouse(),
+            this.$isSupport() ||
+            this.$isAccountant() ||
+            this.$isWarehouse() ||
+            this.$isSupportLeader(),
           sub: [
             {
               route: '/hubs/search',
@@ -207,6 +215,7 @@ export default {
               alias: ['/hubs/search'],
               disable:
                 this.$isSupport() ||
+                this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
@@ -216,6 +225,7 @@ export default {
               alias: ['/hub/import'],
               disable:
                 this.$isSupport() ||
+                this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
@@ -225,6 +235,7 @@ export default {
               alias: ['/hub/export'],
               disable:
                 this.$isSupport() ||
+                this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
@@ -234,6 +245,7 @@ export default {
               alias: ['/hub/return'],
               disable:
                 this.$isSupport() ||
+                this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
@@ -243,6 +255,7 @@ export default {
               alias: ['/hub/reship'],
               disable:
                 this.$isSupport() ||
+                this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
@@ -255,19 +268,33 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isWarehouse() || this.$isHub(),
+          disable:
+            this.$isSupport() ||
+            this.$isWarehouse() ||
+            this.$isHub() ||
+            this.$isSupportLeader(),
           sub: [
             {
               route: '/account',
               title: 'Tài khoản',
               alias: ['/account'],
-              disable: this.$isAccountant(),
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
             {
               route: '',
               title: 'Truy cập',
               alias: [],
-              disable: this.$isAccountant(),
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
             {
               route: '/prices',
