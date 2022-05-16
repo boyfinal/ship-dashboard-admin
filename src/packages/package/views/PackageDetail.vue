@@ -842,7 +842,7 @@ export default {
       ]
 
       return (
-        (this.$isSupport() || this.$isAdmin()) &&
+        (this.$isSupport() || this.$isAdmin() || this.$isSupportLeader()) &&
         ((listStatus.includes(status) == false && !tracking) ||
           this.isReturnPackage)
       )
@@ -958,10 +958,7 @@ export default {
       return result
     },
     isReturnPackage() {
-      return (
-        this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
-        (this.$isAdmin() || this.$isSupport())
-      )
+      return this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN
     },
     isHasCancel() {
       const status = ((this.package_detail || {}).package || {}).status

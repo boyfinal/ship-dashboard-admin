@@ -18,7 +18,6 @@ export default {
    * @return {*}
    */
   fetchListProduct(payload) {
-    console.log(payload)
     return http.get(`/products?${buildQueryString(payload)}`)
   },
   /**
