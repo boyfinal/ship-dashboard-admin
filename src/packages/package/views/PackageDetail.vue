@@ -1021,10 +1021,7 @@ export default {
     },
     handleModal() {
       this.isVisibleModal = true
-      if (
-        this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN &&
-        (this.$isAdmin() || this.$isSupport())
-      ) {
+      if (this.isReturnPackage) {
         this.isReLabel = true
       }
     },
