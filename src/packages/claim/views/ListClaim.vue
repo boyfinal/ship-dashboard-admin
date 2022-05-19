@@ -4,7 +4,7 @@
       <div class="d-flex list__claim-search mb-12">
         <div class="group">
           <p-input
-            placeholder="Tìm theo mã tracking hoặc mã khiếu nại,tên khách hàng"
+            :placeholder="searchPlaceholder"
             prefixIcon="search"
             type="search"
             clearable
@@ -169,7 +169,7 @@ export default {
       claimStatus: CLAIM_STATUS,
       searchBy: {
         code: 'Mã tracking',
-        customer_name: 'Tên khách hàng',
+        customer_code: 'Mã khách hàng',
         recipient: 'Người xử lý',
         id: 'Mã khiếu nại',
       },
@@ -207,6 +207,16 @@ export default {
           isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
         }
       })
+    },
+    searchPlaceholder() {
+      const maptext = {
+        id: 'Tìm theo mã khiếu nại',
+        code: 'Tìm theo LionBay tracking',
+        recipient: 'Tìm theo người xử lý',
+        customer_code: 'Tìm theo mã khách hàng',
+      }
+
+      return maptext[this.filter.search_by] || maptext['code']
     },
   },
   methods: {
