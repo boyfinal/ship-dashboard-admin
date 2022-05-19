@@ -2,15 +2,41 @@
   <div class="pages list__claim">
     <div class="page-content">
       <div class="d-flex list__claim-search mb-12">
-        <p-input
-          placeholder="Tìm theo mã tracking"
-          prefixIcon="search"
-          type="search"
-          clearable
-          :value.sync="filter.search"
-          @keyup.enter="handleSearch"
-        >
-        </p-input>
+        <div class="group">
+          <p-input
+            placeholder="Tìm theo mã tracking hoặc mã khiếu nại,tên khách hàng"
+            prefixIcon="search"
+            type="search"
+            clearable
+            :value.sync="filter.search"
+            @keyup.enter="handleSearch"
+          >
+          </p-input>
+          <p-select
+            class=""
+            placeholder="Please select"
+            v-model="filter.search_by"
+          >
+            <option :value="key" v-for="(value, key) in searchBy" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+
+        <div class="d-flex date-search">
+          <p-datepicker
+            :format="'dd/mm/yyyy'"
+            class="p-input-group input-group"
+            @update="selectDate"
+            :label="labelDate"
+            id="date-search"
+            :value="{
+              startDate: filter.start_date,
+              endDate: filter.end_date,
+            }"
+            @clear="clearSearchDate"
+          ></p-datepicker>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -119,6 +145,7 @@ import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import { date } from '@core/utils/datetime'
 import { FETCH_CLAIMS } from '../store'
 import { mapActions, mapState } from 'vuex'
 
@@ -134,9 +161,19 @@ export default {
         limit: 30,
         search: '',
         status: '',
+        search_by: 'code',
+        start_date: '',
+        end_date: '',
       },
       isFetching: false,
       claimStatus: CLAIM_STATUS,
+      searchBy: {
+        code: 'Mã tracking',
+        customer_name: 'Tên khách hàng',
+        recipient: 'Người xử lý',
+        id: 'Mã khiếu nại',
+      },
+      labelDate: `Tìm theo ngày`,
     }
   },
   created() {
@@ -184,6 +221,16 @@ export default {
         return
       }
       this.isFetching = false
+    },
+
+    selectDate(v) {
+      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
+    },
+    clearSearchDate() {
+      this.filter.end_date = ''
+      this.filter.start_date = ''
+      this.filter.page = 1
     },
   },
   watch: {
