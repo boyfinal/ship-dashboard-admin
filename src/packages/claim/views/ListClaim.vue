@@ -225,6 +225,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      this.filter.search = this.filter.search
+        ? this.filter.search.toUpperCase()
+        : ''
       let result = await this[FETCH_CLAIMS](this.filter)
       if (result.error) {
         this.$toast.open({ type: 'danger', message: result.message })
