@@ -23,6 +23,37 @@
             white-space: nowrap;
         }
     }
+
+    &-search{
+
+        .group{
+            width: 70%;
+            display: flex;
+
+            select{
+                width: 40%;
+                border-bottom-left-radius: unset !important;
+                border-top-left-radius: unset !important;
+            }
+            .p-input-search{
+                border-bottom-right-radius: unset !important;
+                border-top-right-radius: unset !important;
+                border-right: 1px solid transparent;
+            }
+        }
+        .date-search{
+            .label-date-picker{
+                margin-top: 2px;
+                display: inline-block;
+            }
+        }
+
+
+        .date-search{
+            flex: 1;
+            margin-left: 8px;
+        }
+    }
 }
 
 .modal__add-claim {
