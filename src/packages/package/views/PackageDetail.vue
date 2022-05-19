@@ -52,6 +52,18 @@
                   | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
+            <div>
+              <div>Ngày xử lý dự kiến </div>
+              <div>
+                <template v-if="package_detail.estimate_process_date">
+                  {{
+                    package_detail.estimate_process_date
+                      | datetime('dd/MM/yyyy HH:mm:ss')
+                  }}
+                </template>
+                <template v-else>N/A</template>
+              </div>
+            </div>
           </div>
           <div class="page-header__action">
             <p-button
@@ -448,33 +460,53 @@
                   </div>
                 </div>
 
-                <div class="row mb-24">
-                  <div class="card-block product-info">
+                <div class="row">
+                  <div class="card-block product-info mb-0">
                     <div class="card-header">
                       <div class="card-title">Thông tin sản phẩm</div>
                     </div>
-                    <div class="card-content">
-                      <div class="row product-title">
-                        <div class="col-5 mb-8">SKU</div>
-                        <div class="col-5">Tên sản phẩm</div>
-                        <div class="col-2 mb-8 product-quantity">Số lượng</div>
-                      </div>
-                      <div
-                        class="row product-item"
-                        v-for="(prod, index) in package_detail.package
-                          .package_products"
-                        :key="index"
+                    <div
+                      class="card-content"
+                      :class="{
+                        'text-center': !(
+                          package_detail.package.package_products &&
+                          package_detail.package.package_products.length
+                        ),
+                      }"
+                    >
+                      <template
+                        v-if="
+                          package_detail.package.package_products &&
+                          package_detail.package.package_products.length
+                        "
                       >
-                        <div class="col-5 mb-8">{{
-                          mapProduct(prod.product_id).sku
-                        }}</div>
-                        <div class="col-5">{{
-                          mapProduct(prod.product_id).name
-                        }}</div>
-                        <div class="col-2 mb-8 product-quantity">{{
-                          prod.quantity
-                        }}</div>
-                      </div>
+                        <div class="row product-title">
+                          <div class="col-5 mb-8">SKU</div>
+                          <div class="col-5">Tên sản phẩm</div>
+                          <div class="col-2 mb-8 product-quantity"
+                            >Số lượng</div
+                          >
+                        </div>
+                        <div
+                          class="row product-item"
+                          v-for="(prod, index) in package_detail.package
+                            .package_products"
+                          :key="index"
+                        >
+                          <div class="col-5 mb-8">{{
+                            mapProduct(prod.product_id).sku
+                          }}</div>
+                          <div class="col-5">{{
+                            mapProduct(prod.product_id).name
+                          }}</div>
+                          <div class="col-2 mb-8 product-quantity">{{
+                            prod.quantity
+                          }}</div>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <img src="@assets/img/no_data.png" />
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -495,59 +527,69 @@
                           >
                         </div>
                       </div>
-                      <div class="card-content deliver-log">
-                        <div class="timeline-new">
-                          <div
-                            v-for="(item, i) in displayDeliverLogs"
-                            :key="i"
-                            :class="{
-                              'first-item':
-                                i === 0 && timelinePagination.currentPage === 1,
-                            }"
-                            class="timeline-item-new"
-                          >
-                            <div class="item__right">
-                              <div class="title">{{ item.name }}</div>
-                            </div>
+                      <div
+                        class="card-content deliver-log"
+                        :class="{ 'middle-item': !displayDeliverLogs.length }"
+                        style="min-height: 50%"
+                      >
+                        <template v-if="displayDeliverLogs.length">
+                          <div class="timeline-new">
                             <div
-                              v-for="(it, j) in item.data"
-                              :key="j"
-                              class="item__right__data"
+                              v-for="(item, i) in displayDeliverLogs"
+                              :key="i"
                               :class="{
-                                'first-data': j === 0,
+                                'first-item':
+                                  i === 0 &&
+                                  timelinePagination.currentPage === 1,
                               }"
+                              class="timeline-item-new"
                             >
-                              <div class="time col-2 pl-0">
-                                {{ it.ship_time | datetime('HH:mm:ss') }}</div
+                              <div class="item__right">
+                                <div class="title">{{ item.name }}</div>
+                              </div>
+                              <div
+                                v-for="(it, j) in item.data"
+                                :key="j"
+                                class="item__right__data"
+                                :class="{
+                                  'first-data': j === 0,
+                                }"
                               >
-                              <div class="des col-10 pl-0">
-                                <span v-html="it.text"></span>
-                                <span class="location" v-if="it.location">
-                                  ___{{ it.location }}</span
-                                ></div
-                              >
+                                <div class="time col-2 pl-0">
+                                  {{ it.ship_time | datetime('HH:mm:ss') }}</div
+                                >
+                                <div class="des col-10 pl-0">
+                                  <span v-html="it.text"></span>
+                                  <span class="location" v-if="it.location">
+                                    ___{{ it.location }}</span
+                                  ></div
+                                >
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="timeline__next-page">
-                          <div
-                            :class="{
-                              'disable-next-page':
-                                timelinePagination.currentPage <= 1,
-                            }"
-                            @click="previousTimeLinePage"
-                            >Trước</div
-                          ><div
-                            :class="{
-                              'disable-next-page':
-                                timelinePagination.currentPage >=
-                                  timelinePagination.numberPage ||
-                                timelinePagination.numberPage <= 1,
-                            }"
-                            @click="nextTimeLinePage"
-                            >Sau</div
-                          >
-                        </div>
+                          <div class="timeline__next-page">
+                            <div
+                              :class="{
+                                'disable-next-page':
+                                  timelinePagination.currentPage <= 1,
+                              }"
+                              @click="previousTimeLinePage"
+                              >Trước</div
+                            ><div
+                              :class="{
+                                'disable-next-page':
+                                  timelinePagination.currentPage >=
+                                    timelinePagination.numberPage ||
+                                  timelinePagination.numberPage <= 1,
+                              }"
+                              @click="nextTimeLinePage"
+                              >Sau</div
+                            >
+                          </div>
+                        </template>
+                        <template v-else>
+                          <img src="@assets/img/no_data.png" />
+                        </template>
                       </div>
                     </div>
                   </div>
@@ -558,7 +600,7 @@
                 class="col-6 logs"
                 style="padding: 0 30px 0 30px"
               >
-                <div class="row">
+                <div class="row" style="height: 100%">
                   <div class="col-12 p-0">
                     <div class="card-block">
                       <div class="card-header">
@@ -570,8 +612,12 @@
 
                         <div class="card-title ml-24">Lịch sử đơn</div>
                       </div>
-                      <div class="card-content">
-                        <template>
+                      <div
+                        class="card-content"
+                        :class="{ 'middle-item': !displayAuditLogs.length }"
+                        style="min-height: 50%"
+                      >
+                        <template v-if="displayAuditLogs.length">
                           <div class="table-responsive">
                             <table class="table table-hover" id="tbl-packages">
                               <thead>
@@ -632,26 +678,29 @@
                               </tbody>
                             </table>
                           </div>
+                          <div class="timeline__next-page">
+                            <div
+                              :class="{
+                                'disable-next-page':
+                                  auditPagination.currentPage <= 1,
+                              }"
+                              @click="previousAuditLogPage"
+                              >Trước</div
+                            ><div
+                              :class="{
+                                'disable-next-page':
+                                  auditPagination.currentPage >=
+                                    auditPagination.numberPage ||
+                                  auditPagination.numberPage <= 1,
+                              }"
+                              @click="nextAuditLogPage"
+                              >Sau</div
+                            >
+                          </div>
                         </template>
-                        <div class="timeline__next-page">
-                          <div
-                            :class="{
-                              'disable-next-page':
-                                auditPagination.currentPage <= 1,
-                            }"
-                            @click="previousAuditLogPage"
-                            >Trước</div
-                          ><div
-                            :class="{
-                              'disable-next-page':
-                                auditPagination.currentPage >=
-                                  auditPagination.numberPage ||
-                                auditPagination.numberPage <= 1,
-                            }"
-                            @click="nextAuditLogPage"
-                            >Sau</div
-                          >
-                        </div>
+                        <template v-else>
+                          <img src="@assets/img/no_data.png" />
+                        </template>
                       </div>
                     </div>
                   </div>

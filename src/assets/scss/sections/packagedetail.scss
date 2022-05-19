@@ -188,6 +188,11 @@
         width: auto;
         white-space: nowrap;
     }
+    .middle-item{
+        display: flex;
+        align-items: center; 
+        justify-content: center
+    }
 }
 
 .modal__edit-order {
