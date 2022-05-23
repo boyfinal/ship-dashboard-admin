@@ -3,6 +3,13 @@
         margin-left: 0;
         margin-right: 0;
     }
+    .date-search{
+        flex: 1;
+    }
+
+    .group{
+        width: 70%;
+    }
     .btn-info {
         white-space: nowrap;
     }
@@ -206,7 +213,7 @@
             line-height: 28px;
             font-weight: normal;
             .label-date-picker {
-                color: $color-neutral-4;
+                color: $color-neutral-8;
             }
         }
     }

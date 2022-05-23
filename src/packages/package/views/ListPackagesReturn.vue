@@ -2,26 +2,42 @@
   <div class="list-packages pages">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
-        <p-input
-          :placeholder="searchPlaceholder"
-          prefixIcon="search"
-          type="search"
-          :clearable="true"
-          :value.sync="keywordSearch"
-          @keyup.enter="handleSearch"
-          @clear="clearSearch"
-        >
-        </p-input>
-        <p-select
-          class="ml-8"
-          style="width: 20%"
-          placeholder="Please select"
-          v-model="filter.search_by"
-        >
-          <option :value="key" v-for="(value, key) in searchBy" :key="key">
-            {{ value }}
-          </option>
-        </p-select>
+        <div class="group d-flex">
+          <p-input
+            :placeholder="searchPlaceholder"
+            prefixIcon="search"
+            type="search"
+            :clearable="true"
+            :value.sync="keywordSearch"
+            @keyup.enter="handleSearch"
+            @clear="clearSearch"
+          >
+          </p-input>
+          <p-select
+            class="ml-8"
+            style="width: auto"
+            placeholder="Please select"
+            v-model="filter.search_by"
+          >
+            <option :value="key" v-for="(value, key) in searchBy" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+        <div class="d-flex date-search">
+          <p-datepicker
+            :format="'dd/mm/yyyy'"
+            class="p-input-group input-group"
+            @update="selectDate"
+            :label="labelDate"
+            id="date-search"
+            :value="{
+              startDate: filter.start_date,
+              endDate: filter.end_date,
+            }"
+            @clear="clearSearchDate"
+          ></p-datepicker>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -141,6 +157,7 @@ import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalEditOrder from '../components/ModalEditOrder'
 import OverLoading from '@components/shared/OverLoading'
+import { date } from '@core/utils/datetime'
 import {
   MAP_NAME_STATUS_STRING_PACKAGE,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
@@ -185,6 +202,8 @@ export default {
         search: '',
         search_by: 'code',
         code: '',
+        start_date: '',
+        end_date: '',
       },
       isSubmitting: false,
       isVisibleModal: false,
@@ -246,6 +265,15 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    selectDate(v) {
+      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
+    },
+    clearSearchDate() {
+      this.filter.end_date = ''
+      this.filter.start_date = ''
+      this.filter.page = 1
     },
     handleModal(packge_id) {
       this.reshipID = packge_id
