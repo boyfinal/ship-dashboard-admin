@@ -155,6 +155,23 @@ export default {
   components: {
     EmptySearchResult,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          code: 'Mã tracking',
+          customer_code: 'Mã khách hàng',
+          recipient: 'Người xử lý',
+          id: 'Mã khiếu nại',
+        }
+      },
+    },
+  },
   data() {
     return {
       filter: {
@@ -167,19 +184,10 @@ export default {
       },
       isFetching: false,
       claimStatus: CLAIM_STATUS,
-      searchBy: {
-        code: 'Mã tracking',
-        customer_code: 'Mã khách hàng',
-        recipient: 'Người xử lý',
-        id: 'Mã khiếu nại',
-      },
       labelDate: `Tìm theo ngày`,
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
-  },
-  mounted() {
     this.init()
   },
   computed: {
@@ -225,6 +233,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.filter.search = this.filter.search
         ? this.filter.search.toUpperCase()
         : ''
@@ -248,7 +259,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,
