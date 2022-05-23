@@ -2,7 +2,8 @@
   <div class="modal-confirm">
     <p-modal :size="size" :active="visible" :title="title" @close="handleClose">
       <template>
-        <span v-html="description"></span>
+        <p v-html="description"></p>
+        <p v-html="description_1"></p>
         <span
           v-if="link != ''"
           v-html="link"
@@ -56,6 +57,10 @@ export default {
     description: {
       type: String,
       default: 'Bạn có chắc chắn không?',
+    },
+    description_1: {
+      type: String,
+      default: '',
     },
     actionConfirm: {
       type: String,

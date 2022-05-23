@@ -5,7 +5,9 @@ import api from '../api'
  */
 export const LIST_USER = 'listUser'
 export const COUNT_USER = 'countUser'
+export const LIST_APPRAISER = 'listAppraiser'
 export const CREATE_USER = 'createUser'
+export const APPRAI = 'apprai'
 export const UPDATE_STATUS_USER = 'updateStatusUser'
 export const UPDATE_ROLE_USER = 'updateRoleUser'
 export const EXPORT_PACKAGE = 'exportPackage'
@@ -32,6 +34,7 @@ import {
 export const state = {
   user: {},
   users: [],
+  appraisers: [],
   count_user: 0,
   services: [],
   allPrices: [],
@@ -69,6 +72,9 @@ export const mutations = {
   },
   [COUNT_USER]: (state, payload) => {
     state.count_user = payload
+  },
+  [LIST_APPRAISER]: (state, payload) => {
+    state.appraisers = payload
   },
   [FETCH_RATE_EXCHANGE]: (state, payload) => {
     state.rate_exchange = payload
@@ -222,9 +228,50 @@ export const actions = {
    * @param commit
    * @param payload
    */
+  // eslint-disable-next-line no-unused-vars
+  async listAppraiser({ commit }, payload) {
+    let success = true
+    let message = ''
+
+    let list = await api.listUsers(payload)
+
+    if (!list || list.error) {
+      success = false
+      message = list.errorMessage || ''
+      list = []
+    }
+
+    commit(LIST_APPRAISER, list.users)
+    return { success, message }
+  },
+
+  /**
+   * Create sender
+   * @param commit
+   * @param payload
+   */
   // eslint-disable-next-line
   async createUser({ commit }, payload) {
     const response = await api.createUser(payload)
+
+    if (response && response.success) {
+      return { success: true }
+    }
+
+    return {
+      success: false,
+      message: response.errors || response.error,
+    }
+  },
+
+  /**
+   * Apprai
+   * @param commit
+   * @param payload
+   */
+  // eslint-disable-next-line
+  async apprai({ commit }, payload) {
+    const response = await api.apprai(payload)
 
     if (response && response.success) {
       return { success: true }

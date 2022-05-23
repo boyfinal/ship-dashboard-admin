@@ -29,6 +29,15 @@ export default {
   },
 
   /**
+   * Apprai user
+   * @param payload
+   * @return {*}
+   */
+  apprai(payload) {
+    return http.put(`/users/apprai`, payload)
+  },
+
+  /**
    * update status user
    * @param payload
    * @return {*}

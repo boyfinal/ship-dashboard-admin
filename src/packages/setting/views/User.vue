@@ -30,7 +30,10 @@
                     <th>Số điện thoại</th>
                     <th width="250" class="text-center">Quy mô</th>
                     <th>Ngày tạo</th>
-                    <th width="150">Thao tác</th>
+                    <th width="300" v-if="filter.status == statusInActive"
+                      >Người thẩm định</th
+                    >
+                    <th width="200">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -61,10 +64,38 @@
                       <div> {{ item.phone_number || 'N/A' }}</div>
                     </td>
                     <td class="text-center">{{
-                      mapPackage[item.package] || 'N/A'
+                      getPackage(item.package) || 'N/A'
                     }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td v-if="filter.status == statusInActive">
+                      <multiselect
+                        class="multiselect-custom"
+                        v-model="selectedAppraiser[i]"
+                        :options="appraiserOption"
+                        placeholder="Chọn người"
+                        @select="handleSelectAppraiser($event, i, item.id)"
+                        :disabled="
+                          current_user.role != role_support_leader &&
+                          current_user.role != role_admin
+                        "
+                        :custom-label="customLabel"
+                      ></multiselect>
+                    </td>
                     <td>
+                      <a
+                        v-if="filter.status == statusInActive"
+                        href="#"
+                        class="btn edit"
+                        :class="{
+                          deactive:
+                            current_user.role != role_support_leader &&
+                            current_user.role != role_admin &&
+                            current_user.role != role_support,
+                        }"
+                        @click="visibleModalApprai(item)"
+                      >
+                        Thẩm định
+                      </a>
                       <a
                         href="#"
                         class="btn"
@@ -75,8 +106,8 @@
                         @click.prevent="visibleModal(item)"
                       >
                         {{ textButton(item.status) }}
-                      </a></td
-                    >
+                      </a>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -99,27 +130,38 @@
     </div>
     <modal-confirm
       :visible.sync="visibleConfirmLock"
-      :actionConfirm="`Khóa tài khoản`"
+      :actionConfirm="`Xác nhận`"
       :cancel="`Bỏ qua`"
-      :description="`Bạn có chắc chắn muốn khóa tài khoản này?`"
-      :title="`Xác nhận`"
+      :description="`Tài khoản '${item.full_name}' sẽ bị khóa.`"
+      :description_1="`Bạn có chắc chắn muốn khóa tài khoản này?`"
+      :title="`Khóa tài khoản`"
       :type="'danger'"
       @action="handleUpdateStatus(item)"
     ></modal-confirm>
-    <modal-confirm
-      :visible.sync="visibleConfirmUnlock"
-      :actionConfirm="`Mở tài khoản`"
-      :cancel="`Bỏ qua`"
-      :description="`Bạn có chắc chắn muốn mở tài khoản này?`"
-      :title="`Xác nhận`"
-      @action="handleUpdateStatus(item)"
-    ></modal-confirm>
+    <modal-active-user
+      :visible.sync="isVisibleModalActiveUser"
+      :data="apprai_user"
+      @init="init"
+    ></modal-active-user>
+    <modal-apprai
+      :visible.sync="isVisibleApprai"
+      v-if="isVisibleApprai"
+      :data="apprai_user"
+      @init="init"
+    >
+    </modal-apprai>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
-import { LIST_USER, UPDATE_STATUS_USER } from '../store/index'
+import {
+  LIST_USER,
+  UPDATE_STATUS_USER,
+  LIST_APPRAISER,
+  APPRAI,
+} from '../store/index'
+import ModalApprai from '../components/ModalApprai'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -133,6 +175,9 @@ import {
 import AllUser from '@/components/shared/resource/AllUser'
 import { ROLE_CUSTOMER } from '@core/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import { cloneDeep } from '@core/utils'
+import { ROLE_SUPPORT, ROLE_SUPPORT_LEADER, ROLE_ADMIN } from '@core/constants'
+import ModalActiveUser from '../components/ModalActiveUser'
 
 export default {
   name: 'Debt',
@@ -141,6 +186,8 @@ export default {
     EmptySearchResult,
     AllUser,
     ModalConfirm,
+    ModalApprai,
+    ModalActiveUser,
   },
   data() {
     return {
@@ -157,6 +204,17 @@ export default {
       statusInActive: USER_STATUS_INACTIVE,
       visibleConfirmLock: false,
       visibleConfirmUnlock: false,
+      cloneUsers: [],
+      isVisibleApprai: false,
+      apprai_user: null,
+      appraiserOption: [],
+      selectedAppraiser: [],
+      item: { full_name: '' },
+      mapPackage: OPTIONS_PACKAGES,
+      role_support: ROLE_SUPPORT,
+      role_support_leader: ROLE_SUPPORT_LEADER,
+      role_admin: ROLE_ADMIN,
+      isVisibleModalActiveUser: false,
     }
   },
   created() {
@@ -168,17 +226,25 @@ export default {
   computed: {
     ...mapState('setting', {
       users: (state) => state.users,
+      appraisers: (state) => state.appraisers,
       count: (state) => state.count_user,
     }),
-    mapPackage() {
-      return OPTIONS_PACKAGES
-    },
+    ...mapState('shared', {
+      current_user: (state) => state.user,
+    }),
   },
   methods: {
     truncate,
-    ...mapActions('setting', [LIST_USER, UPDATE_STATUS_USER]),
+    ...mapActions('setting', [
+      LIST_USER,
+      LIST_APPRAISER,
+      UPDATE_STATUS_USER,
+      APPRAI,
+    ]),
 
     async init() {
+      console.log(this.current_user)
+      this.apprai_user = null
       this.filter.search = this.user ? this.user.email : ''
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -187,8 +253,46 @@ export default {
       if (!result.success) {
         this.$toast.error(result.message)
       }
+
+      let payload = {
+        role: 'appraiser',
+      }
+
+      const result2 = await this.listAppraiser(payload)
+
+      if (!result2.success) {
+        this.$toast.open({ message: result2.message, type: 'error' })
+      }
       this.isFetching = false
+      this.cloneUsers = cloneDeep(this.users)
+
+      this.selectedAppraiser = []
+      for (let i = 0; i < this.cloneUsers.length; i++) {
+        this.selectedAppraiser.push({
+          full_name:
+            this.cloneUsers[i].appraiser_name != ''
+              ? this.cloneUsers[i].appraiser_name
+              : 'Chọn người',
+        })
+
+        this.selectedAppraiser[i].id = this.cloneUsers[i].appraiser_id
+      }
+
+      this.appraiserOption = []
+      for (let i = 0; i < this.appraisers.length; i++) {
+        this.appraiserOption.push({
+          full_name: this.appraisers[i].full_name,
+          id: this.appraisers[i].id,
+        })
+      }
+      return this.appraiserOption
     },
+
+    getPackage(i) {
+      let a = this.mapPackage.find((pkg) => pkg.id == i)
+      return a ? a.value : 'N/A'
+    },
+
     textButton(status) {
       switch (status) {
         case this.statusInActive:
@@ -201,12 +305,17 @@ export default {
           return null
       }
     },
+
     visibleModal(item) {
       if (item.status == this.statusActive) {
         this.visibleConfirmLock = true
-      } else this.visibleConfirmUnlock = true
+      } else {
+        this.apprai_user = cloneDeep(item)
+        this.isVisibleModalActiveUser = true
+      }
       this.item = item
     },
+
     async handleUpdateStatus(item) {
       let payload = {
         id: item.id,
@@ -230,6 +339,37 @@ export default {
         message: 'Cập nhật thành công',
         duration: 3000,
       })
+    },
+
+    customLabel(item) {
+      return item.full_name
+    },
+
+    async handleSelectAppraiser(value, index, user_id) {
+      const payload = {}
+
+      let appraiser_id
+
+      if (this.cloneUsers[index].appraiser_id != value.id) {
+        appraiser_id = value.id
+      }
+
+      console.log(user_id)
+
+      payload.id = user_id
+      payload.appraiser_id = appraiser_id
+
+      const res = await this.apprai(payload)
+
+      if (!res.success) {
+        this.$toast.error(res.message, { duration: 3000 })
+        return
+      }
+    },
+
+    visibleModalApprai(item) {
+      this.apprai_user = item
+      this.isVisibleApprai = true
     },
   },
   watch: {
