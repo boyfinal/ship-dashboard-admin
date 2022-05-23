@@ -131,7 +131,11 @@
                         </router-link>
                         <span
                           v-if="!item.validate_address"
-                          class="list-warning pull-right badge badge-round badge-warning-order"
+                          class="
+                            list-warning
+                            pull-right
+                            badge badge-round badge-warning-order
+                          "
                         >
                           <p-tooltip
                             class="item_name"
@@ -163,9 +167,11 @@
                         >
                           <a
                             target="_blank"
-                            :href="`https://t.17track.net/en#nums=${
-                              item.package_code ? item.package_code.code : ''
-                            }`"
+                            :href="
+                              `https://t.17track.net/en#nums=${
+                                item.package_code ? item.package_code.code : ''
+                              }`
+                            "
                           >
                             <svg
                               width="32"
@@ -203,7 +209,9 @@
                         v-if="item.tracking"
                         target="_blank"
                         class="on-hover"
-                        :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`"
+                        :href="
+                          `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`
+                        "
                       >
                         {{ item.tracking.tracking_number }}
                       </a>
@@ -221,7 +229,11 @@
                       <span v-status="item.status"></span>
                       <span
                         v-if="item.alert > 0"
-                        class="pull-right list-warning badge badge-round badge-warning-order"
+                        class="
+                          pull-right
+                          list-warning
+                          badge badge-round badge-warning-order
+                        "
                       >
                         <p-tooltip
                           class="item_name"
@@ -292,6 +304,25 @@ export default {
     PackageStatusTab,
     ModalExport,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          code: 'LionBay tracking',
+          order_number: 'Mã đơn hàng',
+          recipient: 'Người nhận',
+          account: 'Tài khoản khách hàng',
+          customer_full_name: 'Tên khách hàng',
+          tracking: 'Last mile tracking',
+        }
+      },
+    },
+  },
   data() {
     return {
       filter: {
@@ -313,14 +344,6 @@ export default {
       visibleConfirmCancel: false,
       isVisibleExport: false,
       selected: [],
-      searchBy: {
-        code: 'LionBay tracking',
-        order_number: 'Mã đơn hàng',
-        recipient: 'Người nhận',
-        account: 'Tài khoản khách hàng',
-        customer_full_name: 'Tên khách hàng',
-        tracking: 'Last mile tracking',
-      },
       PackageStatusDeactivate: PACKAGE_STATUS_DEACTIVATE,
       PackageStatusExpiredText: PACKAGE_STATUS_EXPIRED_TEXT,
     }
@@ -378,6 +401,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.keywordSearch = this.filter.search.trim()
       const result = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
@@ -432,7 +458,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,

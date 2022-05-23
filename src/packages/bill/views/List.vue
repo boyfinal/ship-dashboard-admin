@@ -1,7 +1,7 @@
 <template>
   <div class="pages list__claim list__bill">
     <div class="page-content">
-      <div class="d-flex jc-sb mb-12">
+      <div class="d-flex jc-sb mb-12 search-input">
         <div class="d-flex" style="flex: auto">
           <p-input
             id="search"
@@ -32,10 +32,9 @@
               class="form-control"
               style="width: auto"
             >
-              <option value="customer">Khách hàng</option>
-              <option value="bill_code">Hoá đơn</option>
-              <option value="order_number">Đơn hàng</option>
-              <option value="tracking">Lionbay/ Last mile tracking</option>
+              <option :value="key" v-for="(value, key) in searchBy" :key="key">
+                {{ value }}
+              </option>
             </select>
           </div>
         </div>
@@ -101,7 +100,12 @@
                     </table>
                   </div>
                   <div
-                    class="d-flex justify-content-between align-items-center mb-16"
+                    class="
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                      mb-16
+                    "
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -216,7 +220,12 @@
                     </table>
                   </div>
                   <div
-                    class="d-flex justify-content-between align-items-center mb-16"
+                    class="
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                      mb-16
+                    "
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -425,13 +434,33 @@ export default {
     ModalExport,
     UserResource,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          customer: 'khách hàng',
+          bill_code: 'Hóa đơn',
+          order_number: 'Đơn hàng',
+          tracking: 'Lionbay/ Last mile tracking',
+        }
+      },
+    },
+    tab: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       filter: {
         page: 1,
         limit: 30,
         search: '',
-        search_by: 'customer',
         status: '',
         tab: 'bill',
       },
@@ -476,9 +505,11 @@ export default {
       isExporting: false,
     }
   },
-  mounted() {
-    this.filter = this.getRouteQuery()
-    this.init()
+  created() {
+    this.filter.search_by = this.user_id > 0 ? 'bill_code' : 'customer'
+    if (this.filter.tab == 'topup') {
+      this.initTopup()
+    } else this.init()
   },
   computed: {
     ...mapState('bill', {
@@ -582,7 +613,9 @@ export default {
     async init() {
       this.filter.limit = this.filter.limit != 30 ? 30 : this.filter.limit
       this.handleUpdateRouteQuery()
-
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.isFetching = true
 
       const res = await Promise.all([
@@ -601,6 +634,9 @@ export default {
     async initTopup() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       let payload = cloneDeep(this.filter)
       const result = await this[FETCH_LIST_TRANSACTIONS](payload)
       this.isFetching = false
@@ -762,7 +798,7 @@ export default {
         case TransactionStatusSuccess:
           validAmount = this.checkValidateMoneyAmount()
           if (!validAmount) {
-            this.$nextTick(function () {
+            this.$nextTick(function() {
               this.$refs['money_' + this.selectedItem.id][0].focus()
             })
             break
@@ -829,16 +865,16 @@ export default {
     },
   },
   watch: {
-    'filter.status': function () {
+    'filter.status': function() {
       this.filter.page = 1
       this.init()
     },
-    'filter.page': function () {
+    'filter.page': function() {
       if (this.filter.tab == 'topup') {
         this.initTopup()
       } else this.init()
     },
-    'filter.search_by': function () {
+    'filter.search_by': function() {
       if (this.filter.search != '') {
         this.filter.page = 1
         if (this.filter.tab == 'bill') {
@@ -846,16 +882,21 @@ export default {
         } else this.initTopup()
       }
     },
-    'filter.tab': function () {
+    'filter.tab': function() {
       this.filter.page = 1
       if (this.filter.tab == 'topup') {
         this.filter.type = 1
         this.initTopup()
       } else this.init()
     },
-    'filter.type': function () {
+    'filter.type': function() {
       this.filter.page = 1
       this.initTopup()
+    },
+    tab: function() {
+      if (this.tab == 'bill' || this.tab == 'topup') {
+        this.filter.tab = this.tab
+      }
     },
   },
 }
