@@ -37,7 +37,7 @@
               </div>
               <div class="right">
                 <p>{{ (user.balance > 0 ? user.balance : 0) | formatPrice }}</p>
-                <p>U0001</p>
+                <p>{{ user.holding_money | formatPrice }}</p>
                 <p>{{
                   user.user_info && user.user_info.debt_max_amount > 0
                     ? 'Trả sau'
@@ -80,16 +80,74 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-body"> </div>
+      <div class="multi-page">
+        <div class="tab">
+          <a
+            href="javascript:void(0)"
+            @click="setTab('packages')"
+            :class="{ deactive: !isPackages, active: isPackages }"
+            >Đơn hàng</a
+          >
+          <a
+            href="javascript:void(0)"
+            @click="setTab('return')"
+            :class="{ deactive: !isReturn, active: isReturn }"
+            >Đơn hàng trả về</a
+          >
+          <a
+            href="javascript:void(0)"
+            @click="setTab('claim')"
+            :class="{ deactive: !isClaim, active: isClaim }"
+            >Khiếu nại</a
+          >
+          <a
+            href="javascript:void(0)"
+            @click="setTab('product')"
+            :class="{ deactive: !isProduct, active: isProduct }"
+            >Danh sách sản phẩm</a
+          >
+          <a
+            href="javascript:void(0)"
+            @click="setTab('bill')"
+            :class="{ deactive: !isBill, active: isBill }"
+            >Hóa đơn</a
+          >
+          <a
+            href="javascript:void(0)"
+            @click="setTab('topup')"
+            :class="{ deactive: !isTopup, active: isTopup }"
+            >Thanh toán</a
+          >
+        </div>
+        <list-packages
+          v-if="isPackages"
+          :user_id="userID"
+          :searchBy="searchBy"
+        ></list-packages>
+        <list-packages-return
+          v-if="isReturn"
+          :user_id="userID"
+          :searchBy="searchBy"
+        ></list-packages-return>
+        <list-claim
+          v-if="isClaim"
+          :user_id="userID"
+          :searchBy="searchByClaim"
+        ></list-claim>
+        <bill-list
+          v-if="isBill || isTopup"
+          :user_id="userID"
+          :tab="tab"
+          :searchBy="searchByBill"
+        ></bill-list>
+        <list-product v-if="isProduct" :user_id="userID"></list-product>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
-// import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import {
@@ -99,12 +157,21 @@ import {
 } from '../constants'
 import api from '@/packages/shared/api'
 import { GET_USER } from '../../../packages/shared/store'
+import ListPackages from '../../package/views/ListPackages.vue'
+import ListPackagesReturn from '../../package/views/ListPackagesReturn.vue'
+import ListClaim from '../../claim/views/ListClaim.vue'
+import BillList from '../../bill/views/List.vue'
+import ListProduct from './ListProduct.vue'
 
 export default {
   name: 'UserDetail',
   mixins: [mixinRoute, mixinTable],
   components: {
-    // EmptySearchResult,
+    ListPackages,
+    ListPackagesReturn,
+    ListClaim,
+    BillList,
+    ListProduct,
   },
   data() {
     return {
@@ -117,6 +184,23 @@ export default {
       statusUser: CUSTOMER_STATUS_TAB,
       userID: 0,
       user: {},
+      tab: 'packages',
+      searchBy: {
+        code: 'LionBay tracking',
+        order_number: 'Mã đơn hàng',
+        recipient: 'Người nhận',
+        tracking: 'Last mile tracking',
+      },
+      searchByBill: {
+        bill_code: 'Hóa đơn',
+        order_number: 'Đơn hàng',
+        tracking: 'Lionbay/ Last mile tracking',
+      },
+      searchByClaim: {
+        code: 'Mã tracking',
+        recipient: 'Người xử lý',
+        id: 'Mã khiếu nại',
+      },
     }
   },
   created() {
@@ -124,14 +208,29 @@ export default {
     this.init()
   },
   computed: {
-    ...mapState('shared', {
-      user: (state) => state.user,
-    }),
     mapPackage() {
       return OPTIONS_PACKAGES
     },
     types() {
       return MAP_USER_CLASS_TEXT
+    },
+    isPackages() {
+      return this.tab === 'packages'
+    },
+    isReturn() {
+      return this.tab === 'return'
+    },
+    isClaim() {
+      return this.tab === 'claim'
+    },
+    isProduct() {
+      return this.tab === 'product'
+    },
+    isBill() {
+      return this.tab === 'bill'
+    },
+    isTopup() {
+      return this.tab === 'topup'
     },
   },
   methods: {
@@ -153,18 +252,13 @@ export default {
       this.user = response.users[0]
       this.isFetching = false
     },
+    setTab(tab) {
+      this.tab = tab
+    },
   },
   watch: {
-    'filter.page': {
-      handler: function () {
-        this.init()
-      },
-      deep: true,
-    },
-    'filter.status': {
-      handler: function () {
-        this.init()
-      },
+    tab: {
+      handler: function() {},
       deep: true,
     },
   },

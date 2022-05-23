@@ -8,6 +8,7 @@ export const FETCH_PACKAGE_DETAIL = 'fetchPackage'
 export const FETCH_LIST_PACKAGES = 'fetchListPackages'
 export const COUNT_LIST_PACKAGES = 'countListPackages'
 export const FETCH_LIST_PRODUCTS = 'fetchListProducts'
+export const COUNT_LIST_PRODUCTS = 'countListProducts'
 export const FETCH_LIST_SERVICE = 'fetchListService'
 export const IMPORT_PACKAGE = 'importPackage'
 export const UPDATE_PACKAGE = 'updatePackage'
@@ -37,6 +38,7 @@ export const state = {
   count_status: [],
   products: [],
   service: [],
+  countProducts: 0,
 }
 /**
  * Getters
@@ -62,6 +64,9 @@ export const mutations = {
   },
   [FETCH_LIST_PRODUCTS]: (state, payload) => {
     state.products = payload
+  },
+  [COUNT_LIST_PRODUCTS]: (state, payload) => {
+    state.countProducts = payload.count
   },
   [FETCH_LIST_SERVICE]: (state, payload) => {
     state.service = payload
@@ -130,12 +135,22 @@ export const actions = {
   },
   // eslint-disable-next-line no-unused-vars
   async fetchListProducts({ commit }, payload) {
-    const res = await api.fetchListProduct(payload)
-    if (!res.products) {
-      return { error: true, message: res.errorMessage || '' }
+    let result = { error: false }
+    let [list, count] = await Promise.all([
+      api.fetchListProduct(payload),
+      api.countListProduct(payload),
+    ])
+    if (!list.products || !count) {
+      count = { count: 0 }
+      result = {
+        error: true,
+        message: list.errorMessage || '',
+      }
     }
-    commit(FETCH_LIST_PRODUCTS, res.products)
-    return { error: false }
+    commit(FETCH_LIST_PRODUCTS, list.products)
+    commit(COUNT_LIST_PRODUCTS, count)
+
+    return result
   },
   // eslint-disable-next-line no-unused-vars
   async fetchListService({ commit }, payload) {

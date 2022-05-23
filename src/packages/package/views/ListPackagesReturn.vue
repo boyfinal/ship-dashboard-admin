@@ -158,6 +158,25 @@ export default {
     ModalEditOrder,
     OverLoading,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          code: 'LionBay tracking',
+          order_number: 'Mã đơn hàng',
+          recipient: 'Người nhận',
+          account: 'Tài khoản khách hàng',
+          customer_full_name: 'Tên khách hàng',
+          tracking: 'Last mile tracking',
+        }
+      },
+    },
+  },
   data() {
     return {
       filter: {
@@ -173,19 +192,11 @@ export default {
       isUploading: false,
       keywordSearch: '',
       isFetching: false,
-      searchBy: {
-        code: 'LionBay tracking',
-        order_number: 'Mã đơn hàng',
-        recipient: 'Người nhận',
-        account: 'Tài khoản khách hàng',
-        customer_full_name: 'Tên khách hàng',
-        tracking: 'Last mile tracking',
-      },
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
     this.keywordSearch = this.filter.search.trim()
+    this.init()
   },
   computed: {
     ...mapState('package', {
@@ -222,6 +233,9 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.keywordSearch = this.filter.search.trim()
       const payload = {
         ...this.filter,
@@ -256,7 +270,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,
