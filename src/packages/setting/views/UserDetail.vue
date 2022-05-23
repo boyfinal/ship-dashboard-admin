@@ -65,12 +65,10 @@
               <div class="left">
                 <p>Kích thước hàng:</p>
                 <p>Loại hàng:</p>
-                <p>Email:</p>
                 <p>Quy mô:</p>
                 <p>Địa chỉ kho:</p>
               </div>
               <div class="right">
-                <p>U0001</p>
                 <p>U0001</p>
                 <p>U0001</p>
                 <p>U0001</p>
