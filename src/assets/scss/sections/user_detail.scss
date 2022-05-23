@@ -1,0 +1,30 @@
+.user-detail {
+    .user-info {
+        min-height: 172px;
+        .card {
+            height: 100%;
+            box-shadow: 0px 12px 20px -16px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            padding: 16px;
+            p {
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 20px;
+                margin-bottom: 4px;
+            }
+            .left {
+                p {
+                    width: max-content;
+                    color: $color-neutral-7;
+                }
+            }
+            .right {
+                margin-left: 16px;
+                p {
+                    font-weight: 500;
+                    color: $color-neutral-9;
+                }
+            }
+        }
+    }
+}
