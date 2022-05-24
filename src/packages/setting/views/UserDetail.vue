@@ -15,11 +15,35 @@
               </div>
               <div class="right">
                 <p>U{{ user.id }}</p>
-                <p>{{ user.full_name }}</p>
-                <p>{{ user.email }}</p>
-                <p>{{ user.phone_number }}</p>
+                <p>
+                  <p-tooltip
+                    v-if="user.full_name"
+                    :label="user.full_name"
+                    size="large"
+                    position="top"
+                    type="dark"
+                    :active="user.full_name.length > 20"
+                  >
+                    {{ truncate(user.full_name, 20) }}
+                  </p-tooltip>
+                  <span class="full-text">{{ user.full_name }}</span>
+                </p>
+                <p>
+                  <p-tooltip
+                    v-if="user.email"
+                    :label="user.email"
+                    size="large"
+                    position="top"
+                    type="dark"
+                    :active="user.email.length > 20"
+                  >
+                    {{ truncate(user.email, 20) }}
+                  </p-tooltip>
+                  <span class="full-text">{{ user.email }}</span>
+                </p>
+                <p>{{ user.phone_number || 'N/A' }}</p>
                 <p>{{ types[user.class] }}</p>
-                <p>{{ user.tax_code }}</p>
+                <p>{{ user.tax_code || 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -53,7 +77,7 @@
                 <p>{{
                   user.user_info && user.user_info.debt_max_day > 0
                     ? `${user.user_info.debt_max_day} ngày`
-                    : '-'
+                    : 'N/A'
                 }}</p>
               </div>
             </div>
@@ -70,10 +94,10 @@
                 <p>Địa chỉ kho:</p>
               </div>
               <div class="right">
-                <p>{{ user.volume }}</p>
-                <p>{{ user.item_type }}</p>
-                <p>{{ getPackage(user.package) }}</p>
-                <p>{{ user.warehouse_address }}</p>
+                <p>{{ user.volume || 'N/A' }}</p>
+                <p>{{ user.item_type || 'N/A' }}</p>
+                <p>{{ getPackage(user.package) || 'N/A' }}</p>
+                <p>{{ user.warehouse_address || 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -106,12 +130,14 @@
             >Danh sách sản phẩm</a
           >
           <a
+            v-if="current_user.role != roleSupportLeader"
             href="javascript:void(0)"
             @click="setTab('bill')"
             :class="{ deactive: !isBill, active: isBill }"
             >Hóa đơn</a
           >
           <a
+            v-if="current_user.role != roleSupportLeader"
             href="javascript:void(0)"
             @click="setTab('topup')"
             :class="{ deactive: !isTopup, active: isTopup }"
@@ -145,7 +171,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -161,6 +187,7 @@ import ListPackagesReturn from '../../package/views/ListPackagesReturn.vue'
 import ListClaim from '../../claim/views/ListClaim.vue'
 import BillList from '../../bill/views/List.vue'
 import ListProduct from './ListProduct.vue'
+import { ROLE_SUPPORT_LEADER } from '@core/constants'
 
 export default {
   name: 'UserDetail',
@@ -201,6 +228,7 @@ export default {
         id: 'Mã khiếu nại',
       },
       mapPackage: OPTIONS_PACKAGES,
+      roleSupportLeader: ROLE_SUPPORT_LEADER,
     }
   },
   created() {
@@ -208,6 +236,9 @@ export default {
     this.init()
   },
   computed: {
+    ...mapState('shared', {
+      current_user: (state) => state.user,
+    }),
     types() {
       return MAP_USER_CLASS_TEXT
     },
@@ -259,7 +290,7 @@ export default {
   },
   watch: {
     tab: {
-      handler: function() {},
+      handler: function () {},
       deep: true,
     },
   },
