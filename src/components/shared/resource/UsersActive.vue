@@ -68,7 +68,11 @@ export default {
     this.handleSearch = debounce(async function (search = '') {
       this.isLoading = true
       let response = await api.fetchUsersByRole(
-        Object.assign({}, this.filter, { search: search, not_limit: true })
+        Object.assign({}, this.filter, {
+          search: search,
+          not_limit: true,
+          status: 1,
+        })
       )
       if (response && response.errorMessage) {
         this.users = []
@@ -92,7 +96,7 @@ export default {
     async fetchUsers(search = '') {
       this.isLoading = true
       const result = await api.fetchUsersByRole(
-        Object.assign({}, this.filter, { search: search.trim() })
+        Object.assign({}, this.filter, { search: search.trim(), status: 1 })
       )
       this.isLoading = false
 

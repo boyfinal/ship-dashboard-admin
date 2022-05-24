@@ -245,7 +245,7 @@ export default {
     ...mapActions('setting', [CREATE_USER]),
 
     async fetchCustomer() {
-      let req = { role: 'customer', search: '', not_limit: true }
+      let req = { role: 'customer', search: '', not_limit: true, status: 1 }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []
@@ -387,7 +387,7 @@ export default {
   },
   watch: {
     visible: {
-      handler: function() {
+      handler: function () {
         if (this.visible) {
           this.user = Object.assign({}, this.data)
         }
