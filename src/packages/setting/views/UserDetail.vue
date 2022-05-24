@@ -19,7 +19,7 @@
                 <p>{{ user.email }}</p>
                 <p>{{ user.phone_number }}</p>
                 <p>{{ types[user.class] }}</p>
-                <p>MST</p>
+                <p>{{ user.tax_code }}</p>
               </div>
             </div>
           </div>
@@ -66,13 +66,14 @@
                 <p>Kích thước hàng:</p>
                 <p>Loại hàng:</p>
                 <p>Quy mô:</p>
+                <br v-if="user.package == 1" />
                 <p>Địa chỉ kho:</p>
               </div>
               <div class="right">
-                <p>U0001</p>
-                <p>U0001</p>
-                <p>U0001</p>
-                <p>U0001</p>
+                <p>{{ user.volume }}</p>
+                <p>{{ user.item_type }}</p>
+                <p>{{ getPackage(user.package) }}</p>
+                <p>{{ user.warehouse_address }}</p>
               </div>
             </div>
           </div>
@@ -199,6 +200,7 @@ export default {
         recipient: 'Người xử lý',
         id: 'Mã khiếu nại',
       },
+      mapPackage: OPTIONS_PACKAGES,
     }
   },
   created() {
@@ -206,9 +208,6 @@ export default {
     this.init()
   },
   computed: {
-    mapPackage() {
-      return OPTIONS_PACKAGES
-    },
     types() {
       return MAP_USER_CLASS_TEXT
     },
@@ -252,6 +251,10 @@ export default {
     },
     setTab(tab) {
       this.tab = tab
+    },
+    getPackage(i) {
+      let a = this.mapPackage.find((pkg) => pkg.id == i)
+      return a ? a.value : 'N/A'
     },
   },
   watch: {
