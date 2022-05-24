@@ -187,37 +187,21 @@ export default {
 
       const payload = {}
 
-      if (this.user.full_name != this.data.full_name) {
-        payload.full_name = this.user.full_name
-      }
+      payload.full_name = this.user.full_name
 
-      if (this.user.email != this.data.email) {
-        payload.email = this.user.email
-      }
+      payload.email = this.user.email
 
-      if (this.user.phone_number != this.data.phone_number) {
-        payload.phone_number = this.user.phone_number
-      }
+      payload.phone_number = this.user.phone_number
 
-      if (this.user.package != this.data.package) {
-        payload.package = parseInt(this.user.package)
-      }
+      payload.package = parseInt(this.user.package)
 
-      if (this.user.tax_code != this.data.tax_code) {
-        payload.tax_code = this.user.tax_code
-      }
+      payload.tax_code = this.user.tax_code
 
-      if (this.user.volume != this.data.volume) {
-        payload.volume = this.user.volume
-      }
+      payload.volume = this.user.volume
 
-      if (this.user.item_type != this.data.item_type) {
-        payload.item_type = this.user.item_type
-      }
+      payload.item_type = this.user.item_type
 
-      if (this.user.warehouse_address != this.data.warehouse_address) {
-        payload.warehouse_address = this.user.warehouse_address
-      }
+      payload.warehouse_address = this.user.warehouse_address
 
       payload.id = this.data.id
 
