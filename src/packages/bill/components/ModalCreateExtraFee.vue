@@ -10,6 +10,7 @@
           class="user-resource is-fullwidth"
           :filter="{ role: 'customer' }"
           :label="`Tìm khách hàng`"
+          :search="email ? email : ''"
         />
       </div>
     </div>
@@ -88,6 +89,10 @@ export default {
     types: {
       type: Array,
       default: () => [],
+    },
+    email: {
+      type: String,
+      default: '',
     },
   },
   data() {
