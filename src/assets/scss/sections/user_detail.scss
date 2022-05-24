@@ -23,6 +23,9 @@
                 p {
                     font-weight: 500;
                     color: $color-neutral-9;
+                    .p-tooltip {
+                        display: none;
+                    }
                 }
             }
         }
@@ -84,6 +87,17 @@
             .bulk-actions {
                 top: 78px;
             }
+        }
+    }
+    @media (max-width: 1366px) {
+        .p-tooltip {
+            display: block !important;
+            &::after {
+                width: max-content;
+            }
+        }
+        .full-text {
+            display: none
         }
     }
 }

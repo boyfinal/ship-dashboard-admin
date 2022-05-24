@@ -29,7 +29,7 @@
             :format="'dd/mm/yyyy'"
             class="p-input-group input-group"
             @update="selectDate"
-            :label="labelDate"
+            :label="`Tìm theo ngày`"
             id="date-search"
             :value="{
               startDate: filter.start_date,
@@ -298,7 +298,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
