@@ -112,6 +112,7 @@
             >Đơn hàng</a
           >
           <a
+            v-if="current_user.role != roleSupportLeader"
             href="javascript:void(0)"
             @click="setTab('return')"
             :class="{ deactive: !isReturn, active: isReturn }"
