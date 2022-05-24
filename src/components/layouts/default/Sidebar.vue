@@ -144,7 +144,7 @@ export default {
               route: '/user',
               title: 'Tài khoản khách hàng',
               alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant() || this.$isSupport(),
+              disable: this.$isAccountant(),
             },
           ],
         },

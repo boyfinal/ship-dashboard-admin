@@ -124,7 +124,6 @@ export default {
       let payload = {
         id: this.user.id,
         support_id: this.user.support_id,
-        status: this.statusActive,
       }
 
       this.loading = true

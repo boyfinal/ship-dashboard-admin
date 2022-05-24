@@ -5,7 +5,7 @@
         <all-user
           id="search"
           class="user-resource is-fullwidth"
-          :filter="{ role: 'customer' }"
+          :filter="query"
           :label="`Tìm theo tên khách hàng hoặc email`"
           :emitID="false"
           v-model="user"
@@ -25,6 +25,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
+                    <th v-if="!$isSupport()">Mã khách hàng</th>
                     <th>Tên</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
@@ -33,11 +34,23 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th width="200">Thao tác</th>
+                    <th width="300">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in users" :key="i">
+                    <td v-if="!$isSupport()">
+                      <router-link
+                        :to="{
+                          name: 'user-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        U{{ item.id }}
+                      </router-link>
+                    </td>
                     <td class="user-fullname">
                       <p-tooltip
                         :label="item.full_name"
@@ -89,14 +102,27 @@
                         :class="{
                           deactive:
                             current_user.role != role_support_leader &&
-                            current_user.role != role_admin &&
-                            current_user.role != role_support,
+                            current_user.role != role_admin,
                         }"
                         @click="visibleModalApprai(item)"
                       >
                         Thẩm định
                       </a>
                       <a
+                        v-if="filter.status == statusActive"
+                        href="#"
+                        class="btn edit"
+                        :class="{
+                          deactive:
+                            current_user.role != role_support_leader &&
+                            current_user.role != role_admin,
+                        }"
+                        @click="visibleRole(item)"
+                      >
+                        Phân quyền
+                      </a>
+                      <a
+                        v-if="current_user.role != role_support"
                         href="#"
                         class="btn"
                         :class="{
@@ -138,6 +164,16 @@
       :type="'danger'"
       @action="handleUpdateStatus(item)"
     ></modal-confirm>
+    <modal-confirm
+      :visible.sync="visibleConfirmUnlock"
+      :actionConfirm="`Xác nhận`"
+      :cancel="`Bỏ qua`"
+      :description="`Tài khoản '${item.full_name}' sẽ được kích hoạt.`"
+      :description_1="`Bạn có chắc chắn muốn kích hoạt tài khoản này?`"
+      :title="`Kích hoạt tài khoản`"
+      @action="handleUpdateStatus(item)"
+    ></modal-confirm>
+
     <modal-active-user
       :visible.sync="isVisibleModalActiveUser"
       :data="apprai_user"
@@ -215,6 +251,7 @@ export default {
       role_support_leader: ROLE_SUPPORT_LEADER,
       role_admin: ROLE_ADMIN,
       isVisibleModalActiveUser: false,
+      query: {},
     }
   },
   created() {
@@ -229,7 +266,7 @@ export default {
       appraisers: (state) => state.appraisers,
       count: (state) => state.count_user,
     }),
-    ...mapState('shared', {
+    ...mapState('auth', {
       current_user: (state) => state.user,
     }),
   },
@@ -243,12 +280,17 @@ export default {
     ]),
 
     async init() {
-      console.log(this.current_user)
       this.apprai_user = null
       this.filter.search = this.user ? this.user.email : ''
       this.isFetching = true
       this.handleUpdateRouteQuery()
-      const filter = Object.assign({ role: ROLE_CUSTOMER }, this.filter)
+      this.query = {}
+      this.query.role = ROLE_CUSTOMER
+      if (this.$isSupport()) {
+        console.log(this.current_user)
+        this.query.appraiser_id = this.current_user.id
+      }
+      const filter = Object.assign(this.query, this.filter)
       const result = await this.listUser(filter)
       if (!result.success) {
         this.$toast.error(result.message)
@@ -309,11 +351,13 @@ export default {
     visibleModal(item) {
       if (item.status == this.statusActive) {
         this.visibleConfirmLock = true
-      } else {
-        this.apprai_user = cloneDeep(item)
-        this.isVisibleModalActiveUser = true
-      }
+      } else this.visibleConfirmUnlock = true
       this.item = item
+    },
+
+    visibleRole(item) {
+      this.apprai_user = cloneDeep(item)
+      this.isVisibleModalActiveUser = true
     },
 
     async handleUpdateStatus(item) {
