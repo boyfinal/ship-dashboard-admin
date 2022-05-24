@@ -189,9 +189,13 @@ export default {
 
       payload.full_name = this.user.full_name
 
-      payload.email = this.user.email
+      if (this.user.email != this.data.email) {
+        payload.email = this.user.email
+      }
 
-      payload.phone_number = this.user.phone_number
+      if (this.user.phone_number != this.data.phone_number) {
+        payload.phone_number = this.user.phone_number
+      }
 
       payload.package = parseInt(this.user.package)
 
