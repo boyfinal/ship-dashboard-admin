@@ -502,6 +502,9 @@ export default {
   },
   created() {
     this.filter.search_by = this.user_id > 0 ? 'bill_code' : 'customer'
+    if (this.tab == 'bill' || this.tab == 'topup') {
+      this.filter.tab = this.tab
+    }
     if (this.filter.tab == 'topup') {
       this.initTopup()
     } else this.init()
