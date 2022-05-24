@@ -100,12 +100,7 @@
                     </table>
                   </div>
                   <div
-                    class="
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                      mb-16
-                    "
+                    class="d-flex justify-content-between align-items-center mb-16"
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -220,12 +215,7 @@
                     </table>
                   </div>
                   <div
-                    class="
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                      mb-16
-                    "
+                    class="d-flex justify-content-between align-items-center mb-16"
                     v-if="count > 0"
                   >
                     <p-pagination
@@ -344,6 +334,7 @@
       :types="fee_types"
       :visible.sync="visibleCreateExtraFeeModal"
       :loading="isSubmitting"
+      :email="email"
       @save="handleSubmitExtraFee"
     >
     </modal-create-extra-fee>
@@ -439,6 +430,10 @@ export default {
       type: Number,
       default: 0,
     },
+    email: {
+      type: String,
+      default: '',
+    },
     searchBy: {
       type: Object,
       default() {
@@ -507,6 +502,9 @@ export default {
   },
   created() {
     this.filter.search_by = this.user_id > 0 ? 'bill_code' : 'customer'
+    if (this.tab == 'bill' || this.tab == 'topup') {
+      this.filter.tab = this.tab
+    }
     if (this.filter.tab == 'topup') {
       this.initTopup()
     } else this.init()
@@ -717,7 +715,8 @@ export default {
       return (
         (transaction.type === TransactionLogTypePayoneer ||
           transaction.type === TransactionLogTypePingPong) &&
-        transaction.status === TransactionStatusProcess
+        transaction.status === TransactionStatusProcess &&
+        transaction.amount <= 0
       )
     },
     getTextType(transaction) {
@@ -737,9 +736,6 @@ export default {
       const payload = {
         id: this.selectedItem.id,
         status: status,
-        amount: this.money[this.selectedItem.id]
-          ? parseFloat(this.money[this.selectedItem.id].replaceAll(',', ''))
-          : 0,
       }
       const result = await this[CHANGE_STATUS_TRANSACTION](payload)
       this.isChangingStatus = false
@@ -776,18 +772,7 @@ export default {
       this.validateErrors = []
     },
     checkValidateMoneyAmount() {
-      const transaction = this.selectedItem
       this.resetErrors()
-      if (
-        transaction.type !== TransactionLogTypePayoneer &&
-        transaction.type !== TransactionLogTypePingPong
-      ) {
-        return true
-      }
-      if (!this.money[transaction.id]) {
-        this.validateErrors[transaction.id] = true
-        return false
-      }
       return true
     },
     handleConfirm(status, item) {
@@ -798,7 +783,7 @@ export default {
         case TransactionStatusSuccess:
           validAmount = this.checkValidateMoneyAmount()
           if (!validAmount) {
-            this.$nextTick(function() {
+            this.$nextTick(function () {
               this.$refs['money_' + this.selectedItem.id][0].focus()
             })
             break
@@ -865,16 +850,16 @@ export default {
     },
   },
   watch: {
-    'filter.status': function() {
+    'filter.status': function () {
       this.filter.page = 1
       this.init()
     },
-    'filter.page': function() {
+    'filter.page': function () {
       if (this.filter.tab == 'topup') {
         this.initTopup()
       } else this.init()
     },
-    'filter.search_by': function() {
+    'filter.search_by': function () {
       if (this.filter.search != '') {
         this.filter.page = 1
         if (this.filter.tab == 'bill') {
@@ -882,18 +867,18 @@ export default {
         } else this.initTopup()
       }
     },
-    'filter.tab': function() {
+    'filter.tab': function () {
       this.filter.page = 1
       if (this.filter.tab == 'topup') {
         this.filter.type = 1
         this.initTopup()
       } else this.init()
     },
-    'filter.type': function() {
+    'filter.type': function () {
       this.filter.page = 1
       this.initTopup()
     },
-    tab: function() {
+    tab: function () {
       if (this.tab == 'bill' || this.tab == 'topup') {
         this.filter.tab = this.tab
       }

@@ -86,7 +86,7 @@ export default {
       filter: {
         limit: 25,
         search: '',
-        status: '',
+        status: 1,
       },
       isFetching: false,
       product: {},
@@ -124,7 +124,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
