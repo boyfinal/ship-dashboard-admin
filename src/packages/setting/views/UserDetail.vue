@@ -163,6 +163,7 @@
         <bill-list
           v-if="isBill || isTopup"
           :user_id="userID"
+          :email="user.email"
           :tab="tab"
           :searchBy="searchByBill"
         ></bill-list>
