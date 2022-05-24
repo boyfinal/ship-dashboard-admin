@@ -54,6 +54,7 @@
             <div class="card-body">
               <div class="list__bill-list">
                 <status-tab
+                  class="tab-type"
                   v-model="filter.tab"
                   :status="listTab"
                   :hasAll="false"

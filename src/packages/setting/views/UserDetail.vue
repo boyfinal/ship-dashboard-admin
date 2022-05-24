@@ -1,6 +1,6 @@
 <template>
   <div class="setting user-detail pages">
-    <div class="page-content">
+    <div class="page-content" v-if="user != null">
       <div class="user-info mb-24 row">
         <div class="col-4">
           <div class="card">
@@ -170,6 +170,7 @@
         <list-product v-if="isProduct" :user_id="userID"></list-product>
       </div>
     </div>
+    <empty-search-result v-else></empty-search-result>
   </div>
 </template>
 <script>
@@ -190,6 +191,7 @@ import ListClaim from '../../claim/views/ListClaim.vue'
 import BillList from '../../bill/views/List.vue'
 import ListProduct from './ListProduct.vue'
 import { ROLE_SUPPORT_LEADER } from '@core/constants'
+import EmptySearchResult from '@components/shared/EmptySearchResult'
 
 export default {
   name: 'UserDetail',
@@ -200,6 +202,7 @@ export default {
     ListClaim,
     BillList,
     ListProduct,
+    EmptySearchResult,
   },
   data() {
     return {
@@ -275,7 +278,7 @@ export default {
       )
       if (response && response.errorMessage) {
         this.$toast.error(response.errorMessage)
-        this.users = []
+        this.user = null
         return
       }
 
