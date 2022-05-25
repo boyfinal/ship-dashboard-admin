@@ -34,7 +34,7 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th width="300">Thao tác</th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -102,6 +102,7 @@
                         :class="{
                           deactive:
                             current_user.role != role_support_leader &&
+                            current_user.role != role_support &&
                             current_user.role != role_admin,
                         }"
                         @click="visibleModalApprai(item)"
@@ -287,7 +288,7 @@ export default {
       this.query = {}
       this.query.role = ROLE_CUSTOMER
       if (this.$isSupport()) {
-        console.log(this.current_user)
+        this.statusUser = { 'Chờ kích hoạt': 2 }
         this.query.appraiser_id = this.current_user.id
       }
       const filter = Object.assign(this.query, this.filter)

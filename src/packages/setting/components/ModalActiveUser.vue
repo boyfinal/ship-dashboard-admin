@@ -34,7 +34,7 @@
               @click="handleCreate"
               :loading="loading"
             >
-              Kích hoạt
+              Xác nhận
             </p-button>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default {
     },
     title: {
       type: String,
-      default: 'Kích hoạt tài khoản',
+      default: 'Phân quyền',
     },
     data: {
       type: Object,
