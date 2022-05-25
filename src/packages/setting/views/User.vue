@@ -34,7 +34,9 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th style="width: 280px; text-align: center">Thao tác</th>
+                    <th style="min-width: 200px; text-align: center"
+                      >Thao tác</th
+                    >
                   </tr>
                 </thead>
                 <tbody>
