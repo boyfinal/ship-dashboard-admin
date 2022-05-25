@@ -212,7 +212,9 @@ export default {
 
       const payload = {}
 
-      payload.full_name = this.user.full_name
+      if (this.user.full_name != this.data.full_name) {
+        payload.full_name = this.user.full_name
+      }
 
       if (this.user.email != this.data.email) {
         payload.email = this.user.email
