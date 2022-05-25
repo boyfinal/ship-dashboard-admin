@@ -358,8 +358,6 @@ export default {
 
       let options = this.options.concat()
 
-      console.log(this.groupValues)
-
       /* istanbul ignore else */
       if (this.internalSearch) {
         options = this.groupValues

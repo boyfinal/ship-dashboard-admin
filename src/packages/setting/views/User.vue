@@ -34,7 +34,7 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th width="230">Thao tác</th>
+                    <th width="280" style="text-align: center">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -96,7 +96,7 @@
                         :custom-label="customLabel"
                       ></multiselect>
                     </td>
-                    <td>
+                    <td style="text-align: center">
                       <a
                         v-if="filter.status == statusInActive"
                         href="#"

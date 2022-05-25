@@ -5,7 +5,7 @@
         <div class="row mb-16">
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Họ và tên: <span>*</span></label
+              >Họ và tên: <span style="color: red">*</span></label
             >
             <p-input
               placeholder="Nhập họ và tên"
@@ -16,7 +16,7 @@
           </div>
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Số điện thoại: <span>*</span></label
+              >Số điện thoại: <span style="color: red">*</span></label
             >
             <p-input
               placeholder="Nhập số điện thoại"
@@ -29,7 +29,7 @@
         <div class="row mb-16">
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Email: <span>*</span></label
+              >Email: <span style="color: red">*</span></label
             >
             <p-input
               placeholder="Nhập email"
@@ -79,11 +79,11 @@
         <div class="row mb-16">
           <div class="col">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Quy mô: <span>*</span></label
+              >Quy mô: <span style="color: red">*</span></label
             >
             <multiselect
               class="multiselect-custom"
-              :class="{ 'input-valid': errorRole }"
+              :class="{ 'input-valid': errorPackage }"
               v-model="package_user"
               :options="mapPackage"
               placeholder="Chọn quy mô"
@@ -119,7 +119,10 @@
           <span style="margin-bottom: 3px">
             <p-svg name="InfoCircle"></p-svg>
           </span>
-          <b>Lưu ý:</b> <i>(<span>*</span>) Là các trường bắt buộc nhập.</i>
+          <b>Lưu ý:</b>
+          <i
+            >(<span style="color: red">*</span>) Là các trường bắt buộc nhập.</i
+          >
         </div>
         <div class="d-flex">
           <div>
