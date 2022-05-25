@@ -5,7 +5,7 @@
         <div class="row mb-16">
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Họ và tên:</label
+              >Họ và tên: <span>*</span></label
             >
             <p-input
               placeholder="Nhập họ và tên"
@@ -16,18 +16,21 @@
           </div>
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Số điện thoại:</label
+              >Số điện thoại: <span>*</span></label
             >
             <p-input
               placeholder="Nhập số điện thoại"
               v-model="user.phone_number"
               @keyup.enter="handleCreate"
+              :error="valider.error('phone_number')"
             />
           </div>
         </div>
         <div class="row mb-16">
           <div class="col-6">
-            <label class="color-newtral-10 font-weight-600 mb-5">Email:</label>
+            <label class="color-newtral-10 font-weight-600 mb-5"
+              >Email: <span>*</span></label
+            >
             <p-input
               placeholder="Nhập email"
               v-model="user.email"
@@ -37,8 +40,8 @@
           </div>
           <div class="col-6">
             <label class="color-newtral-10 font-weight-600 mb-5"
-              >Mã số thuế:</label
-            >
+              >Mã số thuế:
+            </label>
             <p-input
               placeholder="Nhập mã số thuế"
               v-model="user.tax_code"
@@ -75,9 +78,12 @@
 
         <div class="row mb-16">
           <div class="col">
-            <label class="color-newtral-10 font-weight-600 mb-5">Quy mô:</label>
+            <label class="color-newtral-10 font-weight-600 mb-5"
+              >Quy mô: <span>*</span></label
+            >
             <multiselect
               class="multiselect-custom"
+              :class="{ 'input-valid': errorRole }"
               v-model="package_user"
               :options="mapPackage"
               placeholder="Chọn quy mô"
@@ -87,6 +93,9 @@
               :custom-label="customLabel"
               :openDirection="'above'"
             ></multiselect>
+            <span class="invalid-error" v-if="errorPackage"
+              >Quy mô không được để trống</span
+            >
           </div>
         </div>
 
@@ -106,7 +115,12 @@
       </template>
 
       <template slot="footer">
-        <div></div>
+        <div>
+          <span style="margin-bottom: 3px">
+            <p-svg name="InfoCircle"></p-svg>
+          </span>
+          <b>Lưu ý:</b> <i>(<span>*</span>) Là các trường bắt buộc nhập.</i>
+        </div>
         <div class="d-flex">
           <div>
             <p-button @click="handleClose" type="default" :disabled="loading">
@@ -118,7 +132,7 @@
               @click="handleCreate"
               :loading="loading"
             >
-              {{ data.id ? 'Sửa' : 'Tạo' }}
+              Xác nhận
             </p-button>
           </div>
         </div>
@@ -167,6 +181,7 @@ export default {
       valider: null,
       package_user: {},
       mapPackage: OPTIONS_PACKAGES,
+      errorPackage: false,
     }
   },
 
@@ -174,6 +189,7 @@ export default {
     this.valider = valider.schema((y) => ({
       full_name: y.string().required('Tên không để trống'),
       email: y.string().required('Email không để trống'),
+      phone_number: y.string().required('Số điện thoại không để trống'),
     }))
   },
 
@@ -181,7 +197,13 @@ export default {
     ...mapActions('setting', [APPRAI]),
 
     async handleCreate() {
+      this.errorPackage = false
       if (!this.valider.check(this.user)) {
+        return
+      }
+
+      if (parseInt(this.user.package) < 1) {
+        this.errorPackage = true
         return
       }
 

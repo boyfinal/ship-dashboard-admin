@@ -6,7 +6,7 @@
           id="search"
           class="user-resource is-fullwidth"
           :filter="query"
-          :label="`Tìm theo tên khách hàng hoặc email`"
+          :label="`Tìm theo tên khách hàng, email hoặc mã khách hàng`"
           :emitID="false"
           v-model="user"
           @input="init"
@@ -25,7 +25,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th v-if="!$isSupport()">Mã khách hàng</th>
+                    <th>Mã khách hàng</th>
                     <th>Tên</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
@@ -34,13 +34,14 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th>Thao tác</th>
+                    <th width="230">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in users" :key="i">
-                    <td v-if="!$isSupport()">
+                    <td>
                       <router-link
+                        v-if="!$isSupport()"
                         :to="{
                           name: 'user-detail',
                           params: {
@@ -50,6 +51,7 @@
                       >
                         U{{ item.id }}
                       </router-link>
+                      <p v-else> U{{ item.id }} </p>
                     </td>
                     <td class="user-fullname">
                       <p-tooltip
@@ -299,6 +301,8 @@ export default {
 
       let payload = {
         role: 'appraiser',
+        not_limit: true,
+        status: this.statusActive,
       }
 
       const result2 = await this.listAppraiser(payload)

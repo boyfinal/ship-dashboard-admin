@@ -98,7 +98,7 @@ export default {
     ...mapActions('setting', [CREATE_USER, UPDATE_STATUS_USER]),
 
     async fetchAppraiser() {
-      let req = { role: 'appraiser', not_limit: true, status: 1 }
+      let req = { role: 'support', not_limit: true, status: this.statusActive }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []

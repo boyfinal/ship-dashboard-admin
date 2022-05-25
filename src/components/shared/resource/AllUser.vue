@@ -107,10 +107,10 @@ export default {
       this.users = result.users
     },
 
-    customLabel({ full_name, email, phone_number }) {
+    customLabel({ id, full_name, email, phone_number }) {
       return email !== ''
-        ? `${full_name} - ${email}`
-        : `${full_name} - ${phone_number}`
+        ? `U${id} - ${full_name} - ${email}`
+        : `U${id} - ${full_name} - ${phone_number}`
     },
 
     handleSelect(user) {
