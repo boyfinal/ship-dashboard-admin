@@ -30,11 +30,11 @@
             class="page-header-group-actions__right"
             v-if="claim.status != claimStatusProcessed"
           >
-            <p-button type="info" @click="handleCancelTicket()">
-              Đã xử lý
-            </p-button>
-            <p-button type="info" class="ml-8" @click="showModalReply">
+            <p-button type="info" class="" @click="showModalReply">
               Trả lời
+            </p-button>
+            <p-button type="info ml-8" @click="showModalClose">
+              Đã xử lý
             </p-button>
           </div>
         </div>
@@ -154,6 +154,15 @@
       v-if="isVisibleModalReply"
       @success="replySuccess"
     ></modal-reply>
+    <modal-confirm
+      :visible.sync="visibleConfirmClose"
+      :actionConfirm="`Xác nhận`"
+      :cancel="`Bỏ qua`"
+      :description="`Bạn có chắc chắn muốn đóng khiếu nại?`"
+      :title="`Xác nhận`"
+      @action="handleCancelTicket"
+      :type="`danger`"
+    ></modal-confirm>
   </div>
 </template>
 
@@ -165,6 +174,7 @@ import Browser from '@core/helpers/browser'
 import ModalReply from '../components/ModalReply'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import Message from '../components/Message'
+import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
   UPDATE_TICKET,
   UPDATE_FILE_TICKET,
@@ -183,6 +193,7 @@ export default {
     File,
     ModalReply,
     Message,
+    ModalConfirm,
   },
   props: {
     visible: {
@@ -212,6 +223,7 @@ export default {
       isTicketOpen: false,
       attach_files: [],
       isVisibleModalReply: false,
+      visibleConfirmClose: false,
       messages: [],
       isMessageLoading: false,
       filter: {
@@ -320,6 +332,9 @@ export default {
 
     hasFiles() {
       return this.claim.attachment && this.claims.attachment.length
+    },
+    showModalClose() {
+      this.visibleConfirmClose = true
     },
     extenionFileUrl(val) {
       const rex = /(?:\.([^.]+))?$/
@@ -431,6 +446,7 @@ export default {
         id: this.claim.id,
       }
       const result = await this[CANCEL_TICKET](payload)
+      this.visibleConfirmClose = false
       if (result.error) {
         this.$toast.open({
           type: 'error',
