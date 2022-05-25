@@ -211,28 +211,30 @@ export default {
       }
 
       const payload = {}
+      console.log(this.data)
+      console.log(this.data.phone_number.trim())
 
-      if (this.user.full_name != this.data.full_name) {
-        payload.full_name = this.user.full_name
+      if (this.user.full_name.trim() != this.data.full_name) {
+        payload.full_name = this.user.full_name.trim()
       }
 
-      if (this.user.email != this.data.email) {
-        payload.email = this.user.email
+      if (this.user.email.trim() != this.data.email) {
+        payload.email = this.user.email.trim()
       }
 
-      if (this.user.phone_number != this.data.phone_number) {
-        payload.phone_number = this.user.phone_number
+      if (this.user.phone_number.trim() != this.data.phone_number) {
+        payload.phone_number = this.user.phone_number.trim()
       }
 
       payload.package = parseInt(this.user.package)
 
-      payload.tax_code = this.user.tax_code
+      payload.tax_code = this.user.tax_code.trim()
 
-      payload.volume = this.user.volume
+      payload.volume = this.user.volume.trim()
 
-      payload.item_type = this.user.item_type
+      payload.item_type = this.user.item_type.trim()
 
-      payload.warehouse_address = this.user.warehouse_address
+      payload.warehouse_address = this.user.warehouse_address.trim()
 
       payload.id = this.data.id
 

@@ -34,7 +34,7 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th width="300" style="text-align: center">Thao tác</th>
+                    <th style="width: 280px; text-align: center">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,7 +127,7 @@
                       <a
                         v-if="current_user.role != role_support"
                         href="#"
-                        class="btn"
+                        class="btn edit"
                         :class="{
                           lock: item.status == statusActive,
                           edit: item.status != statusActive,
