@@ -249,7 +249,7 @@ export default {
 
       this.$emit('update:visible', false)
       this.$emit('init', true)
-      this.$toast.success('Thêm thành công', { duration: 3000 })
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
 
     customLabel(item) {

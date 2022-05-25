@@ -34,7 +34,7 @@
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
-                    <th style="min-width: 200px; text-align: center"
+                    <th style="min-width: 240px; text-align: center"
                       >Thao tác</th
                     >
                   </tr>
@@ -129,7 +129,7 @@
                       <a
                         v-if="current_user.role != role_support"
                         href="#"
-                        class="btn edit"
+                        class="btn"
                         :class="{
                           lock: item.status == statusActive,
                           edit: item.status != statusActive,
@@ -416,6 +416,8 @@ export default {
         this.$toast.error(res.message, { duration: 3000 })
         return
       }
+
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
 
     visibleModalApprai(item) {
