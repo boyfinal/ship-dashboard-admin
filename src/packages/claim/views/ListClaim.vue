@@ -53,6 +53,7 @@
                   <thead>
                     <tr class="list__claim-title">
                       <th>MÃ KHIẾU NẠI</th>
+                      <th>MÃ KHÁCH HÀNG</th>
                       <th>LIONBAY TRACKING </th>
                       <th>TIÊU ĐỀ</th>
                       <th>NGƯỜI XỬ LÝ</th>
@@ -76,6 +77,7 @@
                           {{ item.id }}
                         </router-link>
                       </td>
+                      <td>U{{ item.user_id }}</td>
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -87,6 +89,7 @@
                           {{ item.package_code }}
                         </router-link>
                       </td>
+
                       <td width="150">
                         <p-tooltip
                           :label="item.title"
@@ -213,6 +216,7 @@ export default {
           updated_at: item.updated_at,
           status: item.status,
           isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
+          user_id: item.user_id,
         }
       })
     },
@@ -259,7 +263,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
