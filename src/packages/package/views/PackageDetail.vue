@@ -52,16 +52,13 @@
                   | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
-            <div>
+            <div v-if="package_detail.estimate_process_date">
               <div>Ngày xử lý dự kiến </div>
               <div>
-                <template v-if="package_detail.estimate_process_date">
-                  {{
-                    package_detail.estimate_process_date
-                      | datetime('dd/MM/yyyy HH:mm:ss')
-                  }}
-                </template>
-                <template v-else>N/A</template>
+                {{
+                  package_detail.estimate_process_date
+                    | datetime('dd/MM/yyyy HH:mm:ss')
+                }}
               </div>
             </div>
           </div>
