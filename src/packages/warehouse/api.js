@@ -15,15 +15,6 @@ export default {
   fetchPackageByCode(payload) {
     return http.get(`/packages/${payload}/code`)
   },
-
-  /**
-   * fetch list product
-   * @param payload
-   * @return {*}
-   */
-  fetchListProduct() {
-    return http.get(`/products`)
-  },
   /**
    * fetch list service
    * @param payload

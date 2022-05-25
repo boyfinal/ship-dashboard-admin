@@ -18,8 +18,10 @@ export default {
    * @return {*}
    */
   fetchListProduct(payload) {
-    console.log(payload)
     return http.get(`/products?${buildQueryString(payload)}`)
+  },
+  countListProduct(payload) {
+    return http.get(`/products/count?${buildQueryString(payload)}`)
   },
   /**
    * fetch list service

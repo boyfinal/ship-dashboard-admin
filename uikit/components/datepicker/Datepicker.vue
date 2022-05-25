@@ -20,47 +20,50 @@
     :close-on-esc="true"
     :ranges="ranges"
   >
-    <div slot="input" slot-scope="picker" style="width: 100%;">
+    <div slot="input" slot-scope="picker" style="width: 100%">
       <p-svg
         name="calendar"
-        style="float: right; margin-left: 2px; margin-top: 6px;"
+        style="float: right; margin-left: 2px; margin-top: 6px"
       ></p-svg>
       <span
         class="label-date-picker"
         v-if="
           dateRange.startDate === dateRange.endDate &&
-            dateRange.startDate === ''
+          dateRange.startDate === ''
         "
       >
         {{ label }}
       </span>
       <span
+        class="label-date-picker"
         v-else-if="
           picker.startDate &&
-            picker.endDate &&
-            picker.startDate != picker.endDate &&
-            !singleDatePicker
+          picker.endDate &&
+          picker.startDate != picker.endDate &&
+          !singleDatePicker
         "
       >
         {{ picker.startDate | date('dd/MM/yyyy') }} ~
         {{ picker.endDate | date('dd/MM/yyyy') }}
       </span>
       <span
+        class="label-date-picker"
         v-else-if="
           dateRange.startDate &&
-            dateRange.endDate &&
-            picker.startDate != picker.endDate &&
-            !singleDatePicker
+          dateRange.endDate &&
+          picker.startDate != picker.endDate &&
+          !singleDatePicker
         "
       >
         {{ dateRange.startDate | date('dd/MM/yyyy') }} ~
         {{ dateRange.endDate | date('dd/MM/yyyy') }}
       </span>
       <span
+        class="label-date-picker"
         v-else-if="
           singleDatePicker &&
-            (dateRange.startDate || dateRange.endDate) &&
-            label != 'dd/mm/yyyy'
+          (dateRange.startDate || dateRange.endDate) &&
+          label != 'dd/mm/yyyy'
         "
       >
         {{ dateRange.startDate || dateRange.endDate | date('dd/MM/yyyy') }}
@@ -73,7 +76,12 @@
       >
         <p-svg
           name="x-sm"
-          style="float: right; margin-left: 2px; margin-top: 9px; margin-right: 2px"
+          style="
+            float: right;
+            margin-left: 2px;
+            margin-top: 9px;
+            margin-right: 2px;
+          "
         ></p-svg>
       </span>
     </div>
@@ -188,7 +196,7 @@ export default {
     },
   },
   watch: {
-    value: function(value) {
+    value: function (value) {
       this.dateRange = value
     },
   },

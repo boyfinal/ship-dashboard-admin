@@ -4,6 +4,7 @@ import {
   ROLE_WAREHOUSE,
   ROLE_SUPPORT,
   ROLE_HUB,
+  ROLE_SUPPORT_LEADER,
 } from '@core/constants'
 
 export const USER_STATUS_DEACTIVE = 0
@@ -19,8 +20,8 @@ export const USER_STATUS_TAB = {
 }
 
 export const CUSTOMER_STATUS_TAB = {
-  'Chờ kích hoạt': 2,
   'Tài khoản mở': 1,
+  'Chờ kích hoạt': 2,
   'Tài khoản đóng': 0,
 }
 
@@ -40,6 +41,10 @@ export const ROLE = [
   {
     key: ROLE_SUPPORT,
     name: 'Support',
+  },
+  {
+    key: ROLE_SUPPORT_LEADER,
+    name: 'Support Leader',
   },
   {
     key: ROLE_HUB,
@@ -78,11 +83,11 @@ export const DAY_LIMIT = [
   { id: 5, value: 180 },
 ]
 
-export const OPTIONS_PACKAGES = {
-  [1]: 'Không có nhu cầu thường xuyên',
-  [2]: '< 150 đơn',
-  [3]: '150 - 9000 đơn',
-  [4]: '900 - 3000 đơn',
-  [5]: '3000 - 6000 đơn',
-  [6]: '> 6000 đơn',
-}
+export const OPTIONS_PACKAGES = [
+  { id: 1, value: 'Không có nhu cầu thường xuyên' },
+  { id: 2, value: '< 150 đơn' },
+  { id: 3, value: '150 - 9000 đơn' },
+  { id: 4, value: '900 - 3000 đơn' },
+  { id: 5, value: '3000 - 6000 đơn' },
+  { id: 6, value: '> 6000 đơn' },
+]

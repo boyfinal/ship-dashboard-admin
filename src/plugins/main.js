@@ -3,25 +3,28 @@ import { clickoutside } from '@core/vue/directives'
 
 const MainPlugin = {
   install(Vue) {
-    Vue.prototype.$isLogin = function() {
+    Vue.prototype.$isLogin = function () {
       return Boolean(this.$store.getters['auth/currentRole'])
     }
-    Vue.prototype.$isAdmin = function() {
+    Vue.prototype.$isAdmin = function () {
       return this.$store.getters['auth/isAdmin']
     }
-    Vue.prototype.$isSupport = function() {
+    Vue.prototype.$isSupport = function () {
       return this.$store.getters['auth/isSupport']
     }
-    Vue.prototype.$isAccountant = function() {
+    Vue.prototype.$isSupportLeader = function () {
+      return this.$store.getters['auth/isSupportLeader']
+    }
+    Vue.prototype.$isAccountant = function () {
       return this.$store.getters['auth/isAccountant']
     }
-    Vue.prototype.$isWarehouse = function() {
+    Vue.prototype.$isWarehouse = function () {
       return this.$store.getters['auth/isWarehouse']
     }
-    Vue.prototype.$isHub = function() {
+    Vue.prototype.$isHub = function () {
       return this.$store.getters['auth/isHub']
     }
-    Vue.prototype.$hasAuthorize = function(key) {
+    Vue.prototype.$hasAuthorize = function (key) {
       if (typeof ACL[key] === 'undefined') {
         return false
       }

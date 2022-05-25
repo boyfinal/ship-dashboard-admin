@@ -68,7 +68,10 @@ function filterGroups(search, label, values, groupLabel, customLabel) {
     })
 }
 
-const flow = (...fns) => (x) => fns.reduce((v, f) => f(v), x)
+const flow =
+  (...fns) =>
+  (x) =>
+    fns.reduce((v, f) => f(v), x)
 
 export default {
   data() {
@@ -402,9 +405,7 @@ export default {
         ? this.flatAndStrip(this.options)
         : this.options
       return options.map((element) =>
-        this.customLabel(element, this.label)
-          .toString()
-          .toLowerCase()
+        this.customLabel(element, this.label).toString().toLowerCase()
       )
     },
     currentOptionLabel() {

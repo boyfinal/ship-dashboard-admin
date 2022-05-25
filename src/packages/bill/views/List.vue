@@ -1,7 +1,7 @@
 <template>
   <div class="pages list__claim list__bill">
     <div class="page-content">
-      <div class="d-flex jc-sb mb-12">
+      <div class="d-flex jc-sb mb-12 search-input">
         <div class="d-flex" style="flex: auto">
           <p-input
             id="search"
@@ -32,10 +32,9 @@
               class="form-control"
               style="width: auto"
             >
-              <option value="customer">Khách hàng</option>
-              <option value="bill_code">Hoá đơn</option>
-              <option value="order_number">Đơn hàng</option>
-              <option value="tracking">Lionbay/ Last mile tracking</option>
+              <option :value="key" v-for="(value, key) in searchBy" :key="key">
+                {{ value }}
+              </option>
             </select>
           </div>
         </div>
@@ -55,6 +54,7 @@
             <div class="card-body">
               <div class="list__bill-list">
                 <status-tab
+                  class="tab-type"
                   v-model="filter.tab"
                   :status="listTab"
                   :hasAll="false"
@@ -335,6 +335,7 @@
       :types="fee_types"
       :visible.sync="visibleCreateExtraFeeModal"
       :loading="isSubmitting"
+      :email="email"
       @save="handleSubmitExtraFee"
     >
     </modal-create-extra-fee>
@@ -425,13 +426,37 @@ export default {
     ModalExport,
     UserResource,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    email: {
+      type: String,
+      default: '',
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          customer: 'khách hàng',
+          bill_code: 'Hóa đơn',
+          order_number: 'Đơn hàng',
+          tracking: 'Lionbay/ Last mile tracking',
+        }
+      },
+    },
+    tab: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       filter: {
         page: 1,
         limit: 30,
         search: '',
-        search_by: 'customer',
         status: '',
         tab: 'bill',
       },
@@ -476,9 +501,14 @@ export default {
       isExporting: false,
     }
   },
-  mounted() {
-    this.filter = this.getRouteQuery()
-    this.init()
+  created() {
+    this.filter.search_by = this.user_id > 0 ? 'bill_code' : 'customer'
+    if (this.tab == 'bill' || this.tab == 'topup') {
+      this.filter.tab = this.tab
+    }
+    if (this.filter.tab == 'topup') {
+      this.initTopup()
+    } else this.init()
   },
   computed: {
     ...mapState('bill', {
@@ -582,7 +612,9 @@ export default {
     async init() {
       this.filter.limit = this.filter.limit != 30 ? 30 : this.filter.limit
       this.handleUpdateRouteQuery()
-
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.isFetching = true
 
       const res = await Promise.all([
@@ -601,6 +633,9 @@ export default {
     async initTopup() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       let payload = cloneDeep(this.filter)
       const result = await this[FETCH_LIST_TRANSACTIONS](payload)
       this.isFetching = false
@@ -681,7 +716,8 @@ export default {
       return (
         (transaction.type === TransactionLogTypePayoneer ||
           transaction.type === TransactionLogTypePingPong) &&
-        transaction.status === TransactionStatusProcess
+        transaction.status === TransactionStatusProcess &&
+        transaction.amount <= 0
       )
     },
     getTextType(transaction) {
@@ -701,9 +737,6 @@ export default {
       const payload = {
         id: this.selectedItem.id,
         status: status,
-        amount: this.money[this.selectedItem.id]
-          ? parseFloat(this.money[this.selectedItem.id].replaceAll(',', ''))
-          : 0,
       }
       const result = await this[CHANGE_STATUS_TRANSACTION](payload)
       this.isChangingStatus = false
@@ -740,18 +773,7 @@ export default {
       this.validateErrors = []
     },
     checkValidateMoneyAmount() {
-      const transaction = this.selectedItem
       this.resetErrors()
-      if (
-        transaction.type !== TransactionLogTypePayoneer &&
-        transaction.type !== TransactionLogTypePingPong
-      ) {
-        return true
-      }
-      if (!this.money[transaction.id]) {
-        this.validateErrors[transaction.id] = true
-        return false
-      }
       return true
     },
     handleConfirm(status, item) {
@@ -856,6 +878,11 @@ export default {
     'filter.type': function () {
       this.filter.page = 1
       this.initTopup()
+    },
+    tab: function () {
+      if (this.tab == 'bill' || this.tab == 'topup') {
+        this.filter.tab = this.tab
+      }
     },
   },
 }

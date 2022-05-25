@@ -164,14 +164,14 @@
           <li
             v-show="
               showNoResults &&
-                filteredOptions.length === 0 &&
-                search &&
-                !loading
+              filteredOptions.length === 0 &&
+              search &&
+              !loading
             "
           >
             <span class="multiselect__option">
               <slot name="noResult" :search="search"
-                >No elements found. Consider changing the search query.</slot
+                >No elements found. Consider changing the search query.2</slot
               >
             </span>
           </li>

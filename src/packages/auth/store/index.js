@@ -4,6 +4,7 @@ import {
   ROLE_WAREHOUSE,
   ROLE_SUPPORT,
   ROLE_HUB,
+  ROLE_SUPPORT_LEADER,
 } from '@core/constants'
 import api from '../api'
 import AuthService from '@core/services/auth'
@@ -210,6 +211,9 @@ export const getters = {
   },
   isWarehouse(state) {
     return state.user.role === ROLE_WAREHOUSE
+  },
+  isSupportLeader() {
+    return state.user.role === ROLE_SUPPORT_LEADER
   },
   isHub(state) {
     return state.user.role === ROLE_HUB

@@ -18,6 +18,15 @@ export const routes = [
       import(/* webpackChunkName: "settings" */ './views/User.vue'),
   },
   {
+    path: '/user/:id',
+    name: 'user-detail',
+    meta: {
+      title: 'Quản lý tài khoản khách hàng',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/UserDetail.vue'),
+  },
+  {
     path: '/prices',
     name: 'prices',
     meta: {

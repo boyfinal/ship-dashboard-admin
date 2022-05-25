@@ -2,26 +2,43 @@
   <div class="list-packages pages">
     <div class="page-content">
       <div class="d-flex jc-sb mb-12 search-input">
-        <p-input
-          :placeholder="searchPlaceholder"
-          prefixIcon="search"
-          type="search"
-          :clearable="true"
-          :value.sync="keywordSearch"
-          @keyup.enter="handleSearch"
-          @clear="clearSearch"
-        >
-        </p-input>
-        <p-select
-          class="ml-8"
-          style="width: 20%"
-          placeholder="Please select"
-          v-model="filter.search_by"
-        >
-          <option :value="key" v-for="(value, key) in searchBy" :key="key">
-            {{ value }}
-          </option>
-        </p-select>
+        <div class="group d-flex">
+          <p-input
+            :placeholder="searchPlaceholder"
+            prefixIcon="search"
+            type="search"
+            :clearable="true"
+            :value.sync="keywordSearch"
+            @keyup.enter="handleSearch"
+            @clear="clearSearch"
+          >
+          </p-input>
+          <p-select
+            class="ml-8"
+            style="width: auto"
+            placeholder="Please select"
+            v-model="filter.search_by"
+          >
+            <option :value="key" v-for="(value, key) in searchBy" :key="key">
+              {{ value }}
+            </option>
+          </p-select>
+        </div>
+
+        <div class="d-flex date-search">
+          <p-datepicker
+            :format="'dd/mm/yyyy'"
+            class="p-input-group input-group"
+            @update="selectDate"
+            :label="labelDate"
+            id="date-search"
+            :value="{
+              startDate: filter.start_date,
+              endDate: filter.end_date,
+            }"
+            @clear="clearSearchDate"
+          ></p-datepicker>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -114,7 +131,6 @@
                         </router-link>
                         <span
                           v-if="!item.validate_address"
-                          @click="handleValidateAddress(item.id)"
                           class="list-warning pull-right badge badge-round badge-warning-order"
                         >
                           <p-tooltip
@@ -247,6 +263,7 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
+import { date } from '@core/utils/datetime'
 import {
   PACKAGE_STATUS_TAB,
   MAP_NAME_STATUS_STRING_PACKAGE,
@@ -275,6 +292,25 @@ export default {
     PackageStatusTab,
     ModalExport,
   },
+  props: {
+    user_id: {
+      type: Number,
+      default: 0,
+    },
+    searchBy: {
+      type: Object,
+      default() {
+        return {
+          code: 'LionBay tracking',
+          order_number: 'Mã đơn hàng',
+          recipient: 'Người nhận',
+          account: 'Tài khoản khách hàng',
+          customer_full_name: 'Tên khách hàng',
+          tracking: 'Last mile tracking',
+        }
+      },
+    },
+  },
   data() {
     return {
       filter: {
@@ -282,6 +318,8 @@ export default {
         status: '',
         search: '',
         search_by: 'code',
+        start_date: '',
+        end_date: '',
         code: '',
       },
       labelDate: `Tìm theo ngày`,
@@ -294,21 +332,13 @@ export default {
       visibleConfirmCancel: false,
       isVisibleExport: false,
       selected: [],
-      searchBy: {
-        code: 'LionBay tracking',
-        order_number: 'Mã đơn hàng',
-        recipient: 'Người nhận',
-        account: 'Tài khoản khách hàng',
-        customer_full_name: 'Tên khách hàng',
-        tracking: 'Last mile tracking',
-      },
       PackageStatusDeactivate: PACKAGE_STATUS_DEACTIVATE,
       PackageStatusExpiredText: PACKAGE_STATUS_EXPIRED_TEXT,
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
     this.keywordSearch = this.filter.search.trim()
+    this.init()
   },
   computed: {
     ...mapState('package', {
@@ -359,12 +389,24 @@ export default {
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+      if (this.user_id > 0) {
+        this.filter.user_id = this.user_id
+      }
       this.keywordSearch = this.filter.search.trim()
       const result = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    selectDate(v) {
+      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
+    },
+    clearSearchDate() {
+      this.filter.end_date = ''
+      this.filter.start_date = ''
+      this.filter.page = 1
     },
     handleValue(e) {
       this.selected = JSON.parse(JSON.stringify(e))
