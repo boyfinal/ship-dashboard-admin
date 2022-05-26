@@ -141,7 +141,7 @@ export default {
 
       this.$emit('update:visible', false)
       this.$emit('init', true)
-      this.$toast.success('Kích hoạt thành công', { duration: 3000 })
+      this.$toast.success('Phân quyền thành công', { duration: 3000 })
     },
 
     handleSelectSupport(value) {

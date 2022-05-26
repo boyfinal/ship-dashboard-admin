@@ -176,10 +176,10 @@ export default {
 }
 </script>
 <style>
-.modal-footer {
+.modal-export .modal-footer {
   justify-content: flex-end !important;
 }
-.p-modal-content label {
+.modal-export .p-modal-content label {
   margin-bottom: 0.4rem;
 }
 </style>
