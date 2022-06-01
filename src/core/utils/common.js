@@ -121,3 +121,22 @@ export const asyncFilter = async (arr, predicate) => {
 
   return arr.filter((_v, index) => results[index])
 }
+
+/**
+ * Tính phí cao điểm
+ * @param weight
+ */
+
+export const caculateFee = (weight) => {
+  const rate = process.env.VUE_APP_RATE_EXCHANGE
+
+  if (+rate == 0) {
+    return 0
+  }
+  var fee = (+rate * weight) / 1000
+
+  if (fee < 0.1) {
+    fee = 0.1
+  }
+  return +fee
+}
