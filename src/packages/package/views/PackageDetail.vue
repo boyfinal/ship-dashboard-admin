@@ -803,7 +803,7 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
-import { cloneDeep } from '@core/utils'
+import { cloneDeep, caculateFee } from '@core/utils'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
@@ -942,12 +942,17 @@ export default {
       )
     },
     sumExtraFee() {
+      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+        return caculateFee(this.package_detail.package.weight)
+      }
+
       if (
         !this.package_detail.extra_fee ||
         this.package_detail.extra_fee.length <= 0
       ) {
         return 0
       }
+
       return this.package_detail.extra_fee.reduce((accu, curr) => ({
         amount: accu.amount + curr.amount,
       })).amount
@@ -992,14 +997,22 @@ export default {
     mapExtraFee() {
       let arr = cloneDeep(this.extraFee),
         result = []
-
-      for (const ele of arr) {
-        let index = result.findIndex(
-          (x) => x.extra_fee_types.name == ele.extra_fee_types.name
-        )
-        if (index == -1) {
-          result.push(ele)
-        } else result[index].amount += ele.amount
+      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+        result = [
+          {
+            extra_fee_types: { name: 'Phụ phí cao điểm' },
+            amount: caculateFee(this.package_detail.package.weight),
+          },
+        ]
+      } else {
+        for (const ele of arr) {
+          let index = result.findIndex(
+            (x) => x.extra_fee_types.name == ele.extra_fee_types.name
+          )
+          if (index == -1) {
+            result.push(ele)
+          } else result[index].amount += ele.amount
+        }
       }
       return result
     },
