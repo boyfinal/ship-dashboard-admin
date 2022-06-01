@@ -162,7 +162,6 @@ export default {
         return 0
       }
       var fee = (+rate * weight) / 1000
-      fee = Math.round((fee + Number.EPSILON) * 100) / 100
       if (fee < min) {
         fee = min
       }
