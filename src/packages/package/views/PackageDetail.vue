@@ -809,17 +809,18 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
 import api from '../api'
 import { truncate } from '@core/utils/string'
-import { cloneDeep, caculateFee } from '@core/utils'
+import { cloneDeep } from '@core/utils'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
 import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
 import { ROLE_SUPPORT } from '@core/constants'
+import mixinTable from '@core/mixins/table'
 
 export default {
   name: 'PackageDetail',
-  mixins: [mixinChaining],
+  mixins: [mixinChaining, mixinTable],
   components: {
     ModalEditOrder,
     ModalConfirm,
@@ -949,7 +950,7 @@ export default {
     },
     sumExtraFee() {
       if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
-        return caculateFee(this.package_detail.package.weight)
+        return this.caculateFee(this.package_detail.package.weight)
       }
 
       if (
@@ -1007,7 +1008,7 @@ export default {
         result = [
           {
             extra_fee_types: { name: 'Phụ phí cao điểm' },
-            amount: caculateFee(this.package_detail.package.weight),
+            amount: this.caculateFee(this.package_detail.package.weight),
           },
         ]
       } else {

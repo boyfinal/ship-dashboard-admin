@@ -122,21 +122,6 @@ export const asyncFilter = async (arr, predicate) => {
   return arr.filter((_v, index) => results[index])
 }
 
-/**
- * Tính phí cao điểm
- * @param weight
- */
-
-export const caculateFee = (weight) => {
-  const rate = process.env.VUE_APP_RATE_EXCHANGE
-
-  if (+rate == 0) {
-    return 0
-  }
-  var fee = (+rate * weight) / 1000
-  fee = Math.round((fee + Number.EPSILON) * 100) / 100
-  if (fee < 0.1) {
-    fee = 0.1
-  }
-  return +fee
+export const roundNumberToTwoDecimalPlaces = (v, n) => {
+  return Math.ceil(v * Math.pow(10, n)) / Math.pow(10, n)
 }

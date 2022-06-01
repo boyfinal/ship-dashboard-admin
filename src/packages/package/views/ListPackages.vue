@@ -264,7 +264,7 @@ import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
 import { date } from '@core/utils/datetime'
-import { caculateFee } from '@core/utils'
+
 import {
   PACKAGE_STATUS_CREATED_TEXT,
   PACKAGE_STATUS_TAB,
@@ -437,7 +437,7 @@ export default {
     },
     convertPrice(item) {
       if (item.status_string == PACKAGE_STATUS_CREATED_TEXT) {
-        return caculateFee(item.weight) + item.shipping_fee
+        return this.caculateFee(item.weight) + item.shipping_fee
       } else {
         return item.shipping_fee
       }
