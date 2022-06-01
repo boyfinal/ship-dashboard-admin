@@ -397,7 +397,13 @@
                       <div class="card-header">
                         <div class="card-title">Phí phát sinh</div>
                       </div>
-                      <div class="card-content" v-if="mapExtraFee.length">
+                      <div
+                        class="card-content"
+                        v-if="
+                          mapExtraFee.length ||
+                          package_detail.package.status == 1
+                        "
+                      >
                         <div
                           class="row"
                           v-for="(item, i) in mapExtraFee"
