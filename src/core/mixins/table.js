@@ -1,4 +1,5 @@
 import { cloneDeep } from '@core/utils'
+import { roundNumberToTwoDecimalPlaces } from '@core/utils'
 
 export default {
   computed: {
@@ -53,7 +54,7 @@ export default {
       return `${this.totalSelected} đơn hàng đang được chọn`
     },
     isChecked() {
-      return function(value) {
+      return function (value) {
         return (
           this.action.selected.some((e) => e.id == value.id) &&
           this.action.selected.length &&
@@ -62,7 +63,7 @@ export default {
       }
     },
     isCheckedAll() {
-      return function(value) {
+      return function (value) {
         return (
           this.action.selected.includes(value) &&
           this.action.selected &&
@@ -148,9 +149,28 @@ export default {
       }
       this.$set(this.action, 'selected', selected)
     },
+
+    /**
+     * Tính phí cao điểm
+     * @param weight
+     */
+
+    caculateFee(weight) {
+      const rate = this.$store.state.shared.configs.extra_fee
+      const min = +rate * 0.1
+      if (+rate == 0) {
+        return 0
+      }
+      var fee = (+rate * weight) / 1000
+      fee = Math.round((fee + Number.EPSILON) * 100) / 100
+      if (fee < min) {
+        fee = min
+      }
+      return roundNumberToTwoDecimalPlaces(+fee, 2)
+    },
   },
   watch: {
-    $route: function() {
+    $route: function () {
       if (this.action.selected) {
         this.$set(this.action, 'selected', [])
       }
