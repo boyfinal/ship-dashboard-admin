@@ -134,7 +134,7 @@ export const caculateFee = (weight) => {
     return 0
   }
   var fee = (+rate * weight) / 1000
-
+  fee = Math.round((fee + Number.EPSILON) * 100) / 100
   if (fee < 0.1) {
     fee = 0.1
   }
