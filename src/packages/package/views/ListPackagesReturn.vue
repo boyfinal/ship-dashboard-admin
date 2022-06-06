@@ -109,13 +109,15 @@
                       }}</span>
                       <span v-else>N/A</span>
                     </td>
-                    <td
-                      v-if="
-                        item.description == 'Return' || item.description == ''
-                      "
-                      >N/A</td
-                    >
-                    <td v-else>{{ item.description }}</td>
+                    <td>
+                      <span
+                        v-if="
+                          item.description == 'Return' || item.description == ''
+                        "
+                        >N/A</span
+                      >
+                      <span v-else>{{ item.description }}</span>
+                    </td>
                     <td>{{
                       item.package_return_id ? `Đã gửi lý do` : `Chưa gửi lý do`
                     }}</td>
