@@ -560,9 +560,9 @@ export default {
           date = 0
         } else {
           var distance = today - day_user
-          date = Math.floor(distance / (1000 * 60 * 60 * 24))
+          date = distance / (1000 * 60 * 60 * 24)
         }
-        debt_day = this.userInfo.user_info.debt_max_day - date
+        debt_day = Math.floor(this.userInfo.user_info.debt_max_day - date)
 
         return debt_day > 0 ? ` (Còn ${debt_day} ngày)` : `(Còn 0 ngày)`
       }
