@@ -562,9 +562,16 @@ export default {
           var distance = today - day_user
           date = distance / (1000 * 60 * 60 * 24)
         }
-        debt_day = Math.floor(this.userInfo.user_info.debt_max_day - date)
-
-        return debt_day > 0 ? ` (Còn ${debt_day} ngày)` : `(Còn 0 ngày)`
+        debt_day = this.userInfo.user_info.debt_max_day - date
+        let text =  `(Còn 0 ngày)`
+        if(debt_day >= 1){
+            text =  `(Còn ${Math.floor(debt_day)} ngày)`
+        }else if(debt_day*24 >= 1){
+            text =  `(Còn ${Math.floor(debt_day*24)} giờ)`
+        }else if(debt_day*24*60 >= 1){
+            text =  `(Còn ${Math.floor(debt_day*24*60)} phút)`
+        }
+        return text
       }
       return ''
     },
