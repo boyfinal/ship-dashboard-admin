@@ -53,6 +53,7 @@
                     <th>Khách hàng</th>
                     <th>Ngày trả hàng</th>
                     <th>Ngày kho nhận</th>
+                    <th>Lý do</th>
                     <th>Trạng thái</th>
                     <th v-if="showBtn"></th>
                   </tr>
@@ -108,6 +109,13 @@
                       }}</span>
                       <span v-else>N/A</span>
                     </td>
+                    <td
+                      v-if="
+                        item.description == 'Return' || item.description == ''
+                      "
+                      >N/A</td
+                    >
+                    <td v-else>{{ item.description }}</td>
                     <td>{{
                       item.package_return_id ? `Đã gửi lý do` : `Chưa gửi lý do`
                     }}</td>
