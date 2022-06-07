@@ -49,4 +49,7 @@ export default {
   readNotification(payload) {
     return http.get(`/users/notifications/read/${payload}`)
   },
+  getConfigs() {
+    return http.get(`/configs`)
+  },
 }

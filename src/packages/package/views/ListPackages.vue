@@ -233,7 +233,7 @@
                         </p-tooltip>
                       </span>
                     </td>
-                    <td>{{ item.shipping_fee | formatPrice }}</td>
+                    <td>{{ convertPrice(item) | formatPrice }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -264,7 +264,9 @@ import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
 import { date } from '@core/utils/datetime'
+
 import {
+  PACKAGE_STATUS_CREATED_TEXT,
   PACKAGE_STATUS_TAB,
   MAP_NAME_STATUS_STRING_PACKAGE,
   PACKAGE_STATUS_DEACTIVATE,
@@ -432,6 +434,13 @@ export default {
         'danh_sach_van_don_'
       )
       this.isVisibleExport = false
+    },
+    convertPrice(item) {
+      if (item.status_string == PACKAGE_STATUS_CREATED_TEXT) {
+        return this.caculateFee(item.weight) + item.shipping_fee
+      } else {
+        return item.shipping_fee
+      }
     },
     description(alert) {
       switch (alert) {

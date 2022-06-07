@@ -397,7 +397,13 @@
                       <div class="card-header">
                         <div class="card-title">Phí phát sinh</div>
                       </div>
-                      <div class="card-content" v-if="mapExtraFee.length">
+                      <div
+                        class="card-content"
+                        v-if="
+                          mapExtraFee.length ||
+                          package_detail.package.status == 1
+                        "
+                      >
                         <div
                           class="row"
                           v-for="(item, i) in mapExtraFee"
@@ -810,10 +816,11 @@ import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
 import { ROLE_SUPPORT } from '@core/constants'
+import mixinTable from '@core/mixins/table'
 
 export default {
   name: 'PackageDetail',
-  mixins: [mixinChaining],
+  mixins: [mixinChaining, mixinTable],
   components: {
     ModalEditOrder,
     ModalConfirm,
@@ -942,12 +949,17 @@ export default {
       )
     },
     sumExtraFee() {
+      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+        return this.caculateFee(this.package_detail.package.weight)
+      }
+
       if (
         !this.package_detail.extra_fee ||
         this.package_detail.extra_fee.length <= 0
       ) {
         return 0
       }
+
       return this.package_detail.extra_fee.reduce((accu, curr) => ({
         amount: accu.amount + curr.amount,
       })).amount
@@ -992,14 +1004,22 @@ export default {
     mapExtraFee() {
       let arr = cloneDeep(this.extraFee),
         result = []
-
-      for (const ele of arr) {
-        let index = result.findIndex(
-          (x) => x.extra_fee_types.name == ele.extra_fee_types.name
-        )
-        if (index == -1) {
-          result.push(ele)
-        } else result[index].amount += ele.amount
+      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+        result = [
+          {
+            extra_fee_types: { name: 'Phụ phí cao điểm' },
+            amount: this.caculateFee(this.package_detail.package.weight),
+          },
+        ]
+      } else {
+        for (const ele of arr) {
+          let index = result.findIndex(
+            (x) => x.extra_fee_types.name == ele.extra_fee_types.name
+          )
+          if (index == -1) {
+            result.push(ele)
+          } else result[index].amount += ele.amount
+        }
       }
       return result
     },

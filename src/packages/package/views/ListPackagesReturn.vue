@@ -53,6 +53,7 @@
                     <th>Khách hàng</th>
                     <th>Ngày trả hàng</th>
                     <th>Ngày kho nhận</th>
+                    <th>Lý do</th>
                     <th>Trạng thái</th>
                     <th v-if="showBtn"></th>
                   </tr>
@@ -107,6 +108,15 @@
                         item.hub_imported_at | date('dd/MM/yyyy')
                       }}</span>
                       <span v-else>N/A</span>
+                    </td>
+                    <td>
+                      <span
+                        v-if="
+                          item.description == 'Return' || item.description == ''
+                        "
+                        >N/A</span
+                      >
+                      <span v-else>{{ item.description }}</span>
                     </td>
                     <td>{{
                       item.package_return_id ? `Đã gửi lý do` : `Chưa gửi lý do`

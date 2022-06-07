@@ -24,7 +24,7 @@ import '@assets/fonts/material-design/material-design.min.css'
 import '@assets/fonts/web-icons/web-icons.min.css'
 import PHeader from './Header'
 import PSidebar from './Sidebar'
-import { GET_USER } from '../../../packages/shared/store'
+import { GET_USER, GET_CONFIGS } from '../../../packages/shared/store'
 import firebase from '../../../core/services/firebase'
 export default {
   name: 'Version2',
@@ -51,9 +51,19 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions('shared', [GET_USER]),
+    ...mapActions('shared', [GET_USER, GET_CONFIGS]),
     async init() {
       await this.getUser()
+
+      const result = await this[GET_CONFIGS]()
+
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 4000,
+        })
+      }
     },
     toggleShowSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen

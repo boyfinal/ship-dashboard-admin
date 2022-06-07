@@ -34,6 +34,7 @@
                       <th>LIONBAY TRACKING</th>
                       <th>NGÀY RETURN</th>
                       <th>NGÀY NHẬP KHO</th>
+                      <th>LÝ DO</th>
                       <th>TRẠNG THÁI</th>
                       <th></th>
                     </template>
@@ -64,6 +65,15 @@
                         item.hub_imported_at | date('dd/MM/yyyy')
                       }}</span>
                       <span v-else>N/A</span>
+                    </td>
+                    <td>
+                      <span
+                        v-if="
+                          item.description == 'Return' || item.description == ''
+                        "
+                        >N/A</span
+                      >
+                      <span v-else>{{ item.description }}</span>
                     </td>
                     <td>
                       <span
