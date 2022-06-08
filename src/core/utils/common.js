@@ -121,3 +121,7 @@ export const asyncFilter = async (arr, predicate) => {
 
   return arr.filter((_v, index) => results[index])
 }
+
+export const roundNumberToTwoDecimalPlaces = (v, n) => {
+  return Math.ceil(v * Math.pow(10, n)) / Math.pow(10, n)
+}

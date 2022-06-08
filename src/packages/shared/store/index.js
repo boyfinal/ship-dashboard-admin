@@ -16,6 +16,7 @@ export const READ_NOTIFICATIONS = 'readNotifications'
 export const READ_NOTIFICATION = 'readNotification'
 export const GET_COUNT = 'getCount'
 export const GET_NOTIFICATION = 'getNotification'
+export const GET_CONFIGS = 'getConfigs'
 
 import union from 'lodash/union'
 import addresses from '../../../assets/json/address.json'
@@ -32,6 +33,7 @@ export const state = {
   notificationAll: [],
   countNoti: 0,
   countNotiAll: 0,
+  configs: {},
 }
 
 export const getters = {
@@ -54,6 +56,9 @@ export const getters = {
 export const mutations = {
   [GET_USER]: (state, payload) => {
     state.user = payload
+  },
+  [GET_CONFIGS]: (state, payload) => {
+    state.configs = payload
   },
   [FETCH_ADDRESSES]: (state, payload) => {
     state.addresses = payload
@@ -268,6 +273,24 @@ export const actions = {
     }
     commit(FETCH_NOTIFICATIONS_ALL, list.notifications)
     commit(COUNT_NOTIFICATIONS_ALL, count.count)
+    return result
+  },
+  /**
+   *
+   * @param commit
+   * @param payload
+   * @return {Promise<{success: boolean}>}
+   */
+  async getConfigs({ commit }) {
+    let result = { success: true }
+    let response = await api.getConfigs()
+
+    if ((response && response.errorMessage) || !response.config) {
+      result = { success: false, message: response.errorMessage }
+      response.config = {}
+    }
+
+    commit(GET_CONFIGS, response.config)
     return result
   },
 }
