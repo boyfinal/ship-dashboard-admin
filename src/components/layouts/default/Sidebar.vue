@@ -129,9 +129,9 @@ export default {
               alias: ['/claims', '/claims/:id'],
             },
             {
-              route: '/bills',
+              route: '/debt',
               title: 'Tài chính',
-              alias: ['/bills', '/bills/:code'],
+              alias: ['/bills', '/bills/:code', '/debt'],
               disable: this.$isSupportLeader(),
             },
             {
