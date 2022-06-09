@@ -10,6 +10,7 @@
           :search="filter.search"
           :label="`Tìm khách hàng`"
           :emitID="false"
+          :is-tester="isTester"
           @input="handleSearch"
         />
         <button
@@ -226,6 +227,9 @@ export default {
         limit: 30,
         search: '',
       },
+      isTester: this.$route.query.tester
+        ? parseInt(this.$route.query.tester)
+        : 0,
       isFetching: false,
       visibleExportModal: false,
       isExporting: false,
@@ -350,7 +354,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,

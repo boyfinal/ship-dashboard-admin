@@ -39,6 +39,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    isTester: {
+      type: Number,
+      default: 0,
+    },
     label: {
       type: String,
       default: 'Search user',
@@ -65,13 +69,14 @@ export default {
     }
   },
   created() {
-    this.handleSearch = debounce(async function (search = '') {
+    this.handleSearch = debounce(async function(search = '') {
       this.isLoading = true
       let response = await api.fetchUsersByRole(
         Object.assign({}, this.filter, {
           search: search,
           not_limit: true,
           status: 1,
+          tester: this.isTester,
         })
       )
       if (response && response.errorMessage) {
