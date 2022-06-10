@@ -200,12 +200,15 @@
       :title="`Xác nhận hủy`"
       @action="handleCancelContainer"
     ></modal-confirm>
-    <modal-close-container
+    <modal-choice-shipping-box
+      :boxes="boxes"
+      @save="handlerClose"
       :visible.sync="visibleModalClose"
-      :actionConfirm="`Xác nhận`"
       :cancel="`Hủy`"
-      @action="handlerClose"
-    ></modal-close-container>
+      :actionConfirm="`Xác nhận`"
+      :title="'Xác nhận đóng kiện'"
+    >
+    </modal-choice-shipping-box>
   </div>
 </template>
 
@@ -215,7 +218,6 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import mixinBarcode from '@core/mixins/barcode'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
-import ModalCloseContainer from '../components/ModalCloseContainer'
 
 import {
   APPEND_PACKAGE_TO_CONTAINER,
@@ -227,6 +229,7 @@ import {
 } from '../store'
 
 import { CONTAINER_WAITING_CLOSE } from '../contants'
+import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
 
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -239,7 +242,7 @@ export default {
   components: {
     EmptySearchResult,
     ModalConfirm,
-    ModalCloseContainer,
+    ModalChoiceShippingBox,
   },
   data() {
     return {
@@ -261,6 +264,7 @@ export default {
       container_detail: (state) => state.container_detail,
       packages_in_container: (state) => state.packages_in_container,
       count: (state) => state.count_packages_in_container,
+      boxes: (state) => state.boxes,
     }),
     items() {
       return this.packages_in_container.map((item) => {
@@ -368,8 +372,8 @@ export default {
     showModalClose() {
       this.visibleModalClose = true
     },
-    async handlerClose(weight) {
-      if (weight <= 0) {
+    async handlerClose(body) {
+      if (body.weight <= 0) {
         this.$toast.open({
           message: 'Trọng lượng phải lớn hơn 0',
           type: 'error',
@@ -378,10 +382,10 @@ export default {
       }
       this.visibleModalClose = false
 
-      const payload = {
-        id: parseInt(this.container_detail.id),
-        weight: +weight,
-      }
+      const payload = Object.assign(
+        { id: parseInt(this.container_detail.id) },
+        body
+      )
       const result = await this[CLOSE_CONTAINER](payload)
       if (!result.success) {
         this.$toast.open({
