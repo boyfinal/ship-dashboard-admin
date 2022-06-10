@@ -1,13 +1,13 @@
 <template>
   <div class="pages">
     <iframe
-      style="overflow: hidden; width: 100%"
+      style="overflow: hidden; width: 100%; height: 100vh"
       width="600"
       height="1500"
       seamless
       frameBorder="0"
       scrolling="yes"
-      :src="`https://superset.lionnix.com/login?username=admin`"
+      :src="`https://superset.lionnix.com/login?username=view&redirect=/superset/dashboard/12`"
     >
     </iframe>
   </div>
