@@ -113,6 +113,11 @@ export default {
           disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
+              route: '/statistics',
+              title: ' Thống kê',
+              alias: ['/statistics'],
+            },
+            {
               route: '/packages',
               title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
