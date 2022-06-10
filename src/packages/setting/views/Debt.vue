@@ -28,7 +28,6 @@
               <table class="table table-hover table-cumtomers">
                 <thead>
                   <tr>
-                    <th width="8"></th>
                     <th width="120">Khách hàng</th>
                     <th width="300">Email</th>
                     <th max-width="50">Loại tài khoản</th>
@@ -42,12 +41,6 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in displayUsers" :key="i">
-                    <td width="8" class="user-status">
-                      <i
-                        class="fa fa-circle"
-                        :class="{ active: item.active }"
-                      ></i>
-                    </td>
                     <td class="user-fullname">
                       <p-tooltip
                         :label="item.full_name"
@@ -140,7 +133,7 @@
                         <a
                           href="#"
                           class="btn_action ml-2"
-                          v-if="!$isSupport()"
+                          v-if="$isAdmin()"
                           @click.prevent="editUser(item.id)"
                         >
                           <p-tooltip
@@ -226,6 +219,7 @@ export default {
       filter: {
         limit: 30,
         search: '',
+        status: USER_STATUS_ACTIVE,
       },
       isTester: this.$route.query.tester
         ? parseInt(this.$route.query.tester)
@@ -354,7 +348,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
