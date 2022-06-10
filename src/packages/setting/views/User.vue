@@ -44,6 +44,7 @@
                     <td>
                       <router-link
                         v-if="!$isSupport()"
+                        class="text-no-underline"
                         :to="{
                           name: 'user-detail',
                           params: {
