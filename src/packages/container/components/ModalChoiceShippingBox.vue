@@ -224,7 +224,7 @@ export default {
       if (this.type < this.maxIDBox + 1) {
         this.box = this.boxes.find((i) => i.id == this.type)
       }
-      if (!this.valider.check(this.box)) {
+      if (!this.valider.check(this.box) && !this.isCreate) {
         return
       }
       let payload = {}
