@@ -116,6 +116,12 @@ export default {
               route: '/statistics',
               title: ' Thống kê',
               alias: ['/statistics'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
+                this.$isWarehouse(),
             },
             {
               route: '/packages',
