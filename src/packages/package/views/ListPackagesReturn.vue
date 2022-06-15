@@ -296,8 +296,6 @@ export default {
       this.isVisibleModal = true
     },
     async handleUpdate(params) {
-      this.isVisibleModal = false
-
       if (this.isSubmitting) return
 
       this.isSubmitting = true
@@ -308,6 +306,8 @@ export default {
         this.$toast.error(result.message, { duration: 3000 })
         return
       }
+
+      this.isVisibleModal = false
       this.$toast.success('Reship hàng thành công', { duration: 3000 })
       await this.init()
     },
