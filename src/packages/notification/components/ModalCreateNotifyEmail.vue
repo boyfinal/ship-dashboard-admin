@@ -397,7 +397,7 @@ export default {
   },
   watch: {
     visible: {
-      handler: function(v) {
+      handler: function (v) {
         if (v) {
           Object.assign(this.$data, this.initialData())
           if (this.showDetail) {

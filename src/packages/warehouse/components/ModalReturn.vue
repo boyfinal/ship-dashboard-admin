@@ -2,15 +2,22 @@
   <p-modal :active="visible" @close="handleClose" title="Trả hàng">
     <div class="row mb-24">
       <div class="col-6">
-        <p>LionBay Tracking: {{ code }}</p>
+        <p>Mã đơn hàng: {{ code || code2 }}</p>
       </div>
       <div class="col-6">
         <p>Chi tiết hàng hoá: {{ current.detail }}</p>
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label mb-10">Lý do:</label>
-      <textarea class="form-control" v-model="note"></textarea>
+      <label class="form-label mb-10"
+        >Lý do: <span style="color: #f5222d">*</span></label
+      >
+      <textarea
+        class="form-control"
+        style="min-height: 120px"
+        v-model="note"
+        placeholder="Nhập lý do"
+      ></textarea>
     </div>
     <template slot="footer">
       <div></div>
@@ -46,6 +53,9 @@ export default {
       return this.current && this.current.package_code
         ? this.current.package_code.code
         : ''
+    },
+    code2() {
+      return this.current && this.current.code ? this.current.code : ''
     },
   },
   data() {

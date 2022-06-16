@@ -28,7 +28,7 @@
               <table class="table table-hover table-notify-emails">
                 <thead>
                   <tr>
-                    <th style="width: 30%;">Tiêu đề</th>
+                    <th style="width: 30%">Tiêu đề</th>
                     <th>người gửi</th>
                     <th class="text-left" width="300">Thời gian</th>
                     <th class="text-left" width="180">Trạng thái</th>
@@ -252,7 +252,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

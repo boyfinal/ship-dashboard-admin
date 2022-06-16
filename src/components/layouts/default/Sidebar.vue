@@ -384,7 +384,7 @@ export default {
     },
   },
   watch: {
-    isSidebarOpen: function(value) {
+    isSidebarOpen: function (value) {
       if (!value) {
         this.menus = this.menus.map((obj) =>
           obj.isOpen == true ? { ...obj, isOpen: false } : obj
