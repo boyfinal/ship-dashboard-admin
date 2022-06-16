@@ -36,11 +36,13 @@
               <VclTable class="mt-20" v-if="isLoading"></VclTable>
               <ul v-else>
                 <li
-                  :title="item.email"
+                  :title="getTitleUser(item)"
                   :class="{ tick: checkedLeft.includes(item.id) }"
                   @click="setCheckedLeft(item)"
                   v-for="(item, i) in users"
                   :key="i"
+                  ><template v-if="item.full_name"
+                    >{{ item.full_name }} - </template
                   >{{ item.email }}</li
                 >
               </ul>
@@ -115,21 +117,25 @@
               <ul>
                 <template v-if="searchSelected">
                   <li
-                    :title="item.email"
+                    :title="getTitleUser(item)"
                     :class="{ tick: checkedRight.includes(item.id) }"
                     @click="setCheckedRight(item)"
                     v-for="(item, i) in searchSelectedResult"
                     :key="i"
+                    ><template v-if="item.full_name"
+                      >{{ item.full_name }} - </template
                     >{{ item.email }}</li
                   >
                 </template>
                 <template v-else>
                   <li
-                    :title="item.email"
+                    :title="getTitleUser(item)"
                     :class="{ tick: checkedRight.includes(item.id) }"
                     @click="setCheckedRight(item)"
                     v-for="(item, i) in selected"
                     :key="i"
+                    ><template v-if="item.full_name"
+                      >{{ item.full_name }} - </template
                     >{{ item.email }}</li
                   >
                 </template>
@@ -227,6 +233,12 @@ export default {
     }
   },
   methods: {
+    getTitleUser(user) {
+      if (user.full_name) {
+        return `${user.full_name} - ${user.email}`
+      }
+      return ` ${user.email}`
+    },
     initialData() {
       return {
         maxStrLengthTitle: 50,
@@ -390,14 +402,14 @@ export default {
     },
     searchSelectUser(search) {
       let reg = new RegExp(search, 'i')
-      this.searchSelectedResult = this.selected.filter((item) =>
-        reg.test(item.email)
-      )
+      this.searchSelectedResult = this.selected.filter((item) => {
+        return reg.test(item.email) || reg.test(item.full_name)
+      })
     },
   },
   watch: {
     visible: {
-      handler: function (v) {
+      handler: function(v) {
         if (v) {
           Object.assign(this.$data, this.initialData())
           if (this.showDetail) {
