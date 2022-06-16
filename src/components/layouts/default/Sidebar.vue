@@ -155,7 +155,12 @@ export default {
               route: '/notify/email',
               title: 'Thông báo',
               alias: ['/notify/email'],
-              disable: this.$isAccountant(),
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
           ],
         },
