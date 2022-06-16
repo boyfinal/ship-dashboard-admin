@@ -58,7 +58,7 @@ export default {
     return http.put(`/packages/cancel`, payload)
   },
   returnPackage(payload) {
-    return http.post(`/warehouses/packages/${payload.id}/return`, payload)
+    return http.post(`/warehouses/packages/return`, payload)
   },
   exportWarehousePackage(payload) {
     return http.post('/packages-in-warehouse', payload, {

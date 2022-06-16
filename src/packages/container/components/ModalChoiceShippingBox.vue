@@ -16,7 +16,7 @@
     </div>
     <div v-else>
       <div class="row">
-        <div class="col-6">
+        <div :class="classInput">
           <label for=""><b>Loại:</b></label>
           <p-select class="floating" v-model="type" name="type">
             <option value="0">Chọn một loại</option>
@@ -26,7 +26,7 @@
             <option :value="maxIDBox + 1">Khác</option>
           </p-select>
         </div>
-        <div class="col-6">
+        <div :class="classInput">
           <label for=""><b>Cân nặng:</b> (kg)</label>
           <p-input
             type="number"
@@ -35,6 +35,20 @@
             v-model.number="weight"
             :error="valider.error('weight')"
           />
+        </div>
+        <div class="col-4" v-if="type < maxIDBox + 1">
+          <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
+          <p-select
+            :disabled="true"
+            class="floating"
+            v-model="type"
+            name="weight"
+          >
+            <option value="0">Chọn cân nặng tối đa</option>
+            <option v-for="box in boxes" :key="box.id" :value="box.id">{{
+              box.max_weight
+            }}</option>
+          </p-select>
         </div>
       </div>
       <br />
@@ -199,6 +213,9 @@ export default {
         })
       )
     },
+    classInput() {
+      return this.type < this.maxIDBox + 1 ? 'col-4' : 'col-6'
+    },
   },
   data() {
     return {
@@ -207,6 +224,7 @@ export default {
         height: 0,
         length: 0,
         width: 0,
+        max_weight: 0,
       },
       weight: 0,
       warehouse: {},
@@ -222,7 +240,13 @@ export default {
     },
     async handleSave() {
       if (this.type < this.maxIDBox + 1) {
-        this.box = this.boxes.find((i) => i.id == this.type)
+        this.box = { ...this.boxes.find((i) => i.id == this.type) }
+        if (this.weight > this.box.max_weight) {
+          this.$toast.open({
+            message: 'Vượt quá cân nặng tối đa',
+            type: 'error',
+          })
+        }
       }
       if (!this.valider.check(this.box) && !this.isCreate) {
         return
