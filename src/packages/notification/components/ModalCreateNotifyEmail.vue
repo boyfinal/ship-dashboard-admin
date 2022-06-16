@@ -32,7 +32,8 @@
               v-model="search"
             >
             </p-input>
-            <ul class="list-user-select">
+            <VclTable class="mt-20" v-if="isLoading"></VclTable>
+            <ul class="list-user-select" v-else>
               <li
                 :title="item.email"
                 :class="{ tick: checkedLeft.includes(item.id) }"
@@ -150,12 +151,13 @@
           type="default"
           @click="handleSaveNoti"
           :disabled="disableAction"
+          :loading="isLoading"
         >
           Lưu
         </p-button>
         <p-button
           type="info"
-          :loading="loading"
+          :loading="isLoading"
           @click="handleSendNoti"
           :disabled="disableAction"
         >
@@ -208,7 +210,7 @@ export default {
       search: '',
       searchSelected: '',
       searchSelectedResult: [],
-      loading: false,
+      isLoading: false,
       users: [],
       selected: [],
       checkedLeft: [],
@@ -231,7 +233,7 @@ export default {
         search: '',
         searchSelected: '',
         searchSelectedResult: [],
-        loading: false,
+        isLoading: false,
         users: [],
         selected: [],
         checkedLeft: [],
@@ -244,6 +246,7 @@ export default {
       }
     },
     async init() {
+      this.isLoading = true
       let payload = {
         search: this.search,
         not_limit: true,
@@ -251,13 +254,12 @@ export default {
         role: 'customer',
       }
       let response = await api.fetchUsersByRole(payload)
+      this.isLoading = false
       if (response && response.errorMessage) {
         this.users = []
         return
       }
       if (this.showDetail) {
-        this.title = this.notify.title
-        this.body = this.notify.body
         const selectedIDs = this.notify.receiver_ids
         this.selected = response.users.filter((i) => {
           return selectedIDs.indexOf(i.id) > -1
@@ -394,6 +396,10 @@ export default {
       handler: function(v) {
         if (v) {
           Object.assign(this.$data, this.initialData())
+          if (this.showDetail) {
+            this.title = this.notify.title
+            this.body = this.notify.body
+          }
           this.init()
         }
       },

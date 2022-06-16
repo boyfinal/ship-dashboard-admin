@@ -40,7 +40,7 @@
                     <td>
                       <b>{{ item.title }}</b>
                     </td>
-                    <td>{{ item.title }}</td>
+                    <td>{{ item.sender ? item.sender.fullname : '' }}</td>
                     <td class="text-left">{{
                       item.created_at | datetime('dd/MM/yyyy - HH:mm:s')
                     }}</td>
