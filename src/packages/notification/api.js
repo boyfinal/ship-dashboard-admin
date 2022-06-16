@@ -14,4 +14,7 @@ export default {
   createNotifyEmail(payload) {
     return http.post(`/notifies/email`, payload)
   },
+  sendNotifyEmail(payload) {
+    return http.put(`/notifies/email/send/${payload.id}`)
+  },
 }

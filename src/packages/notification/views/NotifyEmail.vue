@@ -52,6 +52,7 @@
                       <p-button
                         type="info"
                         class="btn-send"
+                        @click="confirmSendNotiEmail(item.id)"
                         v-if="showBtnSendNoti(item.status)"
                       >
                         Gửi
@@ -102,6 +103,7 @@ import {
   FETCH_LIST_NOTIFY_EMAIL,
   CREATE_NOTIFY_EMAIL,
   FETCH_DETAIL_NOTIFY_EMAIL,
+  SEND_NOTIFY_EMAIL,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
 import { NOTIFY_EMAIL_NOT_SEND, NOTIFY_EMAIL_SENT } from '../constant'
@@ -141,6 +143,7 @@ export default {
       FETCH_LIST_NOTIFY_EMAIL,
       CREATE_NOTIFY_EMAIL,
       FETCH_DETAIL_NOTIFY_EMAIL,
+      SEND_NOTIFY_EMAIL,
     ]),
     async init() {
       this.isFetching = true
@@ -167,6 +170,33 @@ export default {
       }
       this.visibleCreateNotiModal = true
       this.isShowDetail = true
+    },
+    confirmSendNotiEmail(id) {
+      this.$dialog.confirm({
+        title: 'Bạn có chắc chắn muốn gửi thông báo không ?',
+        onConfirm: () => this.handleSendNotifyEmail(id),
+      })
+    },
+    async handleSendNotifyEmail(id) {
+      this.isSubmitting = true
+      const payload = {
+        id: id,
+      }
+      const result = await this[SEND_NOTIFY_EMAIL](payload)
+      this.isSubmitting = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
+        return
+      }
+
+      this.$toast.open({
+        type: 'success',
+        message: 'Gửi thông báo thành công',
+      })
+      this.init()
     },
     async handleSaveNotifyEmail(payload) {
       this.isSubmitting = true
