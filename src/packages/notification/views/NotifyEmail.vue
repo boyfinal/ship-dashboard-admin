@@ -118,7 +118,7 @@ export default {
     return {
       filter: {
         page: 1,
-        limit: 5,
+        limit: 30,
         search: '',
       },
       isShowDetail: false,
@@ -252,7 +252,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,
