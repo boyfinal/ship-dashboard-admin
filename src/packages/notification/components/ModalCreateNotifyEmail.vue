@@ -207,11 +207,16 @@ export default {
       return this.selected.map((i) => i.id)
     },
     disableAction() {
-      return this.showDetail && this.notify.status === NOTIFY_EMAIL_SENT
+      return (
+        this.showDetail &&
+        this.notify.status === NOTIFY_EMAIL_SENT &&
+        !this.enableAction
+      )
     },
   },
   data() {
     return {
+      enableAction: true,
       maxStrLengthTitle: 50,
       titleErr: '',
       bodyErr: '',
@@ -241,6 +246,7 @@ export default {
     },
     initialData() {
       return {
+        enableAction: true,
         maxStrLengthTitle: 50,
         titleErr: '',
         bodyErr: '',
@@ -292,8 +298,12 @@ export default {
     },
     validateTilteNotify(e) {
       if (e.length > this.maxStrLengthTitle) {
+        this.enableAction = false
         this.titleErr = `Tiêu đề không vượt quá ${this.maxStrLengthTitle} ký tự`
         this.title = e.slice(0, -1)
+      } else {
+        this.titleErr = ''
+        this.enableAction = true
       }
     },
     validateContent() {
