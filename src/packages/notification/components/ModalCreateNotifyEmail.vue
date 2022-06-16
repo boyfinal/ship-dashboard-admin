@@ -32,21 +32,19 @@
               v-model="search"
             >
             </p-input>
-            <VclTable
-              class="mt-20"
-              v-if="isLoading"
-              style="width:241px"
-            ></VclTable>
-            <ul class="list-user-select" v-else>
-              <li
-                :title="item.email"
-                :class="{ tick: checkedLeft.includes(item.id) }"
-                @click="setCheckedLeft(item)"
-                v-for="(item, i) in users"
-                :key="i"
-                >{{ item.email }}</li
-              >
-            </ul>
+            <div class="list-user-select">
+              <VclTable class="mt-20" v-if="isLoading"></VclTable>
+              <ul v-else>
+                <li
+                  :title="item.email"
+                  :class="{ tick: checkedLeft.includes(item.id) }"
+                  @click="setCheckedLeft(item)"
+                  v-for="(item, i) in users"
+                  :key="i"
+                  >{{ item.email }}</li
+                >
+              </ul>
+            </div>
           </div>
           <div class="action">
             <div class="icon-container">
@@ -113,28 +111,30 @@
               @input="searchSelectUser"
             >
             </p-input>
-            <ul class="list-user-select">
-              <template v-if="searchSelected">
-                <li
-                  :title="item.email"
-                  :class="{ tick: checkedRight.includes(item.id) }"
-                  @click="setCheckedRight(item)"
-                  v-for="(item, i) in searchSelectedResult"
-                  :key="i"
-                  >{{ item.email }}</li
-                >
-              </template>
-              <template v-else>
-                <li
-                  :title="item.email"
-                  :class="{ tick: checkedRight.includes(item.id) }"
-                  @click="setCheckedRight(item)"
-                  v-for="(item, i) in selected"
-                  :key="i"
-                  >{{ item.email }}</li
-                >
-              </template>
-            </ul>
+            <div class="list-user-select">
+              <ul>
+                <template v-if="searchSelected">
+                  <li
+                    :title="item.email"
+                    :class="{ tick: checkedRight.includes(item.id) }"
+                    @click="setCheckedRight(item)"
+                    v-for="(item, i) in searchSelectedResult"
+                    :key="i"
+                    >{{ item.email }}</li
+                  >
+                </template>
+                <template v-else>
+                  <li
+                    :title="item.email"
+                    :class="{ tick: checkedRight.includes(item.id) }"
+                    @click="setCheckedRight(item)"
+                    v-for="(item, i) in selected"
+                    :key="i"
+                    >{{ item.email }}</li
+                  >
+                </template>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -474,5 +474,18 @@ export default {
 }
 .select-user-receiver {
   display: flex;
+}
+
+.list-user-select::-webkit-scrollbar-track {
+  width: 4px;
+  background: #fff;
+}
+.list-user-select::-webkit-scrollbar,
+.list-user-select::-webkit-scrollbar-thumb {
+  width: 4px;
+  height: 80px;
+  background: #e1e2e2;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>
