@@ -7,19 +7,17 @@
       seamless
       frameBorder="0"
       scrolling="yes"
-      :src="`https://superset.lionnix.com/login?username=view&redirect=/superset/dashboard/13`"
+      :src="`https://superset.lionnix.com/login?username=view&redirect=${getLink}`"
     >
     </iframe>
   </div>
 </template>
 <script>
-import AuthService from '@core/services/auth'
-
 export default {
   name: 'Statistics',
   computed: {
-    getToken() {
-      return AuthService.getAccessToken()
+    getLink() {
+      return `${process.env.VUE_APP_SUPERSET}`
     },
   },
 }
