@@ -116,6 +116,12 @@ export default {
               route: '/statistics',
               title: ' Thống kê',
               alias: ['/statistics'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
+                this.$isWarehouse(),
             },
             {
               route: '/packages',
@@ -146,10 +152,15 @@ export default {
               disable: this.$isSupportLeader(),
             },
             {
-              route: '/user',
-              title: 'Tài khoản khách hàng',
-              alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant(),
+              route: '/notify/email',
+              title: 'Thông báo',
+              alias: ['/notify/email'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
           ],
         },
@@ -285,7 +296,7 @@ export default {
           sub: [
             {
               route: '/account',
-              title: 'Tài khoản',
+              title: 'Tài khoản admin',
               alias: ['/account'],
               disable:
                 this.$isAccountant() ||
@@ -293,6 +304,12 @@ export default {
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader(),
+            },
+            {
+              route: '/user',
+              title: 'Tài khoản khách hàng',
+              alias: ['/user', '/user/:id'],
+              disable: this.$isAccountant(),
             },
             {
               route: '',
