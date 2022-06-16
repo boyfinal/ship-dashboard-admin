@@ -7,7 +7,7 @@
       seamless
       frameBorder="0"
       scrolling="yes"
-      :src="`https://superset.lionnix.com/login?username=view&redirect=/superset/dashboard/12`"
+      :src="`https://superset.lionnix.com/login?username=view&redirect=/superset/dashboard/13`"
     >
     </iframe>
   </div>
