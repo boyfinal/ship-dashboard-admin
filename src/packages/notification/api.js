@@ -5,6 +5,11 @@ export default {
   fetchListNotifyEmail(payload) {
     return http.get(`/notifies/email?${buildQueryString(payload)}`)
   },
+  fetchDetailNotifyEmail(payload) {
+    return http.get(
+      `/notifies/email/${payload.id}?${buildQueryString(payload)}`
+    )
+  },
   countNotifyEmail(payload) {
     return http.get(`/notifies/email/count?${buildQueryString(payload)}`)
   },

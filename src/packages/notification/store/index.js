@@ -3,14 +3,20 @@ import api from '../api'
 export const FETCH_LIST_NOTIFY_EMAIL = 'fetchListNotifyEmail'
 export const COUNT_NOTIFY_EMAIL = 'countNotifyEmail'
 export const CREATE_NOTIFY_EMAIL = 'createNotifyEmail'
+export const FETCH_DETAIL_NOTIFY_EMAIL = 'fetchDetailNotifyEmail'
+
 export const state = {
   notifyEmails: [],
   countNotifyEmails: 0,
+  notifyEmail: {},
 }
 
 export const mutations = {
   [FETCH_LIST_NOTIFY_EMAIL]: (state, payload) => {
     state.notifyEmails = payload
+  },
+  [FETCH_DETAIL_NOTIFY_EMAIL]: (state, payload) => {
+    state.notifyEmail = payload
   },
   [COUNT_NOTIFY_EMAIL]: (state, payload) => {
     state.countNotifyEmails = payload
@@ -50,6 +56,21 @@ export const actions = {
         message: response.errorMessage,
       }
     }
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [FETCH_DETAIL_NOTIFY_EMAIL]({ commit }, payload) {
+    let result = { success: true }
+
+    let response = await api.fetchDetailNotifyEmail(payload)
+    if (!response || !response.notify) {
+      result = {
+        success: false,
+        message: response.errorMessage,
+      }
+    }
+    commit(FETCH_DETAIL_NOTIFY_EMAIL, response.notify)
     return result
   },
 }
