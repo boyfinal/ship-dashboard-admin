@@ -208,8 +208,7 @@ export default {
     },
     disableAction() {
       return (
-        this.showDetail &&
-        this.notify.status === NOTIFY_EMAIL_SENT &&
+        (this.showDetail && this.notify.status === NOTIFY_EMAIL_SENT) ||
         !this.enableAction
       )
     },
