@@ -146,11 +146,14 @@
       </div>
     </div>
     <modal-choice-shipping-box
-      :boxes="boxes"
       :warehouses="wareHouses"
       @save="createContainerSubmit"
       :visible.sync="visibleModalChoiceBox"
       :loading="loadingCreateContainer"
+      :isCreate="true"
+      :actionConfirm="'Tạo'"
+      :cancel="'Bỏ qua'"
+      :title="'Tạo kiện hàng'"
     >
     </modal-choice-shipping-box>
     <modal-history-container
@@ -215,7 +218,6 @@ export default {
   computed: {
     ...mapState('container', {
       containers: (state) => state.containers,
-      boxes: (state) => state.boxes,
       count: (state) => state.count,
       count_status: (state) => state.count_status,
       statusTab() {
@@ -354,13 +356,6 @@ export default {
       }
     },
     async createContainerSubmit(body) {
-      if (body.box_type_id == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Chưa chọn loại',
-        })
-        return
-      }
       if (body.warehouse_id == 0) {
         this.$toast.open({
           type: 'error',
@@ -393,7 +388,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

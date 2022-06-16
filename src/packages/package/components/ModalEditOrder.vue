@@ -135,29 +135,8 @@
                 </div>
               </div>
               <div class="card__w" v-if="isReLabel">
-                <div class="card__w-header"> Phí reship </div>
+                <div class="card__w-header"> Reship </div>
                 <div class="card__w-content">
-                  <div class="card__w-item">
-                    <label class="card__w-label">
-                      Phí ($): <span>*</span></label
-                    >
-                    <div class="card__w-input">
-                      <p-input
-                        placeholder="0"
-                        type="text"
-                        v-model="form.amount"
-                        :input="form.amount"
-                        name="amount"
-                        :disabled="!isReLabel"
-                        :error="valider.error('amount')"
-                        @change="formatAmount"
-                        @input="inputAmount"
-                      />
-                      <span class="invalid-error" v-if="validErrors.amount">
-                        {{ validErrors.amount }}
-                      </span>
-                    </div>
-                  </div>
                   <div class="card__w-item">
                     <label class="card__w-label">
                       Nội dung: <span>*</span></label
