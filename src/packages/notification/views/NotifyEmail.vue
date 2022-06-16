@@ -247,6 +247,7 @@ export default {
     },
     showCreateNotifyModal() {
       this.visibleCreateNotiModal = true
+      this.isShowDetail = false
     },
   },
   watch: {

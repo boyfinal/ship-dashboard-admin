@@ -32,7 +32,11 @@
               v-model="search"
             >
             </p-input>
-            <VclTable class="mt-20" v-if="isLoading"></VclTable>
+            <VclTable
+              class="mt-20"
+              v-if="isLoading"
+              style="width:241px"
+            ></VclTable>
             <ul class="list-user-select" v-else>
               <li
                 :title="item.email"
@@ -449,11 +453,12 @@ export default {
   padding: 10px 16px !important;
 }
 .list-user-select {
-  max-width: 224px;
+  width: 241px;
   height: 164px;
   overflow-y: auto;
 }
 .list-user-select li {
+  padding: 0 8px;
   font-weight: 400;
   font-size: 14px;
   line-height: 32px;

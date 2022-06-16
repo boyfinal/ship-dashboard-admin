@@ -152,12 +152,6 @@ export default {
               disable: this.$isSupportLeader(),
             },
             {
-              route: '/user',
-              title: 'Tài khoản khách hàng',
-              alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant(),
-            },
-            {
               route: '/notify/email',
               title: 'Thông báo',
               alias: ['/notify/email'],
@@ -297,7 +291,7 @@ export default {
           sub: [
             {
               route: '/account',
-              title: 'Tài khoản',
+              title: 'Tài khoản admin',
               alias: ['/account'],
               disable:
                 this.$isAccountant() ||
@@ -305,6 +299,12 @@ export default {
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader(),
+            },
+            {
+              route: '/user',
+              title: 'Tài khoản khách hàng',
+              alias: ['/user', '/user/:id'],
+              disable: this.$isAccountant(),
             },
             {
               route: '',
