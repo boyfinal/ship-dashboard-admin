@@ -28,22 +28,31 @@
               <table class="table table-hover table-notify-emails">
                 <thead>
                   <tr>
-                    <th style="width: 30%">Tiêu đề</th>
-                    <th>người gửi</th>
-                    <th class="text-left" width="300">Thời gian</th>
-                    <th class="text-left" width="180">Trạng thái</th>
+                    <th class="text-left" style="width: 30%">Tiêu đề</th>
+                    <th class="text-left" width="250">người gửi</th>
+                    <th class="text-left" width="250">Thời gian tạo</th>
+                    <th class="text-left" width="250">Thời gian gửi</th>
+                    <th class="text-left" width="120">Trạng thái</th>
                     <th width="200"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, i) in notifies" :key="i">
-                    <td>
+                    <td class="text-left title_colum">
                       <b>{{ item.title }}</b>
                     </td>
-                    <td>{{ item.sender ? item.sender.full_name : 'N/A' }}</td>
+                    <td class="text-left">{{
+                      item.sender ? item.sender.full_name : 'N/A'
+                    }}</td>
                     <td class="text-left">{{
                       item.created_at | datetime('dd/MM/yyyy - HH:mm:s')
                     }}</td>
+                    <td class="text-left">
+                      <template v-if="item.sent_at">
+                        {{ item.sent_at | datetime('dd/MM/yyyy - HH:mm:s') }}
+                      </template>
+                      <div v-else>N/A</div>
+                    </td>
                     <td
                       class="text-left"
                       v-html="getStatusNotify(item.status)"

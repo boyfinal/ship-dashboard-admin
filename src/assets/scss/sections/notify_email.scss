@@ -75,6 +75,12 @@
             margin-right: 2px;
         }
     }
+    .title_colum{
+        b{
+            display: block;
+            max-width: calc(100% - 25px);
+        }
+    }
     .table-notify-emails{
         td {
             button{
