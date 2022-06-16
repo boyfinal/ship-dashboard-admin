@@ -116,6 +116,12 @@ export default {
               route: '/statistics',
               title: ' Thống kê',
               alias: ['/statistics'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
+                this.$isWarehouse(),
             },
             {
               route: '/packages',
@@ -149,6 +155,12 @@ export default {
               route: '/user',
               title: 'Tài khoản khách hàng',
               alias: ['/user', '/user/:id'],
+              disable: this.$isAccountant(),
+            },
+            {
+              route: '/notify/email',
+              title: 'Thông báo',
+              alias: ['/notify/email'],
               disable: this.$isAccountant(),
             },
           ],
@@ -367,7 +379,7 @@ export default {
     },
   },
   watch: {
-    isSidebarOpen: function (value) {
+    isSidebarOpen: function(value) {
       if (!value) {
         this.menus = this.menus.map((obj) =>
           obj.isOpen == true ? { ...obj, isOpen: false } : obj
