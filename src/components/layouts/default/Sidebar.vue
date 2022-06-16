@@ -146,6 +146,12 @@ export default {
               alias: ['/user', '/user/:id'],
               disable: this.$isAccountant(),
             },
+            {
+              route: '/notify/email',
+              title: 'Thông báo',
+              alias: ['/notify/email'],
+              disable: this.$isAccountant(),
+            },
           ],
         },
         // {
@@ -362,7 +368,7 @@ export default {
     },
   },
   watch: {
-    isSidebarOpen: function (value) {
+    isSidebarOpen: function(value) {
       if (!value) {
         this.menus = this.menus.map((obj) =>
           obj.isOpen == true ? { ...obj, isOpen: false } : obj
