@@ -34,11 +34,11 @@ export const actions = {
       api.countNotifyEmail(payload),
     ])
 
-    if (!list.notifies || !count.count) {
+    if (!list.notifies || !count || list.errorMessage || count.errorMessage) {
       count = { count: 0 }
       result = {
         success: false,
-        message: list.errorMessage || '',
+        message: list.errorMessage || count.errorMessage || '',
       }
     }
     commit(FETCH_LIST_NOTIFY_EMAIL, list.notifies)
