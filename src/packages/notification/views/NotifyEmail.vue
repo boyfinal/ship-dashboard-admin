@@ -56,7 +56,11 @@
                       >
                         Gửi
                       </p-button>
-                      <p-button type="default" class="btn-detail">
+                      <p-button
+                        type="default"
+                        @click="loadDetailNotify(item.id)"
+                        class="btn-detail"
+                      >
                         Chi tiết
                       </p-button>
                     </td>
@@ -83,6 +87,8 @@
     <modal-create-notify-email
       @save="handleSaveNotifyEmail"
       :visible.sync="visibleCreateNotiModal"
+      :show-detail="isShowDetail"
+      :notify="notify"
     >
     </modal-create-notify-email>
   </div>
@@ -92,7 +98,11 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import ModalCreateNotifyEmail from '@/packages/notification/components/ModalCreateNotifyEmail'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-import { FETCH_LIST_NOTIFY_EMAIL, CREATE_NOTIFY_EMAIL } from '../store'
+import {
+  FETCH_LIST_NOTIFY_EMAIL,
+  CREATE_NOTIFY_EMAIL,
+  FETCH_DETAIL_NOTIFY_EMAIL,
+} from '../store'
 import { mapActions, mapState } from 'vuex'
 import { NOTIFY_EMAIL_NOT_SEND, NOTIFY_EMAIL_SENT } from '../constant'
 export default {
@@ -109,8 +119,10 @@ export default {
         limit: 5,
         search: '',
       },
+      isShowDetail: false,
       isFetching: false,
       isSubmitting: false,
+      isLoading: false,
       visibleCreateNotiModal: false,
     }
   },
@@ -121,12 +133,14 @@ export default {
     ...mapState('notification', {
       notifies: (state) => state.notifyEmails,
       count: (state) => state.countNotifyEmails,
+      notify: (state) => state.notifyEmail,
     }),
   },
   methods: {
     ...mapActions('notification', [
       FETCH_LIST_NOTIFY_EMAIL,
       CREATE_NOTIFY_EMAIL,
+      FETCH_DETAIL_NOTIFY_EMAIL,
     ]),
     async init() {
       this.isFetching = true
@@ -136,6 +150,23 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
       this.isFetching = false
+    },
+    async loadDetailNotify(id) {
+      this.isLoading = true
+      const payload = {
+        id: id,
+      }
+      const result = await this[FETCH_DETAIL_NOTIFY_EMAIL](payload)
+      this.isLoading = false
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+        })
+        return
+      }
+      this.visibleCreateNotiModal = true
+      this.isShowDetail = true
     },
     async handleSaveNotifyEmail(payload) {
       this.isSubmitting = true

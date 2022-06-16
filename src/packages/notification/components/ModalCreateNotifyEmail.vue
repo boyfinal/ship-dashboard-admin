@@ -146,10 +146,19 @@
     <template slot="footer">
       <div></div>
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleSaveNoti">
+        <p-button
+          type="default"
+          @click="handleSaveNoti"
+          :disabled="disableAction"
+        >
           Lưu
         </p-button>
-        <p-button type="info" :loading="loading" @click="handleSendNoti">
+        <p-button
+          type="info"
+          :loading="loading"
+          @click="handleSendNoti"
+          :disabled="disableAction"
+        >
           Gửi
         </p-button>
       </div>
@@ -163,7 +172,7 @@ import api from '@/packages/shared/api'
 
 import 'quill/dist/quill.snow.css'
 import { quillEditor } from 'vue-quill-editor'
-
+import { NOTIFY_EMAIL_SENT } from '../constant'
 export default {
   name: 'ModalCreateNotifyEmail',
   components: { PInput, quillEditor },
@@ -172,10 +181,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    showDetail: {
+      type: Boolean,
+      default: false,
+    },
+    notify: {
+      type: Object,
+      default: () => {},
+    },
   },
   computed: {
     selectIDs() {
       return this.selected.map((i) => i.id)
+    },
+    disableAction() {
+      return this.showDetail && this.notify.status === NOTIFY_EMAIL_SENT
     },
   },
   data() {
@@ -235,6 +255,18 @@ export default {
         this.users = []
         return
       }
+      if (this.showDetail) {
+        this.title = this.notify.title
+        this.body = this.notify.body
+        const selectedIDs = this.notify.receiver_ids
+        this.selected = response.users.filter((i) => {
+          return selectedIDs.indexOf(i.id) > -1
+        })
+        this.users = response.users.filter((i) => {
+          return selectedIDs.indexOf(i.id) < 0
+        })
+        return
+      }
       this.users = response.users
     },
     handleClose() {
@@ -267,13 +299,14 @@ export default {
           .getElementsByClassName('ql-container')[0]
           .classList.remove('error')
       }
-      return this.bodyErr == '' && this.titleErr == ''
+      return this.bodyErr === '' && this.titleErr === ''
     },
     handleSaveNoti() {
       if (!this.validateContent()) {
         return
       }
       let payload = {
+        id: this.notify ? this.notify.id : 0,
         ids: this.selectIDs,
         title: this.title,
         body: this.body,
@@ -286,6 +319,7 @@ export default {
         return
       }
       let payload = {
+        id: this.notify ? this.notify.id : 0,
         ids: this.selectIDs,
         title: this.title,
         body: this.body,
