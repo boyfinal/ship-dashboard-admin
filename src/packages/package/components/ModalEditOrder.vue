@@ -590,34 +590,46 @@ export default {
       }
 
       await this[FETCH_LIST_PRODUCTS](payload)
+
       this.product_option = cloneDeep(this.products)
       this.loading = false
-      this.form.fullname = this.package_detail.package.recipient
-      this.form.phone = this.package_detail.package.phone_number
-      this.form.city = this.package_detail.package.city
-      this.form.state = this.package_detail.package.state_code
-      this.form.postcode = this.package_detail.package.zipcode
-      this.form.note = this.package_detail.package.note
-      this.form.code = this.package_detail.package.code
-      this.form.items = this.package_detail.package.items
-      this.form.weight = this.package_detail.package.weight
-      this.form.length = this.package_detail.package.length
-      this.form.width = this.package_detail.package.width
-      this.form.height = this.package_detail.package.height
-      this.form.countrycode = this.package_detail.package.country_code
+
+      const pkg = (this.package_detail || {}).package || {}
+      this.form.fullname = pkg.recipient
+      this.form.phone = pkg.phone_number
+      this.form.city = pkg.city
+      this.form.state = pkg.state_code
+      this.form.postcode = pkg.zipcode
+      this.form.note = pkg.note
+      this.form.code = pkg.code
+      this.form.items = pkg.items
+      this.form.weight = pkg.weight
+      this.form.length = pkg.length
+      this.form.width = pkg.width
+      this.form.height = pkg.height
+      this.form.countrycode = pkg.country_code
       this.form.service = {
-        id: this.package_detail.package.service
-          ? this.package_detail.package.service.id
-          : 0,
-        name: this.package_detail.package.service
-          ? this.package_detail.package.service.name
-          : '',
+        id: pkg.service ? pkg.service.id : 0,
+        name: pkg.service ? pkg.service.name : '',
       }
-      this.form.address = this.package_detail.package.address_1
-      this.form.address2 = this.package_detail.package.address_2
-      this.form.order_number = this.package_detail.package.order_number
-      this.form.detail = this.package_detail.package.detail
+      this.form.address = pkg.address_1
+      this.form.address2 = pkg.address_2
+      this.form.order_number = pkg.order_number
+      this.form.detail = pkg.detail
       this.service = this.form.service
+
+      if (this.form.weight < pkg.actual_weight) {
+        this.form.weight = pkg.actual_weight
+      }
+
+      if (
+        this.form.width * this.form.length * this.form.height <
+        pkg.actual_width * pkg.actual_length * pkg.actual_height
+      ) {
+        this.form.width = pkg.actual_width
+        this.form.length = pkg.actual_length
+        this.form.height = pkg.actual_height
+      }
 
       this.package_prods = []
       this.product_sku = []
@@ -742,10 +754,25 @@ export default {
     },
     handleRemove() {
       this.isDisable = true
-      this.form.weight = this.package_detail.package.weight
-      this.form.length = this.package_detail.package.length
-      this.form.width = this.package_detail.package.width
-      this.form.height = this.package_detail.package.height
+      const pkg = (this.package_detail || {}).package || {}
+
+      this.form.weight = pkg.weight
+      this.form.length = pkg.length
+      this.form.width = pkg.width
+      this.form.height = pkg.height
+
+      if (this.form.weight < pkg.actual_weight) {
+        this.form.weight = pkg.actual_weight
+      }
+
+      if (
+        this.form.width * this.form.length * this.form.height <
+        pkg.actual_width * pkg.actual_length * pkg.actual_height
+      ) {
+        this.form.width = pkg.actual_width
+        this.form.length = pkg.actual_length
+        this.form.height = pkg.actual_height
+      }
     },
     async handleUpdate() {
       let invalidProd = true
