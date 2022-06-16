@@ -55,6 +55,26 @@
         font-size: 12px;
         line-height: 16px;
     }
+    .not_send_status{
+        color: #3F51B5;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        svg{
+            margin-top: -4px;
+            margin-right: 2px;
+        }
+    }
+    .sent_status{
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #48BE78;
+        svg{
+            margin-top: -4px;
+            margin-right: 2px;
+        }
+    }
     .table-notify-emails{
         td {
             button{

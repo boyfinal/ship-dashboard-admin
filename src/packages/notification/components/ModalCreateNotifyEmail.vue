@@ -203,6 +203,7 @@ export default {
   methods: {
     initialData() {
       return {
+        maxStrLengthTitle: 50,
         titleErr: '',
         bodyErr: '',
         title: '',
@@ -215,6 +216,11 @@ export default {
         selected: [],
         checkedLeft: [],
         checkedRight: [],
+        editorOption: {
+          debug: 'false',
+          placeholder: 'Nhập nội dung',
+          theme: 'snow',
+        },
       }
     },
     async init() {
@@ -406,7 +412,6 @@ export default {
   max-width: 224px;
   height: 164px;
   overflow-y: auto;
-  padding: 2px 8px;
 }
 .list-user-select li {
   font-weight: 400;
@@ -420,7 +425,7 @@ export default {
 }
 .list-user-select li:hover,
 .list-user-select li.tick {
-  background-color: #cfd0d0;
+  background-color: #edeeee;
 }
 .select-user-receiver {
   display: flex;
