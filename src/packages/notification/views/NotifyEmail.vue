@@ -45,11 +45,11 @@
                       item.sender ? item.sender.full_name : 'N/A'
                     }}</td>
                     <td class="text-left">{{
-                      item.created_at | datetime('dd/MM/yyyy - HH:mm:s')
+                      item.created_at | datetime('dd/MM/yyyy - HH:mm:ss')
                     }}</td>
                     <td class="text-left">
                       <template v-if="item.sent_at">
-                        {{ item.sent_at | datetime('dd/MM/yyyy - HH:mm:s') }}
+                        {{ item.sent_at | datetime('dd/MM/yyyy - HH:mm:ss') }}
                       </template>
                       <div v-else>N/A</div>
                     </td>
