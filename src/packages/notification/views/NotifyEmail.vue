@@ -85,7 +85,6 @@
                 :total="count"
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
-                :filter-limit="true"
                 size="sm"
               ></p-pagination>
             </div>
