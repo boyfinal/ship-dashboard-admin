@@ -151,7 +151,7 @@
           <label for=""><b>Nội dung:</b></label>
           <i class="err-txt" v-if="bodyErr">{{ bodyErr }}</i>
         </div>
-        <quill-editor v-model="body" :options="editorOption" />
+        <quill-editor v-model="body" :options="editorOption" ref="editor" />
       </div>
     </div>
     <template slot="footer">
@@ -181,7 +181,7 @@
 <script>
 import PInput from '../../../../uikit/components/input/Input'
 import api from '@/packages/shared/api'
-
+import S3Service from '@core/services/s3'
 import 'quill/dist/quill.snow.css'
 import { quillEditor } from 'vue-quill-editor'
 import { NOTIFY_EMAIL_SENT } from '../constant'
@@ -233,6 +233,37 @@ export default {
         debug: 'false',
         placeholder: 'Nhập nội dung',
         theme: 'snow',
+        modules: {
+          toolbar: {
+            container: [
+              [{ font: [] }, { size: ['small', false, 'large', 'huge'] }], // custom dropdown
+
+              ['bold', 'italic', 'underline', 'strike'],
+
+              [{ color: [] }, { background: [] }],
+
+              [{ script: 'sub' }, { script: 'super' }],
+
+              [{ header: 1 }, { header: 2 }, 'blockquote', 'code-block'],
+
+              [
+                { list: 'ordered' },
+                { list: 'bullet' },
+                { indent: '-1' },
+                { indent: '+1' },
+              ],
+
+              [{ direction: 'rtl' }, { align: [] }],
+
+              ['link', 'image', 'video', 'formula'],
+
+              ['clean'],
+            ],
+            handlers: {
+              image: this.imageHandler,
+            },
+          },
+        },
       },
     }
   },
@@ -242,6 +273,23 @@ export default {
         return `${user.full_name} - ${user.email}`
       }
       return ` ${user.email}`
+    },
+    imageHandler() {
+      const input = document.createElement('input')
+      input.setAttribute('type', 'file')
+      input.setAttribute('accept', 'image/*')
+      input.click()
+      input.onchange = async function () {
+        const file = input.files[0]
+        let r = await S3Service.upload('static', file)
+        let quill = this.$refs.editor.quill
+        const range = quill.getSelection()
+        quill.insertEmbed(
+          range.index,
+          'image',
+          `${process.env.VUE_APP_ASSETS}/${r.url}`
+        )
+      }.bind(this)
     },
     initialData() {
       return {
@@ -263,6 +311,37 @@ export default {
           debug: 'false',
           placeholder: 'Nhập nội dung',
           theme: 'snow',
+          modules: {
+            toolbar: {
+              container: [
+                [{ font: [] }, { size: ['small', false, 'large', 'huge'] }], // custom dropdown
+
+                ['bold', 'italic', 'underline', 'strike'],
+
+                [{ color: [] }, { background: [] }],
+
+                [{ script: 'sub' }, { script: 'super' }],
+
+                [{ header: 1 }, { header: 2 }, 'blockquote', 'code-block'],
+
+                [
+                  { list: 'ordered' },
+                  { list: 'bullet' },
+                  { indent: '-1' },
+                  { indent: '+1' },
+                ],
+
+                [{ direction: 'rtl' }, { align: [] }],
+
+                ['link', 'image', 'video', 'formula'],
+
+                ['clean'],
+              ],
+              handlers: {
+                image: this.imageHandler,
+              },
+            },
+          },
         },
       }
     },
@@ -418,7 +497,7 @@ export default {
   },
   watch: {
     visible: {
-      handler: function(v) {
+      handler: function (v) {
         if (v) {
           Object.assign(this.$data, this.initialData())
           if (this.showDetail) {
