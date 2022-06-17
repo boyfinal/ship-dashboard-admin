@@ -208,10 +208,10 @@ export default {
       this.init()
     },
     async handleSaveNotifyEmail(payload) {
+      this.visibleCreateNotiModal = false
       this.isSubmitting = true
       const result = await this[CREATE_NOTIFY_EMAIL](payload)
       this.isSubmitting = false
-      this.visibleCreateNotiModal = false
       if (!result.success) {
         this.$toast.open({
           type: 'error',
