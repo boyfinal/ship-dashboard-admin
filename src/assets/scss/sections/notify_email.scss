@@ -77,8 +77,14 @@
     }
     .title_colum{
         b{
-            display: block;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             max-width: calc(100% - 25px);
+        }
+        .p-tooltip::after{
+            max-width: calc(100% + 10px);
         }
     }
     .table-notify-emails{

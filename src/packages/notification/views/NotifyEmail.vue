@@ -39,7 +39,17 @@
                 <tbody>
                   <tr v-for="(item, i) in notifies" :key="i">
                     <td class="text-left title_colum">
-                      <b>{{ item.title }}</b>
+                      <p-tooltip
+                        :label="item.title"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="true"
+                      >
+                        <b>
+                          {{ item.title }}
+                        </b>
+                      </p-tooltip>
                     </td>
                     <td class="text-left">{{
                       item.sender ? item.sender.full_name : 'N/A'
