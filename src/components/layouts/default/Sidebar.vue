@@ -288,7 +288,7 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isWarehouse() || this.$isHub(),
+          disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/account',
@@ -322,7 +322,7 @@ export default {
               route: '/prices',
               title: 'Bảng giá',
               alias: ['/prices'],
-              disable: this.$isSupportLeader(),
+              disable: this.$isSupportLeader() || this.$isSupport(),
             },
           ],
         },
@@ -381,7 +381,7 @@ export default {
     },
   },
   watch: {
-    isSidebarOpen: function(value) {
+    isSidebarOpen: function (value) {
       if (!value) {
         this.menus = this.menus.map((obj) =>
           obj.isOpen == true ? { ...obj, isOpen: false } : obj
