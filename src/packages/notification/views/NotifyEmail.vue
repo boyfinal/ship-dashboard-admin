@@ -105,6 +105,7 @@
     </div>
     <modal-create-notify-email
       @save="handleSaveNotifyEmail"
+      :tester="tester"
       :visible.sync="visibleCreateNotiModal"
       :show-detail="isShowDetail"
       :notify="notify"
@@ -144,6 +145,7 @@ export default {
       isSubmitting: false,
       isLoading: false,
       visibleCreateNotiModal: false,
+      tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,
     }
   },
   created() {
@@ -270,7 +272,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

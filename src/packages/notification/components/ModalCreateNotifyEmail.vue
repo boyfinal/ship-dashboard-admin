@@ -193,6 +193,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    tester: {
+      type: Boolean,
+      default: false,
+    },
     showDetail: {
       type: Boolean,
       default: false,
@@ -236,7 +240,7 @@ export default {
         modules: {
           toolbar: {
             container: [
-              [{ font: [] }, { size: ['small', false, 'large', 'huge'] }], // custom dropdown
+              [{ font: [] }, { size: [] }],
 
               ['bold', 'italic', 'underline', 'strike'],
 
@@ -314,7 +318,7 @@ export default {
           modules: {
             toolbar: {
               container: [
-                [{ font: [] }, { size: ['small', false, 'large', 'huge'] }], // custom dropdown
+                [{ font: [] }, { size: [] }], // custom dropdown
 
                 ['bold', 'italic', 'underline', 'strike'],
 
@@ -352,6 +356,7 @@ export default {
         not_limit: true,
         status: 1,
         role: 'customer',
+        tester: this.tester,
       }
       let response = await api.fetchUsersByRole(payload)
       this.isLoading = false
@@ -456,6 +461,7 @@ export default {
         search: search.trim(),
         status: 1,
         role: 'customer',
+        tester: this.tester,
       })
       this.isLoading = false
 
