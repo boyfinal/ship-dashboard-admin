@@ -257,7 +257,11 @@
                     >{{ countSuccess }}/{{ packages.length }}</span
                   ></span
                 >
-                <button class="btn btn-info" @click="handleAccepts">
+                <button
+                  class="btn btn-info"
+                  @click="handleAccepts"
+                  :disabled="disableBtnAccepts"
+                >
                   Duyệt lại
                 </button>
               </div>
@@ -287,7 +291,10 @@
                         >Người gửi: <b>{{ group.name }}</b></span
                       >
                       <span
-                        >Số lượng: <b>{{ group.count }}</b></span
+                        >Số lượng:
+                        <b :class="checkSusccess(group)">{{
+                          group.count
+                        }}</b></span
                       >
                     </div>
                   </div>
@@ -405,6 +412,12 @@ export default {
         (this.codecurrent == this.keyword && this.codecurrent != '')
       )
     },
+    disableBtnAccepts() {
+      let arrPkgs = this.packages.filter(
+        (i) => i.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
+      )
+      return !arrPkgs.length
+    },
     isHasUpdate() {
       return (
         this.current &&
@@ -477,6 +490,9 @@ export default {
         (x) => x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS
       ).length
     },
+  },
+  mounted() {
+    this.beforeLeaveHandle()
   },
   data() {
     return {
@@ -925,6 +941,37 @@ export default {
       this.packages = []
       this.startHandle()
     },
+    beforeLeaveHandle() {
+      window.onbeforeunload = () => {
+        if (!this.disableBtnAccepts) {
+          return 'Vẫn còn đơn thất bại, bạn có muốn thoát khỏi trang?'
+        }
+
+        return null
+      }
+    },
+
+    checkSusccess(group) {
+      let arrFailed = group.items.filter(
+        (i) => i.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
+      )
+      return arrFailed.length ? 'count-danger' : 'count-success'
+    },
+  },
+  // eslint-disable-next-line no-unused-vars
+  beforeRouteLeave(to, from, next) {
+    if (!this.disableBtnAccepts) {
+      const answer = window.confirm(
+        'Vẫn còn đơn thất bại, bạn có muốn thoát khỏi trang?'
+      )
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
 }
 </script>
