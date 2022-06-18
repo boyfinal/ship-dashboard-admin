@@ -294,7 +294,7 @@ export default {
     initialData() {
       return {
         enableAction: true,
-        maxStrLengthTitle: 50,
+        maxStrLengthTitle: 100,
         titleErr: '',
         bodyErr: '',
         title: '',
