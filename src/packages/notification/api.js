@@ -15,6 +15,6 @@ export default {
     return http.post(`/notifies/email`, payload)
   },
   sendNotifyEmail(payload) {
-    return http.put(`/notifies/email/send/${payload.id}`)
+    return http.put(`/notifies/email/send`, payload)
   },
 }
