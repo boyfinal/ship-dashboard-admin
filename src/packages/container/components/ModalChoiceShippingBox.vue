@@ -246,6 +246,7 @@ export default {
             message: 'Vượt quá cân nặng tối đa',
             type: 'error',
           })
+          return
         }
       }
       if (!this.valider.check(this.box) && !this.isCreate) {
