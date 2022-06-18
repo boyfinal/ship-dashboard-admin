@@ -28,7 +28,7 @@
               placeholder="Tìm kiếm"
               prefixIcon="search"
               type="search"
-              @input="updateSearch"
+              @keyup="updateSearch"
               v-model="search"
             >
             </p-input>
@@ -449,7 +449,8 @@ export default {
         this.checkedRight.push(item.id)
       }
     },
-    async updateSearch(search) {
+    async updateSearch(e) {
+      const search = e.target.value
       this.isLoading = true
       const result = await api.fetchUsersByRole({
         search: search.trim(),
@@ -476,6 +477,7 @@ export default {
         return true
       })
       this.selected = [...this.selected, ...checked]
+      this.searchSelected = ''
     },
     removeSelectedUser() {
       let checked = []
@@ -486,6 +488,9 @@ export default {
         }
         return true
       })
+      this.searchSelectedResult = this.searchSelectedResult.filter(
+        (i) => checked.indexOf(i) < 0
+      )
       this.users = [...this.users, ...checked]
     },
     searchSelectUser(search) {
