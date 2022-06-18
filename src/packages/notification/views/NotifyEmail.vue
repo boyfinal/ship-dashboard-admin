@@ -201,7 +201,7 @@ export default {
       this.isSubmitting = true
       const payload = {
         id: id,
-        is_tester: this.tester,
+        is_tester: this.tester == '1' ? true : false,
       }
       const result = await this[SEND_NOTIFY_EMAIL](payload)
       this.isSubmitting = false
@@ -222,7 +222,7 @@ export default {
     async handleSaveNotifyEmail(payload) {
       this.visibleCreateNotiModal = false
       this.isSubmitting = true
-      payload.is_tester = this.tester
+      payload.is_tester = this.tester == '1' ? true : false
       const result = await this[CREATE_NOTIFY_EMAIL](payload)
       this.isSubmitting = false
       if (!result.success) {
