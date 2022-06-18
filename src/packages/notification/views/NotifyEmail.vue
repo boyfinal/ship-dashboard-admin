@@ -108,7 +108,7 @@
       :tester="tester"
       :visible.sync="visibleCreateNotiModal"
       :show-detail="isShowDetail"
-      :notify="notify"
+      :data="notify"
     >
     </modal-create-notify-email>
   </div>

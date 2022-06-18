@@ -194,14 +194,14 @@ export default {
       default: false,
     },
     tester: {
-      type: Boolean,
+      type: [Boolean, Number],
       default: false,
     },
     showDetail: {
       type: Boolean,
       default: false,
     },
-    notify: {
+    data: {
       type: Object,
       default: () => {},
     },
@@ -219,6 +219,7 @@ export default {
   },
   data() {
     return {
+      notify: this.data,
       enableAction: true,
       maxStrLengthTitle: 50,
       titleErr: '',
@@ -297,6 +298,7 @@ export default {
     },
     initialData() {
       return {
+        notify: this.data,
         enableAction: true,
         maxStrLengthTitle: 100,
         titleErr: '',
