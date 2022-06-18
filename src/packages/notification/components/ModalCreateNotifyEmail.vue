@@ -503,6 +503,8 @@ export default {
           if (this.showDetail) {
             this.title = this.notify.title
             this.body = this.notify.body
+          } else {
+            this.notify = {}
           }
           this.init()
         }
