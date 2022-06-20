@@ -872,7 +872,7 @@ export default {
         code: this.codecurrent,
         status,
         detail: this.current.detail,
-
+        status_checkin: status,
         statusHTML: '<span class="text-success">Thành công</span>',
       }
       if (status == 'returned') {
