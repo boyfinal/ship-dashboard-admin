@@ -345,9 +345,11 @@ import {
   GET_CHECKIN_REQUEST,
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
+  UPDATE_STATUS_PACKAGE,
 } from '../store'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
+  PACKAGE_WAREHOUSE_STATUS_PICK,
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
@@ -523,6 +525,7 @@ export default {
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
+      updateStatus: UPDATE_STATUS_PACKAGE,
     }),
 
     async stopHandle() {
@@ -776,7 +779,9 @@ export default {
 
       this.isSubmitting = false
       this.iscaned = true
-
+      if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
+        this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
+      }
       return true
     },
 
