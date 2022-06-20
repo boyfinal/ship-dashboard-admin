@@ -265,7 +265,7 @@ export default {
 
               [{ direction: 'rtl' }, { align: [] }],
 
-              ['link', 'image', 'video', 'formula'],
+              ['link', 'image', 'formula'],
 
               ['clean'],
             ],
@@ -347,7 +347,7 @@ export default {
 
                 [{ direction: 'rtl' }, { align: [] }],
 
-                ['link', 'image', 'video', 'formula'],
+                ['link', 'image', 'formula'],
 
                 ['clean'],
               ],
