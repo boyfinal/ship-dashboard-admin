@@ -779,6 +779,7 @@ export default {
 
       this.isSubmitting = false
       this.iscaned = true
+      this.keyword = ''
       if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
         this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
       }
