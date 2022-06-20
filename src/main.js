@@ -23,13 +23,13 @@ const colorClass = Quill.import('attributors/style/color')
 const directionClass = Quill.import('attributors/style/direction')
 const fontClass = Quill.import('attributors/style/font')
 const sizeClass = Quill.import('attributors/style/size')
-
+sizeClass.whitelist = ['12px', '14px', '16px', '18px', '20px']
+Quill.register(sizeClass, true)
 Quill.register(alignClass, true)
 Quill.register(backgroundClass, true)
 Quill.register(colorClass, true)
 Quill.register(directionClass, true)
 Quill.register(fontClass, true)
-Quill.register(sizeClass, true)
 
 Vue.use(Notifications)
 Vue.use(MainPlugin)

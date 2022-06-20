@@ -182,7 +182,9 @@
 import PInput from '../../../../uikit/components/input/Input'
 import api from '@/packages/shared/api'
 import S3Service from '@core/services/s3'
+import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { NOTIFY_EMAIL_SENT } from '../constant'
 export default {
@@ -241,7 +243,10 @@ export default {
         modules: {
           toolbar: {
             container: [
-              [{ font: [] }, { size: [] }],
+              [
+                { font: [] },
+                { size: ['12px', '14px', '16px', '18px', '20px'] },
+              ],
 
               ['bold', 'italic', 'underline', 'strike'],
 
@@ -320,7 +325,10 @@ export default {
           modules: {
             toolbar: {
               container: [
-                [{ font: [] }, { size: [] }], // custom dropdown
+                [
+                  { font: [] },
+                  { size: ['12px', '14px', '16px', '18px', '20px'] },
+                ],
 
                 ['bold', 'italic', 'underline', 'strike'],
 
@@ -602,5 +610,9 @@ export default {
   background: #e1e2e2;
   border-radius: 8px;
   cursor: pointer;
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: attr(data-value);
 }
 </style>
