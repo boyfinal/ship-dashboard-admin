@@ -845,23 +845,28 @@ export default {
       this.iscaned = true
       this.isSubmitting = false
 
-      this.packages = this.packages.map((item) => {
-        const obj = Object.assign({}, item)
-        if (body.ids.includes(obj.id)) {
-          obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
-        }
-        return obj
-      })
-
-      this.groups.forEach((group) => {
-        group.items = group.items.map((item) => {
+      let index = this.packages.findIndex(({ id }) => id == this.current.id)
+      if (index !== -1) {
+        this.packages = this.packages.map((item) => {
           const obj = Object.assign({}, item)
           if (body.ids.includes(obj.id)) {
             obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
           }
           return obj
         })
-      })
+
+        this.groups.forEach((group) => {
+          group.items = group.items.map((item) => {
+            const obj = Object.assign({}, item)
+            if (body.ids.includes(obj.id)) {
+              obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
+            }
+            return obj
+          })
+        })
+      } else {
+        this.addToAnalytics('returned')
+      }
 
       this.$toast.success(`Trả hàng thành công`)
       this.isVisibleModalReturn = false
