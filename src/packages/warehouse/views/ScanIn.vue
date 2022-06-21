@@ -251,10 +251,10 @@
                   >Kết quả:
                   <span
                     :class="{
-                      'text-success': countSuccess == packages.length,
-                      'text-danger': countSuccess < packages.length,
+                      'text-success': countSuccess == countTotal,
+                      'text-danger': countSuccess < countTotal,
                     }"
-                    >{{ countSuccess }}/{{ packages.length }}</span
+                    >{{ countSuccess }}/{{ countTotal }}</span
                   ></span
                 >
                 <button
@@ -487,7 +487,17 @@ export default {
     },
     countSuccess() {
       return this.packages.filter(
-        (x) => x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS
+        (x) =>
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+          x.status != PACKAGE_STATUS_PENDING_PICKUP
+      ).length
+    },
+    countTotal() {
+      return this.packages.filter(
+        (x) =>
+          (x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+            x.status != PACKAGE_STATUS_PENDING_PICKUP) ||
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
       ).length
     },
   },
@@ -850,6 +860,7 @@ export default {
         this.packages = this.packages.map((item) => {
           const obj = Object.assign({}, item)
           if (body.ids.includes(obj.id)) {
+            obj.status = PACKAGE_STATUS_PENDING_PICKUP
             obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
           }
           return obj
@@ -859,6 +870,7 @@ export default {
           group.items = group.items.map((item) => {
             const obj = Object.assign({}, item)
             if (body.ids.includes(obj.id)) {
+              obj.status = PACKAGE_STATUS_PENDING_PICKUP
               obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
             }
             return obj
@@ -882,6 +894,7 @@ export default {
         statusHTML: '<span class="text-success">Thành công</span>',
       }
       if (status == 'returned') {
+        item.status = PACKAGE_STATUS_PENDING_PICKUP
         item.statusHTML = '<span class="text-warning">Trả hàng</span>'
       }
       if (status == CHECKIN_PACKAGE_STATUS_FAILED) {
