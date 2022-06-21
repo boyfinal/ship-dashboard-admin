@@ -457,6 +457,7 @@ export default {
         title: this.title,
         body: this.body,
         is_send: false,
+        is_send_all: this.isSendAll,
       }
       this.$emit('save', payload)
     },
@@ -470,6 +471,7 @@ export default {
         title: this.title,
         body: this.body,
         is_send: true,
+        is_send_all: this.isSendAll,
       }
       this.$emit('save', payload)
     },
@@ -551,6 +553,7 @@ export default {
           if (this.showDetail) {
             this.title = this.notify.title
             this.body = this.notify.body
+            this.isSendAll = Boolean(this.notify.is_send_all)
           } else {
             this.notify = {}
           }
