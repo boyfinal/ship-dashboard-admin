@@ -21,7 +21,13 @@
     </div>
     <div class="row mb-16">
       <div class="col-12">
-        <label for=""><b>Người nhận:</b></label>
+        <div class="d-flex justify-content-between align-items-center">
+          <label for=""><b>Người nhận:</b></label>
+          <i class="err-txt" v-if="receiverErr">{{ receiverErr }}</i>
+        </div>
+        <p-checkbox v-model="isSendAll" @input="checkSendAll"
+          >Gửi tất cả</p-checkbox
+        >
         <div class="select-user-receiver justify-content-between">
           <div class="user-select-box">
             <p-input
@@ -104,7 +110,7 @@
               </svg>
             </div>
           </div>
-          <div class="user-select-box">
+          <div class="user-select-box" :class="{ error: receiverErr }">
             <p-input
               placeholder="Tìm kiếm"
               prefixIcon="search"
@@ -187,6 +193,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 import { NOTIFY_EMAIL_SENT } from '../constant'
+import { cloneDeep } from '@core/utils'
 export default {
   name: 'ModalCreateNotifyEmail',
   components: { PInput, quillEditor },
@@ -226,6 +233,7 @@ export default {
       maxStrLengthTitle: 50,
       titleErr: '',
       bodyErr: '',
+      receiverErr: '',
       title: '',
       body: '',
       search: '',
@@ -236,6 +244,7 @@ export default {
       selected: [],
       checkedLeft: [],
       checkedRight: [],
+      isSendAll: false,
       editorOption: {
         debug: 'false',
         placeholder: 'Nhập nội dung',
@@ -318,6 +327,7 @@ export default {
         selected: [],
         checkedLeft: [],
         checkedRight: [],
+        isSendAll: false,
         editorOption: {
           debug: 'false',
           placeholder: 'Nhập nội dung',
@@ -399,6 +409,14 @@ export default {
         this.enableAction = true
       }
     },
+    checkSendAll(v) {
+      if (v) {
+        let checked = cloneDeep(this.selected)
+        this.selected = []
+        this.users = [...this.users, ...checked]
+        this.checkedLeft = this.checkedRight = []
+      }
+    },
     validateContent() {
       if (this.title == '') {
         this.titleErr = 'Tiêu đề không được để trống'
@@ -420,7 +438,14 @@ export default {
           .getElementsByClassName('ql-container')[0]
           .classList.remove('error')
       }
-      return this.bodyErr === '' && this.titleErr === ''
+      if (!this.isSendAll && !this.selectIDs.length) {
+        this.receiverErr = 'Người nhận không để trống'
+      } else {
+        this.receiverErr = ''
+      }
+      return (
+        this.bodyErr === '' && this.titleErr === '' && this.receiverErr === ''
+      )
     },
     handleSaveNoti() {
       if (!this.validateContent()) {
@@ -484,6 +509,7 @@ export default {
       })
     },
     addSelectedUser() {
+      this.isSendAll = false
       let checked = []
       this.users = this.users.filter((i) => {
         if (this.checkedLeft.includes(i.id) && this.selected.indexOf(i) < 0) {
@@ -496,6 +522,7 @@ export default {
       this.searchSelected = ''
     },
     removeSelectedUser() {
+      this.isSendAll = false
       let checked = []
       this.selected = this.selected.filter((i) => {
         if (this.checkedRight.includes(i.id) && this.users.indexOf(i) < 0) {
@@ -553,6 +580,9 @@ export default {
   border: 1px solid #cfd0d0;
   border-radius: 8px;
   padding: 0 8px 8px 8px;
+}
+.user-select-box.error {
+  border: 1px solid #f5222d;
 }
 .user-select-box .input-group {
   margin-bottom: 2px;
@@ -614,5 +644,18 @@ export default {
 .ql-snow .ql-picker.ql-size .ql-picker-label::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item::before {
   content: attr(data-value);
+}
+.list-notify-emails .checkbox-custom {
+  position: static;
+  margin-top: 3px;
+}
+.list-notify-emails .checkbox-custom label {
+  margin-bottom: 2px;
+  margin-left: 6px;
+  padding-left: 6px;
+}
+.list-notify-emails .checkbox-custom label::before,
+.list-notify-emails .checkbox-custom label::after {
+  top: -2px;
 }
 </style>
