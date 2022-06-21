@@ -251,10 +251,10 @@
                   >Kết quả:
                   <span
                     :class="{
-                      'text-success': countSuccess == packages.length,
-                      'text-danger': countSuccess < packages.length,
+                      'text-success': countSuccess == countTotal,
+                      'text-danger': countSuccess < countTotal,
                     }"
-                    >{{ countSuccess }}/{{ packages.length }}</span
+                    >{{ countSuccess }}/{{ countTotal }}</span
                   ></span
                 >
                 <button
@@ -345,9 +345,11 @@ import {
   GET_CHECKIN_REQUEST,
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
+  UPDATE_STATUS_PACKAGE,
 } from '../store'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
+  PACKAGE_WAREHOUSE_STATUS_PICK,
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
@@ -485,7 +487,17 @@ export default {
     },
     countSuccess() {
       return this.packages.filter(
-        (x) => x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS
+        (x) =>
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+          x.status != PACKAGE_STATUS_PENDING_PICKUP
+      ).length
+    },
+    countTotal() {
+      return this.packages.filter(
+        (x) =>
+          (x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+            x.status != PACKAGE_STATUS_PENDING_PICKUP) ||
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
       ).length
     },
   },
@@ -523,6 +535,7 @@ export default {
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
+      updateStatus: UPDATE_STATUS_PACKAGE,
     }),
 
     async stopHandle() {
@@ -776,7 +789,9 @@ export default {
 
       this.isSubmitting = false
       this.iscaned = true
-
+      if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
+        this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
+      }
       return true
     },
 
@@ -840,23 +855,30 @@ export default {
       this.iscaned = true
       this.isSubmitting = false
 
-      this.packages = this.packages.map((item) => {
-        const obj = Object.assign({}, item)
-        if (body.ids.includes(obj.id)) {
-          obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
-        }
-        return obj
-      })
-
-      this.groups.forEach((group) => {
-        group.items = group.items.map((item) => {
+      let index = this.packages.findIndex(({ id }) => id == this.current.id)
+      if (index !== -1) {
+        this.packages = this.packages.map((item) => {
           const obj = Object.assign({}, item)
           if (body.ids.includes(obj.id)) {
+            obj.status = PACKAGE_STATUS_PENDING_PICKUP
             obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
           }
           return obj
         })
-      })
+
+        this.groups.forEach((group) => {
+          group.items = group.items.map((item) => {
+            const obj = Object.assign({}, item)
+            if (body.ids.includes(obj.id)) {
+              obj.status = PACKAGE_STATUS_PENDING_PICKUP
+              obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
+            }
+            return obj
+          })
+        })
+      } else {
+        this.addToAnalytics('returned')
+      }
 
       this.$toast.success(`Trả hàng thành công`)
       this.isVisibleModalReturn = false
@@ -872,6 +894,7 @@ export default {
         statusHTML: '<span class="text-success">Thành công</span>',
       }
       if (status == 'returned') {
+        item.status = PACKAGE_STATUS_PENDING_PICKUP
         item.statusHTML = '<span class="text-warning">Trả hàng</span>'
       }
       if (status == CHECKIN_PACKAGE_STATUS_FAILED) {
