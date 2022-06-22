@@ -455,6 +455,13 @@ export default {
     placeholder() {
       return `Phí Re-ship cho đơn ${this.code}`
     },
+    currentId() {
+      return this.packageId > 0
+        ? this.packageId
+        : this.$route.params.id
+        ? this.$route.params.id
+        : 0
+    },
   },
   data() {
     return {
@@ -843,9 +850,8 @@ export default {
       let amount = (this.form.amount || '0').trim()
       amount = parseFloat(amount.replace(/,/g, '')).toFixed(2)
 
-      const { id } = this.$route.params
       const params = {
-        id: id,
+        id: this.currentId,
         recipient: this.form.fullname,
         phone_number: this.form.phone.trim(),
         address_1: this.form.address,
@@ -961,7 +967,7 @@ export default {
       this.isUpdate = true
 
       const params = {
-        id: this.packageId,
+        id: this.currentId,
         recipient: this.form.fullname.trim(),
         phone_number: this.form.phone.trim(),
         address_1: this.form.address.trim(),
