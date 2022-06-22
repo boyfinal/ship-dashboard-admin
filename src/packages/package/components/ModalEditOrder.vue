@@ -377,14 +377,16 @@
               >Hủy bỏ</p-button
             >
             <p-button
-              v-if="!isEstimateCostReship"
-              class="btn btn-info"
+              class="btn btn-info mr-2"
               :disabled="isUpdate"
               @click="estimateCostHandle"
-              >Phí reship</p-button
             >
+              <span v-if="feeReship"
+                >Phí reship: {{ feeReship | formatPrice }}</span
+              >
+              <span v-else>Phí reship</span>
+            </p-button>
             <p-button
-              v-if="isEstimateCostReship"
               class="btn btn-info"
               :disabled="isUpdate"
               @click="handleUpdate"
@@ -500,7 +502,7 @@ export default {
       package_prods: [],
       product_sku: [],
       product_option: [],
-      isEstimateCostReship: false,
+      feeReship: 0,
     }
   },
   created() {
@@ -597,6 +599,7 @@ export default {
     ]),
     async init() {
       this.isEstimateCostReship = false
+      this.feeReship = 0
       this.loading = true
       if (this.packageId) {
         await this.fetchPackage(this.packageId)
@@ -988,13 +991,7 @@ export default {
       }
 
       this.isEstimateCostReship = true
-      this.$dialog.alert({
-        title: 'Phí reship đơn hàng',
-        message: `Phí reship dự kiến: $${result.total_amount}`,
-        onClose: () => {},
-        confirmText: 'Đóng',
-        duration: 3000,
-      })
+      this.feeReship = result.total_amount
     },
   },
   watch: {
