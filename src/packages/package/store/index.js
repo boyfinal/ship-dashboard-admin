@@ -20,6 +20,8 @@ export const COUNT_LIST_PACKAGES_RETURN = 'countListPackagesReturn'
 export const EXPORT_PACKAGE = 'exportPackage'
 export const GET_SERVICE = 'getService'
 export const RESHIP_PACKAGE = 'reshipPackage'
+export const RESHIP_PACKAGE_ESTIMATE_COST = 'reshipPackageEstimateCost'
+
 /**
  * State
  */
@@ -242,5 +244,15 @@ export const actions = {
     }
 
     return { error: false }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [RESHIP_PACKAGE_ESTIMATE_COST]({ commit }, payload) {
+    const res = await api.reshipPackageEstimateCost(payload)
+    if (!res || res.error || res.message) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    return { error: false, ...res }
   },
 }

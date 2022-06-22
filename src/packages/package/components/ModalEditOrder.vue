@@ -377,6 +377,14 @@
               >Hủy bỏ</p-button
             >
             <p-button
+              v-if="!isEstimateCostReship"
+              class="btn btn-info"
+              :disabled="isUpdate"
+              @click="estimateCostHandle"
+              >Phí reship</p-button
+            >
+            <p-button
+              v-if="isEstimateCostReship"
               class="btn btn-info"
               :disabled="isUpdate"
               @click="handleUpdate"
@@ -396,6 +404,7 @@ import {
   GET_SERVICE,
   UPDATE_PACKAGE,
   FETCH_PACKAGE_DETAIL,
+  RESHIP_PACKAGE_ESTIMATE_COST,
 } from '../store'
 import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
@@ -484,6 +493,7 @@ export default {
       package_prods: [],
       product_sku: [],
       product_option: [],
+      isEstimateCostReship: false,
     }
   },
   created() {
@@ -576,8 +586,10 @@ export default {
       FETCH_LIST_PRODUCTS,
       UPDATE_PACKAGE,
       FETCH_PACKAGE_DETAIL,
+      RESHIP_PACKAGE_ESTIMATE_COST,
     ]),
     async init() {
+      this.isEstimateCostReship = false
       this.loading = true
       if (this.packageId) {
         await this.fetchPackage(this.packageId)
@@ -941,6 +953,42 @@ export default {
       }
       this.package_prods.splice(index, 1)
       this.product_sku.splice(index, 1)
+    },
+
+    async estimateCostHandle() {
+      if (this.isUpdating || !this.packageId) return
+
+      this.isUpdate = true
+
+      const params = {
+        id: this.packageId,
+        recipient: this.form.fullname.trim(),
+        phone_number: this.form.phone.trim(),
+        address_1: this.form.address.trim(),
+        city: this.form.city.trim(),
+        state_code: this.form.state.trim(),
+        zipcode: this.form.postcode.trim(),
+        country_code: this.form.countrycode.trim(),
+        address_2: this.form.address2.trim(),
+      }
+
+      const result = await this[RESHIP_PACKAGE_ESTIMATE_COST](params)
+
+      this.isUpdate = false
+
+      if (result.error) {
+        this.$toast.error(result.message, { duration: 3000 })
+        return
+      }
+
+      this.isEstimateCostReship = true
+      this.$dialog.alert({
+        title: 'Phí reship đơn hàng',
+        message: `Phí reship dự kiến: $${result.total_amount}`,
+        onClose: () => {},
+        confirmText: 'Đóng',
+        duration: 3000,
+      })
     },
   },
   watch: {

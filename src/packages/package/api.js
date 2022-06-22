@@ -78,4 +78,7 @@ export default {
   countListPackagesReturn(payload) {
     return http.get(`/packages/returned/count?${buildQueryString(payload)}`)
   },
+  reshipPackageEstimateCost(payload) {
+    return http.post(`/packages/${payload.id}/reship/estimate-cost`, payload)
+  },
 }
