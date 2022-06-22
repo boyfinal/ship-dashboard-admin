@@ -962,7 +962,7 @@ export default {
     },
 
     async estimateCostHandle() {
-      if (this.isUpdating || !this.packageId) return
+      if (this.isUpdating || !this.currentId) return
 
       this.isUpdate = true
 
