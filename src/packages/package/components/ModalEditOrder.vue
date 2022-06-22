@@ -598,7 +598,6 @@ export default {
       RESHIP_PACKAGE_ESTIMATE_COST,
     ]),
     async init() {
-      this.isEstimateCostReship = false
       this.feeReship = 0
       this.loading = true
       if (this.packageId) {
@@ -968,6 +967,7 @@ export default {
       if (this.isUpdating || !this.currentId) return
 
       this.isUpdate = true
+      this.feeReship = 0
 
       const params = {
         id: this.currentId,
@@ -990,7 +990,6 @@ export default {
         return
       }
 
-      this.isEstimateCostReship = true
       this.feeReship = result.total_amount
     },
   },
