@@ -373,9 +373,6 @@
             <div class="notch-bt"></div>
           </div>
           <div class="total-action">
-            <p-button :type="`default`" class="btn" @click="handleClose"
-              >Hủy bỏ</p-button
-            >
             <p-button
               class="btn btn-info mr-2"
               :disabled="isUpdate"
@@ -386,6 +383,9 @@
               >
               <span v-else>Phí reship</span>
             </p-button>
+            <p-button :type="`default`" class="btn" @click="handleClose"
+              >Hủy bỏ</p-button
+            >
             <p-button
               class="btn btn-info"
               :disabled="isUpdate"
