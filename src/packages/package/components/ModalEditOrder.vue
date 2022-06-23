@@ -377,6 +377,7 @@
               >Hủy bỏ</p-button
             >
             <p-button
+              v-if="this.isReLabel"
               class="btn btn-info mr-2"
               :disabled="isUpdate"
               @click="estimateCostHandle"
