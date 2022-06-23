@@ -113,17 +113,6 @@ export default {
           disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
-              route: '/statistics',
-              title: ' Thống kê',
-              alias: ['/statistics'],
-              disable:
-                this.$isAccountant() ||
-                this.$isSupport() ||
-                this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isWarehouse(),
-            },
-            {
               route: '/packages',
               title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
@@ -277,6 +266,33 @@ export default {
                 this.$isSupport() ||
                 this.$isSupportLeader() ||
                 this.$isAccountant() ||
+                this.$isWarehouse(),
+            },
+          ],
+        },
+        {
+          title: 'Thống kê ',
+          icon: 'analytic',
+          iconActive: 'analyticActive',
+          route: { name: 'statistic' },
+          class: '',
+          isOpen: false,
+          disable:
+            this.$isAccountant() ||
+            this.$isSupport() ||
+            this.$isHub() ||
+            this.$isSupportLeader() ||
+            this.$isWarehouse(),
+          sub: [
+            {
+              route: '/statistics',
+              title: ' Tài chính',
+              alias: ['/statistics'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
                 this.$isWarehouse(),
             },
           ],

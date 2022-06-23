@@ -9,15 +9,6 @@ export const routes = [
       import(/* webpackChunkName: "package" */ './views/ListPackages.vue'),
   },
   {
-    path: '/statistics',
-    name: 'statistics',
-    meta: {
-      title: 'Thống kê',
-    },
-    component: () =>
-      import(/* webpackChunkName: "package" */ './views/Statistics.vue'),
-  },
-  {
     path: '/packages/return',
     name: 'list-package-return',
     meta: {
