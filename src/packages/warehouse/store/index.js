@@ -18,7 +18,6 @@ export const UPDATE_STATUS_PACKAGE = 'updateStatusPackage'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
-  PACKAGE_WAREHOUSE_STATUS_RETURN,
 } from '../constants'
 
 export const state = {
@@ -58,10 +57,6 @@ export const mutations = {
       label_url: payload.label_url,
       tracking_number: payload.tracking_number,
     }
-  },
-  [RETURN_PACKAGE]: (state, id) => {
-    if (id != state.package.id) return
-    state.package.status = PACKAGE_WAREHOUSE_STATUS_RETURN
   },
   [WAREHOUSE_CHECK_IN]: (state, payload) => {
     state.package = payload
@@ -140,7 +135,6 @@ export const actions = {
       return { error: true, message: res.errorMessage || '' }
     }
 
-    commit(RETURN_PACKAGE, payload.id)
     return { error: false }
   },
 
@@ -226,7 +220,7 @@ export const actions = {
       return { error: true, message: res.errorMessage }
     }
 
-    return { error: false }
+    return { error: false, status_checkin: res.status_checkin }
   },
 
   // eslint-disable-next-line

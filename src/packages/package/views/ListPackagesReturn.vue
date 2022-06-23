@@ -24,23 +24,14 @@
             </option>
           </p-select>
         </div>
-        <div class="d-flex date-search">
-          <p-datepicker
-            :format="'dd/mm/yyyy'"
-            class="p-input-group input-group"
-            @update="selectDate"
-            :label="`Tìm theo ngày`"
-            id="date-search"
-            :value="{
-              startDate: filter.start_date,
-              endDate: filter.end_date,
-            }"
-            @clear="clearSearchDate"
-          ></p-datepicker>
-        </div>
       </div>
       <div class="card">
         <div class="card-body">
+          <status-tab
+            :has-all="false"
+            :status="statusTab"
+            v-model="filter.request_reship"
+          ></status-tab>
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="packages.length">
             <div class="table-responsive" style="overflow: unset">
@@ -198,7 +189,7 @@ export default {
           order_number: 'Mã đơn hàng',
           recipient: 'Người nhận',
           account: 'Tài khoản khách hàng',
-          customer_full_name: 'Tên khách hàng',
+          customer: 'Tên khách hàng',
           tracking: 'Last mile tracking',
         }
       },
@@ -214,6 +205,7 @@ export default {
         code: '',
         start_date: '',
         end_date: '',
+        request_reship: 'yes',
       },
       isSubmitting: false,
       isVisibleModal: false,
@@ -221,6 +213,16 @@ export default {
       isUploading: false,
       keywordSearch: '',
       isFetching: false,
+      statusTab: [
+        {
+          value: 'yes',
+          text: 'Khách yêu cầu',
+        },
+        {
+          value: '',
+          text: 'Tất cả',
+        },
+      ],
     }
   },
   created() {
@@ -248,8 +250,7 @@ export default {
         recipient: 'Tìm theo tên người nhận',
         account: 'Tìm theo email hoặc sđt của khách hàng',
         order_number: 'Tìm theo mã đơn hàng',
-        customer: 'Tìm theo email hoặc sđt của khách hàng',
-        customer_full_name: 'Tìm theo tên khách hàng',
+        customer: 'Tìm theo tên khách hàng',
         tracking: 'Tìm theo last mile tracking',
       }
 
@@ -266,10 +267,15 @@ export default {
         this.filter.user_id = this.user_id
       }
       this.keywordSearch = this.filter.search.trim()
+
+      const { request_reship, ...filters } = this.filter
       const payload = {
-        ...this.filter,
-        ...{ alert: PACKAGE_ALERT_TYPE_HUB_RETURN },
+        ...filters,
+        alert: PACKAGE_ALERT_TYPE_HUB_RETURN,
+        is_request_reship:
+          request_reship == 'yes' ? 1 : request_reship == 'no' ? -1 : 0,
       }
+
       const result = await this[FETCH_LIST_PACKAGES_RETURN](payload)
       this.isFetching = false
       if (!result.success) {
@@ -290,8 +296,6 @@ export default {
       this.isVisibleModal = true
     },
     async handleUpdate(params) {
-      this.isVisibleModal = false
-
       if (this.isSubmitting) return
 
       this.isSubmitting = true
@@ -302,6 +306,8 @@ export default {
         this.$toast.error(result.message, { duration: 3000 })
         return
       }
+
+      this.isVisibleModal = false
       this.$toast.success('Reship hàng thành công', { duration: 3000 })
       await this.init()
     },

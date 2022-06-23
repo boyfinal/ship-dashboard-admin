@@ -12,4 +12,15 @@ export const routes = [
         import(/* webpackChunkName: "orders" */ './views/Notification')
       ),
   },
+  {
+    path: '/notify/email',
+    name: 'email',
+    meta: {
+      title: 'Thông báo',
+    },
+    component: () =>
+      lazyLoadView(
+        import(/* webpackChunkName: "orders" */ './views/NotifyEmail')
+      ),
+  },
 ]

@@ -23,7 +23,7 @@
                   :disabled="disableInput"
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
-                  placeholder="Nhập LionBay tracking"
+                  placeholder="Nhập mã đơn hàng"
                 ></p-input>
                 <button
                   @click.prevent="searchHandle"
@@ -40,7 +40,7 @@
                 <button
                   class="btn btn-inline-danger ml-3 text-nowrap"
                   :disabled="disableBtnReturn"
-                  @click="showModalReturnHandle"
+                  @click="showModalReturnHandle(null)"
                   >Trả hàng</button
                 >
               </div>
@@ -52,21 +52,27 @@
             </div>
             <div class="card-body">
               <div class="package-info">
-                <div class="d-flex">
-                  <span>LionBay Tracking:</span>
-                  <span>{{ codecurrent }}</span>
-                </div>
-                <div class="d-flex">
-                  <span>Người gửi:</span>
-                  <span>{{ customer }}</span>
-                </div>
-                <div class="d-flex">
-                  <span>Chi tiết hàng hoá:</span>
-                  <span>{{ current.detail }}</span>
-                </div>
-                <div class="d-flex">
-                  <span>Trạng thái:</span>
-                  <span v-status="current.status" type="warehouse"></span>
+                <div class="row">
+                  <div class="col-6 first">
+                    <div class="d-flex">
+                      <span>Mã vận đơn:</span>
+                      <span>{{ codecurrent }}</span>
+                    </div>
+                    <div class="d-flex">
+                      <span>Người gửi:</span>
+                      <span>{{ customer }}</span>
+                    </div></div
+                  >
+                  <div class="col-6 second">
+                    <div class="d-flex">
+                      <span>Thông tin đơn:</span>
+                      <span>{{ current.detail }}</span>
+                    </div>
+                    <div class="d-flex">
+                      <span>Trạng thái:</span>
+                      <span v-status="current.status" type="warehouse"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -175,11 +181,97 @@
           </div>
         </div>
         <div class="col-4" style="min-height: 100%">
-          <div class="card" style="min-height: 100%">
-            <div class="card-header">
-              <div class="card-title">Danh sách</div>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="package-tab"
+                data-toggle="tab"
+                href="#package"
+                role="tab"
+                aria-controls="package"
+                aria-selected="true"
+                >Đơn hàng</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="user-tab"
+                data-toggle="tab"
+                href="#user"
+                role="tab"
+                aria-controls="user"
+                aria-selected="false"
+                >Người gửi</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="package"
+              role="tabpanel"
+              aria-labelledby="package-tab"
+            >
+              <div class="empty" v-if="!packages.length">
+                <p-svg name="empty"></p-svg>
+                <p>Chưa có đơn hàng được quét!</p>
+              </div>
+              <div v-else class="table-responsive">
+                <table class="table table-hover table-packages">
+                  <thead>
+                    <tr>
+                      <template>
+                        <th>Mã vận đơn</th>
+                        <th>Trạng thái</th>
+                        <th width="20"></th>
+                      </template>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, i) in packages" :key="i">
+                      <td>
+                        {{ item.code }}
+                      </td>
+                      <td v-html="item.statusHTML"></td>
+                      <td width="20">
+                        <p-svg
+                          name="return"
+                          @click.prevent="showModalReturnHandle(item)"
+                        ></p-svg>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="result d-flex jc-sb">
+                <span
+                  >Kết quả:
+                  <span
+                    :class="{
+                      'text-success': countSuccess == countTotal,
+                      'text-danger': countSuccess < countTotal,
+                    }"
+                    >{{ countSuccess }}/{{ countTotal }}</span
+                  ></span
+                >
+                <button
+                  class="btn btn-info"
+                  @click="handleAccepts"
+                  :disabled="disableBtnAccepts"
+                >
+                  Duyệt lại
+                </button>
+              </div>
             </div>
-            <div class="card-body">
+            <div
+              class="tab-pane fade"
+              id="user"
+              role="tabpanel"
+              aria-labelledby="user-tab"
+            >
               <div class="empty" v-if="!groups.length">
                 <p-svg name="empty"></p-svg>
                 <p>Chưa có đơn hàng được quét!</p>
@@ -199,7 +291,10 @@
                         >Người gửi: <b>{{ group.name }}</b></span
                       >
                       <span
-                        >Số lượng: <b>{{ group.count }}</b></span
+                        >Số lượng:
+                        <b :class="checkSusccess(group)">{{
+                          group.count
+                        }}</b></span
                       >
                     </div>
                   </div>
@@ -210,9 +305,9 @@
                   >
                     <div class="card-body">
                       <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-user">
                           <tr>
-                            <th>LionBay tracking</th>
+                            <th>Mã đơn hàng</th>
                             <th>Trạng thái</th>
                           </tr>
                           <tbody>
@@ -225,9 +320,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                </div> </div
+            ></div>
           </div>
         </div>
       </div>
@@ -236,7 +330,7 @@
     <ModalReturn
       :visible.sync="isVisibleModalReturn"
       :current="current"
-      @submit="returnHandle"
+      @submit="returnSubmit"
     />
   </div>
 </template>
@@ -256,16 +350,17 @@ import {
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_WAREHOUSE_STATUS_PICK,
-  PACKAGE_STATUS_CREATED,
-  PACKAGE_WAREHOUSE_STATUS_RETURN,
-  PACKAGE_WAREHOUSE_STATUS_CANCELLED,
+  CHECKIN_PACKAGE_STATUS_FAILED,
+  CHECKIN_PACKAGE_STATUS_SUCCESS,
+  CHECKIN_PACKAGE_STATUS_INVALID,
 } from '../constants'
 import { yup } from '../../../core/valider'
+import mixinTable from '@core/mixins/table'
 
 export default {
   name: 'CheckPackage',
   components: { ModalReturn, PageLoading },
-  mixins: [mixinBarcode],
+  mixins: [mixinBarcode, mixinTable],
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
@@ -317,6 +412,12 @@ export default {
         (this.codecurrent == this.keyword && this.codecurrent != '')
       )
     },
+    disableBtnAccepts() {
+      let arrPkgs = this.packages.filter(
+        (i) => i.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
+      )
+      return !arrPkgs.length
+    },
     isHasUpdate() {
       return (
         this.current &&
@@ -338,15 +439,13 @@ export default {
             this.current.user.phone_number
     },
     hasAccept() {
-      return (
-        this.current &&
-        this.current.id &&
-        this.current.status == PACKAGE_STATUS_PENDING_PICKUP &&
-        !this.hasError
-      )
+      return this.current && this.current.id && !this.hasError
     },
     total() {
       return this.packages.length
+    },
+    items() {
+      return this.packages
     },
     errors() {
       if (!this.current.id) return {}
@@ -383,6 +482,27 @@ export default {
     hasError() {
       return Object.keys(this.errors).length > 0
     },
+    packagesReverse() {
+      return [...this.packages].reverse()
+    },
+    countSuccess() {
+      return this.packages.filter(
+        (x) =>
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+          x.status != PACKAGE_STATUS_PENDING_PICKUP
+      ).length
+    },
+    countTotal() {
+      return this.packages.filter(
+        (x) =>
+          (x.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS &&
+            x.status != PACKAGE_STATUS_PENDING_PICKUP) ||
+          x.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
+      ).length
+    },
+  },
+  mounted() {
+    this.beforeLeaveHandle()
   },
   data() {
     return {
@@ -415,7 +535,7 @@ export default {
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
-      updateStauts: UPDATE_STATUS_PACKAGE,
+      updateStatus: UPDATE_STATUS_PACKAGE,
     }),
 
     async stopHandle() {
@@ -471,8 +591,15 @@ export default {
 
       this.iscan = true
       this.checkinRequestId = res.checkin.id
-
-      const packages = res.checkin.packages || []
+      let packages =
+        res.checkin && res.checkin.checkin_package
+          ? res.checkin.checkin_package.map((x) => {
+              return Object.assign(
+                { ...x.package },
+                { status_checkin: x.status }
+              )
+            })
+          : []
       for (const pkg of packages) {
         if (!pkg.package_code || !pkg.user) {
           continue
@@ -481,25 +608,31 @@ export default {
         const code = pkg.package_code.code
         const customer =
           pkg.user.full_name || pkg.user.email || pkg.user.phone_number
-        const status =
-          pkg.status == PACKAGE_WAREHOUSE_STATUS_RETURN
-            ? 'returned'
-            : 'accepted'
 
-        const item = {
-          id: this.current.id,
+        let item = {
+          id: pkg.id,
           code,
-          status,
-          statusHTML: '<span class="text-success">Đã quét</span>',
+          status: pkg.status,
+          status_checkin: pkg.status_checkin,
+          detail: pkg.detail,
+          statusHTML: '<span class="text-success">Thành công</span>',
         }
 
-        if (status == 'returned') {
-          item.statusHTML = '<span class="text-danger">Trả hàng</span>'
+        if (item.status == PACKAGE_STATUS_PENDING_PICKUP) {
+          item.statusHTML = '<span class="text-warning">Trả hàng</span>'
         }
 
-        this.packages.push(item)
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED) {
+          item.statusHTML = '<span class="text-danger">Thất bại</span>'
+        }
 
-        const group = this.groups.find(({ id }) => id == pkg.user.id)
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_INVALID) {
+          item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
+        }
+
+        this.packages.unshift(item)
+
+        let group = this.groups.find(({ id }) => id == pkg.user.id)
         if (group) {
           group.count++
           group.items.push(item)
@@ -583,33 +716,6 @@ export default {
         return
       }
 
-      if (this.current.status == PACKAGE_STATUS_CREATED) {
-        this.$toast.warning(`Mã ${keyword} chưa xác thực`)
-        this.setPackage({})
-        return
-      }
-
-      if (this.current.status == PACKAGE_WAREHOUSE_STATUS_CANCELLED) {
-        this.$toast.warning(`Đơn ${keyword} đã được huỷ`)
-        this.setPackage({})
-        return
-      }
-
-      if (this.current.status == PACKAGE_WAREHOUSE_STATUS_RETURN) {
-        this.$toast.warning(`Đơn ${keyword} đã được hoàn trả`)
-        this.setPackage({})
-        return
-      }
-
-      if (
-        this.current.status != PACKAGE_STATUS_PENDING_PICKUP ||
-        (this.current.tracking && this.current.tracking.id)
-      ) {
-        this.$toast.warning(`Mã ${keyword} đã được quét`)
-        this.setPackage({})
-        return
-      }
-
       this.updateVolum()
     },
 
@@ -673,21 +779,19 @@ export default {
       )
 
       const res = await this.createLabel(form)
-
       if (res.error) {
         this.$toast.error(res.message)
         this.isSubmitting = false
         return false
       }
 
-      this.addToAnalytics('accepted')
+      this.addToAnalytics(res.status_checkin)
+
       this.isSubmitting = false
       this.iscaned = true
-
-      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_PICK)
-
-      this.$toast.success(`Đơn ${this.codecurrent} quét thành công`)
-
+      if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
+        this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
+      }
       return true
     },
 
@@ -716,15 +820,11 @@ export default {
       }
     },
 
-    showModalReturnHandle() {
+    showModalReturnHandle(item) {
+      if (item) {
+        this.setPackage(item)
+      }
       this.isVisibleModalReturn = true
-    },
-
-    returnHandle(note) {
-      this.$dialog.confirm({
-        title: 'Xác nhận trả hàng?',
-        onConfirm: () => this.returnSubmit(note),
-      })
     },
 
     async returnSubmit(note) {
@@ -739,7 +839,7 @@ export default {
       this.updateVolum()
       this.isSubmitting = true
       const body = {
-        id: this.current.id,
+        ids: [this.current.id],
         checkin_request_id: this.checkinRequestId,
         note,
       }
@@ -754,9 +854,33 @@ export default {
 
       this.iscaned = true
       this.isSubmitting = false
-      this.updateStauts(PACKAGE_WAREHOUSE_STATUS_RETURN)
 
-      this.$toast.success(`Mã ${this.codecurrent} trả hàng thành công`)
+      let index = this.packages.findIndex(({ id }) => id == this.current.id)
+      if (index !== -1) {
+        this.packages = this.packages.map((item) => {
+          const obj = Object.assign({}, item)
+          if (body.ids.includes(obj.id)) {
+            obj.status = PACKAGE_STATUS_PENDING_PICKUP
+            obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
+          }
+          return obj
+        })
+
+        this.groups.forEach((group) => {
+          group.items = group.items.map((item) => {
+            const obj = Object.assign({}, item)
+            if (body.ids.includes(obj.id)) {
+              obj.status = PACKAGE_STATUS_PENDING_PICKUP
+              obj.statusHTML = '<span class="text-warning">Trả hàng</span>'
+            }
+            return obj
+          })
+        })
+      } else {
+        this.addToAnalytics('returned')
+      }
+
+      this.$toast.success(`Trả hàng thành công`)
       this.isVisibleModalReturn = false
     },
 
@@ -765,14 +889,22 @@ export default {
         id: this.current.id,
         code: this.codecurrent,
         status,
-        statusHTML: '<span class="text-success">Đã quét</span>',
+        detail: this.current.detail,
+        status_checkin: status,
+        statusHTML: '<span class="text-success">Thành công</span>',
       }
-
       if (status == 'returned') {
-        item.statusHTML = '<span class="text-danger">Trả hàng</span>'
+        item.status = PACKAGE_STATUS_PENDING_PICKUP
+        item.statusHTML = '<span class="text-warning">Trả hàng</span>'
+      }
+      if (status == CHECKIN_PACKAGE_STATUS_FAILED) {
+        item.statusHTML = '<span class="text-danger">Thất bại</span>'
       }
 
-      this.packages.push(item)
+      if (status == CHECKIN_PACKAGE_STATUS_INVALID) {
+        item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
+      }
+      this.packages.unshift(item)
 
       const user = this.current.user
       const group = this.groups.find(({ id }) => id == user.id)
@@ -798,139 +930,68 @@ export default {
       const show = !this.groups[idx].show
       this.$set(this.groups[idx], 'show', show)
     },
+
+    handleValue(e) {
+      this.selected = JSON.parse(JSON.stringify(e))
+    },
+
+    async handleAccepts() {
+      let arrIds = this.packages
+        .filter((i) => i.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED)
+        .map((x) => x.id)
+      this.isFetching = false
+      for (let id of arrIds) {
+        const form = Object.assign(
+          {
+            id: id,
+            checkin_request_id: this.checkinRequestId,
+          },
+          this.form
+        )
+
+        const res = await this.createLabel(form)
+        if (res.error) {
+          this.$toast.error(res.message)
+          continue
+        }
+      }
+
+      this.groups = []
+      this.packages = []
+      this.startHandle()
+    },
+    beforeLeaveHandle() {
+      window.onbeforeunload = () => {
+        if (!this.disableBtnAccepts) {
+          return 'Vẫn còn đơn thất bại, bạn có muốn thoát khỏi trang?'
+        }
+
+        return null
+      }
+    },
+
+    checkSusccess(group) {
+      let arrFailed = group.items.filter(
+        (i) => i.status_checkin == CHECKIN_PACKAGE_STATUS_FAILED
+      )
+      return arrFailed.length ? 'count-danger' : 'count-success'
+    },
+  },
+  // eslint-disable-next-line no-unused-vars
+  beforeRouteLeave(to, from, next) {
+    if (!this.disableBtnAccepts) {
+      const answer = window.confirm(
+        'Vẫn còn đơn thất bại, bạn có muốn thoát khỏi trang?'
+      )
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
 }
 </script>
-<style lang="scss">
-.scan-in {
-  .package-info {
-    .d-flex {
-      margin-bottom: 10px;
-    }
-    span {
-      color: #333;
-      &:first-child {
-        width: 150px;
-        color: #636363;
-      }
-    }
-  }
-  .actions {
-    .icon {
-      margin-right: 8px;
-      vertical-align: bottom;
-      path {
-        fill: #fff;
-      }
-    }
-
-    .btn-white {
-      font-weight: normal;
-      b {
-        color: #333;
-      }
-    }
-  }
-
-  #scanin-list {
-    .card {
-      border: none;
-      + .card {
-        margin-top: 2px;
-      }
-    }
-    .card-header {
-      padding: 0;
-      position: relative;
-
-      .head {
-        transition: all 0.35s ease;
-        padding: 12px 12px;
-        width: 100%;
-        background-color: #141f65;
-        color: #fff;
-        font-size: 14px;
-        line-height: 20px;
-        span:first-child {
-          margin-right: 15px;
-        }
-      }
-
-      a {
-        transform: rotate(180deg);
-        position: absolute;
-        right: 12px;
-        top: 14px;
-        transition: all 0.35s ease;
-      }
-
-      a.collapsed {
-        transform: rotate(0deg);
-        top: 11px;
-        path {
-          stroke: #333;
-        }
-
-        + .head {
-          background-color: #f6f7f7;
-          color: #111212;
-        }
-      }
-    }
-
-    .accordion-collapse {
-      height: 0;
-      transition: height 0.35s ease;
-
-      &.show {
-        height: auto;
-      }
-    }
-  }
-
-  .row {
-    margin-right: -8px;
-    margin-left: -8px;
-  }
-
-  [class^='col-'] {
-    padding-right: 8px;
-    padding-left: 8px;
-  }
-
-  .empty {
-    padding: 120px 0;
-    text-align: center;
-    p {
-      margin-top: 24px;
-    }
-  }
-  .table {
-    th,
-    td {
-      border: none;
-    }
-    th {
-      padding: 8px 12px;
-      background-color: #f6f7f7;
-      color: #626363;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 16px;
-    }
-    td {
-      padding: 12px 12px 11px;
-      color: #111212;
-    }
-    tr + tr {
-      td {
-        border-top: 1px solid #edeeee;
-      }
-    }
-  }
-
-  .table-hover tbody tr:first-child td {
-    border-top: 0;
-  }
-}
-</style>
+<style lang="scss"></style>

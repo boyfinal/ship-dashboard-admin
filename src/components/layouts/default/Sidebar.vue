@@ -129,9 +129,9 @@ export default {
               alias: ['/claims', '/claims/:id'],
             },
             {
-              route: '/bills',
+              route: '/debt',
               title: 'Tài chính',
-              alias: ['/bills', '/bills/:code'],
+              alias: ['/bills', '/bills/:code', '/debt'],
               disable: this.$isSupportLeader(),
             },
             {
@@ -141,10 +141,15 @@ export default {
               disable: this.$isSupportLeader(),
             },
             {
-              route: '/user',
-              title: 'Tài khoản khách hàng',
-              alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant(),
+              route: '/notify/email',
+              title: 'Thông báo',
+              alias: ['/notify/email'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
           ],
         },
@@ -266,21 +271,44 @@ export default {
           ],
         },
         {
+          title: 'Thống kê ',
+          icon: 'analytic',
+          iconActive: 'analyticActive',
+          route: { name: 'statistic' },
+          class: '',
+          isOpen: false,
+          disable:
+            this.$isAccountant() ||
+            this.$isSupport() ||
+            this.$isHub() ||
+            this.$isSupportLeader() ||
+            this.$isWarehouse(),
+          sub: [
+            {
+              route: '/statistics',
+              title: ' Tài chính',
+              alias: ['/statistics'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
+                this.$isWarehouse(),
+            },
+          ],
+        },
+        {
           title: 'Quản trị',
           icon: 'setting',
           iconActive: 'SettingActive',
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable:
-            this.$isSupport() ||
-            this.$isWarehouse() ||
-            this.$isHub() ||
-            this.$isSupportLeader(),
+          disable: this.$isWarehouse() || this.$isHub(),
           sub: [
             {
               route: '/account',
-              title: 'Tài khoản',
+              title: 'Tài khoản admin',
               alias: ['/account'],
               disable:
                 this.$isAccountant() ||
@@ -288,6 +316,12 @@ export default {
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader(),
+            },
+            {
+              route: '/user',
+              title: 'Tài khoản khách hàng',
+              alias: ['/user', '/user/:id'],
+              disable: this.$isAccountant(),
             },
             {
               route: '',
@@ -304,6 +338,7 @@ export default {
               route: '/prices',
               title: 'Bảng giá',
               alias: ['/prices'],
+              disable: this.$isSupportLeader() || this.$isSupport(),
             },
           ],
         },

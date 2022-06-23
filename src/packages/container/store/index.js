@@ -45,13 +45,12 @@ export const actions = {
   async [FETCH_LIST_CONTAINERS]({ commit }, payload) {
     let result = { success: true }
 
-    let [list, count, listBox] = await Promise.all([
+    let [list, count] = await Promise.all([
       api.fetchListContainers(payload),
       api.countListContainers(payload),
-      api.fetchListContainerBoxes(),
     ])
 
-    if (!list.containers || !count || !listBox.boxes) {
+    if (!list.containers || !count) {
       count = { count: 0 }
       result = {
         success: false,
@@ -59,7 +58,6 @@ export const actions = {
       }
     }
     commit(FETCH_LIST_CONTAINERS, list.containers)
-    commit(FETCH_LIST_CONTAINER_BOXES, listBox.boxes)
     commit(COUNT_LIST_CONTAINERS, count)
     return result
   },
@@ -104,15 +102,20 @@ export const actions = {
   // eslint-disable-next-line no-unused-vars
   async [FETCH_CONTAINER_DETAIL]({ commit }, payload) {
     let result = { success: true }
-    let response = await api.detailContainer(payload)
-    if (!response || !response.container) {
+    let [list, listBox] = await Promise.all([
+      api.detailContainer(payload),
+      api.fetchListContainerBoxes(),
+    ])
+    if (!list || !list.container || !listBox) {
       result = {
         success: false,
-        message: response.errorMessage,
+        message: list.errorMessage,
       }
     }
 
-    commit(FETCH_CONTAINER_DETAIL, response)
+    commit(FETCH_CONTAINER_DETAIL, list)
+    commit(FETCH_LIST_CONTAINER_BOXES, listBox.boxes)
+
     return result
   },
 
