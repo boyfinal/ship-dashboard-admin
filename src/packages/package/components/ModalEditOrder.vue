@@ -363,7 +363,15 @@
       </template>
       <template slot="footer">
         <div class="modal__edit-order-footer">
-          <div class="total-title">
+          <div class="total-title" v-if="this.isReLabel">
+            Phí ship:
+            <span class="total-number">{{ feeReship | formatPrice }}</span>
+            <div class="text" style="font-size: 11px"
+              >Đây là phí tạm tính, có thể thay đổi theo thời điểm lệnh reship
+              được tạo thành công!</div
+            >
+          </div>
+          <div class="total-title" v-else>
             Tổng cước:
             <span class="total-number">{{ 0 | formatPrice }}</span>
             <div class="text">Bảng giá không áp dụng cho hành trình này!</div>
@@ -372,27 +380,27 @@
             <div class="notch"></div>
             <div class="notch-bt"></div>
           </div>
-          <div class="total-action">
-            <p-button :type="`default`" class="btn" @click="handleClose"
-              >Hủy bỏ</p-button
-            >
-            <p-button
-              v-if="this.isReLabel"
-              class="btn btn-info mr-2"
-              :disabled="isUpdate"
-              @click="estimateCostHandle"
-            >
-              <span v-if="feeReship"
-                >Phí reship: {{ feeReship | formatPrice }}</span
+          <div class="total-action justify-content-between">
+            <div>
+              <p-button
+                v-if="this.isReLabel"
+                class="btn btn-info mr-2"
+                :disabled="isUpdate"
+                @click="estimateCostHandle"
+                >Phí reship</p-button
               >
-              <span v-else>Phí reship</span>
-            </p-button>
-            <p-button
-              class="btn btn-info"
-              :disabled="isUpdate"
-              @click="handleUpdate"
-              >Cập nhật</p-button
-            >
+            </div>
+            <div>
+              <p-button :type="`default`" class="btn" @click="handleClose"
+                >Hủy bỏ</p-button
+              >
+              <p-button
+                class="btn btn-info"
+                :disabled="isUpdate"
+                @click="handleUpdate"
+                >Cập nhật</p-button
+              >
+            </div>
           </div>
         </div>
       </template>
