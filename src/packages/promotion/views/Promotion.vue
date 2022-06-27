@@ -1,15 +1,14 @@
 <template>
   <div class="pages promotion setting-account">
     <div class="search-input">
-      <p-input
-        placeholder="Tìm kiếm promotion"
-        prefixIcon="search"
-        class="mb-2"
-        type="search"
-        :value="filter.search"
-        @keyup.enter="handleSearch"
-      >
-      </p-input>
+      <search-promotion
+        id="search"
+        class="user-resource is-fullwidth mb-2"
+        :filter="filter"
+        :label="`Tìm kiếm promotion`"
+        v-model="filter.search"
+        @input="init"
+      />
     </div>
     <div class="page-content">
       <div class="card">
@@ -47,6 +46,7 @@
                       <a
                         href="#"
                         class="btn edit ml-8"
+                        :class="{ deactive: item.status != 1 }"
                         @click="loadDetailPromotion(item)"
                       >
                         Sửa
@@ -68,7 +68,6 @@
           :total="count"
           :perPage.sync="filter.limit"
           :current.sync="filter.page"
-          :filterLimit="true"
           size="sm"
         ></p-pagination>
       </div>
@@ -104,7 +103,7 @@ import {
 } from '../store/index'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAppendPromotion from '../components/ModalAppendPromotion.vue'
-
+import SearchPromotion from '../components/SearchPromotion.vue'
 export default {
   name: 'ListPromotion',
   mixins: [mixinRoute, mixinTable],
@@ -112,11 +111,12 @@ export default {
     EmptySearchResult,
     ModalConfirm,
     ModalAppendPromotion,
+    SearchPromotion,
   },
   data() {
     return {
       filter: {
-        limit: 20,
+        limit: 30,
         search: '',
         status: 1,
       },
