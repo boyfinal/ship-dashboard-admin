@@ -179,8 +179,6 @@ export default {
     return {
       promotion: this.data,
       receiverErr: '',
-      title: '',
-      body: '',
       search: '',
       searchSelected: '',
       searchSelectedResult: [],
@@ -223,9 +221,9 @@ export default {
       return
     },
     handleClose() {
-      ;(this.checkedLeft = []),
-        (this.checkedRight = []),
-        (this.receiverErr = '')
+      // ;(this.checkedLeft = []),
+      //   (this.checkedRight = []),
+      //   (this.receiverErr = '')
       this.$emit('update:visible', false)
     },
     validateContent() {
@@ -313,12 +311,26 @@ export default {
         return reg.test(item.email) || reg.test(item.full_name)
       })
     },
+    initialData() {
+      return {
+        promotion: this.data,
+        receiverErr: '',
+        search: '',
+        searchSelected: '',
+        searchSelectedResult: [],
+        isLoading: false,
+        users: [],
+        selected: [],
+        checkedLeft: [],
+        checkedRight: [],
+      }
+    },
   },
   watch: {
     visible: {
       handler: function (v) {
         if (v) {
-          this.promotion = this.data
+          Object.assign(this.$data, this.initialData())
           this.init()
         }
       },
