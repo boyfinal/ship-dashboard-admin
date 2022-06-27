@@ -127,6 +127,7 @@
                 </ul>
               </div>
             </div>
+            <i class="err-txt" v-if="receiverErr">{{ receiverErr }}</i>
           </div>
         </div>
       </div>
@@ -222,6 +223,9 @@ export default {
       return
     },
     handleClose() {
+      ;(this.checkedLeft = []),
+        (this.checkedRight = []),
+        (this.receiverErr = '')
       this.$emit('update:visible', false)
     },
     validateContent() {
@@ -229,6 +233,7 @@ export default {
         this.receiverErr = 'Khách hàng áp dụng không để trống'
         return false
       }
+      this.receiverErr = ''
       return true
     },
     handleAppendPromotion() {
@@ -313,9 +318,7 @@ export default {
     visible: {
       handler: function (v) {
         if (v) {
-          ;(this.checkedLeft = []),
-            (this.checkedRight = []),
-            (this.promotion = this.data)
+          this.promotion = this.data
           this.init()
         }
       },
@@ -395,7 +398,12 @@ b {
   font-weight: 600;
   color: #111212;
 }
-
+.err-txt {
+  color: #da1e28;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+}
 .list-user-select::-webkit-scrollbar-track {
   width: 4px;
   background: #fff;
