@@ -151,6 +151,11 @@ export default {
                 this.$isHub() ||
                 this.$isSupportLeader(),
             },
+            {
+              route: '/promotions',
+              title: 'Promotion',
+              alias: ['/promotions'],
+            },
           ],
         },
         // {
