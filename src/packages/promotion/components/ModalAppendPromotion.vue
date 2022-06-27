@@ -221,9 +221,6 @@ export default {
       return
     },
     handleClose() {
-      // ;(this.checkedLeft = []),
-      //   (this.checkedRight = []),
-      //   (this.receiverErr = '')
       this.$emit('update:visible', false)
     },
     validateContent() {
