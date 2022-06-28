@@ -155,6 +155,12 @@ export default {
               route: '/promotions',
               title: 'Promotion',
               alias: ['/promotions'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
             },
           ],
         },
