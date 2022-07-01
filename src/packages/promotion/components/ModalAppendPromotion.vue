@@ -33,58 +33,10 @@
           </div>
           <div class="action">
             <div class="icon-container">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                @click="addSelectedUser"
-              >
-                <rect width="32" height="32" rx="4" fill="#EDEEEE" />
-                <path
-                  d="M18.4299 9.92999L24.4999 16L18.4299 22.07"
-                  stroke="#AAABAB"
-                  stroke-width="2"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M7.5 16H24.33"
-                  stroke="#AAABAB"
-                  stroke-width="2"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                @click="removeSelectedUser"
-              >
-                <rect width="32" height="32" rx="4" fill="#EDEEEE" />
-                <path
-                  d="M13.57 9.92999L7.5 16L13.57 22.07"
-                  stroke="#AAABAB"
-                  stroke-width="2"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M24.4999 16H7.66992"
-                  stroke="#AAABAB"
-                  stroke-width="2"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <p-svg name="add_all" @click="addAllUser"></p-svg>
+              <p-svg name="add" @click="addSelectedUser"></p-svg>
+              <p-svg name="remove" @click="removeSelectedUser"></p-svg>
+              <p-svg name="remove_all" @click="removeAllUser"></p-svg>
             </div>
           </div>
           <div>
@@ -241,22 +193,6 @@ export default {
       }
       this.$emit('save', payload)
     },
-    setCheckedLeft(item) {
-      const index = this.checkedLeft.indexOf(item.id)
-      if (index > -1) {
-        this.checkedLeft.splice(index, 1)
-      } else {
-        this.checkedLeft.push(item.id)
-      }
-    },
-    setCheckedRight(item) {
-      const index = this.checkedRight.indexOf(item.id)
-      if (index > -1) {
-        this.checkedRight.splice(index, 1)
-      } else {
-        this.checkedRight.push(item.id)
-      }
-    },
     async updateSearch(e) {
       const search = e.target.value
       this.isLoading = true
@@ -275,6 +211,30 @@ export default {
       this.users = result.users.filter((i) => {
         return !this.selectIDs.includes(i.id)
       })
+    },
+    setCheckedLeft(item) {
+      const index = this.checkedLeft.indexOf(item.id)
+      if (index > -1) {
+        this.checkedLeft.splice(index, 1)
+      } else {
+        this.checkedLeft.push(item.id)
+      }
+    },
+    setCheckedRight(item) {
+      const index = this.checkedRight.indexOf(item.id)
+      if (index > -1) {
+        this.checkedRight.splice(index, 1)
+      } else {
+        this.checkedRight.push(item.id)
+      }
+    },
+    addAllUser() {
+      this.checkedLeft = this.users.map((user) => user.id)
+      this.addSelectedUser()
+    },
+    removeAllUser() {
+      this.checkedRight = this.selected.map((x) => x.id)
+      this.removeSelectedUser()
     },
     addSelectedUser() {
       let checked = []
@@ -340,6 +300,7 @@ export default {
   margin-bottom: 0.4rem;
 }
 .action {
+  padding-top: 40px;
   margin: 8px;
   display: flex;
   align-items: center;
@@ -348,7 +309,7 @@ export default {
 .action svg {
   cursor: pointer;
   display: block;
-  margin: 8px 0px;
+  margin: 4px 0px;
 }
 .user-select-box {
   border: 1px solid #cfd0d0;
