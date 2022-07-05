@@ -151,6 +151,17 @@ export default {
                 this.$isHub() ||
                 this.$isSupportLeader(),
             },
+            {
+              route: '/promotions',
+              title: 'Promotion',
+              alias: ['/promotions'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
+            },
           ],
         },
         // {
