@@ -225,8 +225,6 @@ export default {
     this.valider.reset()
   },
   mounted() {
-    console.log(this.typeContainer)
-
     this.type = this.boxes[0] ? this.boxes[0].id : 0
   },
   computed: {
