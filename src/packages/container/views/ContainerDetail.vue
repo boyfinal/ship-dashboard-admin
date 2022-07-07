@@ -211,6 +211,7 @@
       :cancel="`Hủy`"
       :actionConfirm="`Xác nhận`"
       :title="'Xác nhận đóng kiện'"
+      :typeContainer="container_detail.type"
     >
     </modal-choice-shipping-box>
   </div>
