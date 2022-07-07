@@ -133,6 +133,15 @@
           />
         </div>
       </div>
+      <template v-if="typeContainer === typeManual">
+        <br />
+        <div class="row">
+          <div class="col-12">
+            <label for=""><b>Mã tracking</b></label>
+            <p-input v-model="tracking_number" :error="err" />
+          </div>
+        </div>
+      </template>
     </div>
 
     <template slot="footer">
@@ -189,8 +198,12 @@ export default {
     title: {
       type: String,
     },
+    typeContainer: {
+      type: Number,
+    },
   },
   created() {
+    console.log(this.typeContainer)
     this.valider = valider.schema((y) => ({
       height: y
         .number()
@@ -212,6 +225,8 @@ export default {
     this.valider.reset()
   },
   mounted() {
+    console.log(this.typeContainer)
+
     this.type = this.boxes[0] ? this.boxes[0].id : 0
   },
   computed: {
@@ -237,12 +252,14 @@ export default {
         max_weight: 0,
       },
       weight: 0,
+      tracking_number: '',
       warehouse: {},
       type: 0,
       warehouseID: 0,
       containerType: 0,
       store: 1,
       valider: null,
+      err: '',
       types: [
         {
           key: CONTAINER_TYPE_API,
@@ -253,10 +270,13 @@ export default {
           text: 'Tạo mã UPS thủ công',
         },
       ],
+      typeManual: CONTAINER_TYPE_MANUAL,
     }
   },
   methods: {
     handleClose() {
+      this.err = ''
+      this.valider.reset()
       this.$emit('update:visible', false)
     },
     async handleSave() {
@@ -270,22 +290,27 @@ export default {
           return
         }
       }
+      this.box = Object.assign(this.box, {
+        weight: this.weight,
+        tracking_number: this.tracking_number,
+      })
       if (!this.valider.check(this.box) && !this.isCreate) {
+        return
+      }
+      if (this.typeContainer == 1 && this.tracking_number == '') {
+        this.err = 'Tracking number không để trống'
         return
       }
       let payload = {}
       if (this.isCreate) {
-        payload = {
-          ...{ warehouse_id: this.warehouseID, type: this.containerType },
-        }
+        payload = { warehouse_id: this.warehouseID, type: this.containerType }
       } else {
         payload = {
-          ...{
-            width: this.box.width,
-            height: this.box.height,
-            length: this.box.length,
-            weight: this.weight,
-          },
+          width: this.box.width,
+          height: this.box.height,
+          length: this.box.length,
+          weight: this.box.weight,
+          tracking_number: this.box.tracking_number,
         }
       }
 
