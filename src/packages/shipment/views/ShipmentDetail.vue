@@ -168,11 +168,12 @@
                       <th>Số lượng</th>
                       <th>Trọng lượng</th>
                       <th>Dài x Rộng x Cao</th>
+                      <th>Loại</th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, i) in containers" :key="i">
+                    <tr v-for="(item, i) in displayContainers" :key="i">
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -274,6 +275,7 @@
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
+                      <td>{{ item.type_text }}</td>
                       <td>
                         <p-button
                           v-if="
@@ -358,6 +360,8 @@ import {
   MAP_NAME_STATUS_SHIPMENT,
 } from '../constants'
 import Browser from '@core/helpers/browser'
+import { CONTAINER_TYPE_MANUAL } from '../../container/contants'
+
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
@@ -412,6 +416,15 @@ export default {
       },
       showIntransitButton() {
         return this.isClosedShipment
+      },
+      displayContainers() {
+        return (this.containers || []).map((item) => {
+          item.type_text =
+            item.type != CONTAINER_TYPE_MANUAL
+              ? 'Tạo UPS bằng API'
+              : 'Tạo UPS thủ công'
+          return item
+        })
       },
     }),
     items() {

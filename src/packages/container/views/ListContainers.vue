@@ -56,13 +56,14 @@
                       <th>Kích thước</th>
                       <th class="text-center">Số lượng đơn</th>
                       <th class="text-center">Tổng cân nặng</th>
+                      <th>Loại</th>
                       <th>Trạng thái</th>
                       <th>Hành động</th>
                     </template>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in containers" :key="i">
+                  <tr v-for="(item, i) in displayContainers" :key="i">
                     <td>
                       <router-link
                         class="text-no-underline"
@@ -114,6 +115,7 @@
                     >
                     <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
+                    <td>{{ item.type_text }}</td>
                     <td>
                       <span v-status="item.status" type="container"></span>
                     </td>
@@ -179,6 +181,7 @@ import {
   CONTAINER_DELIVERIED,
   CONTAINER_IMPORT_HUB,
   CONTAINER_EXPORT_HUB,
+  CONTAINER_TYPE_MANUAL,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
@@ -256,6 +259,16 @@ export default {
             : obj
         )
         return temp
+      },
+
+      displayContainers() {
+        return (this.containers || []).map((item) => {
+          item.type_text =
+            item.type != CONTAINER_TYPE_MANUAL
+              ? 'Tạo UPS bằng API'
+              : 'Tạo UPS thủ công'
+          return item
+        })
       },
     }),
   },

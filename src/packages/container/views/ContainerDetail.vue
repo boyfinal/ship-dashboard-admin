@@ -45,6 +45,10 @@
               <div>Số lượng đơn: </div>
               <div>{{ count }}</div>
             </div>
+            <div>
+              <div>Loại kiện hàng: </div>
+              <div>{{ typeText }}</div>
+            </div>
           </div>
         </div>
 
@@ -228,7 +232,7 @@ import {
   GET_LABEL,
 } from '../store'
 
-import { CONTAINER_WAITING_CLOSE } from '../contants'
+import { CONTAINER_WAITING_CLOSE, CONTAINER_TYPE_MANUAL } from '../contants'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
 
 import { cloneDeep } from '../../../core/utils'
@@ -274,6 +278,12 @@ export default {
     },
     isAdmin() {
       return this.$isAdmin()
+    },
+    typeText() {
+      const containerType = (this.container_detail || {}).type
+      return containerType != CONTAINER_TYPE_MANUAL
+        ? 'Tạo UPS bằng API'
+        : 'Tạo UPS thủ công'
     },
   },
   created() {
