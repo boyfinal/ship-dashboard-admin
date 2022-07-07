@@ -357,28 +357,26 @@ export default {
     },
     async createContainerSubmit(body) {
       if (body.warehouse_id == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Chưa chọn kho',
-        })
+        this.$toast.error('Chưa chọn kho')
         return
       }
+
+      if (body.type == 0) {
+        this.$toast.error('Chưa chọn kiểu kiện')
+        return
+      }
+
       this.loadingCreateContainer = true
       const result = await this[CREATE_CONTAINER](body)
       this.loadingCreateContainer = false
       this.visibleModalChoiceBox = false
+
       if (!result.success) {
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-        })
+        this.$toast.error(result.message)
         return
       }
 
-      this.$toast.open({
-        type: 'success',
-        message: 'Tạo kiện hàng thành công',
-      })
+      this.$toast.success('Tạo kiện hàng thành công')
       this.init()
     },
     handleFilter(id) {
