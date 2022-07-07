@@ -44,4 +44,12 @@ export const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/Profile.vue'),
   },
+  {
+    path: '/debt',
+    name: 'debt',
+    meta: {
+      title: 'Quản lý công nợ',
+    },
+    component: () => import(/* webpackChunkName: "bills" */ './views/Debt.vue'),
+  },
 ]
