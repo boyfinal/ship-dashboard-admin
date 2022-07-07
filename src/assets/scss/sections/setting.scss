@@ -203,3 +203,41 @@
         }
     }
 }
+//Modal search debt
+
+//Modal search bill
+
+.debt__search{
+    .checkbox-custom{
+        top:unset;
+        position: unset;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .price, .payment{
+        margin-top: 24px;
+         input[type=checkbox]:checked + label::before{
+            background-color: #00B7B0;
+            border-color: #00B7B0;
+        }
+         input[type=checkbox]:checked + label{
+            font-weight: 700;
+        }
+    }
+
+
+
+    .list-option{
+        padding: 10px 0;
+    }
+
+    .modal-body{
+        overflow-y: unset;
+    }
+
+    .modal-footer{
+        justify-content: flex-end;
+    }
+
+}
