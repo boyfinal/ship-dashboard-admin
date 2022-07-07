@@ -13,6 +13,15 @@
           >
         </p-select>
       </div>
+      <div class="col">
+        <label for=""><b>Chọn kiểu kiện:</b></label>
+        <p-select class="floating" v-model="containerType" name="containerType">
+          <option value="0">Chọn kiểu kiện</option>
+          <option v-for="item in types" :key="item.key" :value="item.key">{{
+            item.text
+          }}</option>
+        </p-select>
+      </div>
     </div>
     <div v-else>
       <div class="row">
@@ -145,6 +154,7 @@
 
 <script>
 import valider from '@core/valider'
+import { CONTAINER_TYPE_API, CONTAINER_TYPE_MANUAL } from '../contants'
 
 export default {
   name: 'ModalChoiceShippingBox',
@@ -230,8 +240,19 @@ export default {
       warehouse: {},
       type: 0,
       warehouseID: 0,
+      containerType: 0,
       store: 1,
       valider: null,
+      types: [
+        {
+          key: CONTAINER_TYPE_API,
+          text: 'Tạo mã UPS theo API',
+        },
+        {
+          key: CONTAINER_TYPE_MANUAL,
+          text: 'Tạo mã UPS thủ công',
+        },
+      ],
     }
   },
   methods: {
@@ -254,7 +275,9 @@ export default {
       }
       let payload = {}
       if (this.isCreate) {
-        payload = { ...{ warehouse_id: this.warehouseID } }
+        payload = {
+          ...{ warehouse_id: this.warehouseID, type: this.containerType },
+        }
       } else {
         payload = {
           ...{
@@ -277,6 +300,7 @@ export default {
       this.isShow = value
       this.type = 0
       this.warehouseID = 0
+      this.containerType = 0
     },
     type(val) {
       if (val == this.maxIDBox + 1) {

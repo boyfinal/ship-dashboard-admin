@@ -5,6 +5,10 @@ export const CONTAINER_INTRANSIT = 5
 export const CONTAINER_DELIVERIED = 4
 export const CONTAINER_IMPORT_HUB = 6
 export const CONTAINER_EXPORT_HUB = 7
+
+export const CONTAINER_TYPE_API = 1
+export const CONTAINER_TYPE_MANUAL = 2
+
 export const CONTAINER_STATUS_TAB = [
   {
     value: '',
