@@ -15,6 +15,9 @@ export default {
   createContainer(payload) {
     return http.post(`/containers`, payload)
   },
+  updateContainer(payload) {
+    return http.put(`/containers/${payload.id}`, payload)
+  },
   detailContainer(payload) {
     return http.get(`/containers/${payload.code}?${buildQueryString(payload)}`)
   },

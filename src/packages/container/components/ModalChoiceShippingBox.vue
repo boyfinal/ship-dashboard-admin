@@ -9,8 +9,8 @@
             v-for="warehouse in warehouses"
             :key="warehouse.id"
             :value="warehouse.id"
-            >HUB {{ warehouse.state }}</option
-          >
+            >HUB {{ warehouse.state }}
+          </option>
         </p-select>
       </div>
       <div class="col">
@@ -203,7 +203,6 @@ export default {
     },
   },
   created() {
-    console.log(this.typeContainer)
     this.valider = valider.schema((y) => ({
       height: y
         .number()
@@ -343,6 +342,7 @@ export default {
     width: 800px;
   }
 }
+
 .p-modal-content label {
   margin-bottom: 0.4rem;
 }

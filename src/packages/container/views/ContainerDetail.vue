@@ -77,6 +77,15 @@
               id="startScanButton"
               type="info"
               :class="`mr-3`"
+              v-if="showBtnUpdate"
+              @click="handleShowUpdateModal"
+            >
+              Cập nhật tracking
+            </p-button>
+            <p-button
+              id="startScanButton"
+              type="info"
+              :class="`mr-3`"
               v-if="
                 !isStartScan &&
                 container_detail.status === CONTAINER_WAITING_CLOSE
@@ -134,8 +143,8 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in items" :key="i">
-                      <td
-                        ><router-link
+                      <td>
+                        <router-link
                           v-if="isAdmin"
                           class="text-no-underline"
                           :to="`/packages/${item.id}`"
@@ -187,7 +196,8 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
-                ></p-pagination>
+                >
+                </p-pagination>
               </div>
             </template>
             <empty-search-result v-else></empty-search-result>
@@ -203,7 +213,8 @@
       :description="`Bạn có chắc chắn hủy kiện ?`"
       :title="`Xác nhận hủy`"
       @action="handleCancelContainer"
-    ></modal-confirm>
+    >
+    </modal-confirm>
     <modal-choice-shipping-box
       :boxes="boxes"
       @save="handlerClose"
@@ -211,9 +222,15 @@
       :cancel="`Hủy`"
       :actionConfirm="`Xác nhận`"
       :title="'Xác nhận đóng kiện'"
-      :typeContainer="container_detail.type"
     >
     </modal-choice-shipping-box>
+    <modal-update-container
+      :loading="isSubmitting"
+      @update="handleUpdateContainer"
+      :tracking="container_detail.tracking_number"
+      :visible.sync="visibleUpdateModal"
+    >
+    </modal-update-container>
   </div>
 </template>
 
@@ -230,12 +247,18 @@ import {
   CLOSE_CONTAINER,
   FETCH_CONTAINER_DETAIL,
   REMOVE_PACKAGE_FROM_CONTAINER,
+  UPDATE_CONTAINER,
   GET_LABEL,
 } from '../store'
 
-import { CONTAINER_WAITING_CLOSE, CONTAINER_TYPE_MANUAL } from '../contants'
+import {
+  CONTAINER_WAITING_CLOSE,
+  CONTAINER_INTRANSIT,
+  CONTAINER_CLOSE,
+  CONTAINER_TYPE_MANUAL,
+} from '../contants'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
-
+import ModalUpdateContainer from '../components/ModalUpdateContainer'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import Browser from '@core/helpers/browser'
@@ -248,6 +271,7 @@ export default {
     EmptySearchResult,
     ModalConfirm,
     ModalChoiceShippingBox,
+    ModalUpdateContainer,
   },
   data() {
     return {
@@ -257,7 +281,9 @@ export default {
         page: 1,
         search: '',
       },
+      isSubmitting: false,
       visibleConfirm: false,
+      visibleUpdateModal: false,
       code: '',
       isStartScan: false,
       CONTAINER_WAITING_CLOSE: CONTAINER_WAITING_CLOSE,
@@ -276,6 +302,16 @@ export default {
         item.code = item.package_code ? item.package_code.code : ''
         return item
       })
+    },
+    showBtnUpdate() {
+      return (
+        (this.container_detail || {}).type === CONTAINER_TYPE_MANUAL &&
+        [
+          CONTAINER_WAITING_CLOSE,
+          CONTAINER_CLOSE,
+          CONTAINER_INTRANSIT,
+        ].includes((this.container_detail || {}).status)
+      )
     },
     isAdmin() {
       return this.$isAdmin()
@@ -298,6 +334,7 @@ export default {
       CLOSE_CONTAINER,
       CANCEL_CONTAINER,
       GET_LABEL,
+      UPDATE_CONTAINER,
     ]),
     async init() {
       this.isFetching = true
@@ -360,6 +397,28 @@ export default {
       })
       await this.init()
     },
+    async handleUpdateContainer(tracking) {
+      this.isSubmitting = true
+      const payload = {
+        id: parseInt(this.container_detail.id),
+        tracking_number: tracking,
+      }
+      const result = await this[UPDATE_CONTAINER](payload)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.isSubmitting = false
+      this.visibleUpdateModal = false
+      this.$toast.open({
+        message: `Cập nhật kiện hàng thành công`,
+        type: 'success',
+      })
+      await this.init()
+    },
     async handleCancelContainer() {
       this.visibleConfirm = false
       const payload = {
@@ -414,6 +473,9 @@ export default {
     handleStartScan() {
       this.isStartScan = true
       document.getElementById('startScanButton').blur()
+    },
+    handleShowUpdateModal() {
+      this.visibleUpdateModal = true
     },
     handleStopScan() {
       this.isStartScan = false
@@ -520,14 +582,17 @@ export default {
   white-space: nowrap;
   border: none;
 }
+
 .btn-add-container {
   svg {
     margin-bottom: 3px;
   }
 }
+
 .container-detail .page-header_back {
   margin-bottom: 16px;
 }
+
 .container-detail .page-header_back a {
   font-weight: 500;
   font-size: 14px;
@@ -535,27 +600,35 @@ export default {
   letter-spacing: 0.2px;
   color: #626363;
 }
+
 .container-detail .page-header_back a img {
   margin-top: -2px;
 }
+
 .container-detail .page-header_back a span {
   margin-left: 10px;
 }
+
 .container-detail .page-header {
   margin-bottom: 18px;
 }
+
 .container-detail .btn-add-container img {
   margin-top: -6px;
 }
+
 .container-detail .page-header__info {
   display: flex;
 }
+
 .page-header__input {
   display: flex;
 }
+
 .container-detail .page-header__input .input-group {
   width: calc(100% - 100px) !important;
 }
+
 .container-detail .btn-cancel-container {
   padding: 6px 16px;
   background-color: #fff1f0;
@@ -563,6 +636,7 @@ export default {
   color: red;
   border-radius: 4px;
 }
+
 .container-detail .btn-cancel-shipment {
   border: 1px solid #f5222d;
   color: red;
@@ -583,12 +657,14 @@ export default {
 .container-detail .page-header__info > {
   div {
     margin-right: 50px;
+
     div:last-child {
       font-size: 16px;
       font-weight: 600;
     }
   }
 }
+
 .page-header__barcode img {
   cursor: pointer;
 }
