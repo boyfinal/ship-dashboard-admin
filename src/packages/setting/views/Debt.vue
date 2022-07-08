@@ -189,11 +189,7 @@
     >
     </modal-edit-user>
 
-    <modal-search
-      v-if="isVisibleSearch"
-      :visible.sync="isVisibleSearch"
-      @fetch="searchAdvanced"
-    >
+    <modal-search :visible.sync="isVisibleSearch" @fetch="searchAdvanced">
     </modal-search>
   </div>
 </template>
@@ -231,7 +227,7 @@ export default {
   data() {
     return {
       filter: {
-        limit: 25,
+        limit: 30,
         search: '',
         status: USER_STATUS_ACTIVE,
       },
