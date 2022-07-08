@@ -246,11 +246,17 @@ export default {
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
-  },
-  mounted() {
+    this.filter = {
+      limit: 30,
+      search: '',
+      status: USER_STATUS_ACTIVE,
+      price_arr: [],
+      postpaid: '',
+      prepaid: '',
+    }
     this.init()
   },
+
   computed: {
     ...mapState('setting', {
       users: (state) => state.users,
