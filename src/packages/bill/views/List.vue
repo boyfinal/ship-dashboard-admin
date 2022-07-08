@@ -238,7 +238,10 @@
               <span>Khách hàng</span>
               <div
                 class="icon"
-                v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+                v-if="
+                  (user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT) &&
+                  userInfo
+                "
               >
                 <p-tooltip
                   :label="'Export công nợ'"
@@ -456,7 +459,7 @@ export default {
       filter: {
         page: 1,
         limit: 30,
-        // search: '',
+        search_by: 'customer',
         status: '',
         tab: 'bill',
       },
@@ -676,9 +679,6 @@ export default {
       if (this.filter.search_by == 'customer') {
         this.filter.search = this.userInfo ? this.userInfo.email : ''
       }
-      if (this.filter.tab == 'bill') {
-        this.init()
-      } else this.initTopup()
     },
     handleShowModalCreateExtraFee() {
       this.visibleCreateExtraFeeModal = true
@@ -875,6 +875,12 @@ export default {
           this.init()
         } else this.initTopup()
       }
+    },
+    'filter.search': function () {
+      this.filter.page = 1
+      if (this.filter.tab == 'bill') {
+        this.init()
+      } else this.initTopup()
     },
     'filter.tab': function () {
       this.filter.page = 1
