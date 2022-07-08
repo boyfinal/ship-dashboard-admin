@@ -124,6 +124,9 @@ export default {
     }
   },
   computed: {},
+  created() {
+    this.filter = this.getRouteQuery()
+  },
 
   methods: {
     handleClose() {
