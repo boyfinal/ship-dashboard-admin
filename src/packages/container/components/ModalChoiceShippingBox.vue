@@ -290,7 +290,7 @@ export default {
 
       this.tracking_number = this.tracking_number.trim().toUpperCase()
       var re = /^[a-zA-Z0-9]*$/g
-      if (this.typeContainer == 1 && this.tracking_number == '') {
+      if (this.typeContainer == this.typeManual && this.tracking_number == '') {
         this.err = 'Tracking number không để trống'
         return
       }
@@ -303,7 +303,6 @@ export default {
         weight: this.weight,
         tracking_number: this.tracking_number,
       })
-
       if (!this.valider.check(this.box) && !this.isCreate) {
         return
       }
