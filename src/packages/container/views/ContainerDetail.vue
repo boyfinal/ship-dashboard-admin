@@ -395,7 +395,7 @@ export default {
     },
     async handleUpdateContainer(tracking) {
       const regex = /^[a-z0-9]+$/i
-      if (!regex.test(tracking.trim())) {
+      if (tracking.trim() != '' && !regex.test(tracking.trim())) {
         this.$toast.open({
           message: 'Tracking chỉ chứa chữ số và chữ cái',
           type: 'error',
