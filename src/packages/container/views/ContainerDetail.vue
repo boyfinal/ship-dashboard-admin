@@ -405,7 +405,7 @@ export default {
       this.isSubmitting = true
       const payload = {
         id: parseInt(this.container_detail.id),
-        tracking_number: tracking.trim(),
+        tracking_number: tracking.trim().toUpperCase(),
       }
       const result = await this[UPDATE_CONTAINER](payload)
       if (!result.success) {
