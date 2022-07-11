@@ -287,14 +287,6 @@ export default {
           return
         }
       }
-      this.box = Object.assign(this.box, {
-        weight: this.weight,
-        tracking_number: this.tracking_number,
-      })
-
-      if (!this.valider.check(this.box) && !this.isCreate) {
-        return
-      }
 
       this.tracking_number = this.tracking_number.trim().toUpperCase()
       var re = /^[a-zA-Z0-9]*$/g
@@ -304,6 +296,15 @@ export default {
       }
       if (!re.test(this.tracking_number)) {
         this.err = 'Tracking number không hợp lệ'
+        return
+      }
+
+      this.box = Object.assign(this.box, {
+        weight: this.weight,
+        tracking_number: this.tracking_number,
+      })
+
+      if (!this.valider.check(this.box) && !this.isCreate) {
         return
       }
 
