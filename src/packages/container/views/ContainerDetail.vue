@@ -222,6 +222,7 @@
       :cancel="`Hủy`"
       :actionConfirm="`Xác nhận`"
       :title="'Xác nhận đóng kiện'"
+      :typeContainer="container_detail.type"
     >
     </modal-choice-shipping-box>
     <modal-update-container
@@ -253,7 +254,6 @@ import {
 
 import {
   CONTAINER_WAITING_CLOSE,
-  CONTAINER_INTRANSIT,
   CONTAINER_CLOSE,
   CONTAINER_TYPE_MANUAL,
 } from '../contants'
@@ -306,11 +306,7 @@ export default {
     showBtnUpdate() {
       return (
         (this.container_detail || {}).type === CONTAINER_TYPE_MANUAL &&
-        [
-          CONTAINER_WAITING_CLOSE,
-          CONTAINER_CLOSE,
-          CONTAINER_INTRANSIT,
-        ].includes((this.container_detail || {}).status)
+        [CONTAINER_CLOSE].includes((this.container_detail || {}).status)
       )
     },
     isAdmin() {
@@ -398,10 +394,18 @@ export default {
       await this.init()
     },
     async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (!regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
       this.isSubmitting = true
       const payload = {
         id: parseInt(this.container_detail.id),
-        tracking_number: tracking,
+        tracking_number: tracking.trim(),
       }
       const result = await this[UPDATE_CONTAINER](payload)
       if (!result.success) {
