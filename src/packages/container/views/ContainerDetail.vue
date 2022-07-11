@@ -399,6 +399,21 @@ export default {
       await this.init()
     },
     async handleUpdateContainer(tracking) {
+      var re = /^[a-zA-Z0-9]*$/g
+      if (tracking == '') {
+        this.$toast.open({
+          message: 'Tracking number không để trống',
+          type: 'error',
+        })
+        return
+      }
+      if (!re.test(tracking)) {
+        this.$toast.open({
+          message: 'Tracking number không hợp lệ',
+          type: 'error',
+        })
+        return
+      }
       this.isSubmitting = true
       const payload = {
         id: parseInt(this.container_detail.id),
