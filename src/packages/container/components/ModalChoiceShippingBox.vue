@@ -290,10 +290,6 @@ export default {
 
       this.tracking_number = this.tracking_number.trim().toUpperCase()
       var re = /^[a-zA-Z0-9]*$/g
-      if (this.typeContainer == this.typeManual && this.tracking_number == '') {
-        this.err = 'Tracking number không để trống'
-        return
-      }
       if (!re.test(this.tracking_number)) {
         this.err = 'Tracking number không hợp lệ'
         return
