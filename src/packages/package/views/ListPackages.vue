@@ -342,6 +342,7 @@ export default {
     this.keywordSearch = this.filter.search.trim()
     this.init()
   },
+
   computed: {
     ...mapState('package', {
       packages: (state) => state.packages,

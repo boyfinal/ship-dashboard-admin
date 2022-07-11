@@ -70,8 +70,10 @@
   </div>
 </template>
 <script>
+import mixinRoute from '@core/mixins/route'
 export default {
   name: 'ModalSearch',
+  mixins: [mixinRoute],
   props: {
     visible: {
       type: Boolean,
@@ -89,7 +91,8 @@ export default {
         status_arr: [],
         payment_arr: [],
         page: 1,
-        limit: 25,
+        limit: 30,
+        status: 1,
       },
       allSelected: false,
       allPaymentSelected: false,
@@ -121,18 +124,14 @@ export default {
     }
   },
   computed: {},
-  created() {},
+  created() {
+    this.filter = this.getRouteQuery()
+  },
 
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close')
-      this.filter = {
-        status_arr: [],
-        payment_arr: [],
-        page: 1,
-        limit: 25,
-      }
     },
 
     handleExport() {
@@ -148,16 +147,11 @@ export default {
         prepay: this.filter.payment_arr.includes('prepay') ? '1' : '',
         postpaid: this.filter.payment_arr.includes('postpaid') ? '1' : '',
         page: 1,
-        limit: 25,
+        limit: 30,
+        status: 1,
       }
       this.$emit('fetch', params)
       this.handleClose()
-      this.filter = {
-        status_arr: [],
-        payment_arr: [],
-        page: 1,
-        limit: 25,
-      }
     },
     checkAll() {
       this.filter.status_arr = []
@@ -189,8 +183,8 @@ export default {
           ? true
           : false
     },
-    visible: function () {
-      this.err = false
+    visible() {
+      this.filter = this.getRouteQuery()
     },
   },
 }
