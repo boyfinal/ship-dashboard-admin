@@ -254,7 +254,6 @@ import {
 
 import {
   CONTAINER_WAITING_CLOSE,
-  CONTAINER_INTRANSIT,
   CONTAINER_CLOSE,
   CONTAINER_TYPE_MANUAL,
 } from '../contants'
@@ -307,11 +306,7 @@ export default {
     showBtnUpdate() {
       return (
         (this.container_detail || {}).type === CONTAINER_TYPE_MANUAL &&
-        [
-          CONTAINER_WAITING_CLOSE,
-          CONTAINER_CLOSE,
-          CONTAINER_INTRANSIT,
-        ].includes((this.container_detail || {}).status)
+        [CONTAINER_CLOSE].includes((this.container_detail || {}).status)
       )
     },
     isAdmin() {
@@ -399,17 +394,10 @@ export default {
       await this.init()
     },
     async handleUpdateContainer(tracking) {
-      var re = /^[a-zA-Z0-9]*$/g
-      if (tracking == '') {
+      const regex = /^[a-z0-9]+$/i
+      if (!regex.test(tracking.trim())) {
         this.$toast.open({
-          message: 'Tracking number không để trống',
-          type: 'error',
-        })
-        return
-      }
-      if (!re.test(tracking)) {
-        this.$toast.open({
-          message: 'Tracking number không hợp lệ',
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
           type: 'error',
         })
         return
@@ -417,7 +405,7 @@ export default {
       this.isSubmitting = true
       const payload = {
         id: parseInt(this.container_detail.id),
-        tracking_number: tracking,
+        tracking_number: tracking.trim(),
       }
       const result = await this[UPDATE_CONTAINER](payload)
       if (!result.success) {
