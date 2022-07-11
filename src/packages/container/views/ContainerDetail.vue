@@ -253,7 +253,6 @@ import {
 
 import {
   CONTAINER_WAITING_CLOSE,
-  CONTAINER_INTRANSIT,
   CONTAINER_CLOSE,
   CONTAINER_TYPE_MANUAL,
 } from '../contants'
@@ -306,11 +305,7 @@ export default {
     showBtnUpdate() {
       return (
         (this.container_detail || {}).type === CONTAINER_TYPE_MANUAL &&
-        [
-          CONTAINER_WAITING_CLOSE,
-          CONTAINER_CLOSE,
-          CONTAINER_INTRANSIT,
-        ].includes((this.container_detail || {}).status)
+        [CONTAINER_CLOSE].includes((this.container_detail || {}).status)
       )
     },
     isAdmin() {
