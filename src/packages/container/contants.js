@@ -109,3 +109,8 @@ export const MAP_NAME_STATUS_CONTAINER = {
     className: 'info',
   },
 }
+
+export const MAP_CONTAINER_TEXT_TYPES = {
+  [CONTAINER_TYPE_API]: 'Label Lionbay',
+  [CONTAINER_TYPE_MANUAL]: 'Label ngoài',
+}

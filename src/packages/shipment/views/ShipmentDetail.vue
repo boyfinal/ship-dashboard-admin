@@ -420,9 +420,7 @@ export default {
       displayContainers() {
         return (this.containers || []).map((item) => {
           item.type_text =
-            item.type != CONTAINER_TYPE_MANUAL
-              ? 'Tạo UPS bằng API'
-              : 'Tạo UPS thủ công'
+            item.type != CONTAINER_TYPE_MANUAL ? 'Label Lionbay' : 'Label ngoài'
           return item
         })
       },

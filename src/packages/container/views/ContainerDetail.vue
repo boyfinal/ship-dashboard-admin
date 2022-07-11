@@ -315,8 +315,8 @@ export default {
     typeText() {
       const containerType = (this.container_detail || {}).type
       return containerType != CONTAINER_TYPE_MANUAL
-        ? 'Tạo UPS bằng API'
-        : 'Tạo UPS thủ công'
+        ? 'Label Lionbay'
+        : 'Label ngoài'
     },
   },
   created() {
