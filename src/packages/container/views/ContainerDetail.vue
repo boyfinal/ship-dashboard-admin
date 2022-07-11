@@ -394,10 +394,18 @@ export default {
       await this.init()
     },
     async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (!regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
       this.isSubmitting = true
       const payload = {
         id: parseInt(this.container_detail.id),
-        tracking_number: tracking,
+        tracking_number: tracking.trim(),
       }
       const result = await this[UPDATE_CONTAINER](payload)
       if (!result.success) {
