@@ -41,6 +41,21 @@
             v-model="filter.status"
             :count-status="coverCountStatus"
           />
+          <div class="p-tabs nav-tabs-horizontal mt-16 type-badge">
+            <ul role="tablist" class="nav nav-tabs nav-tabs-line">
+              <li
+                role="presentation"
+                class="nav-item"
+                :class="{ active: k == filter.type }"
+                v-for="(text, k) in containerTypes"
+                :key="k"
+              >
+                <a href="#" class="nav-link" @click.prevent="changeType(k)">{{
+                  text
+                }}</a>
+              </li>
+            </ul>
+          </div>
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="containers.length">
             <div class="table-responsive">
@@ -181,7 +196,9 @@ import {
   CONTAINER_DELIVERIED,
   CONTAINER_IMPORT_HUB,
   CONTAINER_EXPORT_HUB,
+  CONTAINER_TYPE_API,
   CONTAINER_TYPE_MANUAL,
+  MAP_CONTAINER_TEXT_TYPES,
 } from '../contants'
 import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
@@ -207,12 +224,14 @@ export default {
         status: '',
         search: '',
         warehouse: '',
+        type: CONTAINER_TYPE_API,
       },
       isFetching: false,
       visibleModalChoiceBox: false,
       loadingCreateContainer: false,
       visibleModalHistory: false,
       containerHistories: [],
+      containerTypes: MAP_CONTAINER_TEXT_TYPES,
     }
   },
   created() {
@@ -264,9 +283,7 @@ export default {
       displayContainers() {
         return (this.containers || []).map((item) => {
           item.type_text =
-            item.type != CONTAINER_TYPE_MANUAL
-              ? 'Tạo UPS bằng API'
-              : 'Tạo UPS thủ công'
+            item.type != CONTAINER_TYPE_MANUAL ? 'Label Lionbay' : 'Label ngoài'
           return item
         })
       },
@@ -395,6 +412,10 @@ export default {
     handleFilter(id) {
       this.filter.page = 1
       this.filter.warehouse = id
+    },
+    changeType(v) {
+      this.filter.page = 1
+      this.filter.type = v
     },
   },
   watch: {
