@@ -14,9 +14,9 @@
         </p-select>
       </div>
       <div class="col">
-        <label for=""><b>Chọn kiểu kiện:</b></label>
+        <label for=""><b>Chọn kiểu label:</b></label>
         <p-select class="floating" v-model="containerType" name="containerType">
-          <option value="0">Chọn kiểu kiện</option>
+          <option value="0">Chọn kiểu label</option>
           <option v-for="item in types" :key="item.key" :value="item.key">{{
             item.text
           }}</option>
@@ -260,11 +260,11 @@ export default {
       types: [
         {
           key: CONTAINER_TYPE_API,
-          text: 'Tạo mã UPS theo API',
+          text: 'Label Lionbay',
         },
         {
           key: CONTAINER_TYPE_MANUAL,
-          text: 'Tạo mã UPS thủ công',
+          text: 'Label ngoài',
         },
       ],
       typeManual: CONTAINER_TYPE_MANUAL,
