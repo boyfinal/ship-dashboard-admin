@@ -198,6 +198,7 @@
 
                         <span class="svg" v-if="item.tracking_number">
                           <p-tooltip
+                            v-if="item.type == containerTypeApi"
                             class="item_name"
                             :label="` Download `"
                             position="top"
@@ -303,7 +304,8 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
-                ></p-pagination>
+                >
+                </p-pagination>
               </div>
             </template>
             <empty-search-result v-else></empty-search-result>
@@ -326,7 +328,8 @@
       :description="`Bạn có chắc chắn muốn chuyển UPS không?`"
       :title="`Xác nhận`"
       @action="handleChangeIntransit"
-    ></modal-confirm>
+    >
+    </modal-confirm>
   </div>
 </template>
 
@@ -360,7 +363,10 @@ import {
   MAP_NAME_STATUS_SHIPMENT,
 } from '../constants'
 import Browser from '@core/helpers/browser'
-import { CONTAINER_TYPE_MANUAL } from '../../container/contants'
+import {
+  CONTAINER_TYPE_MANUAL,
+  CONTAINER_TYPE_API,
+} from '../../container/contants'
 
 export default {
   name: 'ShipmentDetail',
@@ -416,6 +422,9 @@ export default {
       },
       showIntransitButton() {
         return this.isClosedShipment
+      },
+      containerTypeApi() {
+        return CONTAINER_TYPE_API
       },
       displayContainers() {
         return (this.containers || []).map((item) => {
@@ -692,9 +701,11 @@ export default {
   white-space: nowrap;
   border: none;
 }
+
 .shipment-detail .page-header_back {
   margin-bottom: 16px;
 }
+
 .shipment-detail .page-header_back a {
   font-weight: 500;
   font-size: 14px;
@@ -702,24 +713,31 @@ export default {
   letter-spacing: 0.2px;
   color: #626363;
 }
+
 .shipment-detail .page-header_back a img {
   margin-top: -2px;
 }
+
 .shipment-detail .page-header_back a span {
   margin-left: 10px;
 }
+
 .shipment-detail .page-header {
   margin-bottom: 18px;
 }
+
 .shipment-detail .btn-add-container img {
   margin-top: -6px;
 }
+
 .shipment-detail .page-header__info {
   display: flex;
 }
+
 .shipment-detail .page-header__info .input-group {
   width: calc(100% - 195px);
 }
+
 .shipment-detail .btn-cancel-container {
   padding: 6px 16px;
   background-color: #fff1f0;
@@ -727,38 +745,48 @@ export default {
   color: red;
   border-radius: 4px;
 }
+
 .shipment-detail .btn-cancel-shipment {
   border: 1px solid #f5222d;
   color: red;
   background-color: #fff;
 }
+
 .page-header__info > .info {
   margin-right: 50px;
 }
+
 .page-header__info > div div:last-child {
   font-size: 16px;
   font-weight: 600;
 }
+
 .page-header__subtitle {
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
 }
+
 #tbl-packages svg {
   margin-top: 0;
 }
+
 #tbl-packages .svg {
   opacity: 0;
 }
+
 #tbl-packages tr:hover .svg {
   opacity: 1;
 }
+
 #tbl-packages tr:hover .svg svg:hover circle {
   fill: #e1f7fc;
 }
+
 #tbl-packages tr:hover .svg svg:hover path {
   fill: #20bddb;
 }
+
 #tbl-packages .p-tooltip::after {
   width: auto;
 }
