@@ -290,6 +290,14 @@
                         >
                           Hủy
                         </p-button>
+                        <p-button
+                          type="info"
+                          :class="`mr-3`"
+                          v-if="showBtnUpdate(item)"
+                          @click="handleShowUpdateModal(item)"
+                        >
+                          Cập nhật tracking
+                        </p-button>
                       </td>
                     </tr>
                   </tbody>
@@ -330,6 +338,13 @@
       @action="handleChangeIntransit"
     >
     </modal-confirm>
+    <modal-update-container
+      :loading="isSubmitting"
+      @update="handleUpdateContainer"
+      :tracking="container.tracking_number"
+      :visible.sync="visibleUpdateModal"
+    >
+    </modal-update-container>
   </div>
 </template>
 
@@ -349,8 +364,10 @@ import {
   APPEND_CONTAINERS_SHIPMENT,
   DOWNLOAD_SHIPMENT_LABEL_ZIP,
 } from '../store'
+import { CONTAINER_CLOSE } from '@/packages/container/contants'
+import ModalUpdateContainer from '@/packages/container/components/ModalUpdateContainer'
 import ModalListContainer from '../components/ModalListContainer'
-import { GET_LABEL } from '../../container/store'
+import { GET_LABEL, UPDATE_CONTAINER } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
@@ -375,6 +392,7 @@ export default {
     EmptySearchResult,
     ModalListContainer,
     ModalConfirm,
+    ModalUpdateContainer,
   },
   data() {
     return {
@@ -385,6 +403,9 @@ export default {
         search: '',
       },
       code: '',
+      isSubmitting: false,
+      visibleUpdateModal: false,
+      container: {},
       isStartScan: false,
       loading: false,
       loadingLabel: false,
@@ -453,7 +474,7 @@ export default {
       EXPORT_SHIPMENT,
       DOWNLOAD_SHIPMENT_LABEL_ZIP,
     ]),
-    ...mapActions('container', [GET_LABEL]),
+    ...mapActions('container', [GET_LABEL, UPDATE_CONTAINER]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -682,6 +703,48 @@ export default {
         type: 'success',
       })
       this.init()
+    },
+    showBtnUpdate(container) {
+      return (
+        container.type === CONTAINER_TYPE_MANUAL &&
+        [CONTAINER_CLOSE].includes(container.status)
+      )
+    },
+    handleShowUpdateModal(container) {
+      this.visibleUpdateModal = true
+      this.container = container
+    },
+    async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (tracking.trim() != '' && !regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
+
+      this.isSubmitting = true
+      const payload = {
+        id: parseInt(this.container.id),
+        tracking_number: tracking.trim().toUpperCase(),
+      }
+      const result = await this[UPDATE_CONTAINER](payload)
+      console.log(result)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.isSubmitting = false
+      this.visibleUpdateModal = false
+      this.$toast.open({
+        message: `Cập nhật kiện hàng thành công`,
+        type: 'success',
+      })
+      await this.init()
     },
   },
   watch: {
