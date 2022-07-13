@@ -141,6 +141,14 @@
                       >
                         Xem lịch sử
                       </p-button>
+                      <p-button
+                        type="info"
+                        :class="`mr-3`"
+                        v-if="showBtnUpdate(item)"
+                        @click="handleShowUpdateModal(item)"
+                      >
+                        Cập nhật tracking
+                      </p-button>
                     </td>
                   </tr>
                 </tbody>
@@ -155,7 +163,8 @@
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
-              ></p-pagination>
+              >
+              </p-pagination>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
@@ -178,11 +187,19 @@
       :histories="containerHistories"
     >
     </modal-history-container>
+    <modal-update-container
+      :loading="isSubmitting"
+      @update="handleUpdateContainer"
+      :tracking="container.tracking_number"
+      :visible.sync="visibleUpdateModal"
+    >
+    </modal-update-container>
   </div>
 </template>
 <script>
 import ContainerStatusTab from '../components/ContainerStatusTab'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
+import ModalUpdateContainer from '../components/ModalUpdateContainer'
 import { mapState, mapActions } from 'vuex'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -200,7 +217,12 @@ import {
   CONTAINER_TYPE_MANUAL,
   MAP_CONTAINER_TEXT_TYPES,
 } from '../contants'
-import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
+import {
+  FETCH_LIST_CONTAINERS,
+  CREATE_CONTAINER,
+  GET_LABEL,
+  UPDATE_CONTAINER,
+} from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
 import Browser from '@core/helpers/browser'
 import api from '../api'
@@ -215,6 +237,7 @@ export default {
     EmptySearchResult,
     ContainerStatusTab,
     ModalChoiceShippingBox,
+    ModalUpdateContainer,
   },
   data() {
     return {
@@ -226,7 +249,10 @@ export default {
         warehouse: '',
         type: CONTAINER_TYPE_API,
       },
+      isSubmitting: false,
       isFetching: false,
+      visibleUpdateModal: false,
+      container: {},
       visibleModalChoiceBox: false,
       loadingCreateContainer: false,
       visibleModalHistory: false,
@@ -294,6 +320,7 @@ export default {
       FETCH_LIST_CONTAINERS,
       CREATE_CONTAINER,
       GET_LABEL,
+      UPDATE_CONTAINER,
     ]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
@@ -327,6 +354,48 @@ export default {
         return
       }
       this.isFetching = false
+    },
+    showBtnUpdate(container) {
+      return (
+        container.type === CONTAINER_TYPE_MANUAL &&
+        [CONTAINER_CLOSE].includes(container.status)
+      )
+    },
+    handleShowUpdateModal(container) {
+      this.visibleUpdateModal = true
+      this.container = container
+    },
+    async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (tracking.trim() != '' && !regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
+
+      this.isSubmitting = true
+      const payload = {
+        id: parseInt(this.container.id),
+        tracking_number: tracking.trim().toUpperCase(),
+      }
+      const result = await this[UPDATE_CONTAINER](payload)
+      console.log(result)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.isSubmitting = false
+      this.visibleUpdateModal = false
+      this.$toast.open({
+        message: `Cập nhật kiện hàng thành công`,
+        type: 'success',
+      })
+      await this.init()
     },
     isCloseContainer(container) {
       return container.status === CONTAINER_CLOSE

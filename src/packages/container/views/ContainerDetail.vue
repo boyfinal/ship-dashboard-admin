@@ -74,7 +74,6 @@
           </div>
           <div class="page-header__action col-6 text-right">
             <p-button
-              id="startScanButton"
               type="info"
               :class="`mr-3`"
               v-if="showBtnUpdate"
