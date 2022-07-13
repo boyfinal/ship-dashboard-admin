@@ -274,6 +274,8 @@ export default {
   methods: {
     handleClose() {
       this.err = ''
+      this.tracking_number = ''
+      this.weight = 0
       this.valider.reset()
       this.$emit('update:visible', false)
     },
