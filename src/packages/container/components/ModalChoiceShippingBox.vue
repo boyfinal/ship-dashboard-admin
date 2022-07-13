@@ -138,7 +138,11 @@
         <div class="row">
           <div class="col-12">
             <label for=""><b>Mã tracking</b></label>
-            <p-input v-model="tracking_number" :error="err" />
+            <p-input
+              :placeholder="`Nhập tay hoặc quét barcode`"
+              v-model="tracking_number"
+              :error="err"
+            />
           </div>
         </div>
       </template>
