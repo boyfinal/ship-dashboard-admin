@@ -136,14 +136,13 @@
                     </td>
                     <td>
                       <p-button
-                        class="btn btn-info ml-3 text-nowrap"
+                        class="btn btn-info mr-3 text-nowrap"
                         @click="showHistoryContainer(item)"
                       >
                         Xem lịch sử
                       </p-button>
                       <p-button
                         type="info"
-                        :class="`ml-3`"
                         v-if="showBtnUpdate(item)"
                         @click="handleShowUpdateModal(item)"
                       >

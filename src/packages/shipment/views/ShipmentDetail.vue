@@ -285,14 +285,13 @@
                             !isIntransitShipment
                           "
                           type="danger"
-                          :class="`btn-cancel-container`"
+                          :class="`btn-cancel-container mr-3`"
                           @click="handleCancelContainer(item.id)"
                         >
                           Hủy
                         </p-button>
                         <p-button
                           type="info"
-                          :class="`ml-3`"
                           v-if="showBtnUpdate(item)"
                           @click="handleShowUpdateModal(item)"
                         >
