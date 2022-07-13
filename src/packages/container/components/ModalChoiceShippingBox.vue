@@ -15,12 +15,9 @@
       </div>
       <div class="col">
         <label for=""><b>Chọn kiểu label:</b></label>
-        <p-select class="floating" v-model="containerType" name="containerType">
-          <option value="0">Chọn kiểu label</option>
-          <option v-for="item in types" :key="item.key" :value="item.key">{{
-            item.text
-          }}</option>
-        </p-select>
+        <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
+          >Label ngoài</p-checkbox
+        >
       </div>
     </div>
     <div v-else>
@@ -138,7 +135,11 @@
         <div class="row">
           <div class="col-12">
             <label for=""><b>Mã tracking</b></label>
-            <p-input v-model="tracking_number" :error="err" />
+            <p-input
+              :placeholder="`Nhập tay hoặc quét barcode`"
+              v-model="tracking_number"
+              :error="err"
+            />
           </div>
         </div>
       </template>
@@ -253,7 +254,7 @@ export default {
       warehouse: {},
       type: 0,
       warehouseID: 0,
-      containerType: 0,
+      isTypeManual: false,
       store: 1,
       valider: null,
       err: '',
@@ -305,7 +306,10 @@ export default {
 
       let payload = {}
       if (this.isCreate) {
-        payload = { warehouse_id: this.warehouseID, type: this.containerType }
+        payload = { warehouse_id: this.warehouseID, type: CONTAINER_TYPE_API }
+        if (this.isTypeManual) {
+          payload.type = CONTAINER_TYPE_MANUAL
+        }
       } else {
         payload = {
           width: this.box.width,

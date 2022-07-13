@@ -485,6 +485,7 @@ export default {
       document.getElementById('stopScanButton').blur()
     },
     async barcodeSubmit(keyword) {
+      if (this.visibleModalClose) return
       if (!this.isStartScan) {
         this.$toast.error('Bạn phải nhấn bắt đầu quét trước khi quét.')
         return

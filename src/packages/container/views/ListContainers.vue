@@ -476,6 +476,11 @@ export default {
       }
 
       this.$toast.success('Tạo kiện hàng thành công')
+
+      this.filter.page = 1
+      this.filter.type = body.type
+      this.filter.warehouse = body.warehouse_id
+
       this.init()
     },
     handleFilter(id) {
