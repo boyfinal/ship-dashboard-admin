@@ -143,7 +143,7 @@
                       </p-button>
                       <p-button
                         type="info"
-                        :class="`mr-3`"
+                        :class="`ml-3`"
                         v-if="showBtnUpdate(item)"
                         @click="handleShowUpdateModal(item)"
                       >
