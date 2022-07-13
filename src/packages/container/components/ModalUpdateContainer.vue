@@ -4,7 +4,12 @@
       <div class="row">
         <div class="col-12">
           <label for=""><b>Mã tracking:</b></label>
-          <p-input type="text" v-model="ups_tracking"> </p-input>
+          <p-input
+            type="text"
+            v-model="ups_tracking"
+            placeholder="Nhập tay hoặc quét barcode"
+          >
+          </p-input>
         </div>
       </div>
     </template>

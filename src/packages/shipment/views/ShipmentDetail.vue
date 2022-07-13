@@ -372,6 +372,7 @@ import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
+  ShipmentWaitingClose,
   ShipmentClosed,
   ShipmentCanceled,
   ShipmentDelivered,
@@ -706,7 +707,8 @@ export default {
     showBtnUpdate(container) {
       return (
         container.type === CONTAINER_TYPE_MANUAL &&
-        [CONTAINER_CLOSE].includes(container.status)
+        [CONTAINER_CLOSE].includes(container.status) &&
+        [ShipmentWaitingClose, ShipmentClosed].includes(this.shipment.status)
       )
     },
     handleShowUpdateModal(container) {
