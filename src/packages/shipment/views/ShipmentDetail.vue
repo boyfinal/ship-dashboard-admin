@@ -714,6 +714,8 @@ export default {
     handleShowUpdateModal(container) {
       this.visibleUpdateModal = true
       this.container = container
+      document.onkeyup = null
+      document.onkeydown = null
     },
     async handleUpdateContainer(tracking) {
       const regex = /^[a-z0-9]+$/i
@@ -731,7 +733,6 @@ export default {
         tracking_number: tracking.trim().toUpperCase(),
       }
       const result = await this[UPDATE_CONTAINER](payload)
-      console.log(result)
       if (!result.success) {
         this.$toast.open({
           message: result.message,
@@ -754,6 +755,15 @@ export default {
         this.init()
       },
       deep: true,
+    },
+    visibleUpdateModal: {
+      handler: function (v) {
+        if (!v) {
+          this.initBarcodeListener()
+        } else {
+          this.destroyEvenListener()
+        }
+      },
     },
   },
 }

@@ -479,6 +479,7 @@ export default {
     },
     handleShowUpdateModal() {
       this.visibleUpdateModal = true
+      this.destroyEvenListener()
     },
     handleStopScan() {
       this.isStartScan = false

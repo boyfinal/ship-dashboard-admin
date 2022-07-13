@@ -39,6 +39,10 @@ export default {
     setDetectingScanning(value) {
       this.detecting_scanning = value
     },
+    destroyEvenListener() {
+      document.onkeyup = null
+      document.onkeydown = null
+    },
     initBarcodeListener() {
       //fire on key press down
       document.onkeydown = () => {
