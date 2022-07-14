@@ -58,7 +58,7 @@
           </div>
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="containers.length">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: revert">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <tr>
@@ -68,12 +68,12 @@
                       <th>Mã lô</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
-                      <th>Kích thước</th>
+                      <th width="90">Kích thước</th>
                       <th class="text-center">Số lượng đơn</th>
                       <th class="text-center">Tổng cân nặng</th>
                       <th>Loại</th>
                       <th>Trạng thái</th>
-                      <th>Hành động</th>
+                      <th width="80"></th>
                     </template>
                   </tr>
                 </thead>
@@ -134,20 +134,33 @@
                     <td>
                       <span v-status="item.status" type="container"></span>
                     </td>
-                    <td>
-                      <p-button
-                        class="btn btn-info mr-3 text-nowrap"
-                        @click="showHistoryContainer(item)"
+                    <td class="text-center">
+                      <p-tooltip
+                        :label="`Xem lịch sử`"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="true"
                       >
-                        Xem lịch sử
-                      </p-button>
-                      <p-button
-                        type="info"
-                        v-if="showBtnUpdate(item)"
-                        @click="handleShowUpdateModal(item)"
+                        <p-svg
+                          name="clock"
+                          class="mr-8"
+                          @click="showHistoryContainer(item)"
+                        ></p-svg>
+                      </p-tooltip>
+                      <p-tooltip
+                        :label="`Sửa tracking`"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="true"
                       >
-                        Cập nhật tracking
-                      </p-button>
+                        <p-svg
+                          name="update"
+                          v-if="showBtnUpdate(item)"
+                          @click="handleShowUpdateModal(item)"
+                        ></p-svg>
+                      </p-tooltip>
                     </td>
                   </tr>
                 </tbody>
