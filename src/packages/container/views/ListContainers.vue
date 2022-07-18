@@ -41,9 +41,24 @@
             v-model="filter.status"
             :count-status="coverCountStatus"
           />
+          <div class="p-tabs nav-tabs-horizontal mt-16 type-badge">
+            <ul role="tablist" class="nav nav-tabs nav-tabs-line">
+              <li
+                role="presentation"
+                class="nav-item"
+                :class="{ active: k == filter.type }"
+                v-for="(text, k) in containerTypes"
+                :key="k"
+              >
+                <a href="#" class="nav-link" @click.prevent="changeType(k)">{{
+                  text
+                }}</a>
+              </li>
+            </ul>
+          </div>
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="containers.length">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: revert">
               <table class="table table-hover" id="tbl-packages">
                 <thead>
                   <tr>
@@ -53,16 +68,17 @@
                       <th>Mã lô</th>
                       <th>Ngày tạo</th>
                       <th>Ngày đóng</th>
-                      <th>Kích thước</th>
+                      <th width="90">Kích thước</th>
                       <th class="text-center">Số lượng đơn</th>
                       <th class="text-center">Tổng cân nặng</th>
+                      <th>Loại</th>
                       <th>Trạng thái</th>
-                      <th>Hành động</th>
+                      <th width="80"></th>
                     </template>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in containers" :key="i">
+                  <tr v-for="(item, i) in displayContainers" :key="i">
                     <td>
                       <router-link
                         class="text-no-underline"
@@ -114,16 +130,37 @@
                     >
                     <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
+                    <td>{{ item.type_text }}</td>
                     <td>
                       <span v-status="item.status" type="container"></span>
                     </td>
-                    <td>
-                      <p-button
-                        class="btn btn-info ml-3 text-nowrap"
-                        @click="showHistoryContainer(item)"
+                    <td class="text-center">
+                      <p-tooltip
+                        :label="`Xem lịch sử`"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="true"
                       >
-                        Xem lịch sử
-                      </p-button>
+                        <p-svg
+                          name="clock"
+                          class="mr-8"
+                          @click="showHistoryContainer(item)"
+                        ></p-svg>
+                      </p-tooltip>
+                      <p-tooltip
+                        :label="`Sửa tracking`"
+                        size="large"
+                        position="top"
+                        type="dark"
+                        :active="true"
+                      >
+                        <p-svg
+                          name="update"
+                          v-if="showBtnUpdate(item)"
+                          @click="handleShowUpdateModal(item)"
+                        ></p-svg>
+                      </p-tooltip>
                     </td>
                   </tr>
                 </tbody>
@@ -138,7 +175,8 @@
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
-              ></p-pagination>
+              >
+              </p-pagination>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
@@ -161,11 +199,19 @@
       :histories="containerHistories"
     >
     </modal-history-container>
+    <modal-update-container
+      :loading="isSubmitting"
+      @update="handleUpdateContainer"
+      :tracking="container.tracking_number"
+      :visible.sync="visibleUpdateModal"
+    >
+    </modal-update-container>
   </div>
 </template>
 <script>
 import ContainerStatusTab from '../components/ContainerStatusTab'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
+import ModalUpdateContainer from '../components/ModalUpdateContainer'
 import { mapState, mapActions } from 'vuex'
 
 import EmptySearchResult from '@components/shared/EmptySearchResult'
@@ -179,8 +225,16 @@ import {
   CONTAINER_DELIVERIED,
   CONTAINER_IMPORT_HUB,
   CONTAINER_EXPORT_HUB,
+  CONTAINER_TYPE_API,
+  CONTAINER_TYPE_MANUAL,
+  MAP_CONTAINER_TEXT_TYPES,
 } from '../contants'
-import { FETCH_LIST_CONTAINERS, CREATE_CONTAINER, GET_LABEL } from '../store'
+import {
+  FETCH_LIST_CONTAINERS,
+  CREATE_CONTAINER,
+  GET_LABEL,
+  UPDATE_CONTAINER,
+} from '../store'
 import { FETCH_WAREHOUSE } from '../../shared/store'
 import Browser from '@core/helpers/browser'
 import api from '../api'
@@ -195,6 +249,7 @@ export default {
     EmptySearchResult,
     ContainerStatusTab,
     ModalChoiceShippingBox,
+    ModalUpdateContainer,
   },
   data() {
     return {
@@ -204,12 +259,17 @@ export default {
         status: '',
         search: '',
         warehouse: '',
+        type: CONTAINER_TYPE_API,
       },
+      isSubmitting: false,
       isFetching: false,
+      visibleUpdateModal: false,
+      container: {},
       visibleModalChoiceBox: false,
       loadingCreateContainer: false,
       visibleModalHistory: false,
       containerHistories: [],
+      containerTypes: MAP_CONTAINER_TEXT_TYPES,
     }
   },
   created() {
@@ -257,6 +317,14 @@ export default {
         )
         return temp
       },
+
+      displayContainers() {
+        return (this.containers || []).map((item) => {
+          item.type_text =
+            item.type != CONTAINER_TYPE_MANUAL ? 'Label Lionbay' : 'Label ngoài'
+          return item
+        })
+      },
     }),
   },
   methods: {
@@ -264,6 +332,7 @@ export default {
       FETCH_LIST_CONTAINERS,
       CREATE_CONTAINER,
       GET_LABEL,
+      UPDATE_CONTAINER,
     ]),
     ...mapActions('shared', [FETCH_WAREHOUSE]),
     async init() {
@@ -297,6 +366,48 @@ export default {
         return
       }
       this.isFetching = false
+    },
+    showBtnUpdate(container) {
+      return (
+        container.type === CONTAINER_TYPE_MANUAL &&
+        [CONTAINER_CLOSE].includes(container.status)
+      )
+    },
+    handleShowUpdateModal(container) {
+      this.visibleUpdateModal = true
+      this.container = container
+    },
+    async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (tracking.trim() != '' && !regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
+
+      this.isSubmitting = true
+      const payload = {
+        id: parseInt(this.container.id),
+        tracking_number: tracking.trim().toUpperCase(),
+      }
+      const result = await this[UPDATE_CONTAINER](payload)
+      console.log(result)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.isSubmitting = false
+      this.visibleUpdateModal = false
+      this.$toast.open({
+        message: `Cập nhật kiện hàng thành công`,
+        type: 'success',
+      })
+      await this.init()
     },
     isCloseContainer(container) {
       return container.status === CONTAINER_CLOSE
@@ -357,33 +468,40 @@ export default {
     },
     async createContainerSubmit(body) {
       if (body.warehouse_id == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Chưa chọn kho',
-        })
+        this.$toast.error('Chưa chọn kho')
         return
       }
+
+      if (body.type == 0) {
+        this.$toast.error('Chưa chọn kiểu kiện')
+        return
+      }
+
       this.loadingCreateContainer = true
       const result = await this[CREATE_CONTAINER](body)
       this.loadingCreateContainer = false
       this.visibleModalChoiceBox = false
+
       if (!result.success) {
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-        })
+        this.$toast.error(result.message)
         return
       }
 
-      this.$toast.open({
-        type: 'success',
-        message: 'Tạo kiện hàng thành công',
-      })
+      this.$toast.success('Tạo kiện hàng thành công')
+
+      this.filter.page = 1
+      this.filter.type = body.type
+      this.filter.warehouse = body.warehouse_id
+
       this.init()
     },
     handleFilter(id) {
       this.filter.page = 1
       this.filter.warehouse = id
+    },
+    changeType(v) {
+      this.filter.page = 1
+      this.filter.type = v
     },
   },
   watch: {

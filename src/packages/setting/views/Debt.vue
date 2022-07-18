@@ -19,6 +19,11 @@
           v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
           >Export</button
         >
+        <button
+          @click="handleShowModalSearch"
+          class="btn btn-info ml-3 text-nowrap"
+          >Filter</button
+        >
       </div>
       <div class="card">
         <div class="card-body">
@@ -30,7 +35,7 @@
                   <tr>
                     <th width="120">Khách hàng</th>
                     <th width="300">Email</th>
-                    <th max-width="50">Loại tài khoản</th>
+                    <th max-width="50">Bảng giá</th>
                     <th max-width="80">Kiểu thanh toán</th>
                     <th max-width="50">Số dư hiện tại</th>
                     <th max-width="80">Công nợ hiện tại</th>
@@ -183,6 +188,9 @@
       @close="closeEdit"
     >
     </modal-edit-user>
+
+    <modal-search :visible.sync="isVisibleSearch" @fetch="searchAdvanced">
+    </modal-search>
   </div>
 </template>
 <script>
@@ -198,6 +206,7 @@ import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
 import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
 import ModalEditUser from '../components/ModalEdit'
+import ModalSearch from '../components/ModalSearch'
 import {
   MAP_USER_CLASS_TEXT,
   MAP_USER_CLASS_ICON,
@@ -213,6 +222,7 @@ export default {
     ModalExport,
     ModalEditUser,
     UserResource,
+    ModalSearch,
   },
   data() {
     return {
@@ -232,14 +242,21 @@ export default {
       userSelected: {},
       isVisibleEditUser: false,
       userInfo: null,
+      isVisibleSearch: false,
     }
   },
   created() {
-    this.filter = this.getRouteQuery()
-  },
-  mounted() {
+    this.filter = {
+      limit: 30,
+      search: '',
+      status: USER_STATUS_ACTIVE,
+      price_arr: [],
+      postpaid: '',
+      prepaid: '',
+    }
     this.init()
   },
+
   computed: {
     ...mapState('setting', {
       users: (state) => state.users,
@@ -312,6 +329,13 @@ export default {
 
     handleShowModalExport() {
       this.visibleExportModal = true
+    },
+    handleShowModalSearch() {
+      this.isVisibleSearch = true
+    },
+
+    async searchAdvanced(filter) {
+      this.filter = { ...filter }
     },
 
     async handleExport(payload) {

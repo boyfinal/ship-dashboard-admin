@@ -168,11 +168,12 @@
                       <th>Số lượng</th>
                       <th>Trọng lượng</th>
                       <th>Dài x Rộng x Cao</th>
+                      <th>Loại</th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, i) in containers" :key="i">
+                    <tr v-for="(item, i) in displayContainers" :key="i">
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -197,6 +198,7 @@
 
                         <span class="svg" v-if="item.tracking_number">
                           <p-tooltip
+                            v-if="item.type == containerTypeApi"
                             class="item_name"
                             :label="` Download `"
                             position="top"
@@ -274,6 +276,7 @@
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
+                      <td>{{ item.type_text }}</td>
                       <td>
                         <p-button
                           v-if="
@@ -282,10 +285,17 @@
                             !isIntransitShipment
                           "
                           type="danger"
-                          :class="`btn-cancel-container`"
+                          :class="`btn-cancel-container mr-3`"
                           @click="handleCancelContainer(item.id)"
                         >
                           Hủy
+                        </p-button>
+                        <p-button
+                          type="info"
+                          v-if="showBtnUpdate(item)"
+                          @click="handleShowUpdateModal(item)"
+                        >
+                          Cập nhật tracking
                         </p-button>
                       </td>
                     </tr>
@@ -301,7 +311,8 @@
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
-                ></p-pagination>
+                >
+                </p-pagination>
               </div>
             </template>
             <empty-search-result v-else></empty-search-result>
@@ -324,7 +335,15 @@
       :description="`Bạn có chắc chắn muốn chuyển UPS không?`"
       :title="`Xác nhận`"
       @action="handleChangeIntransit"
-    ></modal-confirm>
+    >
+    </modal-confirm>
+    <modal-update-container
+      :loading="isSubmitting"
+      @update="handleUpdateContainer"
+      :tracking="container.tracking_number"
+      :visible.sync="visibleUpdateModal"
+    >
+    </modal-update-container>
   </div>
 </template>
 
@@ -344,13 +363,16 @@ import {
   APPEND_CONTAINERS_SHIPMENT,
   DOWNLOAD_SHIPMENT_LABEL_ZIP,
 } from '../store'
+import { CONTAINER_CLOSE } from '@/packages/container/contants'
+import ModalUpdateContainer from '@/packages/container/components/ModalUpdateContainer'
 import ModalListContainer from '../components/ModalListContainer'
-import { GET_LABEL } from '../../container/store'
+import { GET_LABEL, UPDATE_CONTAINER } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import {
+  ShipmentWaitingClose,
   ShipmentClosed,
   ShipmentCanceled,
   ShipmentDelivered,
@@ -358,6 +380,11 @@ import {
   MAP_NAME_STATUS_SHIPMENT,
 } from '../constants'
 import Browser from '@core/helpers/browser'
+import {
+  CONTAINER_TYPE_MANUAL,
+  CONTAINER_TYPE_API,
+} from '../../container/contants'
+
 export default {
   name: 'ShipmentDetail',
   mixins: [mixinRoute, mixinTable, mixinBarcode, mixinDownload],
@@ -365,6 +392,7 @@ export default {
     EmptySearchResult,
     ModalListContainer,
     ModalConfirm,
+    ModalUpdateContainer,
   },
   data() {
     return {
@@ -375,6 +403,9 @@ export default {
         search: '',
       },
       code: '',
+      isSubmitting: false,
+      visibleUpdateModal: false,
+      container: {},
       isStartScan: false,
       loading: false,
       loadingLabel: false,
@@ -413,6 +444,16 @@ export default {
       showIntransitButton() {
         return this.isClosedShipment
       },
+      containerTypeApi() {
+        return CONTAINER_TYPE_API
+      },
+      displayContainers() {
+        return (this.containers || []).map((item) => {
+          item.type_text =
+            item.type != CONTAINER_TYPE_MANUAL ? 'Label Lionbay' : 'Label ngoài'
+          return item
+        })
+      },
     }),
     items() {
       return this.containers
@@ -433,7 +474,7 @@ export default {
       EXPORT_SHIPMENT,
       DOWNLOAD_SHIPMENT_LABEL_ZIP,
     ]),
-    ...mapActions('container', [GET_LABEL]),
+    ...mapActions('container', [GET_LABEL, UPDATE_CONTAINER]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -663,6 +704,50 @@ export default {
       })
       this.init()
     },
+    showBtnUpdate(container) {
+      return (
+        container.type === CONTAINER_TYPE_MANUAL &&
+        [CONTAINER_CLOSE].includes(container.status) &&
+        [ShipmentWaitingClose, ShipmentClosed].includes(this.shipment.status)
+      )
+    },
+    handleShowUpdateModal(container) {
+      this.visibleUpdateModal = true
+      this.container = container
+      document.onkeyup = null
+      document.onkeydown = null
+    },
+    async handleUpdateContainer(tracking) {
+      const regex = /^[a-z0-9]+$/i
+      if (tracking.trim() != '' && !regex.test(tracking.trim())) {
+        this.$toast.open({
+          message: 'Tracking chỉ chứa chữ số và chữ cái',
+          type: 'error',
+        })
+        return
+      }
+
+      this.isSubmitting = true
+      const payload = {
+        id: parseInt(this.container.id),
+        tracking_number: tracking.trim().toUpperCase(),
+      }
+      const result = await this[UPDATE_CONTAINER](payload)
+      if (!result.success) {
+        this.$toast.open({
+          message: result.message,
+          type: 'error',
+        })
+        return
+      }
+      this.isSubmitting = false
+      this.visibleUpdateModal = false
+      this.$toast.open({
+        message: `Cập nhật kiện hàng thành công`,
+        type: 'success',
+      })
+      await this.init()
+    },
   },
   watch: {
     filter: {
@@ -670,6 +755,15 @@ export default {
         this.init()
       },
       deep: true,
+    },
+    visibleUpdateModal: {
+      handler: function (v) {
+        if (!v) {
+          this.initBarcodeListener()
+        } else {
+          this.destroyEvenListener()
+        }
+      },
     },
   },
 }
@@ -681,9 +775,11 @@ export default {
   white-space: nowrap;
   border: none;
 }
+
 .shipment-detail .page-header_back {
   margin-bottom: 16px;
 }
+
 .shipment-detail .page-header_back a {
   font-weight: 500;
   font-size: 14px;
@@ -691,24 +787,31 @@ export default {
   letter-spacing: 0.2px;
   color: #626363;
 }
+
 .shipment-detail .page-header_back a img {
   margin-top: -2px;
 }
+
 .shipment-detail .page-header_back a span {
   margin-left: 10px;
 }
+
 .shipment-detail .page-header {
   margin-bottom: 18px;
 }
+
 .shipment-detail .btn-add-container img {
   margin-top: -6px;
 }
+
 .shipment-detail .page-header__info {
   display: flex;
 }
+
 .shipment-detail .page-header__info .input-group {
   width: calc(100% - 195px);
 }
+
 .shipment-detail .btn-cancel-container {
   padding: 6px 16px;
   background-color: #fff1f0;
@@ -716,38 +819,48 @@ export default {
   color: red;
   border-radius: 4px;
 }
+
 .shipment-detail .btn-cancel-shipment {
   border: 1px solid #f5222d;
   color: red;
   background-color: #fff;
 }
+
 .page-header__info > .info {
   margin-right: 50px;
 }
+
 .page-header__info > div div:last-child {
   font-size: 16px;
   font-weight: 600;
 }
+
 .page-header__subtitle {
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
 }
+
 #tbl-packages svg {
   margin-top: 0;
 }
+
 #tbl-packages .svg {
   opacity: 0;
 }
+
 #tbl-packages tr:hover .svg {
   opacity: 1;
 }
+
 #tbl-packages tr:hover .svg svg:hover circle {
   fill: #e1f7fc;
 }
+
 #tbl-packages tr:hover .svg svg:hover path {
   fill: #20bddb;
 }
+
 #tbl-packages .p-tooltip::after {
   width: auto;
 }

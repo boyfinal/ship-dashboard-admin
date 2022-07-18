@@ -11,6 +11,7 @@ export const REMOVE_PACKAGE_FROM_CONTAINER = 'removePackageFromContainer'
 export const CLOSE_CONTAINER = 'closeContainer'
 export const CANCEL_CONTAINER = 'cancelContainer'
 export const GET_LABEL = 'getLabel'
+export const UPDATE_CONTAINER = 'updateContainer'
 
 export const state = {
   containers: [],
@@ -91,6 +92,20 @@ export const actions = {
 
     let response = await api.createContainer(payload)
     if (!response || !response.container) {
+      result = {
+        success: false,
+        message: response.errorMessage,
+      }
+    }
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [UPDATE_CONTAINER]({ commit }, payload) {
+    let result = { success: true }
+
+    let response = await api.updateContainer(payload)
+    if (!response || !response.success) {
       result = {
         success: false,
         message: response.errorMessage,

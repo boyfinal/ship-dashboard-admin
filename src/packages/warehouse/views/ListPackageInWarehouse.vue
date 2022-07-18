@@ -341,6 +341,11 @@ export default {
       this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
     },
     async showLabel(label) {
+      if (!label) {
+        this.$toast.error(`This tracking doesn't have label`)
+        return
+      }
+
       document.activeElement && document.activeElement.blur()
       if (this.blob && this.isImage) {
         printImage(this.blob)

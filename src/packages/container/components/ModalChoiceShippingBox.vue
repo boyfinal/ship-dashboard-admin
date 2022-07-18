@@ -9,9 +9,15 @@
             v-for="warehouse in warehouses"
             :key="warehouse.id"
             :value="warehouse.id"
-            >HUB {{ warehouse.state }}</option
-          >
+            >HUB {{ warehouse.state }}
+          </option>
         </p-select>
+      </div>
+      <div class="col">
+        <label for=""><b>Chọn kiểu label:</b></label>
+        <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
+          >Label ngoài</p-checkbox
+        >
       </div>
     </div>
     <div v-else>
@@ -124,6 +130,19 @@
           />
         </div>
       </div>
+      <template v-if="typeContainer === typeManual">
+        <br />
+        <div class="row">
+          <div class="col-12">
+            <label for=""><b>Mã tracking</b></label>
+            <p-input
+              :placeholder="`Nhập tay hoặc quét barcode`"
+              v-model="tracking_number"
+              :error="err"
+            />
+          </div>
+        </div>
+      </template>
     </div>
 
     <template slot="footer">
@@ -145,6 +164,7 @@
 
 <script>
 import valider from '@core/valider'
+import { CONTAINER_TYPE_API, CONTAINER_TYPE_MANUAL } from '../contants'
 
 export default {
   name: 'ModalChoiceShippingBox',
@@ -178,6 +198,9 @@ export default {
     },
     title: {
       type: String,
+    },
+    typeContainer: {
+      type: Number,
     },
   },
   created() {
@@ -227,15 +250,33 @@ export default {
         max_weight: 0,
       },
       weight: 0,
+      tracking_number: '',
       warehouse: {},
       type: 0,
       warehouseID: 0,
+      isTypeManual: false,
       store: 1,
       valider: null,
+      err: '',
+      types: [
+        {
+          key: CONTAINER_TYPE_API,
+          text: 'Label Lionbay',
+        },
+        {
+          key: CONTAINER_TYPE_MANUAL,
+          text: 'Label ngoài',
+        },
+      ],
+      typeManual: CONTAINER_TYPE_MANUAL,
     }
   },
   methods: {
     handleClose() {
+      this.err = ''
+      this.tracking_number = ''
+      this.weight = 0
+      this.valider.reset()
       this.$emit('update:visible', false)
     },
     async handleSave() {
@@ -249,20 +290,35 @@ export default {
           return
         }
       }
+
+      this.tracking_number = this.tracking_number.trim().toUpperCase()
+      var re = /^[a-zA-Z0-9]*$/g
+      if (!re.test(this.tracking_number)) {
+        this.err = 'Tracking number không hợp lệ'
+        return
+      }
+
+      this.box = Object.assign(this.box, {
+        weight: this.weight,
+        tracking_number: this.tracking_number,
+      })
       if (!this.valider.check(this.box) && !this.isCreate) {
         return
       }
+
       let payload = {}
       if (this.isCreate) {
-        payload = { ...{ warehouse_id: this.warehouseID } }
+        payload = { warehouse_id: this.warehouseID, type: CONTAINER_TYPE_API }
+        if (this.isTypeManual) {
+          payload.type = CONTAINER_TYPE_MANUAL
+        }
       } else {
         payload = {
-          ...{
-            width: this.box.width,
-            height: this.box.height,
-            length: this.box.length,
-            weight: this.weight,
-          },
+          width: this.box.width,
+          height: this.box.height,
+          length: this.box.length,
+          weight: this.box.weight,
+          tracking_number: this.box.tracking_number,
         }
       }
 
@@ -277,6 +333,7 @@ export default {
       this.isShow = value
       this.type = 0
       this.warehouseID = 0
+      this.containerType = 0
     },
     type(val) {
       if (val == this.maxIDBox + 1) {
@@ -296,6 +353,7 @@ export default {
     width: 800px;
   }
 }
+
 .p-modal-content label {
   margin-bottom: 0.4rem;
 }
