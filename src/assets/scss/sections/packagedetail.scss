@@ -75,6 +75,7 @@
         }
         .page-header__action {
             min-width: 330px;
+            // text-align: right;
         }
     }
     .more-extra-fee img {
@@ -188,9 +189,9 @@
         width: auto;
         white-space: nowrap;
     }
-    .middle-item{
+    .middle-item {
         display: flex;
-        align-items: center; 
+        align-items: center;
         justify-content: center
     }
 }
