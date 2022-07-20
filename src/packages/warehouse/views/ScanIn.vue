@@ -237,7 +237,7 @@
                           <p-tooltip
                             class="item_name"
                             :label="`Update label lỗi`"
-                            position="top"
+                            position="right"
                             type="dark"
                           >
                             <p-svg name="warning"></p-svg>
@@ -331,7 +331,7 @@
                                   <p-tooltip
                                     class="item_name"
                                     :label="`Update label lỗi`"
-                                    position="top"
+                                    position="right"
                                     type="dark"
                                   >
                                     <p-svg name="warning"></p-svg>
