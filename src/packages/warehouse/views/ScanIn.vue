@@ -20,6 +20,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
+                  ref="input"
                   :disabled="disableInput"
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
@@ -617,6 +618,7 @@ export default {
 
       this.iscan = true
       this.checkinRequestId = res.checkin.id
+      this.$refs.input.focus()
       let packages =
         res.checkin && res.checkin.checkin_package
           ? res.checkin.checkin_package.map((x) => {
