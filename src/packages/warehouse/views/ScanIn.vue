@@ -737,7 +737,9 @@ export default {
 
       this.iscaned = false
       this.reset()
-
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       const res = await this.fetchPackage(keyword)
       if (res.error) {
         this.$toast.error(res.message)
