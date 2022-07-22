@@ -812,6 +812,8 @@ import {
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
   PACKAGE_CODE_TEMP,
+  PACKAGE_STATUS_PICKED,
+  PACKAGE_STATUS_PENDING_PICKUP,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -900,6 +902,8 @@ export default {
         PACKAGE_STATUS_DELIVERED,
         PACKAGE_STATUS_IN_TRANSIT,
         PACKAGE_STATUS_EXPIRED,
+        PACKAGE_STATUS_PICKED,
+        PACKAGE_STATUS_PENDING_PICKUP,
       ]
 
       return (

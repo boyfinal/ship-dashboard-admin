@@ -25,6 +25,7 @@
             :label="`Tìm khách hàng`"
             :emitID="false"
             @input="handleSearch"
+            :isTester="tester"
           />
           <div class="">
             <select
@@ -502,6 +503,7 @@ export default {
       isVisibleEditUser: false,
       visibleExportModal: false,
       isExporting: false,
+      tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,
     }
   },
   created() {

@@ -22,7 +22,7 @@
                     <th>PROMOTION</th>
                     <th>NGÀY TẠO</th>
                     <th>TRẠNG THÁI</th>
-                    <th>THAO TÁC</th>
+                    <th class="text-right">THAO TÁC</th>
                   </tr>
                 </thead>
 
@@ -35,10 +35,16 @@
                     <td :class="format(item.status)">{{
                       format(item.status)
                     }}</td>
-                    <td>
+                    <td class="text-right">
+                      <p-button
+                        class="btn btn-info"
+                        :disabled="!item.description"
+                        @click="showModalDescriptionHandle(item)"
+                        >Nội dung</p-button
+                      >
                       <p-button
                         :type="typeBtn(item.status)"
-                        class="btn-detail"
+                        class="btn-detail ml-8"
                         @click="visibleModal(item)"
                       >
                         {{ textBtn(item.status) }}
@@ -88,6 +94,10 @@
       @save="handleAppendPromotion"
     >
     </modal-append-promotion>
+    <modal-description
+      :visible.sync="isVisibleModalDescription"
+      :current="item"
+    ></modal-description>
   </div>
 </template>
 <script>
@@ -104,6 +114,8 @@ import {
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAppendPromotion from '../components/ModalAppendPromotion.vue'
 import SearchPromotion from '../components/SearchPromotion.vue'
+import ModalDescription from '../components/ModalDescription.vue'
+
 export default {
   name: 'ListPromotion',
   mixins: [mixinRoute, mixinTable],
@@ -112,6 +124,7 @@ export default {
     ModalConfirm,
     ModalAppendPromotion,
     SearchPromotion,
+    ModalDescription,
   },
   data() {
     return {
@@ -124,6 +137,7 @@ export default {
       product: {},
       visibleConfirm: false,
       visibleModalAppend: false,
+      isVisibleModalDescription: false,
       description: '',
       title: '',
       type: '',
@@ -223,6 +237,10 @@ export default {
     },
     typeBtn(status) {
       return status == 1 ? 'danger' : 'info'
+    },
+    showModalDescriptionHandle(item) {
+      this.item = item
+      this.isVisibleModalDescription = true
     },
   },
   watch: {

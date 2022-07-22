@@ -105,6 +105,13 @@
     }
     .table-responsive {
         height: 530px;
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: #555;
+        }
     }
     .table-user {
         th,

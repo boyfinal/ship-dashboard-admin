@@ -20,6 +20,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
+                  ref="input"
                   :disabled="disableInput"
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
@@ -224,18 +225,28 @@
                     <tr>
                       <template>
                         <th>Mã vận đơn</th>
-                        <th>Trạng thái</th>
-                        <th width="20"></th>
+                        <th width="150">Trạng thái</th>
+                        <th width="10"></th>
                       </template>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in packages" :key="i">
-                      <td>
-                        {{ item.code }}
+                      <td class="">
+                        <span>{{ item.code }}</span>
+                        <span v-if="item.isUpdateLabelFailed" class="ml-8">
+                          <p-tooltip
+                            class="item_name"
+                            :label="`Update label lỗi`"
+                            position="right"
+                            type="dark"
+                          >
+                            <p-svg name="warning"></p-svg>
+                          </p-tooltip>
+                        </span>
                       </td>
                       <td v-html="item.statusHTML"></td>
-                      <td width="20">
+                      <td width="10">
                         <p-svg
                           name="return"
                           @click.prevent="showModalReturnHandle(item)"
@@ -312,7 +323,22 @@
                           </tr>
                           <tbody>
                             <tr v-for="item in group.items" :key="item.id">
-                              <td>{{ item.code }}</td>
+                              <td class="d-flex">
+                                <span>{{ item.code }}</span>
+                                <span
+                                  v-if="item.isUpdateLabelFailed"
+                                  class="ml-8"
+                                >
+                                  <p-tooltip
+                                    class="item_name"
+                                    :label="`Update label lỗi`"
+                                    position="right"
+                                    type="dark"
+                                  >
+                                    <p-svg name="warning"></p-svg>
+                                  </p-tooltip>
+                                </span>
+                              </td>
                               <td v-html="item.statusHTML"></td>
                             </tr>
                           </tbody>
@@ -353,6 +379,7 @@ import {
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
+  CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
 } from '../constants'
 import { yup } from '../../../core/valider'
 import mixinTable from '@core/mixins/table'
@@ -591,6 +618,7 @@ export default {
 
       this.iscan = true
       this.checkinRequestId = res.checkin.id
+      this.$refs.input.focus()
       let packages =
         res.checkin && res.checkin.checkin_package
           ? res.checkin.checkin_package.map((x) => {
@@ -616,6 +644,7 @@ export default {
           status_checkin: pkg.status_checkin,
           detail: pkg.detail,
           statusHTML: '<span class="text-success">Thành công</span>',
+          isUpdateLabelFailed: false,
         }
 
         if (item.status == PACKAGE_STATUS_PENDING_PICKUP) {
@@ -628,6 +657,10 @@ export default {
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_INVALID) {
           item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
+        }
+
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+          item.isUpdateLabelFailed = true
         }
 
         this.packages.unshift(item)
@@ -706,7 +739,9 @@ export default {
 
       this.iscaned = false
       this.reset()
-
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       const res = await this.fetchPackage(keyword)
       if (res.error) {
         this.$toast.error(res.message)
@@ -782,6 +817,8 @@ export default {
       if (res.error) {
         this.$toast.error(res.message)
         this.isSubmitting = false
+        this.addToAnalytics(CHECKIN_PACKAGE_STATUS_FAILED)
+
         return false
       }
 
@@ -892,6 +929,7 @@ export default {
         detail: this.current.detail,
         status_checkin: status,
         statusHTML: '<span class="text-success">Thành công</span>',
+        isUpdateLabelFailed: false,
       }
       if (status == 'returned') {
         item.status = PACKAGE_STATUS_PENDING_PICKUP
@@ -903,6 +941,9 @@ export default {
 
       if (status == CHECKIN_PACKAGE_STATUS_INVALID) {
         item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
+      }
+      if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+        item.isUpdateLabelFailed = true
       }
       this.packages.unshift(item)
 

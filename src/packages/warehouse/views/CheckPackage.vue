@@ -7,6 +7,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
+                  ref="input"
                   :value="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập LionBay tracking"
@@ -258,6 +259,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.input.focus()
     if (this.$route.query.keyword) {
       this.keyword = this.$route.query.keyword.trim()
       this.fetchPackageSubmit()
@@ -307,6 +309,9 @@ export default {
 
     beforeFetchPackge(keyword) {
       keyword = keyword.trim()
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       if (this.keyword === keyword) return
 
       if (!this.current.id || this.isAccepted) {
