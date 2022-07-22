@@ -15,11 +15,18 @@
           <div class="page-header__info">
             <div>
               <div>LionBay tracking</div>
-              <div class="package-code"
-                >{{
-                  $evaluate('package_detail.package.package_code?.code') ||
-                  'N/A'
-                }}
+              <div class="package-code">
+                <template
+                  v-if="
+                    showPackageCode(this.package_detail.package.package_code)
+                  "
+                >
+                  {{
+                    $evaluate('package_detail.package.package_code?.code') ||
+                    'N/A'
+                  }}
+                </template>
+                <template v-else>N/A</template>
               </div>
             </div>
             <div>
@@ -804,6 +811,7 @@ import {
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
+  PACKAGE_CODE_TEMP,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -1069,6 +1077,9 @@ export default {
       }
       await this[FETCH_LIST_PRODUCTS](payload)
       this.isFetching = false
+    },
+    showPackageCode(code) {
+      return code ? code.status !== PACKAGE_CODE_TEMP : false
     },
     init2() {
       location.reload()
