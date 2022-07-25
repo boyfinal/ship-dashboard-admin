@@ -145,10 +145,7 @@
                       </div>
                     </td>
                     <td class="text-nowrap code">
-                      <span
-                        v-if="showPackageCode(item.package_code)"
-                        class="link-code"
-                      >
+                      <span v-if="showPackageCode(item)" class="link-code">
                         {{ item.package_code.code }}
                       </span>
                       <span
@@ -157,10 +154,7 @@
                       >
                         N/A
                       </span>
-                      <span
-                        class="svg"
-                        v-if="showPackageCode(item.package_code)"
-                      >
+                      <span class="svg" v-if="showPackageCode(item)">
                         <p-tooltip
                           class="item_name"
                           :label="` Track `"
@@ -281,6 +275,7 @@ import {
   PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
   PACKAGE_CODE_TEMP,
+  PACKAGE_STATUS_ARCHIVED,
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
@@ -409,8 +404,13 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
-    showPackageCode(code) {
-      return code ? code.status !== PACKAGE_CODE_TEMP : false
+    showPackageCode(item) {
+      if (item.status === PACKAGE_STATUS_ARCHIVED) {
+        return false
+      }
+      return item.package_code
+        ? item.package_code.status !== PACKAGE_CODE_TEMP
+        : false
     },
     selectDate(v) {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
