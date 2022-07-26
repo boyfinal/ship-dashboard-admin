@@ -170,13 +170,6 @@ export default {
       this.filter.search = ''
       this.searchHandle()
     },
-    barcodeSubmit(keyword) {
-      keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
-      }
-      this.barcode = keyword.trim()
-    },
     async searchHandle() {
       this.handleUpdateRouteQuery()
       if (this.filter.search.length > 22) {
