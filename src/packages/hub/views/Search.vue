@@ -170,13 +170,15 @@ export default {
       this.filter.search = ''
       this.searchHandle()
     },
+    barcodeSubmit() {},
     async searchHandle() {
       this.handleUpdateRouteQuery()
-      if (this.filter.search.length > 22) {
-        this.barcode = this.filter.search = this.filter.search.slice(-22)
-      }
+
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
+      if (this.filter.search.length > 22) {
+        filters.search = this.filter.search.slice(-22)
+      }
       this.isFetching = true
       const res = await Promise.all([
         this.searchSubmit(filters),
@@ -184,8 +186,7 @@ export default {
       ])
 
       this.isFetching = false
-      this.filter.search = this.barcode
-      this.barcode = ''
+      this.filter.search = filters.search
       for (const v of res) {
         if (v.error) {
           this.$toast.error(v.message)
