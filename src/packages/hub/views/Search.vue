@@ -8,7 +8,6 @@
           type="search"
           clearable
           v-model="filter.search"
-          @keyup.enter="searchHandle"
           @clear="clearSearch"
         >
         </p-input>
@@ -92,10 +91,12 @@ import TabExportHub from '../components/TabExportHub'
 import TabPending from '../components/TabPending'
 import mixinBarcode from '@core/mixins/barcode'
 import { date } from '@core/utils/datetime'
+import PButton from '../../../../uikit/components/button/Button'
 
 export default {
   name: 'HubSearch',
   components: {
+    PButton,
     EmptySearchResult,
     TabInHub,
     TabExportHub,
