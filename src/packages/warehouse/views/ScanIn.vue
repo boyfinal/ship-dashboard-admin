@@ -436,7 +436,9 @@ export default {
         !this.keyword ||
         !this.iscan ||
         this.isFetching ||
-        (this.codecurrent == this.keyword && this.codecurrent != '')
+        ((this.codecurrent == this.keyword ||
+          this.trackingCurrent == this.keyword) &&
+          this.codecurrent != '')
       )
     },
     disableBtnAccepts() {
@@ -457,6 +459,11 @@ export default {
       return !this.current || !this.current.package_code
         ? ''
         : this.current.package_code.code || ''
+    },
+    trackingCurrent() {
+      return !this.current || !this.current.tracking
+        ? ''
+        : this.current.tracking.tracking_number || ''
     },
     customer() {
       return !this.current || !this.current.user
@@ -632,14 +639,17 @@ export default {
         if (!pkg.package_code || !pkg.user) {
           continue
         }
-
         const code = pkg.package_code.code
+        const tracking_number = !pkg.tracking
+          ? ''
+          : pkg.tracking.tracking_number || ''
         const customer =
           pkg.user.full_name || pkg.user.email || pkg.user.phone_number
 
         let item = {
           id: pkg.id,
           code,
+          tracking_number,
           status: pkg.status,
           status_checkin: pkg.status_checkin,
           detail: pkg.detail,
@@ -680,7 +690,6 @@ export default {
           items: [item],
         })
       }
-
       this.isFetching = false
     },
 
@@ -717,8 +726,10 @@ export default {
           }
         }
       }
-
-      const index = this.packages.findIndex(({ code }) => code == keyword)
+      const index = this.packages.findIndex(
+        ({ code, tracking_number }) =>
+          code == keyword || tracking_number == keyword
+      )
       if (index !== -1) {
         this.$toast.warning(`Mã ${keyword} đã được quét`)
         return
