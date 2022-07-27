@@ -87,7 +87,7 @@
               :class="`mr-3`"
               v-if="
                 !isStartScan &&
-                container_detail.status === CONTAINER_WAITING_CLOSE
+                  container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStartScan"
             >
@@ -97,7 +97,7 @@
               id="stopScanButton"
               v-if="
                 isStartScan &&
-                container_detail.status === CONTAINER_WAITING_CLOSE
+                  container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStopScan"
               type="info"
@@ -162,11 +162,9 @@
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
-                      <td
-                        ><span v-if="item.tracking && item.tracking.weight">{{
-                          item.tracking.weight
-                        }}</span></td
-                      >
+                      <td>
+                        <span>{{ item.actual_weight || item.weight }}</span>
+                      </td>
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
@@ -343,10 +341,11 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
-    getBoxInfo(packageDetail) {
-      if (packageDetail && packageDetail.tracking) {
-        return `${packageDetail.tracking.length} x ${packageDetail.tracking.width}  x ${packageDetail.tracking.height}`
-      }
+    getBoxInfo(pkg) {
+      const length = pkg.actual_length || pkg.length
+      const width = pkg.actual_width || pkg.width
+      const height = pkg.actual_height || pkg.height
+      return `${length} x ${width}  x ${height}`
     },
     async handleAppend() {
       this.code = this.code.trim()
@@ -572,7 +571,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function () {
+      handler: function() {
         this.init()
       },
       deep: true,
