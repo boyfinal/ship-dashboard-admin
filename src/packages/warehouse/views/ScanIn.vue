@@ -436,9 +436,8 @@ export default {
         !this.keyword ||
         !this.iscan ||
         this.isFetching ||
-        ((this.codecurrent == this.keyword ||
-          this.trackingCurrent == this.keyword) &&
-          this.codecurrent != '')
+        (this.codecurrent == this.keyword && this.codecurrent != '') ||
+        (this.trackingCurrent == this.keyword && this.trackingCurrent != '')
       )
     },
     disableBtnAccepts() {
@@ -625,7 +624,6 @@ export default {
 
       this.iscan = true
       this.checkinRequestId = res.checkin.id
-      this.$refs.input.focus()
       let packages =
         res.checkin && res.checkin.checkin_package
           ? res.checkin.checkin_package.map((x) => {
@@ -700,17 +698,20 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
-      this.beforeFetchPackage(keyword)
+      keyword = keyword.trim()
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+      this.keyword = keyword
+      this.beforeFetchPackage(this.keyword)
       this.disableInput = false
+      return
     },
 
     async beforeFetchPackage(keyword) {
-      keyword = keyword.trim()
       if (this.codecurrent === keyword) return
 
       if (this.isFetching || this.isSubmitting) return
-
-      this.keyword = keyword
 
       if (this.hasAccept && !this.iscaned) {
         if (!this.hasChange) {
@@ -736,6 +737,7 @@ export default {
       }
 
       this.isFetching = true
+      console.log(keyword)
       await this.fetchPackge(keyword)
       setTimeout(() => {
         this.isFetching = false
@@ -840,6 +842,7 @@ export default {
       if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
         this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
       }
+      this.keyword = ''
       return true
     },
 
