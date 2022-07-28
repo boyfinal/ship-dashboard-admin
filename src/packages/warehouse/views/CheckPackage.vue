@@ -259,7 +259,6 @@ export default {
     }
   },
   mounted() {
-    this.$refs.input.focus()
     if (this.$route.query.keyword) {
       this.keyword = this.$route.query.keyword.trim()
       this.fetchPackageSubmit()
