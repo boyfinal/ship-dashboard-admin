@@ -737,7 +737,6 @@ export default {
       }
 
       this.isFetching = true
-      console.log(keyword)
       await this.fetchPackge(keyword)
       setTimeout(() => {
         this.isFetching = false
@@ -939,6 +938,9 @@ export default {
       const item = {
         id: this.current.id,
         code: this.codecurrent,
+        tracking_number: !this.current.tracking
+          ? ''
+          : this.current.tracking.tracking_number || '',
         status,
         detail: this.current.detail,
         status_checkin: status,
