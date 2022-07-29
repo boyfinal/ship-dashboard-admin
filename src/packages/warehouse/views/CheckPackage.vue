@@ -33,12 +33,18 @@
                 <p class="col-6"
                   >LionBay tracking:
                   <b>{{
-                    current.package_code ? current.package_code.code : ''
+                    current.package_code ? current.package_code.code : 'N/A'
                   }}</b>
                 </p>
                 <p class="col-6"
                   >Destination Hub:
-                  <b>Hub {{ current.tracking.warehouse.state }}</b>
+                  <b
+                    >{{
+                      current.tracking && current.tracking.warehouse
+                        ? `Hub ${current.tracking.warehouse.state}`
+                        : 'N/A'
+                    }}
+                  </b>
                 </p>
               </div>
               <div class="row">
@@ -51,14 +57,18 @@
                 <p class="col-6"
                   >Label:
                   <b>{{
-                    count_tracking > 1 ? 'In label mới' : 'Không có label mới'
+                    current.package_code
+                      ? count_tracking > 1
+                        ? 'In label mới'
+                        : 'Không có label mới'
+                      : 'N/A'
                   }}</b>
                 </p>
               </div>
               <div class="row">
                 <p class="col-6"
                   >Người gửi:
-                  <b>{{ current.user ? current.user.full_name : '' }}</b>
+                  <b>{{ current.user ? current.user.full_name : 'N/A' }}</b>
                 </p>
               </div>
             </div>
@@ -278,7 +288,7 @@ export default {
       this.keyword = this.$route.query.keyword.trim()
       this.fetchPackageSubmit()
     } else {
-      this.setPackage({})
+      this.setPackage({ package: {}, count_tracking: 0 })
     }
 
     this.beforeLeaveHandle()

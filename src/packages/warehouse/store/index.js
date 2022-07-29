@@ -92,11 +92,10 @@ export const actions = {
   async [FETCH_PACKAGE_DETAIL]({ commit }, payload) {
     const res = await api.fetchPackageByCode(payload)
     if (!res || res.error) {
-      commit(FETCH_PACKAGE_DETAIL, {})
+      commit(FETCH_PACKAGE_DETAIL, { package: {}, count_tracking: 0 })
       return { error: true, message: res.errorMessage || '' }
     }
-
-    commit(FETCH_PACKAGE_DETAIL, res || {})
+    commit(FETCH_PACKAGE_DETAIL, res || { package: {}, count_tracking: 0 })
     return { error: false }
   },
 
