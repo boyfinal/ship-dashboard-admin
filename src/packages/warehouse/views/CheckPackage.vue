@@ -32,20 +32,34 @@
               <div class="row">
                 <p class="col-6"
                   >LionBay tracking:
-                  {{ current.package_code ? current.package_code.code : '' }}</p
-                >
+                  <b>{{
+                    current.package_code ? current.package_code.code : ''
+                  }}</b>
+                </p>
                 <p class="col-6"
-                  >Người gửi:
-                  {{ current.user ? current.user.full_name : '' }}</p
-                >
+                  >Destination Hub:
+                  <b>Hub {{ current.tracking.warehouse.state }}</b>
+                </p>
               </div>
               <div class="row">
                 <p class="col-6"
                   >Last mile tracking:
-                  {{
+                  <b>{{
                     current.tracking ? current.tracking.tracking_number : 'N/A'
-                  }}</p
-                >
+                  }}</b>
+                </p>
+                <p class="col-6"
+                  >Label:
+                  <b>{{
+                    count_tracking > 1 ? 'In label mới' : 'Không có label mới'
+                  }}</b>
+                </p>
+              </div>
+              <div class="row">
+                <p class="col-6"
+                  >Người gửi:
+                  <b>{{ current.user ? current.user.full_name : '' }}</b>
+                </p>
               </div>
             </div>
           </div>
@@ -172,6 +186,7 @@ export default {
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
+      count_tracking: (state) => state.count_tracking_in_package,
     }),
     ...mapState('shared', {
       service_detail: (state) => state.service_detail,
