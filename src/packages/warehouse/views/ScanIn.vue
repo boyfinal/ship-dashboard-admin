@@ -234,10 +234,10 @@
                     <tr v-for="(item, i) in packages" :key="i">
                       <td class="">
                         <span>{{ item.code }}</span>
-                        <span v-if="item.isUpdateLabelFailed" class="ml-8">
+                        <span v-if="item.alert" class="ml-8">
                           <p-tooltip
                             class="item_name"
-                            :label="`Update label lỗi`"
+                            :label="item.alert"
                             position="right"
                             type="dark"
                           >
@@ -325,13 +325,10 @@
                             <tr v-for="item in group.items" :key="item.id">
                               <td class="d-flex">
                                 <span>{{ item.code }}</span>
-                                <span
-                                  v-if="item.isUpdateLabelFailed"
-                                  class="ml-8"
-                                >
+                                <span v-if="item.alert" class="ml-8">
                                   <p-tooltip
                                     class="item_name"
-                                    :label="`Update label lỗi`"
+                                    :label="item.alert"
                                     position="right"
                                     type="dark"
                                   >
@@ -380,6 +377,7 @@ import {
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
   CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
+  CHECKIN_PACKAGE_STATUS_CHANGE_LABEL,
 } from '../constants'
 import { yup } from '../../../core/valider'
 import mixinTable from '@core/mixins/table'
@@ -652,7 +650,7 @@ export default {
           status_checkin: pkg.status_checkin,
           detail: pkg.detail,
           statusHTML: '<span class="text-success">Thành công</span>',
-          isUpdateLabelFailed: false,
+          alert: '',
         }
 
         if (item.status == PACKAGE_STATUS_PENDING_PICKUP) {
@@ -668,7 +666,11 @@ export default {
         }
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-          item.isUpdateLabelFailed = true
+          item.alert = 'Update label lỗi'
+        }
+
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
+          item.alert = 'Label đã được thay đổi'
         }
 
         this.packages.unshift(item)
@@ -945,8 +947,9 @@ export default {
         detail: this.current.detail,
         status_checkin: status,
         statusHTML: '<span class="text-success">Thành công</span>',
-        isUpdateLabelFailed: false,
+        alert: false,
       }
+
       if (status == 'returned') {
         item.status = PACKAGE_STATUS_PENDING_PICKUP
         item.statusHTML = '<span class="text-warning">Trả hàng</span>'
@@ -958,9 +961,15 @@ export default {
       if (status == CHECKIN_PACKAGE_STATUS_INVALID) {
         item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
       }
+
       if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-        item.isUpdateLabelFailed = true
+        item.alert = 'Update label lỗi'
       }
+
+      if (status == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
+        item.alert = 'Label đã được thay đổi'
+      }
+
       this.packages.unshift(item)
 
       const user = this.current.user
