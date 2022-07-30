@@ -241,7 +241,7 @@
                             position="right"
                             type="dark"
                           >
-                            <p-svg name="warning"></p-svg>
+                            <p-svg :name="item.alert_icon"></p-svg>
                           </p-tooltip>
                         </span>
                       </td>
@@ -332,7 +332,7 @@
                                     position="right"
                                     type="dark"
                                   >
-                                    <p-svg name="warning"></p-svg>
+                                    <p-svg :name="item.alert_icon"></p-svg>
                                   </p-tooltip>
                                 </span>
                               </td>
@@ -376,7 +376,7 @@ import {
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
-  // CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
+  CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
   CHECKIN_PACKAGE_STATUS_CHANGE_LABEL,
 } from '../constants'
 import { yup } from '../../../core/valider'
@@ -665,9 +665,9 @@ export default {
           item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
         }
 
-        // if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-        //   item.alert = 'Update label lỗi'
-        // }
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+          item.alert = 'Update label lỗi'
+        }
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
           item.alert = 'Label đã được thay đổi'
@@ -948,6 +948,7 @@ export default {
         status_checkin: status,
         statusHTML: '<span class="text-success">Thành công</span>',
         alert: false,
+        alert_icon: '',
       }
 
       if (status == 'returned') {
@@ -962,12 +963,14 @@ export default {
         item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
       }
 
-      // if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-      //   item.alert = 'Update label lỗi'
-      // }
+      if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+        item.alert = 'Update label lỗi'
+        item.alert_icon = 'alert'
+      }
 
       if (status == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
         item.alert = 'Label đã được thay đổi'
+        item.alert_icon = 'warning'
       }
 
       this.packages.unshift(item)
