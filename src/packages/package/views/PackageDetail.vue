@@ -71,6 +71,7 @@
               class="btn btn-danger"
               @click="handleCancelPackage"
               v-if="isHasCancel"
+              id="btn_cancel"
             >
               <span>Hủy đơn</span>
             </p-button>
@@ -78,7 +79,7 @@
               type="info"
               v-if="showButtonEdit"
               @click="handleModal"
-              class="ml-7"
+              id="btn_edit"
             >
               {{ isReturnPackage ? `Re-Ship` : `Sửa đơn` }}
             </p-button>
@@ -90,7 +91,6 @@
                 user.role != roleSupport
               "
               @click="showModalExtraFee"
-              class="ml-7"
               id="btn_ex_fee"
             >
               Tạo phí phát sinh
@@ -814,7 +814,7 @@ import {
   PACKAGE_ALERT_TYPE_HUB_RETURN,
   PACKAGE_CODE_TEMP,
   PACKAGE_STATUS_PICKED,
-  PACKAGE_STATUS_PENDING_PICKUP,
+  PACKAGE_STATUS_UNDELIVERED,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -894,7 +894,7 @@ export default {
     }),
 
     showButtonEdit() {
-      const { status, tracking } = (this.package_detail || {}).package || {}
+      const { status } = (this.package_detail || {}).package || {}
       if (!status) return false
 
       const listStatus = [
@@ -904,13 +904,12 @@ export default {
         PACKAGE_STATUS_IN_TRANSIT,
         PACKAGE_STATUS_EXPIRED,
         PACKAGE_STATUS_PICKED,
-        PACKAGE_STATUS_PENDING_PICKUP,
+        PACKAGE_STATUS_UNDELIVERED,
       ]
 
       return (
         (this.$isSupport() || this.$isAdmin() || this.$isSupportLeader()) &&
-        ((listStatus.includes(status) == false && !tracking) ||
-          this.isReturnPackage)
+        (listStatus.includes(status) == false || this.isReturnPackage)
       )
     },
     displayDeliverLogs() {
