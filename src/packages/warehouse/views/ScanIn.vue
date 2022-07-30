@@ -376,7 +376,7 @@ import {
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
-  CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
+  // CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
   CHECKIN_PACKAGE_STATUS_CHANGE_LABEL,
 } from '../constants'
 import { yup } from '../../../core/valider'
@@ -665,9 +665,9 @@ export default {
           item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
         }
 
-        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-          item.alert = 'Update label lỗi'
-        }
+        // if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+        //   item.alert = 'Update label lỗi'
+        // }
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
           item.alert = 'Label đã được thay đổi'
@@ -962,9 +962,9 @@ export default {
         item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
       }
 
-      if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
-        item.alert = 'Update label lỗi'
-      }
+      // if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+      //   item.alert = 'Update label lỗi'
+      // }
 
       if (status == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
         item.alert = 'Label đã được thay đổi'
