@@ -814,8 +814,7 @@ import {
   PACKAGE_ALERT_TYPE_HUB_RETURN,
   PACKAGE_CODE_TEMP,
   PACKAGE_STATUS_PICKED,
-  PACKAGE_STATUS_PENDING_PICKUP,
-  PACKAGE_STATUS_UNDELIVERED
+  PACKAGE_STATUS_UNDELIVERED,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -895,7 +894,7 @@ export default {
     }),
 
     showButtonEdit() {
-      const { status, tracking } = (this.package_detail || {}).package || {}
+      const { status } = (this.package_detail || {}).package || {}
       if (!status) return false
 
       const listStatus = [
@@ -905,14 +904,12 @@ export default {
         PACKAGE_STATUS_IN_TRANSIT,
         PACKAGE_STATUS_EXPIRED,
         PACKAGE_STATUS_PICKED,
-        PACKAGE_STATUS_UNDELIVERED
+        PACKAGE_STATUS_UNDELIVERED,
       ]
-
 
       return (
         (this.$isSupport() || this.$isAdmin() || this.$isSupportLeader()) &&
-        ((listStatus.includes(status) == false ) ||
-          this.isReturnPackage)
+        (listStatus.includes(status) == false || this.isReturnPackage)
       )
     },
     displayDeliverLogs() {
