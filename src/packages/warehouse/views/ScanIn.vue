@@ -667,10 +667,12 @@ export default {
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
           item.alert = 'Update label lỗi'
+          item.alert_icon = 'alert'
         }
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
           item.alert = 'Label đã được thay đổi'
+          item.alert_icon = 'warning'
         }
 
         this.packages.unshift(item)
