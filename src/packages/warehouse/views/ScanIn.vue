@@ -701,7 +701,6 @@ export default {
     },
 
     barcodeSubmit(keyword) {
-      console.log(keyword)
       this.disableInput = true
       keyword = keyword.trim()
       if (keyword.length > 22) {
