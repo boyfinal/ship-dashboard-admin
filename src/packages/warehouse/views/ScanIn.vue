@@ -717,6 +717,15 @@ export default {
 
       if (this.isFetching || this.isSubmitting) return
 
+      const index = this.packages.findIndex(
+        ({ code, tracking_number }) =>
+          code == keyword || tracking_number == keyword
+      )
+      if (index !== -1) {
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
+        return
+      }
+
       if (this.hasAccept && !this.iscaned) {
         if (!this.hasChange) {
           await this.acceptSubmit()
@@ -730,14 +739,6 @@ export default {
             console.log(error)
           }
         }
-      }
-      const index = this.packages.findIndex(
-        ({ code, tracking_number }) =>
-          code == keyword || tracking_number == keyword
-      )
-      if (index !== -1) {
-        this.$toast.warning(`Mã ${keyword} đã được quét`)
-        return
       }
 
       this.isFetching = true
@@ -1062,6 +1063,16 @@ export default {
     } else {
       next()
     }
+  },
+  watch: {
+    isVisibleModalReturn: {
+      handler: function (v) {
+        if (!v) {
+          this.setPackage({})
+        }
+      },
+      deep: true,
+    },
   },
 }
 </script>
