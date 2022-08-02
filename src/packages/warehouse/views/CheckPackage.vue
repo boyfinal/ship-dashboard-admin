@@ -57,11 +57,11 @@
                 <p class="col-6"
                   >Label:
                   <b>{{
-                    current.package_code
+                    current.label_promotion
                       ? count_tracking > 1
-                        ? 'In label mới'
-                        : 'Không có label mới'
-                      : 'N/A'
+                        ? 'Dán lại label + sticker'
+                        : 'Dán sticker'
+                      : 'Dán label'
                   }}</b>
                 </p>
               </div>
