@@ -62,6 +62,10 @@
                     <div class="d-flex">
                       <span>Người gửi:</span>
                       <span>{{ customer }}</span>
+                    </div>
+                    <div class="d-flex">
+                      <span>Mã tracking:</span>
+                      <span>{{ trackingCurrent }}</span>
                     </div></div
                   >
                   <div class="col-6 second">
