@@ -814,6 +814,8 @@ import {
   PACKAGE_ALERT_TYPE_HUB_RETURN,
   PACKAGE_CODE_TEMP,
   PACKAGE_STATUS_UNDELIVERED,
+  PACKAGE_STATUS_WAREHOUSE_LABELED,
+  PACKAGE_STATUS_RESHIP,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -903,6 +905,8 @@ export default {
         PACKAGE_STATUS_IN_TRANSIT,
         PACKAGE_STATUS_EXPIRED,
         PACKAGE_STATUS_UNDELIVERED,
+        PACKAGE_STATUS_WAREHOUSE_LABELED,
+        PACKAGE_STATUS_RESHIP,
       ]
 
       return (
