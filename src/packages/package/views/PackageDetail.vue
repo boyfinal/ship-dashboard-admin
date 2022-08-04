@@ -816,6 +816,7 @@ import {
   PACKAGE_STATUS_UNDELIVERED,
   PACKAGE_STATUS_RESHIP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
+  PACKAGE_STATUS_PICKED,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -1040,6 +1041,17 @@ export default {
     isReturnPackage() {
       return this.package_detail.package.alert === PACKAGE_ALERT_TYPE_HUB_RETURN
     },
+    isDisableService() {
+      const { status } = (this.package_detail || {}).package || {}
+      if (!status) return false
+
+      const listStatus = [
+        PACKAGE_STATUS_WAREHOUSE_LABELED,
+        PACKAGE_STATUS_PICKED,
+      ]
+
+      return listStatus.includes(status)
+    },
     isHasCancel() {
       const status = ((this.package_detail || {}).package || {}).status
       if (!status) return false
@@ -1109,7 +1121,7 @@ export default {
     },
     handleModal() {
       this.isVisibleModal = true
-      if (this.isReturnPackage) {
+      if (this.isReturnPackage || this.isDisableService) {
         this.isReLabel = true
       }
     },
