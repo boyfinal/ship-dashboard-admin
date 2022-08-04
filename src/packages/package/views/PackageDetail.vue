@@ -817,6 +817,7 @@ import {
   PACKAGE_STATUS_RESHIP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
   PACKAGE_STATUS_PICKED,
+  PACKAGE_STATUS_PENDING_PICKUP,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -1048,6 +1049,7 @@ export default {
       const listStatus = [
         PACKAGE_STATUS_WAREHOUSE_LABELED,
         PACKAGE_STATUS_PICKED,
+        PACKAGE_STATUS_PENDING_PICKUP,
       ]
 
       return listStatus.includes(status)
