@@ -245,6 +245,7 @@ export const CHANGE_PACKAGE_TYPE = [
   'Bỏ qua kiểm tra địa chỉ bằng API',
   'Reship',
   'Mã đơn hàng',
+  'Hủy Label',
 ]
 // cSpell:enable
 
