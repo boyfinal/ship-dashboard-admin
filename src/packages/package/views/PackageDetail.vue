@@ -88,7 +88,8 @@
               v-if="
                 package_detail.package.status != statusCreated &&
                 package_detail.package.status != statusArchived &&
-                user.role != roleSupport
+                user.role != roleSupport &&
+                !$isWarehouse()
               "
               @click="showModalExtraFee"
               id="btn_ex_fee"
