@@ -87,7 +87,7 @@
               :class="`mr-3`"
               v-if="
                 !isStartScan &&
-                  container_detail.status === CONTAINER_WAITING_CLOSE
+                container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStartScan"
             >
@@ -97,7 +97,7 @@
               id="stopScanButton"
               v-if="
                 isStartScan &&
-                  container_detail.status === CONTAINER_WAITING_CLOSE
+                container_detail.status === CONTAINER_WAITING_CLOSE
               "
               @click="handleStopScan"
               type="info"
@@ -144,13 +144,13 @@
                     <tr v-for="(item, i) in items" :key="i">
                       <td>
                         <router-link
-                          v-if="isAdmin"
+                          v-if="isAdmin || $isWarehouse"
                           class="text-no-underline"
                           :to="`/packages/${item.id}`"
                         >
                           {{ item.code }}
                         </router-link>
-                        <span v-if="!isAdmin">{{ item.code }}</span>
+                        <span v-else>{{ item.code }}</span>
                       </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
@@ -571,7 +571,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
