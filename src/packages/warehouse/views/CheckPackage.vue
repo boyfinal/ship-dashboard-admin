@@ -7,6 +7,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
+                  ref="input"
                   :value="keyword"
                   @keydown.enter.prevent="searchHandle"
                   placeholder="Nhập LionBay tracking"
@@ -31,20 +32,44 @@
               <div class="row">
                 <p class="col-6"
                   >LionBay tracking:
-                  {{ current.package_code ? current.package_code.code : '' }}</p
-                >
+                  <b>{{
+                    current.package_code ? current.package_code.code : 'N/A'
+                  }}</b>
+                </p>
                 <p class="col-6"
-                  >Người gửi:
-                  {{ current.user ? current.user.full_name : '' }}</p
-                >
+                  >Destination Hub:
+                  <b
+                    >{{
+                      current.tracking && current.tracking.warehouse
+                        ? `Hub ${current.tracking.warehouse.state}`
+                        : 'N/A'
+                    }}
+                  </b>
+                </p>
               </div>
               <div class="row">
                 <p class="col-6"
                   >Last mile tracking:
-                  {{
+                  <b>{{
                     current.tracking ? current.tracking.tracking_number : 'N/A'
-                  }}</p
-                >
+                  }}</b>
+                </p>
+                <p class="col-6"
+                  >Label:
+                  <b>{{
+                    current.label_promotion
+                      ? count_tracking > 1
+                        ? 'Dán lại label + sticker'
+                        : 'Dán sticker'
+                      : 'Dán label'
+                  }}</b>
+                </p>
+              </div>
+              <div class="row">
+                <p class="col-6"
+                  >Người gửi:
+                  <b>{{ current.user ? current.user.full_name : 'N/A' }}</b>
+                </p>
               </div>
             </div>
           </div>
@@ -171,6 +196,7 @@ export default {
   computed: {
     ...mapState('warehouse', {
       current: (state) => state.package,
+      count_tracking: (state) => state.count_tracking_in_package,
     }),
     ...mapState('shared', {
       service_detail: (state) => state.service_detail,
@@ -262,7 +288,7 @@ export default {
       this.keyword = this.$route.query.keyword.trim()
       this.fetchPackageSubmit()
     } else {
-      this.setPackage({})
+      this.setPackage({ package: {}, count_tracking: 0 })
     }
 
     this.beforeLeaveHandle()
@@ -307,6 +333,9 @@ export default {
 
     beforeFetchPackge(keyword) {
       keyword = keyword.trim()
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       if (this.keyword === keyword) return
 
       if (!this.current.id || this.isAccepted) {

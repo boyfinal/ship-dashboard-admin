@@ -190,6 +190,7 @@ export default {
       let payload = {
         promotion_id: this.promotion.id,
         user_id: this.selectIDs,
+        tester: Boolean(this.tester),
       }
       this.$emit('save', payload)
     },

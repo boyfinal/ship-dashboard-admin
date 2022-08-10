@@ -15,11 +15,14 @@
           <div class="page-header__info">
             <div>
               <div>LionBay tracking</div>
-              <div class="package-code"
-                >{{
-                  $evaluate('package_detail.package.package_code?.code') ||
-                  'N/A'
-                }}
+              <div class="package-code">
+                <template v-if="showPackageCode(this.package_detail.package)">
+                  {{
+                    $evaluate('package_detail.package.package_code?.code') ||
+                    'N/A'
+                  }}
+                </template>
+                <template v-else>N/A</template>
               </div>
             </div>
             <div>
@@ -68,6 +71,7 @@
               class="btn btn-danger"
               @click="handleCancelPackage"
               v-if="isHasCancel"
+              id="btn_cancel"
             >
               <span>Hủy đơn</span>
             </p-button>
@@ -75,7 +79,7 @@
               type="info"
               v-if="showButtonEdit"
               @click="handleModal"
-              class="ml-7"
+              id="btn_edit"
             >
               {{ isReturnPackage ? `Re-Ship` : `Sửa đơn` }}
             </p-button>
@@ -84,10 +88,10 @@
               v-if="
                 package_detail.package.status != statusCreated &&
                 package_detail.package.status != statusArchived &&
-                user.role != roleSupport
+                user.role != roleSupport &&
+                !$isWarehouse()
               "
               @click="showModalExtraFee"
-              class="ml-7"
               id="btn_ex_fee"
             >
               Tạo phí phát sinh
@@ -109,67 +113,67 @@
                       <div class="card-content">
                         <div class="row">
                           <div class="col-5 mb-8">Họ và tên:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.recipient')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Điện thoại:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.phone_number')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Địa chỉ:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.address_1')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Địa chỉ phụ:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.address_2')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Thành phố:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.city')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Mã vùng:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.state_code')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Mã bưu điện:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.zipcode')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5">Mã quốc gia:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.country_code')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -182,24 +186,24 @@
                       <div class="card-content">
                         <div class="row">
                           <div class="col-5 mb-8">Chi tiết hàng hóa:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.detail')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Mã đơn hàng:</div>
-                          <div class="col-7"
-                            ><div>{{
+                          <div class="col-7">
+                            <div>{{
                               $evaluate('package_detail.package.order_number')
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Trọng lượng:</div>
-                          <div class="col-7"
-                            ><div
+                          <div class="col-7">
+                            <div
                               >{{ $evaluate('package_detail.package.weight')
                               }}<span v-if="isOverThanOld('weight')">
                                 ({{
@@ -208,13 +212,13 @@
                                   )
                                 }})
                               </span></div
-                            ></div
-                          >
+                            >
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Dài:</div>
-                          <div class="col-7"
-                            ><div
+                          <div class="col-7">
+                            <div
                               >{{ $evaluate('package_detail.package.length')
                               }}<span v-if="isOverThanOld()">
                                 ({{
@@ -223,13 +227,13 @@
                                   )
                                 }})
                               </span></div
-                            ></div
-                          >
+                            >
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Rộng:</div>
-                          <div class="col-7"
-                            ><div
+                          <div class="col-7">
+                            <div
                               >{{ $evaluate('package_detail.package.width')
                               }}<span v-if="isOverThanOld()">
                                 ({{
@@ -238,13 +242,13 @@
                                   )
                                 }})
                               </span></div
-                            ></div
-                          >
+                            >
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-5 mb-8">Cao:</div>
-                          <div class="col-7"
-                            ><div
+                          <div class="col-7">
+                            <div
                               >{{ $evaluate('package_detail.package.height')
                               }}<span v-if="isOverThanOld()">
                                 ({{
@@ -253,8 +257,8 @@
                                   )
                                 }})
                               </span></div
-                            ></div
-                          >
+                            >
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -301,8 +305,8 @@
                               </div>
                               <div v-if="!package_detail.status_ticket">
                                 Không
-                              </div></div
-                            >
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -338,8 +342,8 @@
                             v-if="package_detail.package.package_return"
                           >
                             <div class="col-4 pr-0">Lý do trả hàng:</div>
-                            <div class="col-8 pl-0"
-                              ><div>{{
+                            <div class="col-8 pl-0">
+                              <div>{{
                                 package_detail.package.package_return.reason
                               }}</div>
                             </div>
@@ -412,9 +416,9 @@
                           <div class="col-8 mb-8"
                             >{{ item.extra_fee_types.name }} :</div
                           >
-                          <div class="col-4 text-right"
-                            ><div>{{ item.amount | formatPrice }}</div></div
-                          >
+                          <div class="col-4 text-right">
+                            <div>{{ item.amount | formatPrice }}</div>
+                          </div>
                         </div>
                       </div>
                       <div class="card-content text-center" v-else>
@@ -430,18 +434,18 @@
                       <div class="card-content">
                         <div class="row">
                           <div class="col-8 mb-8">Phí giao hàng:</div>
-                          <div class="col-4 text-right"
-                            ><div>{{
+                          <div class="col-4 text-right">
+                            <div>{{
                               $evaluate('package_detail.package?.shipping_fee')
                                 | formatPrice
-                            }}</div></div
-                          >
+                            }}</div>
+                          </div>
                         </div>
                         <div class="row">
                           <div class="col-8 mb-8">Phí phát sinh:</div>
-                          <div class="col-4 more-extra-fee text-right"
-                            ><div>{{ sumExtraFee | formatPrice }}</div></div
-                          >
+                          <div class="col-4 more-extra-fee text-right">
+                            <div>{{ sumExtraFee | formatPrice }}</div>
+                          </div>
                         </div>
                         <hr
                           style="
@@ -454,9 +458,9 @@
                           <div class="col-8" style="font-weight: 400"
                             >Tổng cước:</div
                           >
-                          <div class="col-4 text-right"
-                            ><div>{{ sumFee | formatPrice }}</div></div
-                          >
+                          <div class="col-4 text-right">
+                            <div>{{ sumFee | formatPrice }}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -565,8 +569,8 @@
                                   <span v-html="it.text"></span>
                                   <span class="location" v-if="it.location">
                                     ___{{ it.location }}</span
-                                  ></div
-                                >
+                                  >
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -578,7 +582,8 @@
                               }"
                               @click="previousTimeLinePage"
                               >Trước</div
-                            ><div
+                            >
+                            <div
                               :class="{
                                 'disable-next-page':
                                   timelinePagination.currentPage >=
@@ -610,8 +615,8 @@
                         <div class="card-action"
                           ><a @click="changeDisplayDeliverDetail()" href="#"
                             >Hành trình đơn</a
-                          ></div
-                        >
+                          >
+                        </div>
 
                         <div class="card-title ml-24">Lịch sử đơn</div>
                       </div>
@@ -689,7 +694,8 @@
                               }"
                               @click="previousAuditLogPage"
                               >Trước</div
-                            ><div
+                            >
+                            <div
                               :class="{
                                 'disable-next-page':
                                   auditPagination.currentPage >=
@@ -762,12 +768,15 @@
   line-height: 22px;
   color: #313232;
 }
+
 .disable-extra-fee {
   color: #cfd0d0;
 }
+
 .bold-line {
   font-weight: 600;
 }
+
 .through-line,
 .through-line td {
   text-decoration-line: line-through;
@@ -804,6 +813,9 @@ import {
   PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
   PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
   PACKAGE_ALERT_TYPE_HUB_RETURN,
+  PACKAGE_CODE_TEMP,
+  PACKAGE_STATUS_UNDELIVERED,
+  PACKAGE_STATUS_RESHIP,
 } from '@/packages/package/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { extension } from '@core/utils/url'
@@ -883,7 +895,7 @@ export default {
     }),
 
     showButtonEdit() {
-      const { status, tracking } = (this.package_detail || {}).package || {}
+      const { status } = (this.package_detail || {}).package || {}
       if (!status) return false
 
       const listStatus = [
@@ -892,12 +904,15 @@ export default {
         PACKAGE_STATUS_DELIVERED,
         PACKAGE_STATUS_IN_TRANSIT,
         PACKAGE_STATUS_EXPIRED,
+        PACKAGE_STATUS_UNDELIVERED,
+        PACKAGE_STATUS_RESHIP,
+        PACKAGE_STATUS_WAREHOUSE_IN_CONTAINER,
+        PACKAGE_STATUS_WAREHOUSE_IN_SHIPMENT,
       ]
 
       return (
         (this.$isSupport() || this.$isAdmin() || this.$isSupportLeader()) &&
-        ((listStatus.includes(status) == false && !tracking) ||
-          this.isReturnPackage)
+        (listStatus.includes(status) == false || this.isReturnPackage)
       )
     },
     displayDeliverLogs() {
@@ -1069,6 +1084,14 @@ export default {
       }
       await this[FETCH_LIST_PRODUCTS](payload)
       this.isFetching = false
+    },
+    showPackageCode(item) {
+      if (item.status === PACKAGE_STATUS_ARCHIVED) {
+        return false
+      }
+      return item.package_code
+        ? item.package_code.status !== PACKAGE_CODE_TEMP
+        : false
     },
     init2() {
       location.reload()

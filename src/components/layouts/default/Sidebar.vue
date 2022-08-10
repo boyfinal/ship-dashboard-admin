@@ -110,7 +110,7 @@ export default {
           route: { name: 'packages' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse() || this.$isHub(),
+          disable: this.$isHub(),
           sub: [
             {
               route: '/packages',
@@ -121,12 +121,13 @@ export default {
               route: '/packages/return',
               title: ' Đơn hàng trả về',
               alias: ['/packages/return'],
-              disable: this.$isSupportLeader(),
+              disable: this.$isSupportLeader() || this.$isWarehouse(),
             },
             {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
+              disable: this.$isWarehouse(),
             },
             {
               route: '/promotions',
@@ -439,6 +440,7 @@ export default {
 <style lang="scss">
 .animsition-link {
   position: relative;
+
   &:before {
     position: absolute;
     content: '';

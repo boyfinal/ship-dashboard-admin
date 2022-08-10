@@ -8,8 +8,8 @@
           type="search"
           clearable
           v-model="filter.search"
-          @keyup.enter="searchHandle"
           @clear="clearSearch"
+          @keyup.enter="searchHandle"
         >
         </p-input>
         <div class="d-flex date-search" v-if="!isTabPending">
@@ -92,10 +92,12 @@ import TabExportHub from '../components/TabExportHub'
 import TabPending from '../components/TabPending'
 import mixinBarcode from '@core/mixins/barcode'
 import { date } from '@core/utils/datetime'
+import PButton from '../../../../uikit/components/button/Button'
 
 export default {
   name: 'HubSearch',
   components: {
+    PButton,
     EmptySearchResult,
     TabInHub,
     TabExportHub,
@@ -168,21 +170,15 @@ export default {
       this.filter.search = ''
       this.searchHandle()
     },
-    barcodeSubmit(keyword) {
-      keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
-      }
-      this.barcode = keyword.trim()
-      this.searchHandle()
-    },
+    barcodeSubmit() {},
     async searchHandle() {
       this.handleUpdateRouteQuery()
-      if (this.barcode) {
-        this.filter.search = this.barcode
-      }
+
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
+      if (this.filter.search.length > 22) {
+        filters.search = this.filter.search.slice(-22)
+      }
       this.isFetching = true
       const res = await Promise.all([
         this.searchSubmit(filters),
@@ -190,7 +186,7 @@ export default {
       ])
 
       this.isFetching = false
-      this.barcode = ''
+      this.filter.search = filters.search
       for (const v of res) {
         if (v.error) {
           this.$toast.error(v.message)

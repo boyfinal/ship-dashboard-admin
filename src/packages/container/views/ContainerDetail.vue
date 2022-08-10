@@ -144,13 +144,13 @@
                     <tr v-for="(item, i) in items" :key="i">
                       <td>
                         <router-link
-                          v-if="isAdmin"
+                          v-if="isAdmin || $isWarehouse"
                           class="text-no-underline"
                           :to="`/packages/${item.id}`"
                         >
                           {{ item.code }}
                         </router-link>
-                        <span v-if="!isAdmin">{{ item.code }}</span>
+                        <span v-else>{{ item.code }}</span>
                       </td>
                       <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
                       <td>
@@ -162,11 +162,9 @@
                           >{{ item.tracking.tracking_number }}</a
                         >
                       </td>
-                      <td
-                        ><span v-if="item.tracking && item.tracking.weight">{{
-                          item.tracking.weight
-                        }}</span></td
-                      >
+                      <td>
+                        <span>{{ item.actual_weight || item.weight }}</span>
+                      </td>
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
@@ -343,10 +341,11 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
-    getBoxInfo(packageDetail) {
-      if (packageDetail && packageDetail.tracking) {
-        return `${packageDetail.tracking.length} x ${packageDetail.tracking.width}  x ${packageDetail.tracking.height}`
-      }
+    getBoxInfo(pkg) {
+      const length = pkg.actual_length || pkg.length
+      const width = pkg.actual_width || pkg.width
+      const height = pkg.actual_height || pkg.height
+      return `${length} x ${width}  x ${height}`
     },
     async handleAppend() {
       this.code = this.code.trim()

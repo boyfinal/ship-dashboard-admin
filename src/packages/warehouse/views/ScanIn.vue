@@ -20,6 +20,7 @@
             <div class="card-body">
               <div class="d-flex">
                 <p-input
+                  ref="input"
                   :disabled="disableInput"
                   v-model="keyword"
                   @keydown.enter.prevent="searchHandle"
@@ -61,6 +62,10 @@
                     <div class="d-flex">
                       <span>Người gửi:</span>
                       <span>{{ customer }}</span>
+                    </div>
+                    <div class="d-flex">
+                      <span>Mã tracking:</span>
+                      <span>{{ trackingCurrent }}</span>
                     </div></div
                   >
                   <div class="col-6 second">
@@ -224,18 +229,28 @@
                     <tr>
                       <template>
                         <th>Mã vận đơn</th>
-                        <th>Trạng thái</th>
-                        <th width="20"></th>
+                        <th width="150">Trạng thái</th>
+                        <th width="10"></th>
                       </template>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in packages" :key="i">
-                      <td>
-                        {{ item.code }}
+                      <td class="">
+                        <span>{{ item.code }}</span>
+                        <span v-if="item.alert" class="ml-8">
+                          <p-tooltip
+                            class="item_name"
+                            :label="item.alert"
+                            position="right"
+                            type="dark"
+                          >
+                            <p-svg :name="item.alert_icon"></p-svg>
+                          </p-tooltip>
+                        </span>
                       </td>
                       <td v-html="item.statusHTML"></td>
-                      <td width="20">
+                      <td width="10">
                         <p-svg
                           name="return"
                           @click.prevent="showModalReturnHandle(item)"
@@ -312,7 +327,19 @@
                           </tr>
                           <tbody>
                             <tr v-for="item in group.items" :key="item.id">
-                              <td>{{ item.code }}</td>
+                              <td class="d-flex">
+                                <span>{{ item.code }}</span>
+                                <span v-if="item.alert" class="ml-8">
+                                  <p-tooltip
+                                    class="item_name"
+                                    :label="item.alert"
+                                    position="right"
+                                    type="dark"
+                                  >
+                                    <p-svg :name="item.alert_icon"></p-svg>
+                                  </p-tooltip>
+                                </span>
+                              </td>
                               <td v-html="item.statusHTML"></td>
                             </tr>
                           </tbody>
@@ -353,6 +380,8 @@ import {
   CHECKIN_PACKAGE_STATUS_FAILED,
   CHECKIN_PACKAGE_STATUS_SUCCESS,
   CHECKIN_PACKAGE_STATUS_INVALID,
+  CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED,
+  CHECKIN_PACKAGE_STATUS_CHANGE_LABEL,
 } from '../constants'
 import { yup } from '../../../core/valider'
 import mixinTable from '@core/mixins/table'
@@ -409,7 +438,8 @@ export default {
         !this.keyword ||
         !this.iscan ||
         this.isFetching ||
-        (this.codecurrent == this.keyword && this.codecurrent != '')
+        (this.codecurrent == this.keyword && this.codecurrent != '') ||
+        (this.trackingCurrent == this.keyword && this.trackingCurrent != '')
       )
     },
     disableBtnAccepts() {
@@ -430,6 +460,11 @@ export default {
       return !this.current || !this.current.package_code
         ? ''
         : this.current.package_code.code || ''
+    },
+    trackingCurrent() {
+      return !this.current || !this.current.tracking
+        ? ''
+        : this.current.tracking.tracking_number || 'N/A'
     },
     customer() {
       return !this.current || !this.current.user
@@ -604,18 +639,22 @@ export default {
         if (!pkg.package_code || !pkg.user) {
           continue
         }
-
         const code = pkg.package_code.code
+        const tracking_number = !pkg.tracking
+          ? ''
+          : pkg.tracking.tracking_number || ''
         const customer =
           pkg.user.full_name || pkg.user.email || pkg.user.phone_number
 
         let item = {
           id: pkg.id,
           code,
+          tracking_number,
           status: pkg.status,
           status_checkin: pkg.status_checkin,
           detail: pkg.detail,
           statusHTML: '<span class="text-success">Thành công</span>',
+          alert: '',
         }
 
         if (item.status == PACKAGE_STATUS_PENDING_PICKUP) {
@@ -628,6 +667,16 @@ export default {
 
         if (item.status_checkin == CHECKIN_PACKAGE_STATUS_INVALID) {
           item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
+        }
+
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+          item.alert = 'Update label lỗi'
+          item.alert_icon = 'alert'
+        }
+
+        if (item.status_checkin == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
+          item.alert = 'Label đã được thay đổi'
+          item.alert_icon = 'warning'
         }
 
         this.packages.unshift(item)
@@ -647,7 +696,6 @@ export default {
           items: [item],
         })
       }
-
       this.isFetching = false
     },
 
@@ -658,17 +706,29 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
-      this.beforeFetchPackage(keyword)
+      keyword = keyword.trim()
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
+      this.keyword = keyword
+      this.beforeFetchPackage(this.keyword)
       this.disableInput = false
+      return
     },
 
     async beforeFetchPackage(keyword) {
-      keyword = keyword.trim()
       if (this.codecurrent === keyword) return
 
       if (this.isFetching || this.isSubmitting) return
 
-      this.keyword = keyword
+      const index = this.packages.findIndex(
+        ({ code, tracking_number }) =>
+          code == keyword || tracking_number == keyword
+      )
+      if (index !== -1) {
+        this.$toast.warning(`Mã ${keyword} đã được quét`)
+        return
+      }
 
       if (this.hasAccept && !this.iscaned) {
         if (!this.hasChange) {
@@ -683,12 +743,6 @@ export default {
             console.log(error)
           }
         }
-      }
-
-      const index = this.packages.findIndex(({ code }) => code == keyword)
-      if (index !== -1) {
-        this.$toast.warning(`Mã ${keyword} đã được quét`)
-        return
       }
 
       this.isFetching = true
@@ -706,7 +760,9 @@ export default {
 
       this.iscaned = false
       this.reset()
-
+      if (keyword.length > 22) {
+        keyword = keyword.slice(-22)
+      }
       const res = await this.fetchPackage(keyword)
       if (res.error) {
         this.$toast.error(res.message)
@@ -782,6 +838,8 @@ export default {
       if (res.error) {
         this.$toast.error(res.message)
         this.isSubmitting = false
+        this.addToAnalytics(CHECKIN_PACKAGE_STATUS_FAILED)
+
         return false
       }
 
@@ -792,6 +850,7 @@ export default {
       if (res.status_checkin == CHECKIN_PACKAGE_STATUS_SUCCESS) {
         this.updateStatus(PACKAGE_WAREHOUSE_STATUS_PICK)
       }
+      this.keyword = ''
       return true
     },
 
@@ -888,11 +947,17 @@ export default {
       const item = {
         id: this.current.id,
         code: this.codecurrent,
+        tracking_number: !this.current.tracking
+          ? ''
+          : this.current.tracking.tracking_number || '',
         status,
         detail: this.current.detail,
         status_checkin: status,
         statusHTML: '<span class="text-success">Thành công</span>',
+        alert: false,
+        alert_icon: '',
       }
+
       if (status == 'returned') {
         item.status = PACKAGE_STATUS_PENDING_PICKUP
         item.statusHTML = '<span class="text-warning">Trả hàng</span>'
@@ -904,6 +969,17 @@ export default {
       if (status == CHECKIN_PACKAGE_STATUS_INVALID) {
         item.statusHTML = '<span class="text-invalid">Không hợp lệ</span>'
       }
+
+      if (status == CHECKIN_PACKAGE_STATUS_UPDATE_LABEL_FAILED) {
+        item.alert = 'Update label lỗi'
+        item.alert_icon = 'alert'
+      }
+
+      if (status == CHECKIN_PACKAGE_STATUS_CHANGE_LABEL) {
+        item.alert = 'Label đã được thay đổi'
+        item.alert_icon = 'warning'
+      }
+
       this.packages.unshift(item)
 
       const user = this.current.user
@@ -991,6 +1067,16 @@ export default {
     } else {
       next()
     }
+  },
+  watch: {
+    isVisibleModalReturn: {
+      handler: function (v) {
+        if (!v) {
+          this.setPackage({})
+        }
+      },
+      deep: true,
+    },
   },
 }
 </script>

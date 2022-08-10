@@ -27,11 +27,13 @@ export const state = {
   count_status: [],
   products: [],
   service: [],
+  count_tracking_in_package: 0,
 }
 
 export const mutations = {
   [FETCH_PACKAGE_DETAIL]: (state, payload) => {
-    state.package = payload
+    state.package = payload.package
+    state.count_tracking_in_package = payload.count_tracking
   },
   [FETCH_LIST_PACKAGES_IN_WAREHOUSE]: (state, payload) => {
     state.packages_in_warehouse = payload
@@ -90,11 +92,10 @@ export const actions = {
   async [FETCH_PACKAGE_DETAIL]({ commit }, payload) {
     const res = await api.fetchPackageByCode(payload)
     if (!res || res.error) {
-      commit(FETCH_PACKAGE_DETAIL, {})
+      commit(FETCH_PACKAGE_DETAIL, { package: {}, count_tracking: 0 })
       return { error: true, message: res.errorMessage || '' }
     }
-
-    commit(FETCH_PACKAGE_DETAIL, res.package || {})
+    commit(FETCH_PACKAGE_DETAIL, res || { package: {}, count_tracking: 0 })
     return { error: false }
   },
 
