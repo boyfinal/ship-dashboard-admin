@@ -464,7 +464,7 @@ export default {
     trackingCurrent() {
       return !this.current || !this.current.tracking
         ? ''
-        : this.current.tracking.tracking_number || ''
+        : this.current.tracking.tracking_number || 'N/A'
     },
     customer() {
       return !this.current || !this.current.user

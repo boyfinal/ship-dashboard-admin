@@ -37,6 +37,36 @@ export const PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT = 1
 export const PACKAGE_ALERT_TYPE_WAREHOUSE_RETURN = 2
 export const PACKAGE_ALERT_TYPE_HUB_RETURN = 3
 
+//audit log
+export const PACKAGE_UPDATE_TYPE_RECIPIENT = 1
+export const PACKAGE_UPDATE_TYPE_PHONENUMBER = 2
+export const PACKAGE_UPDATE_TYPE_ADDRESS = 3
+export const PACKAGE_UPDATE_TYPE_ADDRESS2 = 13
+export const PACKAGE_UPDATE_TYPE_CITY = 4
+export const PACKAGE_UPDATE_TYPE_STATECODE = 5
+export const PACKAGE_UPDATE_TYPE_ZIPCODE = 6
+export const PACKAGE_UPDATE_TYPE_COUNTRYCODE = 7
+export const PACKAGE_UPDATE_TYPE_WEIGHT = 8
+export const PACKAGE_UPDATE_TYPE_VOLUME = 9
+export const PACKAGE_UPDATE_TYPE_NOTE = 10
+export const PACKAGE_UPDATE_TYPE_SERVICE = 11
+export const PACKAGE_UPDATE_TYPE_DETAIL = 12
+export const PACKAGE_UPDATE_TYPE_LABEL = 13
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_COVID = 14
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_OUTSIZE = 15
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_FIXVOLUME = 16
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_FIXWEIGHT = 17
+export const PACKAGE_UPDATE_EXTRAFEE_EDIT_ORDER = 19
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_REFUND = 20
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_OTHER = 21
+export const PACKAGE_CHECK_ADDRESS_TYPE = 22
+export const PACKAGE_IGNORE_ADDRESS_TYPE = 23
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_RESHIP = 24
+export const PACKAGE_UPDATE_TYPE_ORDER_NUMBER = 25
+export const PACKAGE_UPDATE_TYPE_PRODUCT = 26
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_PEAK = 27
+export const PACKAGE_UPDATE_EXTRAFEE_TYPE_CANCEL_LABEL = 28
+
 export const PACKAGE_STATUS_TAB = [
   {
     value: '',
@@ -218,34 +248,67 @@ export const MAP_NAME_STATUS_STRING_PACKAGE = {
 }
 
 // cSpell:disable
-export const CHANGE_PACKAGE_TYPE = [
-  '',
-  'Người nhận',
-  'Số điện thoại người nhận',
-  'Địa chỉ người nhận',
-  'Thành phố',
-  'Mã vùng',
-  'Mã bưu điện',
-  'Mã quốc gia',
-  'Trọng lượng',
-  'Kích thước (DxRxC)',
-  'Yêu cầu khi giao',
-  'Dịch vụ',
-  'Chi tiết hàng hóa',
-  'Địa chỉ phụ người nhận',
-  'Covid',
-  'Quá cỡ',
-  'Sửa kích thước',
-  'Sửa trọng lượng',
-  'Dịch vụ',
-  'Sửa đơn',
-  'Hoàn tiền',
-  'Phí phát sinh khác',
-  'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
-  'Bỏ qua kiểm tra địa chỉ bằng API',
-  'Reship',
-  'Mã đơn hàng',
-]
+// export const CHANGE_PACKAGE_TYPE = [
+//   '',
+//   'Người nhận',
+//   'Số điện thoại người nhận',
+//   'Địa chỉ người nhận',
+//   'Thành phố',
+//   'Mã vùng',
+//   'Mã bưu điện',
+//   'Mã quốc gia',
+//   'Trọng lượng',
+//   'Kích thước (DxRxC)',
+//   'Yêu cầu khi giao',
+//   'Dịch vụ',
+//   'Chi tiết hàng hóa',
+//   'Địa chỉ phụ người nhận',
+//   'Covid',
+//   'Quá cỡ',
+//   'Sửa kích thước',
+//   'Sửa trọng lượng',
+//   'Dịch vụ',
+//   'Sửa đơn',
+//   'Hoàn tiền',
+//   'Phí phát sinh khác',
+//   'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
+//   'Bỏ qua kiểm tra địa chỉ bằng API',
+//   'Reship',
+//   'Mã đơn hàng',
+//   'Hủy Label',
+// ]
+
+export const CHANGE_PACKAGE_TYPE = {
+  [PACKAGE_UPDATE_TYPE_RECIPIENT]: 'Người nhận',
+  [PACKAGE_UPDATE_TYPE_PHONENUMBER]: 'Số điện thoại người nhận',
+  [PACKAGE_UPDATE_TYPE_ADDRESS]: 'Địa chỉ người nhận',
+  [PACKAGE_UPDATE_TYPE_ADDRESS2]: 'Địa chỉ phụ người nhận',
+  [PACKAGE_UPDATE_TYPE_CITY]: 'Thành phố',
+  [PACKAGE_UPDATE_TYPE_STATECODE]: 'Mã vùng',
+  [PACKAGE_UPDATE_TYPE_ZIPCODE]: 'Mã bưu điện',
+  [PACKAGE_UPDATE_TYPE_COUNTRYCODE]: 'Mã quốc gia',
+  [PACKAGE_UPDATE_TYPE_WEIGHT]: 'Trọng lượng',
+  [PACKAGE_UPDATE_TYPE_VOLUME]: 'Kích thước (DxRxC)',
+  [PACKAGE_UPDATE_TYPE_NOTE]: 'Yêu cầu khi giao',
+  [PACKAGE_UPDATE_TYPE_SERVICE]: 'Dịch vụ',
+  [PACKAGE_UPDATE_TYPE_DETAIL]: 'Chi tiết hàng hóa',
+  [PACKAGE_UPDATE_TYPE_LABEL]: '',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_COVID]: 'Covid',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_OUTSIZE]: 'Quá cỡ',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_FIXVOLUME]: 'Sửa kích thước',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_FIXWEIGHT]: 'Sửa trọng lượng',
+  [PACKAGE_UPDATE_EXTRAFEE_EDIT_ORDER]: 'Sửa đơn',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_REFUND]: 'Hoàn tiền',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_OTHER]: 'Phí phát sinh khác',
+  [PACKAGE_CHECK_ADDRESS_TYPE]: 'Xác nhận xóa cảnh báo địa chỉ không hợp lệ',
+  [PACKAGE_IGNORE_ADDRESS_TYPE]: 'Bỏ qua kiểm tra địa chỉ bằng API',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_RESHIP]: 'Reship',
+  [PACKAGE_UPDATE_TYPE_ORDER_NUMBER]: 'Mã đơn hàng',
+  [PACKAGE_UPDATE_TYPE_PRODUCT]: '',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_PEAK]: '',
+  [PACKAGE_UPDATE_EXTRAFEE_TYPE_CANCEL_LABEL]: 'Hủy Label',
+}
+
 // cSpell:enable
 
 export const DELIVER_LOG_PACKAGE = {
