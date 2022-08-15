@@ -51,6 +51,10 @@ export default {
       type: String,
       default: '',
     },
+    isTester: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -68,7 +72,11 @@ export default {
     this.handleSearch = debounce(async function (search = '') {
       this.isLoading = true
       let response = await api.listUsers(
-        Object.assign({}, this.filter, { search: search, not_limit: true })
+        Object.assign({}, this.filter, {
+          search: search,
+          not_limit: true,
+          tester: this.isTester,
+        })
       )
       if (response && response.errorMessage) {
         this.users = []
@@ -92,7 +100,11 @@ export default {
     async fetchUsers(search = '') {
       this.isLoading = true
       const result = await api.listUsers(
-        Object.assign({}, this.filter, { search: search.trim() })
+        Object.assign({}, this.filter, {
+          search: search.trim(),
+          not_limit: true,
+          tester: this.isTester,
+        })
       )
       this.isLoading = false
 
