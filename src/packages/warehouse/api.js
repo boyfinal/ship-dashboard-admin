@@ -65,6 +65,11 @@ export default {
       base_path: '/v1/export/shipment',
     })
   },
+  exportWarehousePackageWrong(payload) {
+    return http.post('/packages/list/wrong-weight', payload, {
+      base_path: '/v1/export/shipment',
+    })
+  },
   createLabelsPdf(payload) {
     const formdata = new FormData()
     formdata.append('file', payload.file)

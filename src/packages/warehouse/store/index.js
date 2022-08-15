@@ -7,6 +7,7 @@ export const RETURN_PACKAGE = 'returnPackage'
 export const ACCEPT_PACKAGE_LABEL = 'acceptPackageLabel'
 export const WAREHOUSE_CHECK_IN = 'warehouseCheckIn'
 export const EXPORT_WAREHOUSE_PACKAGES = 'exportWarehousePackages'
+export const EXPORT_WAREHOUSE_PACKAGES_WRONG = 'exportWarehousePackagesWrong'
 export const IMPORT_CREATE_LABEL_PDF = 'importCreateLabelPdf'
 export const CANCEL_LABEL = 'cancelLabel'
 export const GET_PACKAGE_BY_CODE = 'getPackage'
@@ -161,6 +162,22 @@ export const actions = {
   async [EXPORT_WAREHOUSE_PACKAGES]({ commit }, payload) {
     let result = { success: true }
     const response = await api.exportWarehousePackage(payload)
+
+    if (response.error || response.message) {
+      result = {
+        success: false,
+        message: response.errorMessage || response.error || response.message,
+      }
+    } else {
+      result.url = response.download
+    }
+
+    return result
+  },
+  // eslint-disable-next-line no-unused-vars
+  async [EXPORT_WAREHOUSE_PACKAGES_WRONG]({ commit }, payload) {
+    let result = { success: true }
+    const response = await api.exportWarehousePackageWrong(payload)
 
     if (response.error || response.message) {
       result = {
