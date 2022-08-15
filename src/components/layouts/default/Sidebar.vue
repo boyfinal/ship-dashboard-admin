@@ -127,7 +127,10 @@ export default {
               route: '/packages/alert',
               title: 'Đơn hàng bị chậm',
               alias: ['/packages/alert'],
-              disable: this.$isSupportLeader() || this.$isWarehouse(),
+              disable:
+                this.$isSupportLeader() ||
+                this.$isWarehouse() ||
+                this.$isAccountant(),
             },
             {
               route: '/claims',
