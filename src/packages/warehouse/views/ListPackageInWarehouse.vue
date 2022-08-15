@@ -24,6 +24,12 @@
           class="btn btn-info ml-3 text-nowrap"
           >Create Labels PDF</p-button
         > -->
+        <p-button
+          id="export-btn"
+          @click="handleShowModalExportWrong"
+          class="btn btn-info ml-3 text-nowrap"
+          >Xuất hàng lệch cân</p-button
+        >
       </div>
       <div class="card">
         <div class="card-body">
@@ -172,6 +178,12 @@
       @save="handleExport"
     >
     </modal-export>
+    <modal-wrong-weight
+      :visible.sync="isvisibleExportWrongModal"
+      :loading="isExporting"
+      @export="handleExportWrongWeight"
+    >
+    </modal-wrong-weight>
     <modal-label :visible.sync="isVisibleModalCreateLabelPdf"> </modal-label>
   </div>
 </template>
@@ -180,6 +192,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 import { truncate } from '@core/utils/string'
 import { printImage } from '@core/utils/print'
 import ModalExport from '../components/ModalExport'
+import ModalWrongWeight from '../components/ModalWrongWeight'
 import ModalLabel from '../components/ModalLabel'
 import api from '../api'
 import { date } from '@core/utils/datetime'
@@ -192,6 +205,7 @@ import {
   FETCH_LIST_PACKAGES_IN_WAREHOUSE,
   COUNT_LIST_PACKAGES_IN_WAREHOUSE,
   EXPORT_WAREHOUSE_PACKAGES,
+  EXPORT_WAREHOUSE_PACKAGES_WRONG,
 } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinDownload from '@/packages/shared/mixins/download'
@@ -202,6 +216,7 @@ export default {
   name: 'ListPackageInWarehouse',
   mixins: [mixinRoute, mixinTable, mixinDownload],
   components: {
+    ModalWrongWeight,
     EmptySearchResult,
     ModalExport,
     ModalLabel,
@@ -229,6 +244,7 @@ export default {
       isVisibleConfirmWayBill: false,
       visibleConfirmCancel: false,
       isVisibleModalCreateLabelPdf: false,
+      isvisibleExportWrongModal: false,
       selected: [],
       searchBy: {
         code: 'LionBay tracking',
@@ -268,6 +284,7 @@ export default {
     ...mapActions('warehouse', {
       fetchPackages: FETCH_LIST_PACKAGES_IN_WAREHOUSE,
       exportPackage: EXPORT_WAREHOUSE_PACKAGES,
+      exportPackageWrong: EXPORT_WAREHOUSE_PACKAGES_WRONG,
     }),
 
     ...mapMutations('warehouse', {
@@ -340,6 +357,23 @@ export default {
       }
       this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
     },
+
+    async handleExportWrongWeight(payload) {
+      console.log(payload)
+      this.isExporting = true
+      const result = await this.exportPackageWrong(payload)
+      this.isExporting = false
+
+      if (!result.success) {
+        this.$toast.open({
+          type: 'error',
+          message: result.message,
+          duration: 3000,
+        })
+        return
+      }
+      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
+    },
     async showLabel(label) {
       if (!label) {
         this.$toast.error(`This tracking doesn't have label`)
@@ -371,8 +405,8 @@ export default {
         this.$toast.error('File error !!!')
       }
     },
-    handleShowModalCreateLabelPdf() {
-      this.isVisibleModalCreateLabelPdf = true
+    handleShowModalExportWrong() {
+      this.isvisibleExportWrongModal = true
     },
   },
   watch: {
