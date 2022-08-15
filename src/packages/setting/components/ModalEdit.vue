@@ -1,6 +1,6 @@
 <template>
   <div class="modal-edit-user">
-    <p-modal :active="visible" @close="handleClose" :title="title">
+    <p-modal :active="visible" @close="handleClose" :title="title" size="md">
       <template>
         <form @submit.prevent="handleUpdate">
           <div class="row mb-20">
@@ -53,19 +53,11 @@
               </div>
             </div>
           </div>
-          <div class="row mb-8" :class="{ disabled: paymentType == 0 }">
-            <div class="col-6">
+          <div class="row mb-8">
+            <div class="col-4" :class="{ disabled: paymentType == 0 }">
               <label class="color-newtral-10 mb-5"
                 >Hạn mức nợ tối đa ($):</label
               >
-              <!-- <multiselect
-                placeholder="Chọn hạn mức"
-                v-model="debt_max_amount"
-                label="value"
-                track-by="value"
-                :options="debtLimit"
-              >
-              </multiselect> -->
               <p-input
                 type="text"
                 name="debt_max_amount"
@@ -76,7 +68,7 @@
                 :error="valider.error('debt_max_amount')"
               />
             </div>
-            <div class="col-6">
+            <div class="col-4" :class="{ disabled: paymentType == 0 }">
               <label class="color-newtral-10 mb-5"
                 >Thời gian nợ tối đa (ngày):</label
               >
@@ -88,13 +80,20 @@
                 :options="dayLimit"
               >
               </multiselect>
-              <!-- <p-input
-                type="number"
+            </div>
+            <div class="col-4">
+              <label class="color-newtral-10 mb-5"
+                >Hạn mức hủy tối đa(trong ngày):</label
+              >
+              <p-input
+                type="text"
                 min="0"
-                name="debt_max_day"
-                v-model.number="user.debt_max_day"
-                :error="valider.error('debt_max_day')"
-              /> -->
+                name="cancel_max_amount"
+                v-model="cancel_max_amount"
+                @change="onChangeAmountCancel"
+                @input="validateAmountCancel"
+                :error="valider.error('cancel_max_amount')"
+              />
             </div>
           </div>
         </form>
@@ -134,6 +133,7 @@ import {
   DEBT_LIMIT,
   DAY_LIMIT,
 } from '../constants'
+import { formatNumberV2 } from '../../../core/utils/formatter'
 
 export default {
   name: 'ModalEditUser',
@@ -201,6 +201,7 @@ export default {
       dayLimit: DAY_LIMIT,
       debt_max_amount: 0,
       debt_max_day: 0,
+      cancel_max_amount: '1,000',
     }
   },
   methods: {
@@ -223,12 +224,20 @@ export default {
         return
       }
 
+      if (this.cancel_max_amount < 0) {
+        this.$toast.error('Hạn mức hủy tối đa không hợp lệ')
+        return
+      }
+
       const payload = {
         id: this.current.id,
-        debt_max_amount: this.debt_max_amount
-          ? parseFloat(this.debt_max_amount.replaceAll(',', ''))
-          : 0,
-        debt_max_day: parseInt(this.debt_max_day.value),
+        debt_max_amount: parseFloat(
+          `${this.debt_max_amount || 0}`.replaceAll(',', '')
+        ),
+        debt_max_day: parseInt(this.debt_max_day.value || 0),
+        cancel_max_amount: parseInt(
+          `${this.cancel_max_amount || 0}`.replaceAll(',', '')
+        ),
         class: parseInt(this.type.value),
       }
 
@@ -244,12 +253,14 @@ export default {
       this.$emit('success', payload.class, true)
       this.$toast.success('Chỉnh sửa thông tin công nợ thành công')
     },
+
     onChangeAmount() {
       let value = this.debt_max_amount
       let decimal = value.split('.')[1]
       let number = value.split('.')[0]
       value = value.replace(/,/g, '').replace(/^0+/, '')
-      number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      number = formatNumberV2(number)
+
       if (value.includes('.')) {
         this.debt_max_amount =
           decimal === undefined ? `${number}.` : `${number}.${decimal}`
@@ -268,6 +279,30 @@ export default {
         this.debt_max_amount = `${number}.${decimal.toString().slice(0, 2)}`
       }
     },
+    onChangeAmountCancel() {
+      let value = this.cancel_max_amount
+      let decimal = value.split('.')[1]
+      let number = value.split('.')[0]
+      value = value.replace(/,/g, '').replace(/^0+/, '')
+      number = formatNumberV2(number)
+      if (value.includes('.')) {
+        this.cancel_max_amount =
+          decimal === undefined ? `${number}.` : `${number}.${decimal}`
+      } else {
+        this.cancel_max_amount = number
+      }
+    },
+    validateAmountCancel() {
+      this.cancel_max_amount = this.cancel_max_amount
+        // eslint-disable-next-line no-useless-escape
+        .replace(/[^\d\.]+/g, '')
+        .replace(/(\..*)\./g, '$1')
+      let decimal = this.cancel_max_amount.split('.')[1]
+      let number = this.cancel_max_amount.split('.')[0]
+      if (decimal !== undefined && decimal.length >= 2) {
+        this.cancel_max_amount = `${number}.${decimal.toString().slice(0, 2)}`
+      }
+    },
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close', true)
@@ -284,12 +319,10 @@ export default {
       handler: function (val) {
         const info = val.user_info || {}
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
+        this.cancel_max_amount = info.cancel_max_amount || 0
 
         if (this.paymentType == 1) {
-          this.debt_max_amount =
-            info.debt_max_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0
+          this.debt_max_amount = formatNumberV2(info.debt_max_amount)
           this.debt_max_day = info.debt_max_day
             ? this.dayLimit.find((i) => {
                 return i.value == info.debt_max_day
@@ -307,11 +340,7 @@ export default {
       }
       if (val == 1) {
         const info = val.user_info || {}
-        this.debt_max_amount = info.debt_max_amount
-          ? info.debt_max_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-          : 0
+        this.debt_max_amount = formatNumberV2(info.debt_max_amount)
         this.debt_max_day = info.debt_max_day
           ? this.dayLimit.find((i) => {
               return i.value == info.debt_max_day
