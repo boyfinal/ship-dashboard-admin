@@ -132,6 +132,7 @@ import {
   // USER_CLASS_PARTNER,
   DEBT_LIMIT,
   DAY_LIMIT,
+  CANCEL_MAX_AMOUNT,
 } from '../constants'
 import { formatNumberV2 } from '../../../core/utils/formatter'
 
@@ -201,7 +202,7 @@ export default {
       dayLimit: DAY_LIMIT,
       debt_max_amount: 0,
       debt_max_day: 0,
-      cancel_max_amount: '1,000',
+      cancel_max_amount: CANCEL_MAX_AMOUNT,
     }
   },
   methods: {
@@ -319,7 +320,7 @@ export default {
       handler: function (val) {
         const info = val.user_info || {}
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
-        this.cancel_max_amount = info.cancel_max_amount || 0
+        this.cancel_max_amount = info.cancel_max_amount || CANCEL_MAX_AMOUNT
 
         if (this.paymentType == 1) {
           this.debt_max_amount = formatNumberV2(info.debt_max_amount)
