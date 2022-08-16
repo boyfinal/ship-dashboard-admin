@@ -225,7 +225,7 @@ export default {
         return
       }
 
-      if (this.cancel_max_amount < 0) {
+      if (this.cancel_max_amount <= 0) {
         this.$toast.error('Hạn mức hủy tối đa không hợp lệ')
         return
       }
