@@ -236,7 +236,7 @@ export default {
           `${this.debt_max_amount || 0}`.replaceAll(',', '')
         ),
         debt_max_day: parseInt(this.debt_max_day.value || 0),
-        cancel_max_amount: parseInt(
+        cancel_max_amount: parseFloat(
           `${this.cancel_max_amount || 0}`.replaceAll(',', '')
         ),
         class: parseInt(this.type.value),
