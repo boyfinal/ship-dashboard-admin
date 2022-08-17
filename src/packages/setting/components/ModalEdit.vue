@@ -216,7 +216,7 @@ export default {
         return
       }
 
-      if (!this.debt_max_amount <= 0 && this.paymentType == 1) {
+      if (this.debt_max_amount <= 0 && this.paymentType == 1) {
         this.$toast.error('Hạn mức nợ tối đa không được để trống')
         return
       }
