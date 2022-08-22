@@ -20,6 +20,15 @@ export const routes = [
       ),
   },
   {
+    path: '/packages/alert',
+    name: 'package-alert',
+    meta: {
+      title: 'Quản lý vận đơn chậm',
+    },
+    component: () =>
+      import(/* webpackChunkName: "package" */ './views/ListAlertPackages'),
+  },
+  {
     path: '/packages/:id',
     name: 'package-detail',
     meta: {

@@ -124,6 +124,15 @@ export default {
               disable: this.$isSupportLeader() || this.$isWarehouse(),
             },
             {
+              route: '/packages/alert',
+              title: 'Đơn hàng bị chậm',
+              alias: ['/packages/alert'],
+              disable:
+                this.$isSupportLeader() ||
+                this.$isWarehouse() ||
+                this.$isAccountant(),
+            },
+            {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],

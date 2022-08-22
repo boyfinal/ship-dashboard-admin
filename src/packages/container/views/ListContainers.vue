@@ -225,7 +225,6 @@ import {
   CONTAINER_DELIVERIED,
   CONTAINER_IMPORT_HUB,
   CONTAINER_EXPORT_HUB,
-  CONTAINER_TYPE_API,
   CONTAINER_TYPE_MANUAL,
   MAP_CONTAINER_TEXT_TYPES,
 } from '../contants'
@@ -259,7 +258,7 @@ export default {
         status: '',
         search: '',
         warehouse: '',
-        type: CONTAINER_TYPE_API,
+        type: CONTAINER_TYPE_MANUAL,
       },
       isSubmitting: false,
       isFetching: false,

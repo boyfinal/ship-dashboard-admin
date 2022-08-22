@@ -10,6 +10,7 @@ import {
 export const USER_STATUS_DEACTIVE = 0
 export const USER_STATUS_ACTIVE = 1
 export const USER_STATUS_INACTIVE = 2
+export const CANCEL_MAX_AMOUNT = '1,000'
 
 export const HUB_TYPE = 1
 export const WAREHOUSE_TYPE = 2

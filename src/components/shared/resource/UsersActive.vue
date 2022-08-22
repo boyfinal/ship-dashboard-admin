@@ -69,7 +69,7 @@ export default {
     }
   },
   created() {
-    this.handleSearch = debounce(async function(search = '') {
+    this.handleSearch = debounce(async function (search = '') {
       this.isLoading = true
       let response = await api.fetchUsersByRole(
         Object.assign({}, this.filter, {
