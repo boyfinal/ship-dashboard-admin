@@ -17,4 +17,13 @@ export default {
   sendNotifyEmail(payload) {
     return http.put(`/notifies/email/send`, payload)
   },
+  fetchNotifyCustomer(payload) {
+    return http.get(`/notifies/customer?${buildQueryString(payload)}`)
+  },
+  countNotifyCustomer(payload) {
+    return http.get(`/notifies/customer/count?${buildQueryString(payload)}`)
+  },
+  createNotifyCustomer(payload) {
+    return http.post(`/notifies/customer`, payload)
+  },
 }
