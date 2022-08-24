@@ -132,6 +132,7 @@ import {
   // USER_CLASS_PARTNER,
   DEBT_LIMIT,
   DAY_LIMIT,
+  CANCEL_MAX_AMOUNT,
 } from '../constants'
 import { formatNumberV2 } from '../../../core/utils/formatter'
 
@@ -201,7 +202,7 @@ export default {
       dayLimit: DAY_LIMIT,
       debt_max_amount: 0,
       debt_max_day: 0,
-      cancel_max_amount: '1,000',
+      cancel_max_amount: CANCEL_MAX_AMOUNT,
     }
   },
   methods: {
@@ -214,8 +215,9 @@ export default {
         this.$toast.error('Hạng không được để trống')
         return
       }
-      if (!this.debt_max_amount && this.paymentType == 1) {
-        this.$toast.error('Hạn mức không được để trống')
+
+      if (this.debt_max_amount <= 0 && this.paymentType == 1) {
+        this.$toast.error('Hạn mức nợ tối đa không được để trống')
         return
       }
 
@@ -224,7 +226,7 @@ export default {
         return
       }
 
-      if (this.cancel_max_amount < 0) {
+      if (this.cancel_max_amount <= 0) {
         this.$toast.error('Hạn mức hủy tối đa không hợp lệ')
         return
       }
@@ -235,7 +237,7 @@ export default {
           `${this.debt_max_amount || 0}`.replaceAll(',', '')
         ),
         debt_max_day: parseInt(this.debt_max_day.value || 0),
-        cancel_max_amount: parseInt(
+        cancel_max_amount: parseFloat(
           `${this.cancel_max_amount || 0}`.replaceAll(',', '')
         ),
         class: parseInt(this.type.value),
@@ -319,7 +321,7 @@ export default {
       handler: function (val) {
         const info = val.user_info || {}
         this.paymentType = info.debt_max_amount > 0 ? 1 : 0
-        this.cancel_max_amount = info.cancel_max_amount || 0
+        this.cancel_max_amount = info.cancel_max_amount || CANCEL_MAX_AMOUNT
 
         if (this.paymentType == 1) {
           this.debt_max_amount = formatNumberV2(info.debt_max_amount)
