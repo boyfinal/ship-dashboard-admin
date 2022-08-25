@@ -29,4 +29,7 @@ export default {
   fetchDetailNotifyCustomer(payload) {
     return http.get(`/notifies/customer/${payload.id}`)
   },
+  sendNotifyCustomer(payload) {
+    return http.put(`/notifies/customer/send`, payload)
+  },
 }

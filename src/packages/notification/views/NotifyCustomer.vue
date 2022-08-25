@@ -123,7 +123,7 @@ import {
   FETCH_LIST_NOTIFY_CUSTOMER,
   CREATE_NOTIFY_CUSTOMER,
   FETCH_DETAIL_NOTIFY_CUSTOMER,
-  SEND_NOTIFY_EMAIL,
+  SEND_NOTIFY_CUSTOMER,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
 import { NOTIFY_NOT_PROCESSED } from '../constant'
@@ -164,7 +164,7 @@ export default {
       FETCH_LIST_NOTIFY_CUSTOMER,
       CREATE_NOTIFY_CUSTOMER,
       FETCH_DETAIL_NOTIFY_CUSTOMER,
-      SEND_NOTIFY_EMAIL,
+      SEND_NOTIFY_CUSTOMER,
     ]),
     async init() {
       this.isFetching = true
@@ -204,7 +204,7 @@ export default {
         id: id,
         is_tester: this.tester == '1' ? true : false,
       }
-      const result = await this[SEND_NOTIFY_EMAIL](payload)
+      const result = await this[SEND_NOTIFY_CUSTOMER](payload)
       this.isSubmitting = false
       if (!result.success) {
         this.$toast.open({
