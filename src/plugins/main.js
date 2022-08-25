@@ -33,6 +33,10 @@ const MainPlugin = {
       return ACL[key].indexOf(role) !== -1
     }
 
+    Vue.prototype.$isMarketing = function () {
+      return this.$store.getters['auth/isMarketing']
+    }
+
     Vue.directive('click-outside', clickoutside)
   },
 }

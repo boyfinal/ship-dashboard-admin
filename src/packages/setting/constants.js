@@ -5,6 +5,7 @@ import {
   ROLE_SUPPORT,
   ROLE_HUB,
   ROLE_SUPPORT_LEADER,
+  USER_ROLE_MARKETING,
 } from '@core/constants'
 
 export const USER_STATUS_DEACTIVE = 0
@@ -50,6 +51,10 @@ export const ROLE = [
   {
     key: ROLE_HUB,
     name: 'Hub',
+  },
+  {
+    key: USER_ROLE_MARKETING,
+    name: 'Marketing',
   },
 ]
 
