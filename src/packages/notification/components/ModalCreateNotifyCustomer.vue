@@ -179,12 +179,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <label for=""><b>Link</b></label>
         </div>
-        <p-input
-          class="tilte_noti"
-          @input="validateTilteNotify"
-          placeholder="Nhập đường dẫn"
-          v-model="link"
-        >
+        <p-input class="tilte_noti" placeholder="Nhập đường dẫn" v-model="link">
         </p-input>
       </div>
     </div>
@@ -418,7 +413,7 @@ export default {
         return
       }
       if (this.showDetail) {
-        const selectedIDs = this.notify.receiver_ids
+        const selectedIDs = this.notify.user_ids
         this.selected = response.users.filter((i) => {
           return selectedIDs.indexOf(i.id) > -1
         })
@@ -491,6 +486,7 @@ export default {
         body: this.body,
         is_send: false,
         is_send_all: this.isSendAll,
+        type: parseInt(this.type.value),
         link: this.link,
       }
       this.$emit('save', payload)
@@ -506,6 +502,8 @@ export default {
         body: this.body,
         is_send: true,
         is_send_all: this.isSendAll,
+        type: parseInt(this.type.value),
+        link: this.link,
       }
       this.$emit('save', payload)
     },
@@ -587,7 +585,11 @@ export default {
           if (this.showDetail) {
             this.title = this.notify.title
             this.body = this.notify.body
+            this.link = this.notify.link
             this.isSendAll = Boolean(this.notify.is_send_all)
+            this.type = this.types.find(
+              (item) => (this.notify.type = item.value)
+            )
           } else {
             this.notify = {}
           }

@@ -1,6 +1,8 @@
 export const NOTIFY_EMAIL_NOT_SEND = 0
 export const NOTIFY_EMAIL_SENT = 1
 
+export const NOTIFY_NOT_PROCESSED = 0
+
 export const NOTIFY_TYPE_ORDER_UPDATE = 1
 export const NOTIFY_TYPE_FINANCE_UPDATE = 2
 export const NOTIFY_TYPE_ANNOUNCEMENT = 3

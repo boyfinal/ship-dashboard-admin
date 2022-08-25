@@ -26,4 +26,7 @@ export default {
   createNotifyCustomer(payload) {
     return http.post(`/notifies/customer`, payload)
   },
+  fetchDetailNotifyCustomer(payload) {
+    return http.get(`/notifies/customer/${payload.id}`)
+  },
 }

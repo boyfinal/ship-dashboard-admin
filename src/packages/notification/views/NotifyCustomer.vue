@@ -122,7 +122,7 @@ import mixinTable from '@core/mixins/table'
 import {
   FETCH_LIST_NOTIFY_CUSTOMER,
   CREATE_NOTIFY_CUSTOMER,
-  FETCH_DETAIL_NOTIFY_EMAIL,
+  FETCH_DETAIL_NOTIFY_CUSTOMER,
   SEND_NOTIFY_EMAIL,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
@@ -156,14 +156,14 @@ export default {
     ...mapState('notification', {
       notifies: (state) => state.notifiesCustomer,
       count: (state) => state.countNotifiesCustomer,
-      notify: (state) => state.notifyEmail,
+      notify: (state) => state.notifyCustomer,
     }),
   },
   methods: {
     ...mapActions('notification', [
       FETCH_LIST_NOTIFY_CUSTOMER,
       CREATE_NOTIFY_CUSTOMER,
-      FETCH_DETAIL_NOTIFY_EMAIL,
+      FETCH_DETAIL_NOTIFY_CUSTOMER,
       SEND_NOTIFY_EMAIL,
     ]),
     async init() {
@@ -180,7 +180,7 @@ export default {
       const payload = {
         id: id,
       }
-      const result = await this[FETCH_DETAIL_NOTIFY_EMAIL](payload)
+      const result = await this[FETCH_DETAIL_NOTIFY_CUSTOMER](payload)
       this.isLoading = false
       if (!result.success) {
         this.$toast.open({
