@@ -215,7 +215,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
-import { NOTIFY_EMAIL_SENT, NOTIFY_TYPE } from '../constant'
+import { NOTIFY_NOT_PROCESSED, NOTIFY_TYPE } from '../constant'
 import { cloneDeep } from '@core/utils'
 export default {
   name: 'ModalCreateNotifyCustomer',
@@ -244,7 +244,7 @@ export default {
     },
     disableAction() {
       return (
-        (this.showDetail && this.notify.status === NOTIFY_EMAIL_SENT) ||
+        (this.showDetail && this.notify.status !== NOTIFY_NOT_PROCESSED) ||
         !this.enableAction
       )
     },
@@ -588,7 +588,7 @@ export default {
             this.link = this.notify.link
             this.isSendAll = Boolean(this.notify.is_send_all)
             this.type = this.types.find(
-              (item) => (this.notify.type = item.value)
+              (item) => this.notify.type === item.value
             )
           } else {
             this.notify = {}
