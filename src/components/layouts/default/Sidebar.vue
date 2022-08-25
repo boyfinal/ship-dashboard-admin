@@ -386,6 +386,17 @@ export default {
                 this.$isHub() ||
                 this.$isSupportLeader(),
             },
+            {
+              route: '/notify/customer',
+              title: 'Thông báo khách hàng',
+              alias: ['/notify/customer'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
+            },
           ],
         },
       ],

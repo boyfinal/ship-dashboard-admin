@@ -9,7 +9,7 @@ export const FETCH_DETAIL_NOTIFY_EMAIL = 'fetchDetailNotifyEmail'
 export const SEND_NOTIFY_EMAIL = 'sendNotifyEmail'
 export const CREATE_NOTIFY_CUSTOMER = 'createNotifyCustomer'
 export const FETCH_DETAIL_NOTIFY_CUSTOMER = 'fetchDetailNotifyCustomer'
-
+export const SEND_NOTIFY_CUSTOMER = 'sendNotifyCustomer'
 export const state = {
   notifyEmails: [],
   countNotifyEmails: 0,
@@ -117,6 +117,20 @@ export const actions = {
     let result = { success: true }
 
     let response = await api.sendNotifyEmail(payload)
+    if (!response || !response.success) {
+      result = {
+        success: false,
+        message: response.errorMessage,
+      }
+    }
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [SEND_NOTIFY_CUSTOMER]({ commit }, payload) {
+    let result = { success: true }
+
+    let response = await api.sendNotifyCustomer(payload)
     if (!response || !response.success) {
       result = {
         success: false,

@@ -123,10 +123,10 @@ import {
   FETCH_LIST_NOTIFY_CUSTOMER,
   CREATE_NOTIFY_CUSTOMER,
   FETCH_DETAIL_NOTIFY_CUSTOMER,
-  SEND_NOTIFY_EMAIL,
+  SEND_NOTIFY_CUSTOMER,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
-import { NOTIFY_EMAIL_NOT_SEND, NOTIFY_EMAIL_SENT } from '../constant'
+import { NOTIFY_NOT_PROCESSED } from '../constant'
 export default {
   name: 'NotifyCustomer',
   mixins: [mixinRoute, mixinTable],
@@ -164,7 +164,7 @@ export default {
       FETCH_LIST_NOTIFY_CUSTOMER,
       CREATE_NOTIFY_CUSTOMER,
       FETCH_DETAIL_NOTIFY_CUSTOMER,
-      SEND_NOTIFY_EMAIL,
+      SEND_NOTIFY_CUSTOMER,
     ]),
     async init() {
       this.isFetching = true
@@ -204,7 +204,7 @@ export default {
         id: id,
         is_tester: this.tester == '1' ? true : false,
       }
-      const result = await this[SEND_NOTIFY_EMAIL](payload)
+      const result = await this[SEND_NOTIFY_CUSTOMER](payload)
       this.isSubmitting = false
       if (!result.success) {
         this.$toast.open({
@@ -244,28 +244,25 @@ export default {
       this.init()
     },
     showBtnSendNoti(status) {
-      return status == NOTIFY_EMAIL_NOT_SEND
+      return status == NOTIFY_NOT_PROCESSED
     },
     getStatusNotify(status) {
-      switch (status) {
-        case NOTIFY_EMAIL_NOT_SEND:
-          return `<div class="not_send_status">
+      if (status == NOTIFY_NOT_PROCESSED) {
+        return `<div class="not_send_status">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.6668 8.00001C14.6668 11.68 11.6802 14.6667 8.00016 14.6667C4.32016 14.6667 1.3335 11.68 1.3335 8.00001C1.3335 4.32001 4.32016 1.33334 8.00016 1.33334C11.6802 1.33334 14.6668 4.32001 14.6668 8.00001Z" stroke="#3F51B5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M10.4734 10.12L8.40675 8.88665C8.04675 8.67332 7.75342 8.15999 7.75342 7.73999V5.00665" stroke="#3F51B5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     Chưa gửi
                   </div>`
-        case NOTIFY_EMAIL_SENT:
-          return `<div class="sent_status">
+      } else {
+        return `<div class="sent_status">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8.00016 14.6667C11.6668 14.6667 14.6668 11.6667 14.6668 8.00001C14.6668 4.33334 11.6668 1.33334 8.00016 1.33334C4.3335 1.33334 1.3335 4.33334 1.3335 8.00001C1.3335 11.6667 4.3335 14.6667 8.00016 14.6667Z" stroke="#48BE78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                       <path d="M5.1665 8.00001L7.05317 9.88668L10.8332 6.11334" stroke="#48BE78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                      Đã gửi
                   </div>`
-        default:
-          break
       }
     },
     showCreateNotifyModal() {
