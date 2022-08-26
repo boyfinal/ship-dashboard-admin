@@ -175,7 +175,7 @@
           <label for=""><b>Nội dung:</b></label>
           <i class="err-txt" v-if="bodyErr">{{ bodyErr }}</i>
         </div>
-        <quill-editor v-model="body" :options="editorOption" ref="editor" />
+        <textarea class="form-control" rows="4" v-model="body"></textarea>
       </div>
     </div>
     <div class="row mb-16">
@@ -224,12 +224,11 @@ import S3Service from '@core/services/s3'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
 import { NOTIFY_NOT_PROCESSED, NOTIFY_TYPE } from '../constant'
 import { cloneDeep } from '@core/utils'
 export default {
   name: 'ModalCreateNotifyCustomer',
-  components: { PInput, quillEditor },
+  components: { PInput },
   props: {
     visible: {
       type: Boolean,
