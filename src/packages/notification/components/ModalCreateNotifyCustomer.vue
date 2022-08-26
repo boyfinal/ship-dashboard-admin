@@ -20,9 +20,13 @@
       </div>
     </div>
     <div class="row mb-16">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="color-newtral-10 mb-5">Loại thông báo:</label>
+          <i class="err-txt" v-if="typeErr">{{ typeErr }}</i>
+        </div>
+      </div>
       <div class="col-6">
-        <label class="color-newtral-10 mb-5">Loại thông báo:</label>
-
         <multiselect
           placeholder="Chọn loại"
           v-model="type"
@@ -257,6 +261,7 @@ export default {
       maxStrLengthTitle: 50,
       titleErr: '',
       bodyErr: '',
+      typeErr: '',
       type: '',
       link: '',
       receiverErr: '',
@@ -343,6 +348,7 @@ export default {
         maxStrLengthTitle: 100,
         titleErr: '',
         bodyErr: '',
+        typeErr: '',
         title: '',
         body: '',
         link: '',
@@ -451,6 +457,11 @@ export default {
       } else {
         this.titleErr = ''
       }
+
+      if (!this.type) {
+        this.typeErr = 'Chưa chọn loại notify'
+      }
+
       if (this.body == '') {
         this.bodyErr = 'Nội dung không được để trống'
         document.getElementsByClassName('ql-toolbar')[0].classList.add('error')
@@ -472,7 +483,10 @@ export default {
         this.receiverErr = ''
       }
       return (
-        this.bodyErr === '' && this.titleErr === '' && this.receiverErr === ''
+        this.bodyErr === '' &&
+        this.titleErr === '' &&
+        this.receiverErr === '' &&
+        this.typeErr === ''
       )
     },
     handleSaveNoti() {
