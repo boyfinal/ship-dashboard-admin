@@ -182,8 +182,14 @@
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
           <label for=""><b>Link</b></label>
+          <i class="err-txt" v-if="linkErr">{{ linkErr }}</i>
         </div>
-        <p-input class="tilte_noti" placeholder="Nhập đường dẫn" v-model="link">
+        <p-input
+          class="tilte_noti"
+          @input="validateLink"
+          placeholder="Nhập đường dẫn"
+          v-model="link"
+        >
         </p-input>
       </div>
     </div>
@@ -262,6 +268,7 @@ export default {
       titleErr: '',
       bodyErr: '',
       typeErr: '',
+      linkErr: '',
       type: '',
       link: '',
       receiverErr: '',
@@ -349,6 +356,7 @@ export default {
         titleErr: '',
         bodyErr: '',
         typeErr: '',
+        linkErr: '',
         title: '',
         body: '',
         link: '',
@@ -486,7 +494,8 @@ export default {
         this.bodyErr === '' &&
         this.titleErr === '' &&
         this.receiverErr === '' &&
-        this.typeErr === ''
+        this.typeErr === '' &&
+        this.linkErr === ''
       )
     },
     handleSaveNoti() {
@@ -589,6 +598,15 @@ export default {
       this.searchSelectedResult = this.selected.filter((item) => {
         return reg.test(item.email) || reg.test(item.full_name)
       })
+    },
+    validateLink(link) {
+      const urlregex =
+        /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
+      if (!urlregex.test(link)) {
+        this.linkErr = 'Đường dẫn không hợp lệ'
+      } else {
+        this.linkErr = ''
+      }
     },
   },
   watch: {
