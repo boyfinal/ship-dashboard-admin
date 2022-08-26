@@ -28,7 +28,8 @@
               <table class="table table-hover table-notify-emails">
                 <thead>
                   <tr>
-                    <th class="text-left" style="width: 30%">Tiêu đề</th>
+                    <th class="text-left" style="width: 25%">Tiêu đề</th>
+                    <th class="text-left" width="250">Loại notify</th>
                     <th class="text-left" width="250">người gửi</th>
                     <th class="text-left" width="250">Thời gian tạo</th>
                     <th class="text-left" width="250">Thời gian gửi</th>
@@ -50,6 +51,9 @@
                           {{ item.title }}
                         </b>
                       </p-tooltip>
+                    </td>
+                    <td>
+                      {{ notifyTypes[item.type] }}
                     </td>
                     <td class="text-left">{{
                       item.sender ? item.sender.full_name : 'N/A'
@@ -126,7 +130,7 @@ import {
   SEND_NOTIFY_CUSTOMER,
 } from '../store'
 import { mapActions, mapState } from 'vuex'
-import { NOTIFY_NOT_PROCESSED } from '../constant'
+import { NOTIFY_NOT_PROCESSED, NOTIFY_TYPE } from '../constant'
 export default {
   name: 'NotifyCustomer',
   mixins: [mixinRoute, mixinTable],
@@ -158,6 +162,10 @@ export default {
       count: (state) => state.countNotifiesCustomer,
       notify: (state) => state.notifyCustomer,
     }),
+    notifyTypes() {
+      const type = NOTIFY_TYPE.map(({ text, value }) => [value, text])
+      return Object.fromEntries(type)
+    },
   },
   methods: {
     ...mapActions('notification', [
