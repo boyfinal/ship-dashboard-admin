@@ -486,7 +486,7 @@ export default {
         body: this.body,
         is_send: false,
         is_send_all: this.isSendAll,
-        type: parseInt(this.type.value),
+        type: this.type ? parseInt(this.type.value) : 0,
         link: this.link,
       }
       this.$emit('save', payload)
@@ -502,7 +502,7 @@ export default {
         body: this.body,
         is_send: true,
         is_send_all: this.isSendAll,
-        type: parseInt(this.type.value),
+        type: this.type ? parseInt(this.type.value) : 0,
         link: this.link,
       }
       this.$emit('save', payload)
