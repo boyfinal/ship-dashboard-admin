@@ -20,10 +20,15 @@
       </div>
     </div>
     <div class="row mb-16">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="color-newtral-10 mb-5"><b>Loại thông báo:</b></label>
+          <i class="err-txt" v-if="typeErr">{{ typeErr }}</i>
+        </div>
+      </div>
       <div class="col-6">
-        <label class="color-newtral-10 mb-5">Loại thông báo:</label>
-
         <multiselect
+          :class="{ error: typeErr }"
           placeholder="Chọn loại"
           v-model="type"
           label="text"
@@ -171,15 +176,26 @@
           <label for=""><b>Nội dung:</b></label>
           <i class="err-txt" v-if="bodyErr">{{ bodyErr }}</i>
         </div>
-        <quill-editor v-model="body" :options="editorOption" ref="editor" />
+        <textarea
+          class="form-control"
+          :class="{ error: bodyErr }"
+          rows="4"
+          v-model="body"
+        ></textarea>
       </div>
     </div>
     <div class="row mb-16">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
           <label for=""><b>Link</b></label>
+          <i class="err-txt" v-if="linkErr">{{ linkErr }}</i>
         </div>
-        <p-input class="tilte_noti" placeholder="Nhập đường dẫn" v-model="link">
+        <p-input
+          class="tilte_noti"
+          @input="validateLink"
+          placeholder="Nhập đường dẫn"
+          v-model="link"
+        >
         </p-input>
       </div>
     </div>
@@ -214,12 +230,11 @@ import S3Service from '@core/services/s3'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
 import { NOTIFY_NOT_PROCESSED, NOTIFY_TYPE } from '../constant'
 import { cloneDeep } from '@core/utils'
 export default {
   name: 'ModalCreateNotifyCustomer',
-  components: { PInput, quillEditor },
+  components: { PInput },
   props: {
     visible: {
       type: Boolean,
@@ -257,6 +272,8 @@ export default {
       maxStrLengthTitle: 50,
       titleErr: '',
       bodyErr: '',
+      typeErr: '',
+      linkErr: '',
       type: '',
       link: '',
       receiverErr: '',
@@ -343,6 +360,9 @@ export default {
         maxStrLengthTitle: 100,
         titleErr: '',
         bodyErr: '',
+        receiverErr: '',
+        typeErr: '',
+        linkErr: '',
         title: '',
         body: '',
         link: '',
@@ -451,20 +471,17 @@ export default {
       } else {
         this.titleErr = ''
       }
+
+      if (!this.type) {
+        this.typeErr = 'Chưa chọn loại notify'
+      } else {
+        this.typeErr = ''
+      }
+
       if (this.body == '') {
         this.bodyErr = 'Nội dung không được để trống'
-        document.getElementsByClassName('ql-toolbar')[0].classList.add('error')
-        document
-          .getElementsByClassName('ql-container')[0]
-          .classList.add('error')
       } else {
         this.bodyErr = ''
-        document
-          .getElementsByClassName('ql-toolbar')[0]
-          .classList.remove('error')
-        document
-          .getElementsByClassName('ql-container')[0]
-          .classList.remove('error')
       }
       if (!this.isSendAll && !this.selectIDs.length) {
         this.receiverErr = 'Người nhận không để trống'
@@ -472,7 +489,11 @@ export default {
         this.receiverErr = ''
       }
       return (
-        this.bodyErr === '' && this.titleErr === '' && this.receiverErr === ''
+        this.bodyErr === '' &&
+        this.titleErr === '' &&
+        this.receiverErr === '' &&
+        this.typeErr === '' &&
+        this.linkErr === ''
       )
     },
     handleSaveNoti() {
@@ -486,7 +507,7 @@ export default {
         body: this.body,
         is_send: false,
         is_send_all: this.isSendAll,
-        type: parseInt(this.type.value),
+        type: this.type ? parseInt(this.type.value) : 0,
         link: this.link,
       }
       this.$emit('save', payload)
@@ -502,7 +523,7 @@ export default {
         body: this.body,
         is_send: true,
         is_send_all: this.isSendAll,
-        type: parseInt(this.type.value),
+        type: this.type ? parseInt(this.type.value) : 0,
         link: this.link,
       }
       this.$emit('save', payload)
@@ -576,6 +597,15 @@ export default {
         return reg.test(item.email) || reg.test(item.full_name)
       })
     },
+    validateLink(link) {
+      const urlregex =
+        /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/
+      if (link.trim() !== '' && !urlregex.test(link.trim())) {
+        this.linkErr = 'Đường dẫn không hợp lệ'
+      } else {
+        this.linkErr = ''
+      }
+    },
   },
   watch: {
     visible: {
@@ -624,7 +654,12 @@ export default {
   padding: 0 8px 8px 8px;
 }
 
-.user-select-box.error {
+.user-select-box.error,
+textarea.error {
+  border: 1px solid #f5222d;
+}
+
+.multiselect.error .multiselect__tags {
   border: 1px solid #f5222d;
 }
 
