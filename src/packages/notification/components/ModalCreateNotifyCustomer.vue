@@ -175,7 +175,12 @@
           <label for=""><b>Nội dung:</b></label>
           <i class="err-txt" v-if="bodyErr">{{ bodyErr }}</i>
         </div>
-        <textarea class="form-control" rows="4" v-model="body"></textarea>
+        <textarea
+          class="form-control"
+          :class="{ error: bodyErr }"
+          rows="4"
+          v-model="body"
+        ></textarea>
       </div>
     </div>
     <div class="row mb-16">
@@ -467,22 +472,14 @@ export default {
 
       if (!this.type) {
         this.typeErr = 'Chưa chọn loại notify'
+      } else {
+        this.typeErr = ''
       }
 
       if (this.body == '') {
         this.bodyErr = 'Nội dung không được để trống'
-        document.getElementsByClassName('ql-toolbar')[0].classList.add('error')
-        document
-          .getElementsByClassName('ql-container')[0]
-          .classList.add('error')
       } else {
         this.bodyErr = ''
-        document
-          .getElementsByClassName('ql-toolbar')[0]
-          .classList.remove('error')
-        document
-          .getElementsByClassName('ql-container')[0]
-          .classList.remove('error')
       }
       if (!this.isSendAll && !this.selectIDs.length) {
         this.receiverErr = 'Người nhận không để trống'
@@ -600,7 +597,7 @@ export default {
     },
     validateLink(link) {
       const urlregex =
-        /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
+        /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/
       if (!urlregex.test(link)) {
         this.linkErr = 'Đường dẫn không hợp lệ'
       } else {
@@ -655,7 +652,8 @@ export default {
   padding: 0 8px 8px 8px;
 }
 
-.user-select-box.error {
+.user-select-box.error,
+textarea.error {
   border: 1px solid #f5222d;
 }
 
