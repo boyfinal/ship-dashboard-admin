@@ -360,6 +360,7 @@ export default {
         maxStrLengthTitle: 100,
         titleErr: '',
         bodyErr: '',
+        receiverErr: '',
         typeErr: '',
         linkErr: '',
         title: '',
