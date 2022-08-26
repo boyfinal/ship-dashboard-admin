@@ -600,7 +600,7 @@ export default {
     validateLink(link) {
       const urlregex =
         /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/
-      if (!urlregex.test(link)) {
+      if (link.trim() !== '' && !urlregex.test(link.trim())) {
         this.linkErr = 'Đường dẫn không hợp lệ'
       } else {
         this.linkErr = ''
