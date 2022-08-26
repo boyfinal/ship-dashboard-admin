@@ -22,7 +22,7 @@
     <div class="row mb-16">
       <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
-          <label class="color-newtral-10 mb-5">Loại thông báo:</label>
+          <label class="color-newtral-10 mb-5"><b>Loại thông báo:</b></label>
           <i class="err-txt" v-if="typeErr">{{ typeErr }}</i>
         </div>
       </div>
