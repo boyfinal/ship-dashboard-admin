@@ -28,6 +28,7 @@
       </div>
       <div class="col-6">
         <multiselect
+          :class="{ error: typeErr }"
           placeholder="Chọn loại"
           v-model="type"
           label="text"
@@ -654,6 +655,10 @@ export default {
 
 .user-select-box.error,
 textarea.error {
+  border: 1px solid #f5222d;
+}
+
+.multiselect.error .multiselect__tags {
   border: 1px solid #f5222d;
 }
 
