@@ -34,7 +34,22 @@ export const actions = {
   },
   // eslint-disable-next-line no-unused-vars
   async updatePromotion({ commit }, payload) {
-    const res = await api.updatePromotion(payload)
+    const form = new FormData()
+    form.append('status', payload.status)
+
+    if (payload.file_price) {
+      form.append('file_price', payload.file_price)
+    }
+
+    if (payload.file_weight) {
+      form.append('file_weight', payload.file_weight)
+    }
+
+    if (payload.description) {
+      form.append('description', payload.description)
+    }
+
+    const res = await api.updatePromotion(payload.id, form)
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }

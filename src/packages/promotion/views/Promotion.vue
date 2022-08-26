@@ -1,14 +1,23 @@
 <template>
   <div class="pages promotion setting-account">
-    <div class="search-input">
-      <search-promotion
-        id="search"
-        class="user-resource is-fullwidth mb-2"
-        :filter="filter"
-        :label="`Tìm kiếm promotion`"
-        v-model="filter.search"
-        @input="init"
-      />
+    <div class="d-flex jc-sb mb-16">
+      <div class="search-input d-flex">
+        <search-promotion
+          id="search"
+          class="user-resource is-fullwidth mb-2"
+          :filter="filter"
+          :label="`Tìm kiếm promotion`"
+          v-model="filter.search"
+          @input="init"
+        />
+      </div>
+      <p-button
+        type="info"
+        class="ml-8 add-user"
+        @click="showModalCreateHandle"
+      >
+        Thêm promotion
+      </p-button>
     </div>
     <div class="page-content">
       <div class="card">
@@ -22,27 +31,30 @@
                     <th>PROMOTION</th>
                     <th>NGÀY TẠO</th>
                     <th>TRẠNG THÁI</th>
+                    <th>TYPE</th>
                     <th class="text-right">THAO TÁC</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <tr v-for="(item, i) in listPromotions" :key="i">
+                  <tr v-for="item in promotions" :key="item.id">
                     <td>{{ item.name }}</td>
-                    <td>
-                      {{ item.created_at | date('dd/MM/yyyy') }}
-                    </td>
-                    <td :class="format(item.status)">{{
-                      format(item.status)
-                    }}</td>
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td :class="item.status_class">{{ item.status_text }}</td>
+                    <td>{{ item.type_text }}</td>
                     <td class="text-right">
                       <p-button
                         class="btn btn-info"
-                        :disabled="!item.description"
+                        :disabled="
+                          !item.description &&
+                          !item.s3_path_price &&
+                          !item.s3_path_weight
+                        "
                         @click="showModalDescriptionHandle(item)"
                         >Nội dung</p-button
                       >
                       <p-button
+                        v-if="!$isMarketing()"
                         :type="typeBtn(item.status)"
                         class="btn-detail ml-8"
                         @click="visibleModal(item)"
@@ -50,14 +62,23 @@
                         {{ textBtn(item.status) }}
                       </p-button>
                       <a
+                        v-if="!$isMarketing()"
                         href="#"
                         class="btn edit ml-8"
                         :class="{ deactive: item.status != 1 }"
                         @click="loadDetailPromotion(item)"
                       >
-                        Sửa
-                      </a></td
-                    >
+                        Customer
+                      </a>
+                      <a
+                        v-if="$isMarketing()"
+                        href="#"
+                        class="btn edit ml-8"
+                        @click="showUpdatePromotion(item)"
+                      >
+                        Sửa
+                      </a>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -98,6 +119,11 @@
       :visible.sync="isVisibleModalDescription"
       :current="item"
     ></modal-description>
+    <modal-form
+      :current="item"
+      :visible.sync="isVisibleModalCreate"
+      @on-submitted="onCreatedOrUpdateHandle"
+    ></modal-form>
   </div>
 </template>
 <script>
@@ -115,6 +141,8 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAppendPromotion from '../components/ModalAppendPromotion.vue'
 import SearchPromotion from '../components/SearchPromotion.vue'
 import ModalDescription from '../components/ModalDescription.vue'
+import ModalForm from '../components/ModalForm.vue'
+import { PROMOTION_TYPE_MARKETING } from '../constants'
 
 export default {
   name: 'ListPromotion',
@@ -125,6 +153,7 @@ export default {
     ModalAppendPromotion,
     SearchPromotion,
     ModalDescription,
+    ModalForm,
   },
   data() {
     return {
@@ -138,6 +167,7 @@ export default {
       visibleConfirm: false,
       visibleModalAppend: false,
       isVisibleModalDescription: false,
+      isVisibleModalCreate: false,
       description: '',
       title: '',
       type: '',
@@ -153,6 +183,17 @@ export default {
       count: (state) => state.count,
       listPromotions: (state) => state.promotions,
     }),
+    promotions() {
+      return this.listPromotions.map((item) => {
+        return {
+          ...item,
+          type_text:
+            item.type == PROMOTION_TYPE_MARKETING ? 'Marketing' : 'System',
+          status_text: item.status == 1 ? 'Active' : 'Disable',
+          status_class: item.status == 1 ? 'Active' : 'Disable',
+        }
+      })
+    },
   },
   methods: {
     ...mapActions('promotion', [
@@ -165,11 +206,11 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let result = await this.fetchPromotions(this.filter)
+      this.isFetching = false
+
       if (result.error) {
         this.$toast.open({ type: 'danger', message: result.message })
-        return
       }
-      this.isFetching = false
     },
     visibleModal(item) {
       this.item = item
@@ -180,51 +221,42 @@ export default {
         this.visibleConfirm = true
         return
       }
+
       this.description = 'Xác nhận active promotion?'
       this.type = 'info'
       this.title = 'Active promotion'
       this.visibleConfirm = true
     },
+
     async updateStatusPromotion(item) {
       let payload = {
         id: item.id,
         status: item.status == 1 ? 2 : 1,
       }
+
       let result = await this.updatePromotion(payload)
       this.visibleConfirm = false
 
       if (!result || result.error) {
-        return this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
+        return this.$toast.error(result.message, { duration: 3000 })
       }
+
       await this.init()
-      this.$toast.open({
-        type: 'success',
-        message: 'Cập nhật thành công',
-        duration: 3000,
-      })
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
+
     async handleAppendPromotion(payload) {
       let result = await this.appendUserToPromotion(payload)
       this.visibleModalAppend = false
 
       if (!result || result.error) {
-        return this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
+        return this.$toast.error(result.message, { duration: 3000 })
       }
+
       await this.init()
-      this.$toast.open({
-        type: 'success',
-        message: 'Cập nhật thành công',
-        duration: 3000,
-      })
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
+
     loadDetailPromotion(item) {
       this.item = item
       this.visibleModalAppend = true
@@ -242,6 +274,18 @@ export default {
       this.item = item
       this.isVisibleModalDescription = true
     },
+    showModalCreateHandle() {
+      this.item = {}
+      this.isVisibleModalCreate = true
+    },
+    onCreatedOrUpdateHandle() {
+      this.isVisibleModalCreate = false
+      this.init()
+    },
+    showUpdatePromotion(item) {
+      this.item = item
+      this.isVisibleModalCreate = true
+    },
   },
   watch: {
     filter: {
@@ -258,6 +302,7 @@ export default {
   .Active {
     color: #48be78;
   }
+
   .Disable {
     color: #da1e28;
   }
