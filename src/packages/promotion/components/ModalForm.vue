@@ -1,43 +1,70 @@
 <template>
   <p-modal :active="visible" :title="title" @close="handleClose">
-    <div class="row mb-16">
+    <div class="row mb-16 promotion-form">
       <div class="col-12">
         <div class="mb-20">
-          <label for="">Name: *</label>
+          <label for="">Tên: *</label>
           <p-input v-model="name" :error="errors.name" />
         </div>
         <div class="mb-20">
-          <label for="">Description:</label>
+          <label for="">Mô tả:</label>
           <textarea v-model="description" class="form-control"></textarea>
         </div>
         <div class="mb-20">
           <label for=""
-            >File excel prices:
-            <a :href="templatePrice" target="_blank">Demo templates</a></label
+            >Chỉnh sửa giá
+            <a :href="templatePrice" target="_blank">template</a></label
           >
-          <input
-            type="file"
-            class="form-control"
-            multiple="false"
+          <upload
+            class="order-uploader"
+            drag
+            action=""
+            :auto-upload="false"
+            :on-change="onchangePrice"
+            :on-max-size="errorSizeFileHandler"
+            :max-file-size="2048000"
             accept=".csv,.xlsx,.xls,.xlsm"
-            @change="onchangePrice"
-          />
+          >
+            <img class="el-icon-upload" src="~@/assets/img/upload.png" alt="" />
+            <div class="el-upload__text">
+              Kéo thả file để upload hoặc <em>tải lên</em>
+            </div>
+            <div v-if="!file_price" class="el-before-upload__text">
+              Chưa có file nào được chọn .
+            </div>
+            <div v-else class="el-before-upload__text">
+              {{ file_price.name }}
+            </div>
+          </upload>
           <span class="invalid-error" v-if="errors.file_price">{{
             errors.file_price
           }}</span>
         </div>
         <div class="mb-20">
           <label for=""
-            >File excel weights:
-            <a :href="templateWeight" target="_blank">Demo templates</a></label
+            >Chỉnh sửa cân nặng
+            <a :href="templateWeight" target="_blank">template</a></label
           >
-          <input
-            type="file"
-            class="form-control"
-            multiple="false"
+          <upload
+            drag
+            action=""
+            :auto-upload="false"
+            :on-change="onchangeWeight"
+            :on-max-size="errorSizeFileHandler"
+            :max-file-size="2048000"
             accept=".csv,.xlsx,.xls,.xlsm"
-            @change="onchangeWeight"
-          />
+          >
+            <img class="el-icon-upload" src="~@/assets/img/upload.png" alt="" />
+            <div class="el-upload__text">
+              Kéo thả file để upload hoặc <em>tải lên</em>
+            </div>
+            <div v-if="!file_price" class="el-before-upload__text">
+              Chưa có file nào được chọn .
+            </div>
+            <div v-else class="el-before-upload__text">
+              {{ file_price.name }}
+            </div>
+          </upload>
           <span class="invalid-error" v-if="errors.file_weight">{{
             errors.file_weight
           }}</span>
@@ -47,8 +74,10 @@
     <template slot="footer">
       <div></div>
       <div class="group-button modal-confirm">
-        <p-button type="primary" @click="submitHandle">Lưu</p-button>
         <p-button type="default" @click="handleClose">Đóng</p-button>
+        <p-button type="primary" @click="submitHandle">{{
+          buttonText
+        }}</p-button>
       </div>
     </template>
   </p-modal>
@@ -56,9 +85,11 @@
 
 <script>
 import api from '../api'
+import { Upload } from '@/kit'
 
 export default {
   name: 'ModalCreate',
+  components: { Upload },
   props: {
     visible: {
       type: Boolean,
@@ -87,25 +118,21 @@ export default {
       return `${process.env.VUE_APP_ASSETS}/lionbay_template_promotion_weights.xlsx`
     },
     title() {
-      return this.current.id ? 'Update promotion' : 'Create promotion'
+      return this.current.id ? 'Sửa promotion' : 'Tạo promotion'
+    },
+    buttonText() {
+      return this.current.id ? 'Lưu' : 'Tạo'
     },
   },
   methods: {
     handleClose() {
       this.$emit('update:visible', false)
     },
-    onchangePrice(e) {
-      const files = e.target.files
-      if (!files || files.length < 1) return
-
-      this.file_price = files[0]
-      this.validFile(this.file_price)
+    onchangePrice(file) {
+      this.file_price = file
     },
-    onchangeWeight(e) {
-      const files = e.target.files
-      if (!files || files.length < 1) return
-
-      this.file_weight = files[0]
+    onchangeWeight(file) {
+      this.file_weight = file
     },
     async submitHandle() {
       if (this.isSubmitting) return
@@ -113,7 +140,7 @@ export default {
       this.errors = {}
       const name = this.name.trim()
       if (name == '') {
-        this.$set(this.errors, 'name', 'Promotion name is required')
+        this.$set(this.errors, 'name', 'Tên promotion là bắt buộc')
       }
 
       const form = new FormData()
@@ -125,7 +152,7 @@ export default {
           this.$set(this.errors, 'file_price', 'File không đúng định dạng')
         }
 
-        form.append('file_price', this.file_price)
+        form.append('file_price', this.file_price.raw)
       }
 
       if (this.file_weight) {
@@ -133,7 +160,7 @@ export default {
           this.$set(this.errors, 'file_weight', 'File không đúng định dạng')
         }
 
-        form.append('file_weight', this.file_weight)
+        form.append('file_weight', this.file_weight.raw)
       }
 
       if (Object.keys(this.errors).length > 0) {
@@ -157,7 +184,7 @@ export default {
       }
 
       if (this.current.id > 0) {
-        this.$toast.success('Update promotion thành công!')
+        this.$toast.success('Sửa promotion thành công!')
       } else {
         this.$toast.success('Tạo promotion thành công!')
       }
@@ -176,6 +203,9 @@ export default {
       this.file_price = null
       this.file_weight = null
     },
+    errorSizeFileHandler() {
+      this.$toast.error('File upload vượt quá dung lượng cho phép')
+    },
   },
   watch: {
     current: {
@@ -191,3 +221,13 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.promotion-form .el-upload-dragger {
+  height: 130px;
+
+  .el-icon-upload {
+    margin: 15px 0 12px;
+    height: 40px;
+  }
+}
+</style>

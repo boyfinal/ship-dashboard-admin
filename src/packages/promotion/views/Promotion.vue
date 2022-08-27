@@ -31,7 +31,7 @@
                     <th>PROMOTION</th>
                     <th>NGÀY TẠO</th>
                     <th>TRẠNG THÁI</th>
-                    <th>TYPE</th>
+                    <th>LOẠI</th>
                     <th class="text-right">THAO TÁC</th>
                   </tr>
                 </thead>
@@ -123,7 +123,8 @@
       :current="item"
       :visible.sync="isVisibleModalCreate"
       @on-submitted="onCreatedOrUpdateHandle"
-    ></modal-form>
+    >
+    </modal-form>
   </div>
 </template>
 <script>
@@ -142,7 +143,11 @@ import ModalAppendPromotion from '../components/ModalAppendPromotion.vue'
 import SearchPromotion from '../components/SearchPromotion.vue'
 import ModalDescription from '../components/ModalDescription.vue'
 import ModalForm from '../components/ModalForm.vue'
-import { PROMOTION_TYPE_MARKETING } from '../constants'
+import {
+  PROMOTION_TYPE_MARKETING,
+  MAP_PROMOTION_STATUS_TEXT,
+  MAP_PROMOTION_STATUS_CLASS,
+} from '../constants'
 
 export default {
   name: 'ListPromotion',
@@ -189,8 +194,9 @@ export default {
           ...item,
           type_text:
             item.type == PROMOTION_TYPE_MARKETING ? 'Marketing' : 'System',
-          status_text: item.status == 1 ? 'Active' : 'Disable',
-          status_class: item.status == 1 ? 'Active' : 'Disable',
+          status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
+          status_class:
+            MAP_PROMOTION_STATUS_CLASS[item.status] || 'text-secondary',
         }
       })
     },

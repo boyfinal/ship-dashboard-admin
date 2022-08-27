@@ -1,16 +1,56 @@
 <template>
-  <p-modal :active="visible" :title="title" @close="handleClose">
+  <p-modal :active="visible" title="Xem promotion" @close="handleClose">
     <div class="row mb-16">
-      <div class="col-12">
-        <div v-if="description" v-html="description"></div>
-        <div class="path" v-if="s3PathPrice || s3PathWeight">
-          <hr v-if="description" />
-          <p v-if="s3PathPrice"
-            ><a :href="s3PathPrice">Xem chi tiết bảng giá</a></p
-          >
-          <p v-if="s3PathWeight"
-            ><a :href="s3PathWeight">Xem chi vưot ngưỡng cân nặng</a></p
-          >
+      <div class="col-12 p-desc">
+        <div class="form-group">
+          <b>Tên</b>
+          <input
+            type="text"
+            class="form-control"
+            :value="current.name"
+            disabled
+          />
+        </div>
+        <div class="form-group">
+          <b>Mô tả</b>
+          <textarea
+            type="text"
+            class="form-control"
+            disabled
+            :value="current.description"
+          ></textarea>
+        </div>
+        <div class="d-flex justify-content-between" v-if="s3PathPrice">
+          <span>Chỉnh sửa giá</span>
+          <a :href="s3PathPrice">Tải về</a>
+        </div>
+        <div class="d-flex justify-content-between mb-20" v-if="s3PathWeight">
+          <span>Chỉnh sửa cân nặng</span>
+          <a :href="s3PathWeight">Tải về</a>
+        </div>
+        <hr />
+        <div class="form-group">
+          <b>Khách hàng áp dụng</b>
+          <div class="user-select-box">
+            <p-input
+              placeholder="Tìm kiếm"
+              prefixIcon="search"
+              type="search"
+              :value="search"
+              @input="searchHandle"
+            >
+            </p-input>
+            <div class="list-user-select">
+              <ul>
+                <li
+                  v-for="item in displayUsers"
+                  :key="item.id"
+                  :title="item.name"
+                  >{{ item.name }}</li
+                >
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -22,8 +62,9 @@
     </template>
   </p-modal>
 </template>
-
 <script>
+import api from '../api'
+
 export default {
   name: 'ModalDescription',
   props: {
@@ -36,13 +77,14 @@ export default {
       default: () => {},
     },
   },
+  data() {
+    return {
+      users: [],
+      isLoading: false,
+      search: '',
+    }
+  },
   computed: {
-    title() {
-      return (this.current || {}).name || 'Promotion nội dung'
-    },
-    description() {
-      return (this.current || {}).description || ''
-    },
     s3PathPrice() {
       const path = (this.current || {}).s3_path_price || ''
       return path ? `${process.env.VUE_APP_ASSETS}/${path}` : ''
@@ -51,11 +93,54 @@ export default {
       const path = (this.current || {}).s3_path_weight || ''
       return path ? `${process.env.VUE_APP_ASSETS}/${path}` : ''
     },
+    tester() {
+      return this.$route.query.tester ? parseInt(this.$route.query.tester) : 0
+    },
+    displayUsers() {
+      return this.users.filter(({ full_name, email }) => {
+        return email.includes(this.search) || full_name.includes(this.search)
+      })
+    },
   },
   methods: {
+    async init() {
+      this.isLoading = true
+      const res = await api.fetchPromotionUsers(this.current.id)
+      this.isLoading = false
+
+      if (res && res.errorMessage) {
+        this.users = []
+        return
+      }
+
+      this.users = (res.users || []).map(({ id, full_name, email }) => {
+        return {
+          id,
+          full_name,
+          email,
+          name: full_name ? `${full_name} - ${email}` : email,
+        }
+      })
+    },
     handleClose() {
       this.$emit('update:visible', false)
+    },
+    searchHandle(search) {
+      this.search = search
+    },
+  },
+  watch: {
+    visible: {
+      handler: function (v) {
+        if (v) this.init()
+      },
     },
   },
 }
 </script>
+<style>
+.p-desc .list-user-select {
+  width: 100%;
+  height: 150px;
+}
+</style>

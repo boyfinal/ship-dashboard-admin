@@ -20,4 +20,8 @@ export default {
   createPromotion(payload) {
     return http.post('/promotions', payload)
   },
+
+  fetchPromotionUsers(id) {
+    return http.get(`/promotions/${id}/users`)
+  },
 }
