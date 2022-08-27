@@ -14,9 +14,10 @@
       <p-button
         type="info"
         class="ml-8 add-user"
+        v-if="$isAdmin() || $isMarketing()"
         @click="showModalCreateHandle"
       >
-        Thêm promotion
+        Tạo mới
       </p-button>
     </div>
     <div class="page-content">
