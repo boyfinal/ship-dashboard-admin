@@ -163,7 +163,7 @@ export default {
         this.users = []
         return
       }
-      let selectedIDs = this.promotion.user_ids
+      let selectedIDs = this.promotion.user_ids || []
       this.selected = response.users.filter((i) => {
         return selectedIDs.indexOf(i.id) > -1
       })
