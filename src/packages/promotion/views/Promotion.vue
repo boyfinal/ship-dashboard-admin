@@ -285,9 +285,9 @@ export default {
     },
     textBtn(status) {
       return status == PROMOTION_STATUS_DEACTIVATE
-        ? 'Disable'
-        : status == PROMOTION_STATUS_ACTIVE
         ? 'Active'
+        : status == PROMOTION_STATUS_ACTIVE
+        ? 'Disable'
         : 'Phê duyệt'
     },
     typeBtn(status) {
