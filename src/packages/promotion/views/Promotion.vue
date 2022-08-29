@@ -31,9 +31,10 @@
                 <thead>
                   <tr class="list__product-title">
                     <th>PROMOTION</th>
-                    <th>NGÀY TẠO</th>
+                    <th>Người tạo</th>
                     <th>TRẠNG THÁI</th>
                     <th>LOẠI</th>
+                    <th>NGÀY TẠO</th>
                     <th class="text-right">THAO TÁC</th>
                   </tr>
                 </thead>
@@ -41,10 +42,11 @@
                 <tbody>
                   <tr v-for="item in promotions" :key="item.id">
                     <td>{{ item.name }}</td>
-                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td>{{ item.create_by }}</td>
                     <td :class="item.status_class">{{ item.status_text }}</td>
                     <td>{{ item.type_text }}</td>
-                    <td class="text-right">
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td class="text-right" style="white-space: nowrap">
                       <p-button
                         class="btn btn-info"
                         :disabled="
@@ -198,6 +200,11 @@ export default {
       return this.listPromotions.map((item) => {
         return {
           ...item,
+          create_by: item.user
+            ? item.user.full_name
+              ? `${item.user.full_name} - ${item.user.email}`
+              : item.user.email
+            : 'System',
           disabled_btn_accept:
             this.$isMarketing() ||
             (item.type == PROMOTION_TYPE_MARKETING && this.$isAdmin()),

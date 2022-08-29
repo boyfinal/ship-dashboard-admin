@@ -75,9 +75,7 @@
       <div></div>
       <div class="group-button modal-confirm">
         <p-button type="default" @click="handleClose">Đóng</p-button>
-        <p-button type="primary" @click="submitHandle">{{
-          buttonText
-        }}</p-button>
+        <p-button type="info" @click="submitHandle">{{ buttonText }}</p-button>
       </div>
     </template>
   </p-modal>
