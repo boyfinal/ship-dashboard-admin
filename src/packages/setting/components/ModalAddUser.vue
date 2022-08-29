@@ -245,7 +245,15 @@ export default {
     ...mapActions('setting', [CREATE_USER]),
 
     async fetchCustomer() {
-      let req = { role: 'customer', search: '', not_limit: true, status: 1 }
+      let req = {
+        role: 'customer',
+        search: '',
+        not_limit: true,
+        status: 1,
+        tester: this.$route.query.tester
+          ? parseInt(this.$route.query.tester)
+          : 0,
+      }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
         this.users = []
