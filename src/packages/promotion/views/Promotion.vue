@@ -30,6 +30,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr class="list__product-title">
+                    <th>#</th>
                     <th>PROMOTION</th>
                     <th>Người tạo</th>
                     <th>TRẠNG THÁI</th>
@@ -41,6 +42,7 @@
 
                 <tbody>
                   <tr v-for="item in promotions" :key="item.id">
+                    <td>#{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.create_by }}</td>
                     <td :class="item.status_class">{{ item.status_text }}</td>
