@@ -51,11 +51,6 @@
                     <td class="text-right" style="white-space: nowrap">
                       <p-button
                         class="btn btn-info"
-                        :disabled="
-                          !item.description &&
-                          !item.s3_path_price &&
-                          !item.s3_path_weight
-                        "
                         @click="showModalDescriptionHandle(item)"
                         >Nội dung</p-button
                       >
