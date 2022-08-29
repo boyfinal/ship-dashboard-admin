@@ -18,6 +18,7 @@
             class="form-control"
             disabled
             :value="current.description"
+            style="overflow: scroll"
           ></textarea>
         </div>
         <div class="d-flex justify-content-between" v-if="s3PathPrice">
