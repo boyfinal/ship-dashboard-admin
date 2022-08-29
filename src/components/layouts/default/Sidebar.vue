@@ -149,10 +149,10 @@ export default {
               alias: ['/promotions'],
               disable:
                 this.$isAccountant() ||
-                this.$isSupport() ||
+                // this.$isSupport() ||
                 this.$isWarehouse() ||
-                this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isHub(),
+              // this.$isSupportLeader(),
             },
           ],
         },

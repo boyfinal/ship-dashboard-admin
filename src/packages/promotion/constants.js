@@ -16,3 +16,18 @@ export const MAP_PROMOTION_STATUS_CLASS = {
   [PROMOTION_STATUS_DEACTIVATE]: 'text-danger',
   [PROMOTION_STATUS_DRAFT]: 'text-warning',
 }
+
+export const PROMOTION_STATUS_TABS = [
+  {
+    value: PROMOTION_STATUS_ACTIVE,
+    text: 'Active',
+  },
+  {
+    value: PROMOTION_STATUS_DEACTIVATE,
+    text: 'Disable',
+  },
+  {
+    value: PROMOTION_STATUS_DRAFT,
+    text: 'Chờ phê duyệt',
+  },
+]

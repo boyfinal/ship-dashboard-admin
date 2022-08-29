@@ -23,6 +23,7 @@
     <div class="page-content">
       <div class="card">
         <div class="card-body">
+          <status-tab :status="statusTab" v-model="filter.status"></status-tab>
           <vcl-table class="md-20" v-if="isFetching"></vcl-table>
           <template v-else-if="listPromotions.length > 0">
             <div class="table-responsive">
@@ -55,7 +56,7 @@
                         >Nội dung</p-button
                       >
                       <p-button
-                        v-if="!$isMarketing()"
+                        v-if="$isAdmin()"
                         :type="typeBtn(item.status)"
                         class="btn-detail ml-8"
                         @click="visibleModal(item)"
@@ -148,6 +149,9 @@ import {
   PROMOTION_TYPE_MARKETING,
   MAP_PROMOTION_STATUS_TEXT,
   MAP_PROMOTION_STATUS_CLASS,
+  PROMOTION_STATUS_TABS,
+  PROMOTION_STATUS_ACTIVE,
+  PROMOTION_STATUS_DEACTIVATE,
 } from '../constants'
 
 export default {
@@ -166,7 +170,7 @@ export default {
       filter: {
         limit: 30,
         search: '',
-        status: 1,
+        status: 0,
       },
       isFetching: false,
       product: {},
@@ -179,6 +183,7 @@ export default {
       type: '',
       item: {},
       tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,
+      statusTab: PROMOTION_STATUS_TABS,
     }
   },
   created() {
@@ -193,6 +198,9 @@ export default {
       return this.listPromotions.map((item) => {
         return {
           ...item,
+          disabled_btn_accept:
+            this.$isMarketing() ||
+            (item.type == PROMOTION_TYPE_MARKETING && this.$isAdmin()),
           type_text:
             item.type == PROMOTION_TYPE_MARKETING ? 'Marketing' : 'System',
           status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
@@ -268,14 +276,15 @@ export default {
       this.item = item
       this.visibleModalAppend = true
     },
-    format(status) {
-      return status == 1 ? 'Active' : 'Disable'
-    },
     textBtn(status) {
-      return status == 1 ? 'Disable' : 'Active'
+      return status == PROMOTION_STATUS_DEACTIVATE
+        ? 'Disable'
+        : status == PROMOTION_STATUS_ACTIVE
+        ? 'Active'
+        : 'Phê duyệt'
     },
     typeBtn(status) {
-      return status == 1 ? 'danger' : 'info'
+      return status == PROMOTION_STATUS_ACTIVE ? 'danger' : 'info'
     },
     showModalDescriptionHandle(item) {
       this.item = item
