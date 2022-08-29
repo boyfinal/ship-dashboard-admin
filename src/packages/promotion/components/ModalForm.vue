@@ -58,11 +58,11 @@
             <div class="el-upload__text">
               Kéo thả file để upload hoặc <em>tải lên</em>
             </div>
-            <div v-if="!file_price" class="el-before-upload__text">
+            <div v-if="!file_weight" class="el-before-upload__text">
               Chưa có file nào được chọn .
             </div>
             <div v-else class="el-before-upload__text">
-              {{ file_price.name }}
+              {{ file_weight.name }}
             </div>
           </upload>
           <span class="invalid-error" v-if="errors.file_weight">{{
