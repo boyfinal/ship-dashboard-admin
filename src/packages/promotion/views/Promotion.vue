@@ -36,7 +36,7 @@
                     <th>TRẠNG THÁI</th>
                     <th>LOẠI</th>
                     <th>NGÀY TẠO</th>
-                    <th class="text-right">THAO TÁC</th>
+                    <th class="text-left">THAO TÁC</th>
                   </tr>
                 </thead>
 
@@ -48,41 +48,38 @@
                     <td :class="item.status_class">{{ item.status_text }}</td>
                     <td>{{ item.type_text }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td class="text-right btn-action">
-                      <p>
-                        <p-button
-                          class="btn btn-info"
-                          @click="showModalDescriptionHandle(item)"
-                          >Nội dung</p-button
-                        >
-                        <p-button
-                          v-if="$isAdmin()"
-                          :type="typeBtn(item.status)"
-                          class="btn-detail ml-8"
-                          @click="visibleModal(item)"
-                        >
-                          {{ textBtn(item.status) }}
-                        </p-button>
-                      </p>
-                      <p>
-                        <a
-                          v-if="!$isMarketing()"
-                          href="#"
-                          class="btn edit ml-8"
-                          :class="{ deactive: item.status != 1 }"
-                          @click.prevent="loadDetailPromotion(item)"
-                        >
-                          Customer
-                        </a>
-                        <a
-                          v-if="$isMarketing() || $isAdmin()"
-                          href="#"
-                          class="btn edit ml-8"
-                          @click.prevent="showUpdatePromotion(item)"
-                        >
-                          Sửa
-                        </a>
-                      </p>
+                    <td class="text-left btn-action">
+                      <a
+                        @click.prevent="showModalDescriptionHandle(item)"
+                        href="#"
+                      >
+                        <p-svg name="eye" stroke="black"></p-svg>
+                      </a>
+                      <a
+                        v-if="!$isMarketing()"
+                        href="#"
+                        @click.prevent="loadDetailPromotion(item)"
+                      >
+                        <p-svg
+                          name="users"
+                          :stroke="item.add_user_style"
+                        ></p-svg>
+                      </a>
+                      <a
+                        v-if="item.is_edit"
+                        href="#"
+                        @click.prevent="showUpdatePromotion(item)"
+                      >
+                        <p-svg name="edit-3" :stroke="item.edit_style"></p-svg>
+                      </a>
+                      <p-button
+                        v-if="$isAdmin()"
+                        :type="typeBtn(item.status)"
+                        class="btn-detail ml-15"
+                        @click="visibleModal(item)"
+                      >
+                        {{ textBtn(item.status) }}
+                      </p-button>
                     </td>
                   </tr>
                 </tbody>
@@ -215,6 +212,10 @@ export default {
           status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
           status_class:
             MAP_PROMOTION_STATUS_CLASS[item.status] || 'text-secondary',
+          add_user_style:
+            item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
+          is_edit: this.$isAdmin() || this.$isMarketing(),
+          edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
         }
       })
     },
@@ -282,6 +283,8 @@ export default {
     },
 
     loadDetailPromotion(item) {
+      if (this.item.status != 1) return
+
       this.item = item
       this.visibleModalAppend = true
     },
@@ -308,6 +311,8 @@ export default {
       this.init()
     },
     showUpdatePromotion(item) {
+      if (item.status == PROMOTION_STATUS_ACTIVE) return
+
       this.item = item
       this.isVisibleModalCreate = true
     },
@@ -332,16 +337,20 @@ export default {
     color: #da1e28;
   }
 }
+
 .table-promotion {
   tbody tr td {
     padding: 10px 5px 0;
+
     p {
       margin-bottom: 0;
     }
   }
+
   .btn-action {
-    .btn {
-      margin-bottom: 10px;
+    a + a,
+    a + button {
+      margin-left: 10px;
     }
   }
 }
