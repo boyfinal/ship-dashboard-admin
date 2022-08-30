@@ -177,6 +177,16 @@ export default {
       this.isSubmitting = false
 
       if (!res || res.errorMessage) {
+        if (res.errors && res.errors.length) {
+          for (const err of res.errors) {
+            const value = (err.value || []).join(',')
+            const msg = (err.messages || []).join(',')
+            this.$toast.error(`Line ${err.line}: ${value} - ${msg}`)
+          }
+
+          return
+        }
+
         this.$toast.error(res.errorMessage)
         return
       }
