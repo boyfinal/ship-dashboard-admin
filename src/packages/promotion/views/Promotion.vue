@@ -27,7 +27,7 @@
           <vcl-table class="md-20" v-if="isFetching"></vcl-table>
           <template v-else-if="listPromotions.length > 0">
             <div class="table-responsive">
-              <table class="table table-hover">
+              <table class="table table-hover table-promotion">
                 <thead>
                   <tr class="list__product-title">
                     <th>#</th>
@@ -48,37 +48,41 @@
                     <td :class="item.status_class">{{ item.status_text }}</td>
                     <td>{{ item.type_text }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td class="text-right" style="white-space: nowrap">
-                      <p-button
-                        class="btn btn-info"
-                        @click="showModalDescriptionHandle(item)"
-                        >Nội dung</p-button
-                      >
-                      <p-button
-                        v-if="$isAdmin()"
-                        :type="typeBtn(item.status)"
-                        class="btn-detail ml-8"
-                        @click="visibleModal(item)"
-                      >
-                        {{ textBtn(item.status) }}
-                      </p-button>
-                      <a
-                        v-if="!$isMarketing()"
-                        href="#"
-                        class="btn edit ml-8"
-                        :class="{ deactive: item.status != 1 }"
-                        @click="loadDetailPromotion(item)"
-                      >
-                        Customer
-                      </a>
-                      <a
-                        v-if="$isMarketing()"
-                        href="#"
-                        class="btn edit ml-8"
-                        @click="showUpdatePromotion(item)"
-                      >
-                        Sửa
-                      </a>
+                    <td class="text-right btn-action">
+                      <p>
+                        <p-button
+                          class="btn btn-info"
+                          @click="showModalDescriptionHandle(item)"
+                          >Nội dung</p-button
+                        >
+                        <p-button
+                          v-if="$isAdmin()"
+                          :type="typeBtn(item.status)"
+                          class="btn-detail ml-8"
+                          @click="visibleModal(item)"
+                        >
+                          {{ textBtn(item.status) }}
+                        </p-button>
+                      </p>
+                      <p>
+                        <a
+                          v-if="!$isMarketing()"
+                          href="#"
+                          class="btn edit ml-8"
+                          :class="{ deactive: item.status != 1 }"
+                          @click.prevent="loadDetailPromotion(item)"
+                        >
+                          Customer
+                        </a>
+                        <a
+                          v-if="$isMarketing() || $isAdmin()"
+                          href="#"
+                          class="btn edit ml-8"
+                          @click.prevent="showUpdatePromotion(item)"
+                        >
+                          Sửa
+                        </a>
+                      </p>
                     </td>
                   </tr>
                 </tbody>
@@ -326,6 +330,19 @@ export default {
 
   .Disable {
     color: #da1e28;
+  }
+}
+.table-promotion {
+  tbody tr td {
+    padding: 10px 5px 0;
+    p {
+      margin-bottom: 0;
+    }
+  }
+  .btn-action {
+    .btn {
+      margin-bottom: 10px;
+    }
   }
 }
 </style>

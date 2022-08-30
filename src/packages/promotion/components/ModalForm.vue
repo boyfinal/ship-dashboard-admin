@@ -181,7 +181,8 @@ export default {
           for (const err of res.errors) {
             const value = (err.value || []).join(',')
             const msg = (err.messages || []).join(',')
-            this.$toast.error(`Line ${err.line}: ${value} - ${msg}`)
+            const message = value ? `${value} - ${msg}` : msg
+            this.$toast.error(`Line ${err.line}: ${message}`)
           }
 
           return
@@ -216,6 +217,9 @@ export default {
     },
   },
   watch: {
+    visible() {
+      this.reset()
+    },
     current: {
       handler: function (val) {
         this.reset()
