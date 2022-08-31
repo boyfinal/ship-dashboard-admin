@@ -126,6 +126,7 @@ export default {
     handleClose() {
       this.file_price = null
       this.file_weight = null
+      this.errors = {}
       this.$emit('update:visible', false)
     },
     onchangePrice(file) {
