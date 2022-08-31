@@ -283,7 +283,7 @@ export default {
     },
 
     loadDetailPromotion(item) {
-      if (this.item.status != 1) return
+      if (item.status != PROMOTION_STATUS_ACTIVE) return
 
       this.item = item
       this.visibleModalAppend = true

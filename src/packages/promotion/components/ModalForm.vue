@@ -124,6 +124,8 @@ export default {
   },
   methods: {
     handleClose() {
+      this.file_price = null
+      this.file_weight = null
       this.$emit('update:visible', false)
     },
     onchangePrice(file) {
@@ -217,9 +219,6 @@ export default {
     },
   },
   watch: {
-    visible() {
-      this.reset()
-    },
     current: {
       handler: function (val) {
         this.reset()
