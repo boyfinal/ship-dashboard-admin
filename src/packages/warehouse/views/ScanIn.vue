@@ -4,10 +4,12 @@
       <div class="mb-24">
         <div class="actions">
           <button class="btn btn-info" v-if="!iscan" @click="startHandle">
-            <svgicon name="play" width="20" height="20" /> Bắt đầu quét
+            <svgicon name="play" width="20" height="20" />
+            Bắt đầu quét
           </button>
           <button class="btn btn-danger" v-if="iscan" @click="stopHandle">
-            <svgicon name="pause" width="20" height="20" />Dừng quét
+            <svgicon name="pause" width="20" height="20" />
+            Dừng quét
           </button>
           <button class="btn btn-white ml-20" v-if="iscan">
             Số lượng đã quét: <b>{{ total }}</b>
@@ -30,20 +32,20 @@
                   @click.prevent="searchHandle"
                   :disabled="disableBtnScan"
                   class="btn btn-inline-info ml-3 text-nowrap"
-                  >Quét</button
-                >
+                  >Quét
+                </button>
                 <button
                   class="btn btn-inline-info ml-3 text-nowrap"
                   :disabled="disableBtnAccept"
                   @click.prevent="acceptHandle"
-                  >Xác nhận</button
-                >
+                  >Xác nhận
+                </button>
                 <button
                   class="btn btn-inline-danger ml-3 text-nowrap"
                   :disabled="disableBtnReturn"
                   @click="showModalReturnHandle(null)"
-                  >Trả hàng</button
-                >
+                  >Trả hàng
+                </button>
               </div>
             </div>
           </div>
@@ -66,8 +68,8 @@
                     <div class="d-flex">
                       <span>Mã tracking:</span>
                       <span>{{ trackingCurrent }}</span>
-                    </div></div
-                  >
+                    </div>
+                  </div>
                   <div class="col-6 second">
                     <div class="d-flex">
                       <span>Thông tin đơn:</span>
@@ -347,8 +349,9 @@
                       </div>
                     </div>
                   </div>
-                </div> </div
-            ></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -858,7 +861,10 @@ export default {
     confirmHandle() {
       return new Promise((resolve) => {
         this.$dialog.confirm({
-          title: `Xác nhận thông tin đơn hàng?`,
+          title: `Xác nhận thông tin đơn hàng`,
+          topIcon: true,
+          iconTopClass: 'warning',
+          topIconText: 're-label',
           message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
           onConfirm: () => {
             resolve(true)
@@ -1080,4 +1086,23 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+<style>
+.modal-body .badge-warning {
+  margin-bottom: 10px;
+}
+
+.modal-body .media-body {
+  color: #d46b08;
+}
+
+.modal-body .media-body p {
+  margin-bottom: 0;
+}
+
+.modal-header .modal-title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: #111212;
+}
+</style>

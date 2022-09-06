@@ -8,6 +8,9 @@
             <h4 class="modal-title">{{ title }}</h4>
           </header>
           <section class="modal-body" v-if="message">
+            <span v-if="topIcon" :class="iconTopWrapClass">
+              {{ topIconText }}
+            </span>
             <div class="media">
               <div class="mr-4" v-if="hasIcon">
                 <p-icon
@@ -79,6 +82,18 @@ export default {
     icon: String,
     iconPack: String,
     hasIcon: Boolean,
+    topIcon: {
+      type: Boolean,
+      default: false,
+    },
+    topIconText: {
+      type: String,
+      default: '',
+    },
+    iconTopClass: {
+      type: String,
+      default: 'primary',
+    },
     type: {
       type: String,
       default: 'primary',
@@ -139,6 +154,10 @@ export default {
         default:
           return null
       }
+    },
+    iconTopWrapClass() {
+      const sClass = this.iconTopClass
+      return `badge badge-round badge-${sClass}`
     },
     showCancel() {
       return this.cancelOptions.indexOf('button') >= 0
