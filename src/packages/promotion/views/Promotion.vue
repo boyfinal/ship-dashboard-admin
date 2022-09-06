@@ -27,61 +27,59 @@
           <vcl-table class="md-20" v-if="isFetching"></vcl-table>
           <template v-else-if="listPromotions.length > 0">
             <div class="table-responsive">
-              <table class="table table-hover">
+              <table class="table table-hover table-promotion">
                 <thead>
                   <tr class="list__product-title">
+                    <th>#</th>
                     <th>PROMOTION</th>
                     <th>Người tạo</th>
                     <th>TRẠNG THÁI</th>
                     <th>LOẠI</th>
                     <th>NGÀY TẠO</th>
-                    <th class="text-right">THAO TÁC</th>
+                    <th class="text-left">THAO TÁC</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   <tr v-for="item in promotions" :key="item.id">
+                    <td>#{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.create_by }}</td>
                     <td :class="item.status_class">{{ item.status_text }}</td>
                     <td>{{ item.type_text }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td class="text-right" style="white-space: nowrap">
-                      <p-button
-                        class="btn btn-info"
-                        :disabled="
-                          !item.description &&
-                          !item.s3_path_price &&
-                          !item.s3_path_weight
-                        "
-                        @click="showModalDescriptionHandle(item)"
-                        >Nội dung</p-button
+                    <td class="text-left btn-action">
+                      <a
+                        @click.prevent="showModalDescriptionHandle(item)"
+                        href="#"
                       >
+                        <p-svg name="eye" stroke="black"></p-svg>
+                      </a>
+                      <a
+                        v-if="!$isMarketing()"
+                        href="#"
+                        @click.prevent="loadDetailPromotion(item)"
+                      >
+                        <p-svg
+                          name="users"
+                          :stroke="item.add_user_style"
+                        ></p-svg>
+                      </a>
+                      <a
+                        v-if="item.is_edit"
+                        href="#"
+                        @click.prevent="showUpdatePromotion(item)"
+                      >
+                        <p-svg name="edit-3" :stroke="item.edit_style"></p-svg>
+                      </a>
                       <p-button
                         v-if="$isAdmin()"
                         :type="typeBtn(item.status)"
-                        class="btn-detail ml-8"
+                        class="btn-detail ml-15"
                         @click="visibleModal(item)"
                       >
                         {{ textBtn(item.status) }}
                       </p-button>
-                      <a
-                        v-if="!$isMarketing()"
-                        href="#"
-                        class="btn edit ml-8"
-                        :class="{ deactive: item.status != 1 }"
-                        @click="loadDetailPromotion(item)"
-                      >
-                        Customer
-                      </a>
-                      <a
-                        v-if="$isMarketing()"
-                        href="#"
-                        class="btn edit ml-8"
-                        @click="showUpdatePromotion(item)"
-                      >
-                        Sửa
-                      </a>
                     </td>
                   </tr>
                 </tbody>
@@ -189,6 +187,7 @@ export default {
     }
   },
   created() {
+    this.filter = this.getRouteQuery()
     this.init()
   },
   computed: {
@@ -213,6 +212,10 @@ export default {
           status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
           status_class:
             MAP_PROMOTION_STATUS_CLASS[item.status] || 'text-secondary',
+          add_user_style:
+            item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
+          is_edit: this.$isAdmin() || this.$isMarketing(),
+          edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
         }
       })
     },
@@ -280,6 +283,8 @@ export default {
     },
 
     loadDetailPromotion(item) {
+      if (item.status != PROMOTION_STATUS_ACTIVE) return
+
       this.item = item
       this.visibleModalAppend = true
     },
@@ -306,6 +311,8 @@ export default {
       this.init()
     },
     showUpdatePromotion(item) {
+      if (item.status == PROMOTION_STATUS_ACTIVE) return
+
       this.item = item
       this.isVisibleModalCreate = true
     },
@@ -328,6 +335,23 @@ export default {
 
   .Disable {
     color: #da1e28;
+  }
+}
+
+.table-promotion {
+  tbody tr td {
+    padding: 10px 5px 0;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-action {
+    a + a,
+    a + button {
+      margin-left: 10px;
+    }
   }
 }
 </style>

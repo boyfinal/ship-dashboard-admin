@@ -58,11 +58,11 @@
             <div class="el-upload__text">
               Kéo thả file để upload hoặc <em>tải lên</em>
             </div>
-            <div v-if="!file_price" class="el-before-upload__text">
+            <div v-if="!file_weight" class="el-before-upload__text">
               Chưa có file nào được chọn .
             </div>
             <div v-else class="el-before-upload__text">
-              {{ file_price.name }}
+              {{ file_weight.name }}
             </div>
           </upload>
           <span class="invalid-error" v-if="errors.file_weight">{{
@@ -124,6 +124,9 @@ export default {
   },
   methods: {
     handleClose() {
+      this.file_price = null
+      this.file_weight = null
+      this.errors = {}
       this.$emit('update:visible', false)
     },
     onchangePrice(file) {
@@ -177,6 +180,17 @@ export default {
       this.isSubmitting = false
 
       if (!res || res.errorMessage) {
+        if (res.errors && res.errors.length) {
+          for (const err of res.errors) {
+            const value = (err.value || []).join(',')
+            const msg = (err.messages || []).join(',')
+            const message = value ? `${value} - ${msg}` : msg
+            this.$toast.error(`Line ${err.line}: ${message}`)
+          }
+
+          return
+        }
+
         this.$toast.error(res.errorMessage)
         return
       }
