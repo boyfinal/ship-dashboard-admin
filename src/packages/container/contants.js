@@ -9,6 +9,10 @@ export const CONTAINER_EXPORT_HUB = 7
 export const CONTAINER_TYPE_API = 1
 export const CONTAINER_TYPE_MANUAL = 2
 
+export const CONTAINER_ITEM_INACTIVE = 0
+export const CONTAINER_ITEM_ACTIVE = 1
+export const CONTAINER_ITEM_FAIL = 2
+
 export const CONTAINER_STATUS_TAB = [
   {
     value: '',

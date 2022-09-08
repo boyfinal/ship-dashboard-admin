@@ -137,6 +137,7 @@
                       <th>Nhãn đơn hàng</th>
                       <th>Trọng lượng</th>
                       <th>Dài x Rộng x Cao</th>
+                      <th>Trạng thái quét</th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>
@@ -168,6 +169,7 @@
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
+                      <td v-html="getStatusItem(item.item_status)"> </td>
                       <td>
                         <p-button
                           v-if="
@@ -253,6 +255,8 @@ import {
   CONTAINER_WAITING_CLOSE,
   CONTAINER_CLOSE,
   CONTAINER_TYPE_MANUAL,
+  CONTAINER_ITEM_ACTIVE,
+  CONTAINER_ITEM_FAIL,
 } from '../contants'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
 import ModalUpdateContainer from '../components/ModalUpdateContainer'
@@ -346,6 +350,16 @@ export default {
       const width = pkg.actual_width || pkg.width
       const height = pkg.actual_height || pkg.height
       return `${length} x ${width}  x ${height}`
+    },
+    getStatusItem(status) {
+      switch (status) {
+        case CONTAINER_ITEM_ACTIVE:
+          return '<span class="badge badge-round badge-success">Thành công</span>'
+        case CONTAINER_ITEM_FAIL:
+          return '<span class="badge badge-round badge-danger">Thất bại</span>'
+        default:
+          break
+      }
     },
     async handleAppend() {
       this.code = this.code.trim()
