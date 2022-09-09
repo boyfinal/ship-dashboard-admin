@@ -75,7 +75,7 @@
                       <p-button
                         v-if="$isAdmin()"
                         :type="typeBtn(item.status)"
-                        class="btn-detail ml-15"
+                        class="btn-detail ml-15 btn-promotion"
                         @click="visibleModal(item)"
                       >
                         {{ textBtn(item.status) }}
@@ -353,5 +353,9 @@ export default {
       margin-left: 10px;
     }
   }
+}
+td .btn-promotion {
+  width: 85px;
+  text-align: center;
 }
 </style>
