@@ -561,6 +561,7 @@ export default {
       groups: [],
       disableInput: false,
       validNumber: yup.number(),
+      break_point_weight: 0,
     }
   },
   methods: {
@@ -770,11 +771,10 @@ export default {
       if (res.error) {
         this.$toast.error(res.message)
       }
-
       if (!this.current || !this.current.id) {
         return
       }
-
+      this.break_point_weight = res.break_point_weight
       this.updateVolum()
     },
 
@@ -859,21 +859,39 @@ export default {
 
     // xác nhận thông tin đã chỉnh sửa
     confirmHandle() {
-      return new Promise((resolve) => {
-        this.$dialog.confirm({
-          title: `Xác nhận thông tin đơn hàng`,
-          topIcon: true,
-          iconTopClass: 'warning',
-          topIconText: 're-label',
-          message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
-          onConfirm: () => {
-            resolve(true)
-          },
-          onCancel: () => {
-            resolve(false)
-          },
+      if (
+        this.current.actual_weight < this.break_point_weight &&
+        this.form.actual_weight >= this.break_point_weight
+      ) {
+        return new Promise((resolve) => {
+          this.$dialog.confirm({
+            title: `Xác nhận thông tin đơn hàng`,
+            topIcon: true,
+            iconTopClass: 'warning',
+            topIconText: 're-label',
+            message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
+            onConfirm: () => {
+              resolve(true)
+            },
+            onCancel: () => {
+              resolve(false)
+            },
+          })
         })
-      })
+      } else {
+        return new Promise((resolve) => {
+          this.$dialog.confirm({
+            title: `Xác nhận thông tin đơn hàng?`,
+            message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
+            onConfirm: () => {
+              resolve(true)
+            },
+            onCancel: () => {
+              resolve(false)
+            },
+          })
+        })
+      }
     },
 
     reset() {
@@ -1087,19 +1105,20 @@ export default {
 }
 </script>
 <style>
-.modal-body .badge-warning {
+.has-top-icon .modal-body .badge-warning {
   margin-bottom: 10px;
 }
 
-.modal-body .media-body {
+.has-top-icon .modal-body .media-body {
   color: #d46b08;
 }
 
-.modal-body .media-body p {
+.has-top-icon .modal-body .media-body p {
   margin-bottom: 0;
 }
 
-.modal-header .modal-title {
+.has-top-icon .modal-header .modal-title {
+  color: #fa8c16 !important;
   font-weight: 500;
   font-size: 18px;
   line-height: 28px;

@@ -29,6 +29,7 @@ export const state = {
   products: [],
   service: [],
   count_tracking_in_package: 0,
+  break_point_weight: 0,
 }
 
 export const mutations = {
@@ -66,7 +67,6 @@ export const mutations = {
   },
   [GET_PACKAGE_BY_CODE]: (state, payload) => {
     state.package = payload
-
     if (state.package.actual_height <= 0) {
       state.package.actual_height = state.package.height
     }
@@ -227,7 +227,7 @@ export const actions = {
     }
 
     commit(GET_PACKAGE_BY_CODE, res.package || {})
-    return { error: false }
+    return { error: false, break_point_weight: res.break_point_weight }
   },
 
   // eslint-disable-next-line

@@ -1,6 +1,10 @@
 <template>
   <transition :name="animation">
-    <div v-if="isActive" class="p-dialog p-modal is-active">
+    <div
+      v-if="isActive"
+      class="p-dialog p-modal is-active"
+      :class="{ 'has-top-icon': topIcon }"
+    >
       <div class="p-modal-background" @click="cancel('outside')"></div>
       <div class="p-modal-card p-animation-content">
         <div class="modal-content">
