@@ -561,7 +561,6 @@ export default {
       groups: [],
       disableInput: false,
       validNumber: yup.number(),
-      break_point_weight: 0,
     }
   },
   methods: {
@@ -774,7 +773,6 @@ export default {
       if (!this.current || !this.current.id) {
         return
       }
-      this.break_point_weight = res.break_point_weight
       this.updateVolum()
     },
 

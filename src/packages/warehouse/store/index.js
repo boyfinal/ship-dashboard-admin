@@ -29,7 +29,6 @@ export const state = {
   products: [],
   service: [],
   count_tracking_in_package: 0,
-  break_point_weight: 0,
 }
 
 export const mutations = {
@@ -227,7 +226,7 @@ export const actions = {
     }
 
     commit(GET_PACKAGE_BY_CODE, res.package || {})
-    return { error: false, break_point_weight: res.break_point_weight }
+    return { error: false }
   },
 
   // eslint-disable-next-line
