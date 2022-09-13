@@ -37,6 +37,7 @@
                 <button
                   class="btn btn-inline-info ml-3 text-nowrap"
                   :disabled="disableBtnAccept"
+                  :loading="isCheckingRelabel"
                   @click.prevent="acceptHandle"
                   >Xác nhận
                 </button>
@@ -376,6 +377,7 @@ import {
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
   UPDATE_STATUS_PACKAGE,
+  CHECK_RELABEL,
 } from '../store'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -549,6 +551,7 @@ export default {
       isFetching: false,
       keyword: '',
       isSubmitting: false,
+      isCheckingRelabel: false,
       form: {
         actual_weight: 0,
         actual_length: 0,
@@ -570,6 +573,7 @@ export default {
       getCheckinRequest: GET_CHECKIN_REQUEST,
       closeCheckinRequest: CLOSE_CHECKIN_REQUEST,
       returnPackageRequest: RETURN_PACKAGE,
+      checkRelabel: CHECK_RELABEL,
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
@@ -856,11 +860,23 @@ export default {
     },
 
     // xác nhận thông tin đã chỉnh sửa
-    confirmHandle() {
-      if (
-        this.current.actual_weight < this.break_point_weight &&
-        this.form.actual_weight >= this.break_point_weight
-      ) {
+    async confirmHandle() {
+      let payload = {
+        weight: this.form.actual_weight,
+        height: this.form.actual_height,
+        length: this.form.actual_length,
+        width: this.form.actual_width,
+        id: this.current.id,
+      }
+      this.isCheckingRelabel = true
+      const result = await this.checkRelabel(payload)
+      this.isCheckingRelabel = false
+      if (result.error) {
+        this.$toast.error(result.message)
+        return
+      }
+
+      if (result.re_label) {
         return new Promise((resolve) => {
           this.$dialog.confirm({
             title: `Xác nhận thông tin đơn hàng`,
