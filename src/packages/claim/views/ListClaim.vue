@@ -91,14 +91,8 @@
                       </td>
 
                       <td>
-                        <p-tooltip
-                          :label="item.content"
-                          size="large"
-                          position="top"
-                          type="dark"
-                          :active="item.content.length > 30"
-                        >
-                          {{ truncate(item.content, 30) }}
+                        <p-tooltip size="large" position="top" type="dark">
+                          {{ truncate(item.reason, 30) }}
                         </p-tooltip>
                       </td>
                       <td>{{ item.supports }}</td>
@@ -144,7 +138,12 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY } from '../constants'
+import {
+  CLAIM_STATUS,
+  CLAIM_CUSTOMER_REPLY,
+  MAP_REASON_CATEGORY_TEXT,
+  REASON_CATEGORY_OTHER_TEXT,
+} from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -211,7 +210,9 @@ export default {
               ? item.package.package_code.code
               : '',
           title: item.title,
-          content: item.content,
+          reason:
+            MAP_REASON_CATEGORY_TEXT[item.content] ||
+            REASON_CATEGORY_OTHER_TEXT,
           supports: supports.join(', '),
           created_at: item.created_at,
           updated_at: item.updated_at,
