@@ -17,6 +17,7 @@ export const state = {
   containers: [],
   container_detail: {},
   count_packages_in_container: 0,
+  count_item: 0,
   packages_in_container: [],
   count: 0,
   count_status: [],
@@ -38,6 +39,7 @@ export const mutations = {
     state.container_detail = payload.container
     state.count_packages_in_container = payload.container_count
     state.packages_in_container = payload.packages
+    state.count_item = payload.count_item
   },
 }
 
