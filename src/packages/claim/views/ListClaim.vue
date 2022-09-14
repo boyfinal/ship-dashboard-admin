@@ -211,7 +211,7 @@ export default {
               : '',
           title: item.title,
           reason:
-            MAP_REASON_CATEGORY_TEXT[item.content] ||
+            MAP_REASON_CATEGORY_TEXT[item.category] ||
             REASON_CATEGORY_OTHER_TEXT,
           supports: supports.join(', '),
           created_at: item.created_at,
