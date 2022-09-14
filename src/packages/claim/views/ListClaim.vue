@@ -90,7 +90,7 @@
                         </router-link>
                       </td>
 
-                      <td>{{ truncate(item.reason, 30) }}</td>
+                      <td>{{ item.reason }}</td>
                       <td>{{ item.supports }}</td>
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
                       <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
