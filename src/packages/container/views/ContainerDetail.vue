@@ -50,6 +50,11 @@
               <div>{{ typeText }}</div>
             </div>
           </div>
+          <div>
+            <p-checkbox class="filter-checkbox" v-model="filter.isFail"
+              >Chỉ hiển thị đơn lỗi</p-checkbox
+            >
+          </div>
         </div>
 
         <div class="page-header__subtitle row">
@@ -281,6 +286,7 @@ export default {
         limit: 30,
         page: 1,
         search: '',
+        isFail: false,
       },
       isSubmitting: false,
       visibleConfirm: false,
@@ -685,5 +691,14 @@ export default {
 
 .page-header__barcode img {
   cursor: pointer;
+}
+
+.filter-checkbox {
+  position: relative !important;
+  left: 0 !important;
+}
+
+.filter-checkbox.checkbox-custom label {
+  padding-left: 6px;
 }
 </style>
