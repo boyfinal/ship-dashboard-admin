@@ -193,10 +193,10 @@
               </div>
               <div
                 class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
+                v-if="count_item > 0"
               >
                 <p-pagination
-                  :total="count"
+                  :total="count_item"
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
@@ -283,7 +283,7 @@ export default {
     return {
       isFetching: false,
       filter: {
-        limit: 30,
+        limit: 5,
         page: 1,
         search: '',
         isFail: false,
@@ -302,6 +302,7 @@ export default {
       container_detail: (state) => state.container_detail,
       packages_in_container: (state) => state.packages_in_container,
       count: (state) => state.count_packages_in_container,
+      count_item: (state) => state.count_item,
       boxes: (state) => state.boxes,
     }),
     items() {
