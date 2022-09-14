@@ -283,7 +283,7 @@ export default {
     return {
       isFetching: false,
       filter: {
-        limit: 5,
+        limit: 30,
         page: 1,
         search: '',
         isFail: false,
