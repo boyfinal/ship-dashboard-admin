@@ -90,11 +90,7 @@
                         </router-link>
                       </td>
 
-                      <td>
-                        <p-tooltip size="large" position="top" type="dark">
-                          {{ truncate(item.reason, 30) }}
-                        </p-tooltip>
-                      </td>
+                      <td>{{ truncate(item.reason, 30) }}</td>
                       <td>{{ item.supports }}</td>
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
                       <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
