@@ -53,9 +53,9 @@
                   <thead>
                     <tr class="list__claim-title">
                       <th>MÃ KHIẾU NẠI</th>
-                      <th>MÃ KHÁCH HÀNG</th>
+                      <th>TÊN KHÁCH HÀNG</th>
                       <th>LIONBAY TRACKING </th>
-                      <th>TIÊU ĐỀ</th>
+                      <th>LÝ DO</th>
                       <th>NGƯỜI XỬ LÝ</th>
                       <th>NGÀY TẠO</th>
                       <th>NGÀY CẬP NHẬT GẦN NHẤT</th>
@@ -77,7 +77,7 @@
                           {{ item.id }}
                         </router-link>
                       </td>
-                      <td>U{{ item.user_id }}</td>
+                      <td>{{ item.user_name }}</td>
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -90,15 +90,15 @@
                         </router-link>
                       </td>
 
-                      <td width="150">
+                      <td>
                         <p-tooltip
-                          :label="item.title"
+                          :label="item.content"
                           size="large"
                           position="top"
                           type="dark"
-                          :active="item.title.length > 15"
+                          :active="item.content.length > 30"
                         >
-                          {{ truncate(item.title, 15) }}
+                          {{ truncate(item.content, 30) }}
                         </p-tooltip>
                       </td>
                       <td>{{ item.supports }}</td>
@@ -211,12 +211,14 @@ export default {
               ? item.package.package_code.code
               : '',
           title: item.title,
+          content: item.content,
           supports: supports.join(', '),
           created_at: item.created_at,
           updated_at: item.updated_at,
           status: item.status,
           isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
           user_id: item.user_id,
+          user_name: item.user ? item.user.full_name : '',
         }
       })
     },
