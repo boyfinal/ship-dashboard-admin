@@ -379,10 +379,10 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      this.$toast.open({
-        message: `Thêm đơn hàng thành công`,
-        type: 'success',
-      })
+      // this.$toast.open({
+      //   message: `Thêm đơn hàng thành công`,
+      //   type: 'success',
+      // })
       this.code = ''
       await this.init()
     },
@@ -518,10 +518,10 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      this.$toast.open({
-        message: `Thêm đơn hàng thành công`,
-        type: 'success',
-      })
+      // this.$toast.open({
+      //   message: `Thêm đơn hàng thành công`,
+      //   type: 'success',
+      // })
       this.code = ''
       this.init()
     },
