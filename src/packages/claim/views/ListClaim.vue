@@ -53,9 +53,9 @@
                   <thead>
                     <tr class="list__claim-title">
                       <th>MÃ KHIẾU NẠI</th>
-                      <th>MÃ KHÁCH HÀNG</th>
+                      <th>TÊN KHÁCH HÀNG</th>
                       <th>LIONBAY TRACKING </th>
-                      <th>TIÊU ĐỀ</th>
+                      <th>LÝ DO</th>
                       <th>NGƯỜI XỬ LÝ</th>
                       <th>NGÀY TẠO</th>
                       <th>NGÀY CẬP NHẬT GẦN NHẤT</th>
@@ -77,7 +77,7 @@
                           {{ item.id }}
                         </router-link>
                       </td>
-                      <td>U{{ item.user_id }}</td>
+                      <td>{{ item.user_name }}</td>
                       <td>
                         <router-link
                           class="text-no-underline"
@@ -90,17 +90,7 @@
                         </router-link>
                       </td>
 
-                      <td width="150">
-                        <p-tooltip
-                          :label="item.title"
-                          size="large"
-                          position="top"
-                          type="dark"
-                          :active="item.title.length > 15"
-                        >
-                          {{ truncate(item.title, 15) }}
-                        </p-tooltip>
-                      </td>
+                      <td>{{ item.reason }}</td>
                       <td>{{ item.supports }}</td>
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
                       <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
@@ -144,7 +134,12 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import { CLAIM_STATUS, CLAIM_CUSTOMER_REPLY } from '../constants'
+import {
+  CLAIM_STATUS,
+  CLAIM_CUSTOMER_REPLY,
+  MAP_REASON_CATEGORY_TEXT,
+  REASON_CATEGORY_OTHER_TEXT,
+} from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -211,12 +206,16 @@ export default {
               ? item.package.package_code.code
               : '',
           title: item.title,
+          reason:
+            MAP_REASON_CATEGORY_TEXT[item.category] ||
+            REASON_CATEGORY_OTHER_TEXT,
           supports: supports.join(', '),
           created_at: item.created_at,
           updated_at: item.updated_at,
           status: item.status,
           isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
           user_id: item.user_id,
+          user_name: item.user ? item.user.full_name : '',
         }
       })
     },

@@ -50,6 +50,11 @@
               <div>{{ typeText }}</div>
             </div>
           </div>
+          <div>
+            <p-checkbox class="filter-checkbox" v-model="filter.isFail"
+              >Chỉ hiển thị đơn lỗi</p-checkbox
+            >
+          </div>
         </div>
 
         <div class="page-header__subtitle row">
@@ -137,6 +142,7 @@
                       <th>Nhãn đơn hàng</th>
                       <th>Trọng lượng</th>
                       <th>Dài x Rộng x Cao</th>
+                      <th>Trạng thái quét</th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>
@@ -168,6 +174,7 @@
                       <td>
                         {{ getBoxInfo(item) }}
                       </td>
+                      <td v-html="getStatusItem(item.item_status)"> </td>
                       <td>
                         <p-button
                           v-if="
@@ -186,10 +193,10 @@
               </div>
               <div
                 class="d-flex justify-content-between align-items-center mb-16"
-                v-if="count > 0"
+                v-if="count_item > 0"
               >
                 <p-pagination
-                  :total="count"
+                  :total="count_item"
                   :perPage.sync="filter.limit"
                   :current.sync="filter.page"
                   size="sm"
@@ -253,6 +260,8 @@ import {
   CONTAINER_WAITING_CLOSE,
   CONTAINER_CLOSE,
   CONTAINER_TYPE_MANUAL,
+  CONTAINER_ITEM_ACTIVE,
+  CONTAINER_ITEM_FAIL,
 } from '../contants'
 import ModalChoiceShippingBox from '../components/ModalChoiceShippingBox'
 import ModalUpdateContainer from '../components/ModalUpdateContainer'
@@ -277,6 +286,7 @@ export default {
         limit: 30,
         page: 1,
         search: '',
+        isFail: false,
       },
       isSubmitting: false,
       visibleConfirm: false,
@@ -292,6 +302,7 @@ export default {
       container_detail: (state) => state.container_detail,
       packages_in_container: (state) => state.packages_in_container,
       count: (state) => state.count_packages_in_container,
+      count_item: (state) => state.count_item,
       boxes: (state) => state.boxes,
     }),
     items() {
@@ -347,6 +358,16 @@ export default {
       const height = pkg.actual_height || pkg.height
       return `${length} x ${width}  x ${height}`
     },
+    getStatusItem(status) {
+      switch (status) {
+        case CONTAINER_ITEM_ACTIVE:
+          return '<span class="badge badge-round badge-success">Thành công</span>'
+        case CONTAINER_ITEM_FAIL:
+          return '<span class="badge badge-round badge-danger">Thất bại</span>'
+        default:
+          break
+      }
+    },
     async handleAppend() {
       this.code = this.code.trim()
       if (this.code === '') {
@@ -365,10 +386,10 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      this.$toast.open({
-        message: `Thêm đơn hàng thành công`,
-        type: 'success',
-      })
+      // this.$toast.open({
+      //   message: `Thêm đơn hàng thành công`,
+      //   type: 'success',
+      // })
       this.code = ''
       await this.init()
     },
@@ -504,10 +525,10 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
-      this.$toast.open({
-        message: `Thêm đơn hàng thành công`,
-        type: 'success',
-      })
+      // this.$toast.open({
+      //   message: `Thêm đơn hàng thành công`,
+      //   type: 'success',
+      // })
       this.code = ''
       this.init()
     },
@@ -671,5 +692,14 @@ export default {
 
 .page-header__barcode img {
   cursor: pointer;
+}
+
+.filter-checkbox {
+  position: relative !important;
+  left: 0 !important;
+}
+
+.filter-checkbox.checkbox-custom label {
+  padding-left: 6px;
 }
 </style>

@@ -1,63 +1,86 @@
 <template>
   <div class="pages promotion setting-account">
-    <div class="search-input">
-      <search-promotion
-        id="search"
-        class="user-resource is-fullwidth mb-2"
-        :filter="filter"
-        :label="`Tìm kiếm promotion`"
-        v-model="filter.search"
-        @input="init"
-      />
+    <div class="d-flex jc-sb mb-16">
+      <div class="search-input d-flex">
+        <search-promotion
+          id="search"
+          class="user-resource is-fullwidth mb-2"
+          :filter="filter"
+          :label="`Tìm kiếm promotion`"
+          v-model="filter.search"
+          @input="init"
+        />
+      </div>
+      <p-button
+        type="info"
+        class="ml-8 add-user"
+        v-if="$isAdmin() || $isMarketing()"
+        @click="showModalCreateHandle"
+      >
+        Tạo mới
+      </p-button>
     </div>
     <div class="page-content">
       <div class="card">
         <div class="card-body">
+          <status-tab :status="statusTab" v-model="filter.status"></status-tab>
           <vcl-table class="md-20" v-if="isFetching"></vcl-table>
           <template v-else-if="listPromotions.length > 0">
             <div class="table-responsive">
-              <table class="table table-hover">
+              <table class="table table-hover table-promotion">
                 <thead>
                   <tr class="list__product-title">
+                    <th>#</th>
                     <th>PROMOTION</th>
-                    <th>NGÀY TẠO</th>
+                    <th>Người tạo</th>
                     <th>TRẠNG THÁI</th>
-                    <th class="text-right">THAO TÁC</th>
+                    <th>LOẠI</th>
+                    <th>NGÀY TẠO</th>
+                    <th class="text-left">THAO TÁC</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <tr v-for="(item, i) in listPromotions" :key="i">
+                  <tr v-for="item in promotions" :key="item.id">
+                    <td>#{{ item.id }}</td>
                     <td>{{ item.name }}</td>
-                    <td>
-                      {{ item.created_at | date('dd/MM/yyyy') }}
-                    </td>
-                    <td :class="format(item.status)">{{
-                      format(item.status)
-                    }}</td>
-                    <td class="text-right">
-                      <p-button
-                        class="btn btn-info"
-                        :disabled="!item.description"
-                        @click="showModalDescriptionHandle(item)"
-                        >Nội dung</p-button
+                    <td>{{ item.create_by }}</td>
+                    <td :class="item.status_class">{{ item.status_text }}</td>
+                    <td>{{ item.type_text }}</td>
+                    <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td class="text-left btn-action">
+                      <a
+                        @click.prevent="showModalDescriptionHandle(item)"
+                        href="#"
                       >
+                        <p-svg name="eye" stroke="black"></p-svg>
+                      </a>
+                      <a
+                        v-if="!$isMarketing()"
+                        href="#"
+                        @click.prevent="loadDetailPromotion(item)"
+                      >
+                        <p-svg
+                          name="users"
+                          :stroke="item.add_user_style"
+                        ></p-svg>
+                      </a>
+                      <a
+                        v-if="item.is_edit"
+                        href="#"
+                        @click.prevent="showUpdatePromotion(item)"
+                      >
+                        <p-svg name="edit-3" :stroke="item.edit_style"></p-svg>
+                      </a>
                       <p-button
+                        v-if="$isAdmin()"
                         :type="typeBtn(item.status)"
-                        class="btn-detail ml-8"
+                        class="btn-detail ml-15 btn-promotion"
                         @click="visibleModal(item)"
                       >
                         {{ textBtn(item.status) }}
                       </p-button>
-                      <a
-                        href="#"
-                        class="btn edit ml-8"
-                        :class="{ deactive: item.status != 1 }"
-                        @click="loadDetailPromotion(item)"
-                      >
-                        Sửa
-                      </a></td
-                    >
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -98,6 +121,12 @@
       :visible.sync="isVisibleModalDescription"
       :current="item"
     ></modal-description>
+    <modal-form
+      :current="item"
+      :visible.sync="isVisibleModalCreate"
+      @on-submitted="onCreatedOrUpdateHandle"
+    >
+    </modal-form>
   </div>
 </template>
 <script>
@@ -115,6 +144,15 @@ import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import ModalAppendPromotion from '../components/ModalAppendPromotion.vue'
 import SearchPromotion from '../components/SearchPromotion.vue'
 import ModalDescription from '../components/ModalDescription.vue'
+import ModalForm from '../components/ModalForm.vue'
+import {
+  PROMOTION_TYPE_MARKETING,
+  MAP_PROMOTION_STATUS_TEXT,
+  MAP_PROMOTION_STATUS_CLASS,
+  PROMOTION_STATUS_TABS,
+  PROMOTION_STATUS_ACTIVE,
+  PROMOTION_STATUS_DEACTIVATE,
+} from '../constants'
 
 export default {
   name: 'ListPromotion',
@@ -125,27 +163,31 @@ export default {
     ModalAppendPromotion,
     SearchPromotion,
     ModalDescription,
+    ModalForm,
   },
   data() {
     return {
       filter: {
         limit: 30,
         search: '',
-        status: 1,
+        status: 0,
       },
       isFetching: false,
       product: {},
       visibleConfirm: false,
       visibleModalAppend: false,
       isVisibleModalDescription: false,
+      isVisibleModalCreate: false,
       description: '',
       title: '',
       type: '',
       item: {},
       tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,
+      statusTab: PROMOTION_STATUS_TABS,
     }
   },
   created() {
+    this.filter = this.getRouteQuery()
     this.init()
   },
   computed: {
@@ -153,6 +195,30 @@ export default {
       count: (state) => state.count,
       listPromotions: (state) => state.promotions,
     }),
+    promotions() {
+      return this.listPromotions.map((item) => {
+        return {
+          ...item,
+          create_by: item.user
+            ? item.user.full_name
+              ? `${item.user.full_name} - ${item.user.email}`
+              : item.user.email
+            : 'System',
+          disabled_btn_accept:
+            this.$isMarketing() ||
+            (item.type == PROMOTION_TYPE_MARKETING && this.$isAdmin()),
+          type_text:
+            item.type == PROMOTION_TYPE_MARKETING ? 'Marketing' : 'System',
+          status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
+          status_class:
+            MAP_PROMOTION_STATUS_CLASS[item.status] || 'text-secondary',
+          add_user_style:
+            item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
+          is_edit: this.$isAdmin() || this.$isMarketing(),
+          edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
+        }
+      })
+    },
   },
   methods: {
     ...mapActions('promotion', [
@@ -165,11 +231,11 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
       let result = await this.fetchPromotions(this.filter)
+      this.isFetching = false
+
       if (result.error) {
         this.$toast.open({ type: 'danger', message: result.message })
-        return
       }
-      this.isFetching = false
     },
     visibleModal(item) {
       this.item = item
@@ -180,67 +246,75 @@ export default {
         this.visibleConfirm = true
         return
       }
+
       this.description = 'Xác nhận active promotion?'
       this.type = 'info'
       this.title = 'Active promotion'
       this.visibleConfirm = true
     },
+
     async updateStatusPromotion(item) {
       let payload = {
         id: item.id,
         status: item.status == 1 ? 2 : 1,
       }
+
       let result = await this.updatePromotion(payload)
       this.visibleConfirm = false
 
       if (!result || result.error) {
-        return this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
+        return this.$toast.error(result.message, { duration: 3000 })
       }
+
       await this.init()
-      this.$toast.open({
-        type: 'success',
-        message: 'Cập nhật thành công',
-        duration: 3000,
-      })
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
+
     async handleAppendPromotion(payload) {
       let result = await this.appendUserToPromotion(payload)
       this.visibleModalAppend = false
 
       if (!result || result.error) {
-        return this.$toast.open({
-          type: 'error',
-          message: result.message,
-          duration: 3000,
-        })
+        return this.$toast.error(result.message, { duration: 3000 })
       }
+
       await this.init()
-      this.$toast.open({
-        type: 'success',
-        message: 'Cập nhật thành công',
-        duration: 3000,
-      })
+      this.$toast.success('Cập nhật thành công', { duration: 3000 })
     },
+
     loadDetailPromotion(item) {
+      if (item.status != PROMOTION_STATUS_ACTIVE) return
+
       this.item = item
       this.visibleModalAppend = true
     },
-    format(status) {
-      return status == 1 ? 'Active' : 'Disable'
-    },
     textBtn(status) {
-      return status == 1 ? 'Disable' : 'Active'
+      return status == PROMOTION_STATUS_DEACTIVATE
+        ? 'Active'
+        : status == PROMOTION_STATUS_ACTIVE
+        ? 'Disable'
+        : 'Phê duyệt'
     },
     typeBtn(status) {
-      return status == 1 ? 'danger' : 'info'
+      return status == PROMOTION_STATUS_ACTIVE ? 'danger' : 'info'
     },
     showModalDescriptionHandle(item) {
       this.item = item
       this.isVisibleModalDescription = true
+    },
+    showModalCreateHandle() {
+      this.item = {}
+      this.isVisibleModalCreate = true
+    },
+    onCreatedOrUpdateHandle() {
+      this.isVisibleModalCreate = false
+      this.init()
+    },
+    showUpdatePromotion(item) {
+      if (item.status == PROMOTION_STATUS_ACTIVE) return
+
+      this.item = item
+      this.isVisibleModalCreate = true
     },
   },
   watch: {
@@ -258,8 +332,30 @@ export default {
   .Active {
     color: #48be78;
   }
+
   .Disable {
     color: #da1e28;
   }
+}
+
+.table-promotion {
+  tbody tr td {
+    padding: 10px 5px 0;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-action {
+    a + a,
+    a + button {
+      margin-left: 10px;
+    }
+  }
+}
+td .btn-promotion {
+  width: 85px;
+  text-align: center;
 }
 </style>

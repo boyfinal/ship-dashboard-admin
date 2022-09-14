@@ -4,10 +4,12 @@
       <div class="mb-24">
         <div class="actions">
           <button class="btn btn-info" v-if="!iscan" @click="startHandle">
-            <svgicon name="play" width="20" height="20" /> Bắt đầu quét
+            <svgicon name="play" width="20" height="20" />
+            Bắt đầu quét
           </button>
           <button class="btn btn-danger" v-if="iscan" @click="stopHandle">
-            <svgicon name="pause" width="20" height="20" />Dừng quét
+            <svgicon name="pause" width="20" height="20" />
+            Dừng quét
           </button>
           <button class="btn btn-white ml-20" v-if="iscan">
             Số lượng đã quét: <b>{{ total }}</b>
@@ -30,20 +32,21 @@
                   @click.prevent="searchHandle"
                   :disabled="disableBtnScan"
                   class="btn btn-inline-info ml-3 text-nowrap"
-                  >Quét</button
-                >
+                  >Quét
+                </button>
                 <button
                   class="btn btn-inline-info ml-3 text-nowrap"
                   :disabled="disableBtnAccept"
+                  :loading="isCheckingRelabel"
                   @click.prevent="acceptHandle"
-                  >Xác nhận</button
-                >
+                  >Xác nhận
+                </button>
                 <button
                   class="btn btn-inline-danger ml-3 text-nowrap"
                   :disabled="disableBtnReturn"
                   @click="showModalReturnHandle(null)"
-                  >Trả hàng</button
-                >
+                  >Trả hàng
+                </button>
               </div>
             </div>
           </div>
@@ -66,8 +69,8 @@
                     <div class="d-flex">
                       <span>Mã tracking:</span>
                       <span>{{ trackingCurrent }}</span>
-                    </div></div
-                  >
+                    </div>
+                  </div>
                   <div class="col-6 second">
                     <div class="d-flex">
                       <span>Thông tin đơn:</span>
@@ -347,8 +350,9 @@
                       </div>
                     </div>
                   </div>
-                </div> </div
-            ></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -373,6 +377,7 @@ import {
   CLOSE_CHECKIN_REQUEST,
   RETURN_PACKAGE,
   UPDATE_STATUS_PACKAGE,
+  CHECK_RELABEL,
 } from '../store'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
@@ -546,6 +551,7 @@ export default {
       isFetching: false,
       keyword: '',
       isSubmitting: false,
+      isCheckingRelabel: false,
       form: {
         actual_weight: 0,
         actual_length: 0,
@@ -567,6 +573,7 @@ export default {
       getCheckinRequest: GET_CHECKIN_REQUEST,
       closeCheckinRequest: CLOSE_CHECKIN_REQUEST,
       returnPackageRequest: RETURN_PACKAGE,
+      checkRelabel: CHECK_RELABEL,
     }),
     ...mapMutations('warehouse', {
       setPackage: GET_PACKAGE_BY_CODE,
@@ -767,11 +774,9 @@ export default {
       if (res.error) {
         this.$toast.error(res.message)
       }
-
       if (!this.current || !this.current.id) {
         return
       }
-
       this.updateVolum()
     },
 
@@ -855,19 +860,52 @@ export default {
     },
 
     // xác nhận thông tin đã chỉnh sửa
-    confirmHandle() {
-      return new Promise((resolve) => {
-        this.$dialog.confirm({
-          title: `Xác nhận thông tin đơn hàng?`,
-          message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
-          onConfirm: () => {
-            resolve(true)
-          },
-          onCancel: () => {
-            resolve(false)
-          },
+    async confirmHandle() {
+      let payload = {
+        weight: this.form.actual_weight,
+        height: this.form.actual_height,
+        length: this.form.actual_length,
+        width: this.form.actual_width,
+        id: this.current.id,
+      }
+      this.isCheckingRelabel = true
+      const result = await this.checkRelabel(payload)
+      this.isCheckingRelabel = false
+      if (result.error) {
+        this.$toast.error(result.message)
+        return
+      }
+
+      if (result.re_label) {
+        return new Promise((resolve) => {
+          this.$dialog.confirm({
+            title: `Xác nhận thông tin đơn hàng`,
+            topIcon: true,
+            iconTopClass: 'warning',
+            topIconText: 're-label',
+            message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
+            onConfirm: () => {
+              resolve(true)
+            },
+            onCancel: () => {
+              resolve(false)
+            },
+          })
         })
-      })
+      } else {
+        return new Promise((resolve) => {
+          this.$dialog.confirm({
+            title: `Xác nhận thông tin đơn hàng?`,
+            message: `Đơn ${this.codecurrent} đã được chỉnh sửa, bạn chắn chắn thông tin chỉnh sửa là đúng?`,
+            onConfirm: () => {
+              resolve(true)
+            },
+            onCancel: () => {
+              resolve(false)
+            },
+          })
+        })
+      }
     },
 
     reset() {
@@ -1080,4 +1118,24 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+<style>
+.has-top-icon .modal-body .badge-warning {
+  margin-bottom: 10px;
+}
+
+.has-top-icon .modal-body .media-body {
+  color: #d46b08;
+}
+
+.has-top-icon .modal-body .media-body p {
+  margin-bottom: 0;
+}
+
+.has-top-icon .modal-header .modal-title {
+  color: #fa8c16 !important;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: #111212;
+}
+</style>

@@ -116,12 +116,16 @@ export default {
               route: '/packages',
               title: ' Đơn hàng',
               alias: ['/packages', '/packages/:id'],
+              disable: this.$isMarketing(),
             },
             {
               route: '/packages/return',
               title: ' Đơn hàng trả về',
               alias: ['/packages/return'],
-              disable: this.$isSupportLeader() || this.$isWarehouse(),
+              disable:
+                this.$isSupportLeader() ||
+                this.$isWarehouse() ||
+                this.$isMarketing(),
             },
             {
               route: '/packages/alert',
@@ -130,13 +134,14 @@ export default {
               disable:
                 this.$isSupportLeader() ||
                 this.$isWarehouse() ||
-                this.$isAccountant(),
+                this.$isAccountant() ||
+                this.$isMarketing(),
             },
             {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
-              disable: this.$isWarehouse(),
+              disable: this.$isWarehouse() || this.$isMarketing(),
             },
             {
               route: '/promotions',
@@ -144,10 +149,10 @@ export default {
               alias: ['/promotions'],
               disable:
                 this.$isAccountant() ||
-                this.$isSupport() ||
+                // this.$isSupport() ||
                 this.$isWarehouse() ||
-                this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isHub(),
+              // this.$isSupportLeader(),
             },
           ],
         },
@@ -158,7 +163,7 @@ export default {
           route: { name: 'finances' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse() || this.$isHub(),
+          disable: this.$isWarehouse() || this.$isHub() || this.$isMarketing(),
           sub: [
             {
               route: '/debt',
@@ -198,7 +203,8 @@ export default {
             this.$isSupport() ||
             this.$isHub() ||
             this.$isSupportLeader() ||
-            this.$isWarehouse(),
+            this.$isWarehouse() ||
+            this.$isMarketing(),
           sub: [
             {
               route: '/statistics',
@@ -228,7 +234,7 @@ export default {
           route: '/bill',
           class: '',
           isOpen: false,
-          disable: this.$isSupport() || this.$isHub(),
+          disable: this.$isSupport() || this.$isHub() || this.$isMarketing(),
           sub: [
             {
               route: '/warehouse',
@@ -276,7 +282,8 @@ export default {
             this.$isSupport() ||
             this.$isAccountant() ||
             this.$isWarehouse() ||
-            this.$isSupportLeader(),
+            this.$isSupportLeader() ||
+            this.$isMarketing(),
           sub: [
             {
               route: '/hubs/search',
@@ -338,7 +345,7 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse() || this.$isHub(),
+          disable: this.$isWarehouse() || this.$isHub() || this.$isMarketing(),
           sub: [
             {
               route: '/account',
@@ -372,6 +379,17 @@ export default {
               route: '/notify/email',
               title: 'Thông báo',
               alias: ['/notify/email'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
+            },
+            {
+              route: '/notify/customer',
+              title: 'Thông báo khách hàng',
+              alias: ['/notify/customer'],
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||

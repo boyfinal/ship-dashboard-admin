@@ -9,11 +9,19 @@ export default {
     return http.get(`/promotions/count?${buildQueryString(payload)}`)
   },
 
-  updatePromotion(payload) {
-    return http.put(`/promotions/${payload.id}`, payload)
+  updatePromotion(id, payload) {
+    return http.put(`/promotions/${id}`, payload)
   },
 
   appendUserToPromotion(payload) {
     return http.put('/promotions/append', payload)
+  },
+
+  createPromotion(payload) {
+    return http.post('/promotions', payload)
+  },
+
+  fetchPromotionUsers(id) {
+    return http.get(`/promotions/${id}/users`)
   },
 }

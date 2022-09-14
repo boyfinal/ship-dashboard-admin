@@ -120,4 +120,10 @@ export default {
   checkIn(code) {
     return http.get(`/warehouses/packages/${code}/check-in`)
   },
+  checkRelabel(payload) {
+    return http.post(
+      `/warehouses/packages/${payload.id}/check-relabel`,
+      payload
+    )
+  },
 }

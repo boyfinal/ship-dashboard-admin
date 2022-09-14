@@ -15,7 +15,7 @@ export const PACKAGE_CREATE_LABEL = 'createLabel'
 export const GET_CHECKIN_REQUEST = 'getCheckinRequest'
 export const CLOSE_CHECKIN_REQUEST = 'closeCheckinRequest'
 export const UPDATE_STATUS_PACKAGE = 'updateStatusPackage'
-
+export const CHECK_RELABEL = 'checkRelabel'
 import {
   PACKAGE_STATUS_PENDING_PICKUP,
   PACKAGE_STATUS_WAREHOUSE_LABELED,
@@ -66,7 +66,6 @@ export const mutations = {
   },
   [GET_PACKAGE_BY_CODE]: (state, payload) => {
     state.package = payload
-
     if (state.package.actual_height <= 0) {
       state.package.actual_height = state.package.height
     }
@@ -261,5 +260,15 @@ export const actions = {
     }
 
     return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [CHECK_RELABEL]({ commit }, payload) {
+    const res = await api.checkRelabel(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false, ...res }
   },
 }

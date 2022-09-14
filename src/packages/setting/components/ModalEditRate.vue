@@ -18,10 +18,13 @@
       </div>
       <template slot="footer">
         <div class="group-button modal-confirm">
-          <p-button type="default" @click="handleClose">
-            Bỏ qua
-          </p-button>
-          <p-button type="info" :loading="loading" @click="handleSave">
+          <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
+          <p-button
+            type="info"
+            :disabled="isDisableSave"
+            :loading="loading"
+            @click="handleSave"
+          >
             Sửa
           </p-button>
         </div>
@@ -44,6 +47,11 @@ export default {
     },
     rate: {
       type: Number,
+    },
+  },
+  computed: {
+    isDisableSave() {
+      return this.rate == this.price
     },
   },
   data() {
@@ -92,6 +100,7 @@ export default {
   label {
     margin-bottom: 5px;
   }
+
   .modal-footer {
     justify-content: flex-end;
   }
