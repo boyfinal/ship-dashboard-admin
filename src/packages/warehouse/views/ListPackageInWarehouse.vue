@@ -50,6 +50,7 @@
                       <th>Nhãn kiện</th>
                       <th>Mã kiện</th>
                       <th>ID lô</th>
+                      <th>Ngày quét vào kho</th>
                       <th></th>
                     </template>
                   </tr>
@@ -139,6 +140,9 @@
                       </router-link>
                       <span v-else>-</span>
                     </td>
+                    <td>{{
+                      item.checkin_warehouse_at | date('dd/MM/yyyy HH:mm')
+                    }}</td>
                     <td>
                       <div>
                         <p-button
