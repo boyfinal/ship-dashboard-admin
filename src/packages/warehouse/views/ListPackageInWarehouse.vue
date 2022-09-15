@@ -140,9 +140,12 @@
                       </router-link>
                       <span v-else>-</span>
                     </td>
-                    <td>{{
-                      item.checkin_warehouse_at | date('dd/MM/yyyy HH:mm')
-                    }}</td>
+                    <td>
+                      <time v-if="item.checkin_warehouse_at">{{
+                        item.checkin_warehouse_at | date('dd/MM/yyyy HH:mm')
+                      }}</time>
+                      <span v-else>-</span>
+                    </td>
                     <td>
                       <div>
                         <p-button
