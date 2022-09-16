@@ -183,7 +183,12 @@ import {
   GET_FILE_TICKET,
 } from '../store'
 import { FETCH_TICKET } from '@/packages/claim/store'
-import { CLAIM_STATUS_PENDING, CLAIM_STATUS_PROCESSED } from '../constants'
+import {
+  CLAIM_STATUS_PENDING,
+  CLAIM_STATUS_PROCESSED,
+  MAP_REASON_CATEGORY_TEXT,
+  REASON_CATEGORY_OTHER_TEXT,
+} from '../constants'
 import { truncate } from '@core/utils/string'
 
 export default {
@@ -411,16 +416,7 @@ export default {
     },
 
     formatReason(reason) {
-      switch (reason) {
-        case 1:
-          return 'Sửa đơn'
-        case 2:
-          return 'Phí hóa đơn'
-        case 3:
-          return 'Không cập nhật trạng thái'
-        case 4:
-          return 'Khác'
-      }
+      return MAP_REASON_CATEGORY_TEXT[reason] || REASON_CATEGORY_OTHER_TEXT
     },
 
     formatStatus(value) {
