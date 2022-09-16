@@ -24,6 +24,30 @@
             </option>
           </p-select>
         </div>
+        <div class="d-flex date-search">
+          <p-datepicker
+            :format="'dd/mm/yyyy'"
+            class="p-input-group input-group"
+            @update="selectDate"
+            :label="labelDate"
+            id="date-search"
+            :value="{
+              startDate: filter.start_date,
+              endDate: filter.end_date,
+            }"
+            @clear="clearSearchDate"
+          ></p-datepicker>
+          <multiselect
+            v-model="sort"
+            class="ml-8"
+            :options="optionFilter"
+            @select="handleSelect"
+            @remove="handleRemove"
+            :placeholder="placeHolder"
+            :custom-label="customLabel"
+          >
+          </multiselect>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -91,7 +115,8 @@
                         v-model="action.selected"
                         :native-value="item"
                         @input="handleValue($event)"
-                      ></p-checkbox>
+                      >
+                      </p-checkbox>
                     </td>
                     <td class="order-number">
                       <div class="d-flex justify-content-between">
@@ -207,7 +232,8 @@
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
-              ></p-pagination>
+              >
+              </p-pagination>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
@@ -280,7 +306,20 @@ export default {
         start_date: '',
         end_date: '',
         code: '',
+        sort: '',
       },
+      optionFilter: [
+        {
+          key: 'DESC',
+          name: 'Tăng dần',
+        },
+        {
+          key: 'ASC',
+          name: 'Giảm dần',
+        },
+      ],
+      sort: null,
+      placeHolder: 'Ngày còn lại',
       labelDate: `Tìm theo ngày`,
       isUploading: false,
       resultImport: {},
@@ -360,6 +399,15 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
       }
     },
+    customLabel({ key, name }) {
+      return typeof key !== 'undefined' ? `${name}` : ''
+    },
+    handleSelect(item) {
+      this.$set(this.filter, 'sort', item.key)
+    },
+    handleRemove() {
+      this.$set(this.filter, 'sort', '')
+    },
     showPackageCode(item) {
       if (item.status === PACKAGE_STATUS_ARCHIVED) {
         return false
@@ -419,14 +467,17 @@ export default {
   width: auto !important;
   white-space: pre;
 }
+
 td.code {
   max-width: 20vw !important;
+
   span.link-code,
   span.svg {
     position: relative;
     top: 3px;
   }
 }
+
 .no-track-code,
 .no-pkg-code {
   position: relative;
