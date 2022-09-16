@@ -32,8 +32,8 @@
             :label="labelDate"
             id="date-search"
             :value="{
-              startDate: filter.start_date,
-              endDate: filter.end_date,
+              startDate: filter.alert_start_date,
+              endDate: filter.alert_end_date,
             }"
             @clear="clearSearchDate"
           ></p-datepicker>
@@ -303,8 +303,8 @@ export default {
         status: '',
         search: '',
         search_by: 'code',
-        start_date: '',
-        end_date: '',
+        alert_start_date: '',
+        alert_end_date: '',
         code: '',
         sort: '',
       },
@@ -417,12 +417,12 @@ export default {
         : false
     },
     selectDate(v) {
-      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
-      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
+      this.filter.alert_start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.alert_end_date = date(v.endDate, 'yyyy-MM-dd')
     },
     clearSearchDate() {
-      this.filter.end_date = ''
-      this.filter.start_date = ''
+      this.filter.alert_end_date = ''
+      this.filter.alert_start_date = ''
       this.filter.page = 1
     },
     handleValue(e) {
