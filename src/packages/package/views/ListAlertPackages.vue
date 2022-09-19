@@ -312,11 +312,11 @@ export default {
       },
       optionFilter: [
         {
-          key: 'DESC',
+          key: 'ASC',
           name: 'Tăng dần',
         },
         {
-          key: 'ASC',
+          key: 'DESC',
           name: 'Giảm dần',
         },
       ],
