@@ -302,7 +302,7 @@ export default {
     return {
       filter: {
         limit: 30,
-        status: '',
+        status: 'pre-transit',
         search: '',
         search_by: 'code',
         alert_start_date: '',
