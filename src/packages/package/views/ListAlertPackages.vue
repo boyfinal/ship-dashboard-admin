@@ -92,8 +92,9 @@
                       <th :class="{ hidden: hiddenClass }"
                         >last mile tracking</th
                       >
-                      <th :class="{ hidden: hiddenClass }">customer</th>
-                      <th :class="{ hidden: hiddenClass }">created date </th>
+                      <th :class="{ hidden: hiddenClass }">Khách hàng</th>
+                      <th :class="{ hidden: hiddenClass }">Ngày tạo</th>
+                      <th>Ngày còn lại</th>
                     </template>
                   </tr>
                 </thead>
@@ -219,6 +220,7 @@
                       {{ item.user.full_name }}
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td>{{ item.day_left }} ngày</td>
                   </tr>
                 </tbody>
               </table>
