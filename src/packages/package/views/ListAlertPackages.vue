@@ -220,7 +220,7 @@
                       {{ item.user.full_name }}
                     </td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
-                    <td>{{ item.day_left }} ngày</td>
+                    <td>{{ item.day_left }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -486,6 +486,7 @@ td.code {
   left: 50px;
   display: inline-block;
 }
+
 .clear-date {
   position: absolute !important;
   margin-top: unset !important;
