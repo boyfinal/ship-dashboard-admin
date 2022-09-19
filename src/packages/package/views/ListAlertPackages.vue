@@ -464,7 +464,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style>
 .p-tooltip::after {
   width: auto !important;
   white-space: pre;
@@ -485,5 +485,12 @@ td.code {
   position: relative;
   left: 50px;
   display: inline-block;
+}
+.clear-date {
+  position: absolute !important;
+  margin-top: unset !important;
+  margin-left: unset !important;
+  right: 26px;
+  top: 4px !important;
 }
 </style>
