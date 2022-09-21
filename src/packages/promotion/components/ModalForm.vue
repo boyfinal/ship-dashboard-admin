@@ -6,11 +6,23 @@
           <label for="">Tên: *</label>
           <p-input v-model="name" :error="errors.name" />
         </div>
+        <div class="mb-20" v-if="isPromotionPriceByWeight">
+          <label for="">Giá/KG ($):</label>
+          <p-input
+            type="text"
+            v-model="price"
+            @input="validateAmount"
+            @change="formatAmount"
+          ></p-input>
+          <span class="invalid-error" v-if="errors.price">{{
+            errors.price
+          }}</span>
+        </div>
         <div class="mb-20">
           <label for="">Mô tả:</label>
           <textarea v-model="description" class="form-control"></textarea>
         </div>
-        <div class="mb-20">
+        <div class="mb-20" v-if="!isPromotionPriceByWeight">
           <label for=""
             >Chỉnh sửa giá
             <a :href="templatePrice" target="_blank">template</a></label
@@ -40,7 +52,7 @@
             errors.file_price
           }}</span>
         </div>
-        <div class="mb-20">
+        <div class="mb-20" v-if="!isPromotionPriceByWeight">
           <label for=""
             >Chỉnh sửa cân nặng
             <a :href="templateWeight" target="_blank">template</a></label
@@ -85,6 +97,9 @@
 import api from '../api'
 import { Upload } from '@/kit'
 
+const PROMOTION_PRICE_BY_WEIGHT_ID =
+  process.env.VUE_APP_PROMOTION_PRICE_BY_WEIGHT_ID
+
 export default {
   name: 'ModalCreate',
   components: { Upload },
@@ -105,6 +120,7 @@ export default {
       description: '',
       file_price: null,
       file_weight: null,
+      price: 0,
       errors: {},
     }
   },
@@ -120,6 +136,9 @@ export default {
     },
     buttonText() {
       return this.current.id ? 'Lưu' : 'Tạo'
+    },
+    isPromotionPriceByWeight() {
+      return this.current.id == PROMOTION_PRICE_BY_WEIGHT_ID
     },
   },
   methods: {
@@ -147,6 +166,17 @@ export default {
       const form = new FormData()
       form.append('name', name)
       form.append('description', this.description)
+
+      if (this.isPromotionPriceByWeight) {
+        let price = this.price.replace(/\s+/g, '').replaceAll(',', '')
+        if (!price || price <= 0) {
+          this.$set(this.errors, 'price', 'Số tiền là bắt buộc!')
+        } else if (!isFinite(price)) {
+          this.$set(this.errors, 'price', 'Số tiền không hợp lệ!')
+        }
+
+        form.append('price', price)
+      }
 
       if (this.file_price) {
         if (!this.validFile(this.file_price)) {
@@ -212,11 +242,51 @@ export default {
     reset() {
       this.name = ''
       this.description = ''
+      this.price = 0
       this.file_price = null
       this.file_weight = null
     },
     errorSizeFileHandler() {
       this.$toast.error('File upload vượt quá dung lượng cho phép')
+    },
+    formatAmount() {
+      this.price = this.price.replace(/\s+/g, '').replaceAll(',', '')
+      let isValid = isFinite(this.price)
+      if (!isValid) {
+        return
+      }
+      let decimal = this.price.split('.')[1]
+      let number = this.price.split('.')[0]
+      number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+      if (decimal !== undefined && decimal.length >= 2) {
+        decimal = decimal.toString().slice(0, 2)
+      }
+
+      if (this.price.includes('.')) {
+        this.price =
+          decimal === undefined ? `${number}.` : `${number}.${decimal}`
+      } else {
+        this.price = number
+      }
+    },
+    validateAmount() {
+      this.price = this.price.replace(/\s+/g, '').replaceAll(',', '')
+
+      if (!this.price || this.price <= 0) {
+        this.$set(this.errors, 'price', 'Số tiền là bắt buộc!')
+        return
+      } else if (!isFinite(this.price)) {
+        this.$set(this.errors, 'price', 'Số tiền không hợp lệ!')
+        return
+      }
+
+      this.$set(this.errors, 'price', '')
+      let decimal = this.price.split('.')[1]
+      let number = this.price.split('.')[0]
+      if (decimal !== undefined && decimal.length >= 2) {
+        this.price = `${number}.${decimal.toString().slice(0, 2)}`
+      }
     },
   },
   watch: {
@@ -227,6 +297,7 @@ export default {
 
         this.name = val.name
         this.description = val.description
+        this.price = val.price
       },
       deep: true,
     },
