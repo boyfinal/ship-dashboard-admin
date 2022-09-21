@@ -154,6 +154,9 @@ import {
   PROMOTION_STATUS_DEACTIVATE,
 } from '../constants'
 
+const PROMOTION_PRICE_BY_WEIGHT_ID =
+  process.env.VUE_APP_PROMOTION_PRICE_BY_WEIGHT_ID
+
 export default {
   name: 'ListPromotion',
   mixins: [mixinRoute, mixinTable],
@@ -215,7 +218,11 @@ export default {
           add_user_style:
             item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
           is_edit: this.$isAdmin() || this.$isMarketing(),
-          edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
+          edit_style:
+            item.status != PROMOTION_STATUS_ACTIVE ||
+            item.id == PROMOTION_PRICE_BY_WEIGHT_ID
+              ? 'black'
+              : 'gray',
         }
       })
     },
@@ -311,7 +318,11 @@ export default {
       this.init()
     },
     showUpdatePromotion(item) {
-      if (item.status == PROMOTION_STATUS_ACTIVE) return
+      if (
+        item.status == PROMOTION_STATUS_ACTIVE &&
+        item.id != PROMOTION_PRICE_BY_WEIGHT_ID
+      )
+        return
 
       this.item = item
       this.isVisibleModalCreate = true
