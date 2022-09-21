@@ -168,13 +168,14 @@ export default {
       form.append('description', this.description)
 
       if (this.isPromotionPriceByWeight) {
-        let price = this.price.replace(/\s+/g, '').replaceAll(',', '')
+        let price = ('' + this.price).replace(/\s+/g, '').replaceAll(',', '')
         if (!price || price <= 0) {
           this.$set(this.errors, 'price', 'Số tiền là bắt buộc!')
         } else if (!isFinite(price)) {
           this.$set(this.errors, 'price', 'Số tiền không hợp lệ!')
         }
 
+        price = parseFloat(price)
         form.append('price', price)
       }
 
@@ -250,7 +251,7 @@ export default {
       this.$toast.error('File upload vượt quá dung lượng cho phép')
     },
     formatAmount() {
-      this.price = this.price.replace(/\s+/g, '').replaceAll(',', '')
+      this.price = ('' + this.price).replace(/\s+/g, '').replaceAll(',', '')
       let isValid = isFinite(this.price)
       if (!isValid) {
         return
@@ -298,6 +299,7 @@ export default {
         this.name = val.name
         this.description = val.description
         this.price = val.price
+        this.formatAmount()
       },
       deep: true,
     },
