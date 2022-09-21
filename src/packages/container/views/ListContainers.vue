@@ -71,6 +71,7 @@
                       <th width="90">Kích thước</th>
                       <th class="text-center">Số lượng đơn</th>
                       <th class="text-center">Tổng cân nặng</th>
+                      <th class="text-center">Cân nặng thực tế</th>
                       <th>Loại</th>
                       <th>Trạng thái</th>
                       <th width="80"></th>
@@ -130,6 +131,9 @@
                     >
                     <td class="text-center">{{ item.count_item }}</td>
                     <td class="text-center">{{ item.weight }}</td>
+                    <td class="text-center">{{
+                      item.actual_weight ? item.actual_weight : ''
+                    }}</td>
                     <td>{{ item.type_text }}</td>
                     <td>
                       <span v-status="item.status" type="container"></span>

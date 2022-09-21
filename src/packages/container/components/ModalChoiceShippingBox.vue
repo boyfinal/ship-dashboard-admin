@@ -22,7 +22,7 @@
     </div>
     <div v-else>
       <div class="row">
-        <div :class="classInput">
+        <div class="col-6">
           <label for=""><b>Loại:</b></label>
           <p-select class="floating" v-model="type" name="type">
             <option value="0">Chọn một loại</option>
@@ -32,17 +32,7 @@
             <option :value="maxIDBox + 1">Khác</option>
           </p-select>
         </div>
-        <div :class="classInput">
-          <label for=""><b>Cân nặng:</b> (kg)</label>
-          <p-input
-            type="number"
-            min="0"
-            name="weight"
-            v-model.number="weight"
-            :error="valider.error('weight')"
-          />
-        </div>
-        <div class="col-4" v-if="type < maxIDBox + 1">
+        <div class="col-6" v-if="type < maxIDBox + 1">
           <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
           <p-select
             :disabled="true"
@@ -58,7 +48,29 @@
         </div>
       </div>
       <br />
-
+      <div class="row">
+        <div class="col-6">
+          <label for=""><b>Cân nặng:</b> (kg)</label>
+          <p-input
+            type="number"
+            min="0"
+            name="weight"
+            v-model.number="weight"
+            :error="valider.error('weight')"
+          />
+        </div>
+        <div class="col-6">
+          <label for=""><b>Cân nặng thực tế (kg)</b></label>
+          <p-input
+            type="number"
+            min="0"
+            name="actual_weight"
+            v-model.number="actual_weight"
+            :error="valider.error('actual_weight')"
+          />
+        </div>
+      </div>
+      <br />
       <div class="row">
         <div class="col-4">
           <label for=""><b>Chiều cao:</b> (cm)</label>
@@ -129,21 +141,6 @@
             :error="valider.error('length')"
           />
         </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-          <label for=""><b>Cân nặng thực tế (kg)</b></label>
-          <p-input
-            type="number"
-            min="0"
-            name="actual_weight"
-            v-model.number="actual_weight"
-            :error="valider.error('actual_weight')"
-          />
-        </div>
-        <div class="col-4"></div>
       </div>
       <template v-if="typeContainer === typeManual">
         <br />
