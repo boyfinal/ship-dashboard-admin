@@ -22,7 +22,7 @@
     </div>
     <div v-else>
       <div class="row">
-        <div :class="classInput">
+        <div class="col-6">
           <label for=""><b>Loại:</b></label>
           <p-select class="floating" v-model="type" name="type">
             <option value="0">Chọn một loại</option>
@@ -32,17 +32,7 @@
             <option :value="maxIDBox + 1">Khác</option>
           </p-select>
         </div>
-        <div :class="classInput">
-          <label for=""><b>Cân nặng:</b> (kg)</label>
-          <p-input
-            type="number"
-            min="0"
-            name="weight"
-            v-model.number="weight"
-            :error="valider.error('weight')"
-          />
-        </div>
-        <div class="col-4" v-if="type < maxIDBox + 1">
+        <div class="col-6" v-if="type < maxIDBox + 1">
           <label for=""><b>Cân nặng tối đa:</b> (kg)</label>
           <p-select
             :disabled="true"
@@ -58,7 +48,29 @@
         </div>
       </div>
       <br />
-
+      <div class="row">
+        <div class="col-6">
+          <label for=""><b>Cân nặng:</b> (kg)</label>
+          <p-input
+            type="number"
+            min="0"
+            name="weight"
+            v-model.number="weight"
+            :error="valider.error('weight')"
+          />
+        </div>
+        <div class="col-6">
+          <label for=""><b>Cân nặng thực tế (kg)</b></label>
+          <p-input
+            type="number"
+            min="0"
+            name="actual_weight"
+            v-model.number="actual_weight"
+            :error="valider.error('actual_weight')"
+          />
+        </div>
+      </div>
+      <br />
       <div class="row">
         <div class="col-4">
           <label for=""><b>Chiều cao:</b> (cm)</label>
@@ -221,6 +233,10 @@ export default {
         .number()
         .typeError('Cân nặng không hợp lệ')
         .min(0.1, 'Cân nặng không hợp lệ'),
+      actual_weight: y
+        .number()
+        .typeError('Cân nặng thực tế không hợp lệ')
+        .min(0.1, 'Cân nặng thực tế không hợp lệ'),
     }))
     this.valider.reset()
   },
@@ -249,6 +265,7 @@ export default {
         width: 0,
         max_weight: 0,
       },
+      actual_weight: 0,
       weight: 0,
       tracking_number: '',
       warehouse: {},
@@ -301,6 +318,7 @@ export default {
       this.box = Object.assign(this.box, {
         weight: this.weight,
         tracking_number: this.tracking_number,
+        actual_weight: this.actual_weight,
       })
       if (!this.valider.check(this.box) && !this.isCreate) {
         return
@@ -318,6 +336,7 @@ export default {
           height: this.box.height,
           length: this.box.length,
           weight: this.box.weight,
+          actual_weight: this.box.actual_weight,
           tracking_number: this.box.tracking_number,
         }
       }

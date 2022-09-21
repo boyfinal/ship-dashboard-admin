@@ -92,7 +92,7 @@ export const DAY_LIMIT = [
 export const OPTIONS_PACKAGES = [
   { id: 1, value: 'Không có nhu cầu thường xuyên' },
   { id: 2, value: '< 150 đơn' },
-  { id: 3, value: '150 - 9000 đơn' },
+  { id: 3, value: '150 - 900 đơn' },
   { id: 4, value: '900 - 3000 đơn' },
   { id: 5, value: '3000 - 6000 đơn' },
   { id: 6, value: '> 6000 đơn' },
