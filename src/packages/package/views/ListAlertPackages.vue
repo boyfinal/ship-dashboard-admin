@@ -32,8 +32,8 @@
             :label="labelDate"
             id="date-search"
             :value="{
-              startDate: filter.alert_start_date,
-              endDate: filter.alert_end_date,
+              startDate: filter.start_date,
+              endDate: filter.end_date,
             }"
             @clear="clearSearchDate"
           ></p-datepicker>
@@ -305,8 +305,8 @@ export default {
         status: 'pre-transit',
         search: '',
         search_by: 'code',
-        alert_start_date: '',
-        alert_end_date: '',
+        start_date: '',
+        end_date: '',
         code: '',
         sort: '',
       },
