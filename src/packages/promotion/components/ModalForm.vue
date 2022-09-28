@@ -7,7 +7,7 @@
           <p-input v-model="name" :error="errors.name" />
         </div>
         <div class="mb-20" v-if="isPromotionPriceByWeight">
-          <label for="">Giá/KG ($):</label>
+          <label for="">Giá/KG ($): *</label>
           <p-input
             type="text"
             v-model="price"
