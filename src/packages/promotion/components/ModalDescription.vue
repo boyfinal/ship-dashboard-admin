@@ -11,6 +11,10 @@
             disabled
           />
         </div>
+        <div class="form-group" v-if="price">
+          <b>Giá/KG ($):</b>
+          <input type="text" class="form-control" :value="price" disabled />
+        </div>
         <div class="form-group">
           <b>Mô tả</b>
           <textarea
@@ -101,6 +105,9 @@ export default {
       return this.users.filter(({ full_name, email }) => {
         return email.includes(this.search) || full_name.includes(this.search)
       })
+    },
+    price() {
+      return (this.current || {}).price || 0
     },
   },
   methods: {
