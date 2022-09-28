@@ -419,12 +419,12 @@ export default {
         : false
     },
     selectDate(v) {
-      this.filter.alert_start_date = date(v.startDate, 'yyyy-MM-dd')
-      this.filter.alert_end_date = date(v.endDate, 'yyyy-MM-dd')
+      this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
     },
     clearSearchDate() {
-      this.filter.alert_end_date = ''
-      this.filter.alert_start_date = ''
+      this.filter.end_date = ''
+      this.filter.start_date = ''
       this.filter.page = 1
     },
     handleValue(e) {
