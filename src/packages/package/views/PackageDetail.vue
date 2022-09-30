@@ -964,20 +964,23 @@ export default {
       )
     },
     sumExtraFee() {
+      let amount = 0
       if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
-        return this.caculateFee(this.package_detail.package.weight)
+        amount += this.calculateFee(this.package_detail.package.weight)
       }
 
       if (
         !this.package_detail.extra_fee ||
         this.package_detail.extra_fee.length <= 0
       ) {
-        return 0
+        return amount
       }
 
-      return this.package_detail.extra_fee.reduce((accu, curr) => ({
-        amount: accu.amount + curr.amount,
-      })).amount
+      amount += this.package_detail.extra_fee.reduce(
+        (total, item) => total + item.amount,
+        0
+      )
+      return amount
     },
     sumFee() {
       return this.package_detail.package.shipping_fee + this.sumExtraFee
@@ -1017,25 +1020,28 @@ export default {
       return PACKAGE_STATUS_IMPORT_HUB
     },
     mapExtraFee() {
-      let arr = cloneDeep(this.extraFee),
+      const arr = cloneDeep(this.extraFee),
         result = []
+
       if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
-        result = [
-          {
-            extra_fee_types: { name: 'Phụ phí cao điểm' },
-            amount: this.caculateFee(this.package_detail.package.weight),
-          },
-        ]
-      } else {
-        for (const ele of arr) {
-          let index = result.findIndex(
-            (x) => x.extra_fee_types.name == ele.extra_fee_types.name
-          )
-          if (index == -1) {
-            result.push(ele)
-          } else result[index].amount += ele.amount
+        result.push({
+          extra_fee_types: { name: 'Phụ phí cao điểm' },
+          amount: this.calculateFee(this.package_detail.package.weight),
+        })
+      }
+
+      for (const ele of arr) {
+        let index = result.findIndex(
+          (x) => x.extra_fee_types.name == ele.extra_fee_types.name
+        )
+
+        if (index == -1) {
+          result.push(ele)
+        } else {
+          result[index].amount += ele.amount
         }
       }
+
       return result
     },
     isReturnPackage() {
