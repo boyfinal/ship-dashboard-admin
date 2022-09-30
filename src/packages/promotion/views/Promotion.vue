@@ -218,11 +218,7 @@ export default {
           add_user_style:
             item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
           is_edit: this.$isAdmin() || this.$isMarketing(),
-          edit_style:
-            item.status != PROMOTION_STATUS_ACTIVE ||
-            item.id == PROMOTION_PRICE_BY_WEIGHT_ID
-              ? 'black'
-              : 'gray',
+          edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
         }
       })
     },
@@ -320,7 +316,7 @@ export default {
     showUpdatePromotion(item) {
       if (
         item.status == PROMOTION_STATUS_ACTIVE &&
-        item.id != PROMOTION_PRICE_BY_WEIGHT_ID
+        item.id == PROMOTION_PRICE_BY_WEIGHT_ID
       )
         return
 
@@ -365,6 +361,7 @@ export default {
     }
   }
 }
+
 td .btn-promotion {
   width: 85px;
   text-align: center;
