@@ -22,7 +22,7 @@
           <label for="">Mô tả:</label>
           <textarea v-model="description" class="form-control"></textarea>
         </div>
-        <div class="mb-20" v-if="!isPromotionPriceByWeight">
+        <div class="mb-20" v-if="isTypeMarketing">
           <label for=""
             >Chỉnh sửa giá
             <a :href="templatePrice" target="_blank">template</a></label
@@ -52,7 +52,7 @@
             errors.file_price
           }}</span>
         </div>
-        <div class="mb-20" v-if="!isPromotionPriceByWeight">
+        <div class="mb-20" v-if="isTypeMarketing">
           <label for=""
             >Chỉnh sửa cân nặng
             <a :href="templateWeight" target="_blank">template</a></label
@@ -96,6 +96,7 @@
 <script>
 import api from '../api'
 import { Upload } from '@/kit'
+import { PROMOTION_TYPE_MARKETING } from '../constants'
 
 const PROMOTION_PRICE_BY_WEIGHT_ID =
   process.env.VUE_APP_PROMOTION_PRICE_BY_WEIGHT_ID
@@ -139,6 +140,9 @@ export default {
     },
     isPromotionPriceByWeight() {
       return this.current.id == PROMOTION_PRICE_BY_WEIGHT_ID
+    },
+    isTypeMarketing() {
+      return this.current.type == PROMOTION_TYPE_MARKETING
     },
   },
   methods: {
