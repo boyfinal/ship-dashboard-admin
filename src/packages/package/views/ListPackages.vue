@@ -448,7 +448,7 @@ export default {
     },
     convertPrice(item) {
       if (item.status_string == PACKAGE_STATUS_CREATED_TEXT) {
-        return this.caculateFee(item.weight) + item.shipping_fee
+        return this.calculateFee(item.weight) + item.shipping_fee
       } else {
         return item.shipping_fee
       }

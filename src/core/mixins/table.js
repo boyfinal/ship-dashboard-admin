@@ -155,7 +155,7 @@ export default {
      * @param weight
      */
 
-    caculateFee(weight) {
+    calculateFee(weight) {
       const rate = this.$store.state.shared.configs.extra_fee
       const min = +rate * 0.1
       if (+rate == 0) {
