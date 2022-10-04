@@ -15,7 +15,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.110.0",
+    "@aws-sdk/client-s3": "^3.112.0",
     "@mdi/font": "^3.9.97",
     "crypto-js": "^3.3.0",
     "date-fns": "^2.16.1",
