@@ -1,4 +1,4 @@
-FROM node:12.13.0 as builder
+FROM 16.4.2 as builder
 WORKDIR /shipping-admin
 ADD ./ /shipping-admin
 
