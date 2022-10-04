@@ -244,6 +244,11 @@ import api from '../api'
 import { printImage } from '@core/utils/print'
 import { cloneDeep } from '../../../core/utils'
 import ModalHistoryContainer from '../components/ModalHistoryContainer'
+import {
+  // WAREHOUSE_STATUS_ACTIVE,
+  WAREHOUSE_TYPE_INTERNATIONAL,
+} from '../../shipment/constants'
+
 export default {
   name: 'ListContainers',
   mixins: [mixinRoute, mixinTable],
@@ -342,16 +347,14 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
 
-      let req = { type: 1, status: 1 }
+      let req = { type: WAREHOUSE_TYPE_INTERNATIONAL }
       const result = await this[FETCH_WAREHOUSE](req)
       if (!result.success) {
         this.isFetching = false
         this.$toast.open({ message: result.message, type: 'error' })
       }
       if (!this.filter.warehouse) {
-        let wareHouseActive = this.wareHouses.filter(
-          (ele) => ele.status == 1 && ele.type == 1
-        )
+        let wareHouseActive = this.wareHouses.filter((ele) => ele.type == 1)
         if (wareHouseActive.length < 1) {
           this.isFetching = false
           return

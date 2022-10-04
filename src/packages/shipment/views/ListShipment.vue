@@ -141,6 +141,8 @@ import {
   ShipmentClosed,
   WareHouseStatusActive,
   WareHouseTypeInternational,
+  WAREHOUSE_TYPE_INTERNATIONAL,
+  // WAREHOUSE_STATUS_ACTIVE,
 } from '../constants'
 import { mapState, mapActions } from 'vuex'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -213,8 +215,8 @@ export default {
       this.handleUpdateRouteQuery()
 
       let req = {
-        type: this.WareHouseTypeInternational,
-        status: this.WareHouseStatusActive,
+        type: this.WAREHOUSE_TYPE_INTERNATIONAL,
+        // status: WAREHOUSE_STATUS_ACTIVE,
       }
       const result = await this[FETCH_WAREHOUSE](req)
 
@@ -223,9 +225,10 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+
       if (!this.filter.warehouseID) {
         let wareHouseActive = this.wareHouses.filter(
-          (ele) => ele.status == 1 && ele.type == 1
+          (ele) => ele.type == WAREHOUSE_TYPE_INTERNATIONAL
         )
         if (wareHouseActive.length < 1) {
           this.isFetching = false
