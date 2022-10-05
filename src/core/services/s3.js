@@ -1,6 +1,8 @@
 import Storage from '../helpers/storage'
 import AuthService from '@core/services/auth'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+// import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+// import S3Client from 'aws-sdk/clients/s3'
+import aws from 'aws-sdk'
 import { unixTime } from '../utils/datetime'
 import { isEmpty } from '../utils/object'
 import { uuid } from '../utils/hash'
@@ -61,46 +63,69 @@ const S3Service = {
   },
   create(key) {
     const config = S3Service.config(key)
-    return new S3Client({
-      region: 'ap-southeast-1',
-      credentials: {
-        accessKeyId: config.access_key_id,
-        secretAccessKey: config.secret_access_key,
-        sessionToken: config.session_token,
-        expiration: config.expiration,
-      },
+    aws.config.credentials = new aws.Credentials({
+      accessKeyId: config.access_key_id,
+      expired: true,
+      expireTime: config.expiration,
+      secretAccessKey: config.secret_access_key,
+      sessionToken: config.session_token,
     })
+
+    aws.config.update({ region: 'ap-southeast-1' })
+    return new aws.S3({ apiVersion: '2006-03-01' })
+    // return new S3Client({
+    //   region: 'ap-southeast-1',
+    //   credentials: {
+    //     accessKeyId: config.access_key_id,
+    //     secretAccessKey: config.secret_access_key,
+    //     sessionToken: config.session_token,
+    //     expiration: config.expiration,
+    //   },
+    // })
   },
   async upload(key, file) {
+    try {
+      const res = await S3Service.uploadHandle(key, file)
+      return { success: true, url: res.path }
+    } catch (error) {
+      return { success: false, message: error.toString() }
+    }
+  },
+
+  async uploadHandle(key, file) {
     let { client, error } = S3Service.client(key)
     if (error === ERROR_TOKEN_EXPIRED || error === ERROR_MISS_CONFIG) {
       const result = await S3Service.reloadToken(key)
       if (!result || !result.success) {
-        return { ...result, success: false }
+        throw new Error(result.message)
       }
 
       client = S3Service.clients[key]
     } else if (error != '') {
-      return { success: false, message: error }
+      throw new Error(error)
     }
 
     if (!BUCKETS[key]) {
-      return { success: false, message: ERROR_BUCKET_INVALID }
+      throw new Error(ERROR_BUCKET_INVALID)
     }
     const ext = extension(file.name)
     const path = `${AuthService.getId()}/${uuid()}.${ext}`
-    try {
-      await client.send(
-        new PutObjectCommand({
-          Key: path,
-          Bucket: BUCKETS[key],
-          Body: file,
-        })
-      )
-      return { success: true, url: path }
-    } catch (error) {
-      return { success: false, message: error.toString() }
+
+    const uploadParams = {
+      Key: path,
+      Bucket: BUCKETS[key],
+      Body: file,
     }
+
+    return new Promise((resolve, reject) => {
+      client.upload(uploadParams, (err, data) => {
+        if (err) {
+          reject(err)
+        }
+
+        resolve({ path, data })
+      })
+    })
   },
 
   async reloadToken(key) {
