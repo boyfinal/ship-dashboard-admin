@@ -139,8 +139,7 @@
 import {
   SHIPMENT_STATUS_TAB,
   ShipmentClosed,
-  WareHouseStatusActive,
-  WareHouseTypeInternational,
+  WAREHOUSE_TYPE_INTERNATIONAL,
 } from '../constants'
 import { mapState, mapActions } from 'vuex'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
@@ -181,8 +180,6 @@ export default {
       visibleConfirmIntransit: false,
       ShipmentClosed: ShipmentClosed,
       loadingCreateWarehouse: false,
-      WareHouseStatusActive,
-      WareHouseTypeInternational,
     }
   },
   created() {
@@ -212,10 +209,7 @@ export default {
       this.isFetching = true
       this.handleUpdateRouteQuery()
 
-      let req = {
-        type: this.WareHouseTypeInternational,
-        status: this.WareHouseStatusActive,
-      }
+      let req = { type: WAREHOUSE_TYPE_INTERNATIONAL }
       const result = await this[FETCH_WAREHOUSE](req)
 
       if (!result.success) {
@@ -223,15 +217,17 @@ export default {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+
       if (!this.filter.warehouseID) {
-        let wareHouseActive = this.wareHouses.filter(
-          (ele) => ele.status == 1 && ele.type == 1
+        const wareHouseActive = this.wareHouses.find(
+          ({ type }) => type == WAREHOUSE_TYPE_INTERNATIONAL
         )
-        if (wareHouseActive.length < 1) {
+        if (!wareHouseActive) {
           this.isFetching = false
           return
         }
-        this.filter.warehouseID = wareHouseActive[0].id
+
+        this.filter.warehouseID = wareHouseActive.id
       }
 
       let payload = cloneDeep(this.filter)
