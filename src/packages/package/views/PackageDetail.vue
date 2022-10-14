@@ -983,6 +983,7 @@ export default {
         (total, item) => total + item.amount,
         0
       )
+
       return amount
     },
     sumFee() {
@@ -1071,8 +1072,8 @@ export default {
     },
     isPkgExceedNotEstimate() {
       return (
-        this.package_detail.is_package_exceed &&
-        this.package_detail.shipping_fee == 0
+        this.package_detail.package.is_package_exceed &&
+        this.package_detail.package.shipping_fee == 0
       )
     },
   },
