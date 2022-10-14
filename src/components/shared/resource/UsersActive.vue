@@ -39,10 +39,10 @@ export default {
       type: Object,
       default: () => {},
     },
-    isTester: {
-      type: Number,
-      default: 0,
-    },
+    // isTester: {
+    //   type: Number,
+    //   default: 0,
+    // },
     label: {
       type: String,
       default: 'Search user',
@@ -62,6 +62,11 @@ export default {
       isLoading: false,
       users: [],
     }
+  },
+  computed: {
+    isTester() {
+      return (this.$route.query || {}).tester || 0
+    },
   },
   mounted() {
     if (!this.shops || !this.shops.length) {
