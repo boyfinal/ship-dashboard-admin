@@ -114,7 +114,8 @@
                         v-model="action.selected"
                         :native-value="item"
                         @input="handleValue($event)"
-                      ></p-checkbox>
+                      >
+                      </p-checkbox>
                     </td>
                     <td class="order-number">
                       <div class="d-flex justify-content-between">
@@ -233,7 +234,24 @@
                         </p-tooltip>
                       </span>
                     </td>
-                    <td>{{ convertPrice(item) | formatPrice }}</td>
+                    <td
+                      class="fee"
+                      v-if="item.is_package_exceed"
+                      style="color: #fa8c16"
+                    >
+                      <span v-if="!item.shipping_fee"> Đang tính giá </span>
+                      <p-tooltip
+                        :label="`Hàng quá cỡ`"
+                        position="top"
+                        type="dark"
+                        v-else
+                      >
+                        <span class="pkg-exceed">
+                          {{ convertPrice(item) | formatPrice }}
+                        </span>
+                      </p-tooltip>
+                    </td>
+                    <td v-else>{{ convertPrice(item) | formatPrice }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -247,7 +265,8 @@
                 :perPage.sync="filter.limit"
                 :current.sync="filter.page"
                 size="sm"
-              ></p-pagination>
+              >
+              </p-pagination>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
@@ -480,14 +499,21 @@ export default {
   width: auto !important;
   white-space: pre;
 }
+
 td.code {
   max-width: 20vw !important;
+
   span.link-code,
   span.svg {
     position: relative;
     top: 3px;
   }
 }
+
+.fee .p-tooltip::after {
+  white-space: pre !important;
+}
+
 .no-track-code,
 .no-pkg-code {
   position: relative;

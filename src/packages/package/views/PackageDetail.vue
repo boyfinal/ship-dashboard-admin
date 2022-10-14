@@ -965,7 +965,10 @@ export default {
     },
     sumExtraFee() {
       let amount = 0
-      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+      if (
+        this.package_detail.package.status == PACKAGE_STATUS_CREATED &&
+        !this.isPkgExceedNotEstimate
+      ) {
         amount += this.calculateFee(this.package_detail.package.weight)
       }
 
@@ -980,6 +983,7 @@ export default {
         (total, item) => total + item.amount,
         0
       )
+
       return amount
     },
     sumFee() {
@@ -1023,7 +1027,10 @@ export default {
       const arr = cloneDeep(this.extraFee),
         result = []
 
-      if (this.package_detail.package.status == PACKAGE_STATUS_CREATED) {
+      if (
+        this.package_detail.package.status == PACKAGE_STATUS_CREATED &&
+        !this.isPkgExceedNotEstimate
+      ) {
         result.push({
           extra_fee_types: { name: 'Phụ phí cao điểm' },
           amount: this.calculateFee(this.package_detail.package.weight),
@@ -1061,6 +1068,12 @@ export default {
           PACKAGE_STATUS_EXPIRED,
           PACKAGE_STATUS_IMPORT_HUB,
         ].includes(status) == false
+      )
+    },
+    isPkgExceedNotEstimate() {
+      return (
+        this.package_detail.package.is_package_exceed &&
+        this.package_detail.package.shipping_fee == 0
       )
     },
   },
