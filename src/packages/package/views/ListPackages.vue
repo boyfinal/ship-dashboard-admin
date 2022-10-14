@@ -240,6 +240,7 @@
                         :label="`Hàng quá cỡ`"
                         position="top"
                         type="dark"
+                        style="white-space: pre"
                         v-else
                       >
                         <span class="pkg-exceed">
