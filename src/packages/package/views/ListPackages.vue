@@ -234,7 +234,11 @@
                         </p-tooltip>
                       </span>
                     </td>
-                    <td v-if="item.is_package_exceed" style="color: #fa8c16">
+                    <td
+                      class="fee"
+                      v-if="item.is_package_exceed"
+                      style="color: #fa8c16"
+                    >
                       <span v-if="!item.shipping_fee"> Đang tính giá </span>
                       <p-tooltip
                         :label="`Hàng quá cỡ`"
@@ -504,6 +508,10 @@ td.code {
     position: relative;
     top: 3px;
   }
+}
+
+.fee .p-tooltip::after {
+  white-space: pre !important;
 }
 
 .no-track-code,
