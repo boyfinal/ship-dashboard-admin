@@ -266,7 +266,7 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      this.keywordSearch = this.filter.search.trim()
+      // this.keywordSearch = this.filter.search.trim()
 
       const { request_reship, ...filters } = this.filter
       const payload = {
