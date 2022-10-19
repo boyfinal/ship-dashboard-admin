@@ -965,12 +965,12 @@ export default {
     },
     sumExtraFee() {
       let amount = 0
-      if (
-        this.package_detail.package.status == PACKAGE_STATUS_CREATED &&
-        !this.isPkgExceedNotEstimate
-      ) {
-        amount += this.calculateFee(this.package_detail.package.weight)
-      }
+      // if (
+      //   this.package_detail.package.status == PACKAGE_STATUS_CREATED &&
+      //   !this.isPkgExceedNotEstimate
+      // ) {
+      //   amount += this.calculateFee(this.package_detail.package.weight)
+      // }
 
       if (
         !this.package_detail.extra_fee ||
