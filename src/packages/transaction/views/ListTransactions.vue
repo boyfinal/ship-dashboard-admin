@@ -7,7 +7,8 @@
             :placeholder="getPlaceHolder"
             prefixIcon="search"
             type="search"
-            :value="filter.search"
+            :value.sync="getSearchValue"
+            @input="bindSearchTemp"
             @keyup.enter="handleSearch"
           >
           </p-input>
@@ -233,6 +234,7 @@ export default {
       selectedItem: null,
       money: [],
       validateErrors: [],
+      inputTemp: '',
     }
   },
   created() {
@@ -274,6 +276,12 @@ export default {
     failStatus() {
       return TransactionStatusFailure
     },
+    getSearchValue() {
+      if (this.inputTemp !== '') {
+        return this.inputTemp
+      }
+      return this.keywordSearch
+    },
   },
   methods: {
     ...mapActions('transaction', [
@@ -292,6 +300,9 @@ export default {
     },
     resetErrors() {
       this.validateErrors = []
+    },
+    bindSearchTemp(e) {
+      this.inputTemp = e.trim()
     },
     handleConfirm(status, item) {
       this.selectedItem = item
