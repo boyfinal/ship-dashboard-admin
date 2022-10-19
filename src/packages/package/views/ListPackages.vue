@@ -8,7 +8,8 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="keywordSearch"
+            :value.sync="getSearchValue"
+            @input="bindSearchTemp"
             @keyup.enter="handleSearch"
             @clear="clearSearch"
           >
@@ -349,6 +350,7 @@ export default {
       isUploading: false,
       resultImport: {},
       keywordSearch: '',
+      inputTemp: '',
       allowSearch: true,
       isFetching: false,
       isVisibleConfirmWayBill: false,
@@ -370,7 +372,12 @@ export default {
       count: (state) => state.countPackages,
       count_status: (state) => state.count_status,
     }),
-
+    getSearchValue() {
+      if (this.inputTemp !== '') {
+        return this.inputTemp
+      }
+      return this.keywordSearch
+    },
     hiddenClass() {
       return this.action.selected.length > 0 || this.isAllChecked
     },
@@ -422,6 +429,9 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    bindSearchTemp(e) {
+      this.inputTemp = e.trim()
     },
     showPackageCode(item) {
       if (item.status === PACKAGE_STATUS_ARCHIVED) {
