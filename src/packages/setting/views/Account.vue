@@ -8,8 +8,9 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="filter.search"
+            :value.sync="getSearchValue"
             @keyup.enter="handleSearch"
+            @input="bindSearchTemp"
           >
           </p-input>
 
@@ -222,6 +223,7 @@ export default {
       filterRole: ROLE,
       statusUser: USER_STATUS_TAB,
       user: {},
+      inputTemp: '',
     }
   },
   created() {
@@ -238,6 +240,12 @@ export default {
     ...mapState('shared', {
       wareHouses: (state) => state.wareHouses,
     }),
+    getSearchValue() {
+      if (this.inputTemp !== '') {
+        return this.inputTemp
+      }
+      return this.filter.search
+    },
   },
   methods: {
     truncate,
@@ -266,7 +274,9 @@ export default {
       }
       this.isFetching = false
     },
-
+    bindSearchTemp(e) {
+      this.inputTemp = e.trim()
+    },
     checkActive(status) {
       return status == this.statusActive ? true : false
     },
@@ -363,7 +373,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,
