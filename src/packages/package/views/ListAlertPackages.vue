@@ -392,7 +392,7 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      this.keywordSearch = this.filter.search.trim()
+      // this.keywordSearch = this.filter.search.trim()
       this.filter.alert = PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT
       const result = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
