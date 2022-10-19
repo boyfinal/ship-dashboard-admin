@@ -7,10 +7,10 @@
           prefixIcon="text"
           type="search"
           clearable
-          :value.sync="getSearchValue"
+          v-model="keywordSearch"
+          @input="checkClearSearch"
           @clear="clearSearch"
           @keyup.enter="searchHandle"
-          @input="bindSearchTemp"
         >
         </p-input>
         <div class="d-flex date-search" v-if="!isTabPending">
@@ -129,12 +129,6 @@ export default {
 
       return `Tìm theo ngày nhập hub`
     },
-    getSearchValue() {
-      if (this.inputTemp !== '') {
-        return this.inputTemp
-      }
-      return this.filter.search
-    },
   },
   data() {
     return {
@@ -146,7 +140,7 @@ export default {
         end_date: '',
         page: 1,
       },
-      inputTemp: '',
+      keywordSearch: '',
       barcode: '',
       tabStatus: HUB_TAB,
       isFetching: false,
@@ -169,9 +163,6 @@ export default {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
       this.filter.end_date = date(v.endDate, 'yyyy-MM-dd')
     },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
-    },
     clearSearchDate() {
       this.filter.end_date = ''
       this.filter.start_date = ''
@@ -182,10 +173,7 @@ export default {
       this.searchHandle()
     },
     barcodeSubmit() {},
-    async searchHandle(e) {
-      if (e) {
-        this.$set(this.filter, 'search', e.target.value.trim())
-      }
+    async searchHandle() {
       this.handleUpdateRouteQuery()
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]

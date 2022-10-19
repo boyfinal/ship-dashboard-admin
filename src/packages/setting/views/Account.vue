@@ -8,9 +8,9 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="getSearchValue"
+            @input="checkClearSearch"
+            v-model="keywordSearch"
             @keyup.enter="handleSearch"
-            @input="bindSearchTemp"
           >
           </p-input>
 
@@ -206,6 +206,7 @@ export default {
         search: '',
         role: '',
       },
+      keywordSearch: '',
       actions: {
         status: {
           title: 'Cập nhật trạng thái',
@@ -223,7 +224,6 @@ export default {
       filterRole: ROLE,
       statusUser: USER_STATUS_TAB,
       user: {},
-      inputTemp: '',
     }
   },
   created() {
@@ -240,12 +240,6 @@ export default {
     ...mapState('shared', {
       wareHouses: (state) => state.wareHouses,
     }),
-    getSearchValue() {
-      if (this.inputTemp !== '') {
-        return this.inputTemp
-      }
-      return this.filter.search
-    },
   },
   methods: {
     truncate,
@@ -273,9 +267,6 @@ export default {
         this.$toast.open({ message: result2.message, type: 'error' })
       }
       this.isFetching = false
-    },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
     },
     checkActive(status) {
       return status == this.statusActive ? true : false

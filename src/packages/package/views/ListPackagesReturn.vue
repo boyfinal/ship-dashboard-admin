@@ -8,8 +8,8 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            @input="bindSearchTemp"
-            :value.sync="getSearchValue"
+            @input="checkClearSearch"
+            v-model="keywordSearch"
             @keyup.enter="handleSearch"
             @clear="clearSearch"
           >
@@ -214,7 +214,6 @@ export default {
       isUploading: false,
       keywordSearch: '',
       isFetching: false,
-      inputTemp: '',
       statusTab: [
         {
           value: 'yes',
@@ -228,7 +227,6 @@ export default {
     }
   },
   created() {
-    this.keywordSearch = this.filter.search.trim()
     this.init()
   },
   computed: {
@@ -236,12 +234,6 @@ export default {
       packages: (state) => state.returnPackages,
       count: (state) => state.countReturnPackages,
     }),
-    getSearchValue() {
-      if (this.inputTemp !== '') {
-        return this.inputTemp
-      }
-      return this.keywordSearch
-    },
     showDetailPackage() {
       return !this.$isAccountant() && !this.$isSupport()
     },
@@ -289,9 +281,6 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
-    },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
     },
     selectDate(v) {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')

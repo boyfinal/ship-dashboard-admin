@@ -8,8 +8,8 @@
             prefixIcon="search"
             type="search"
             clearable
-            @input="bindSearchTemp"
-            :value.sync="getSearchValue"
+            v-model="keywordSearch"
+            @input="checkClearSearch"
             @keyup.enter="handleSearch"
           >
           </p-input>
@@ -181,7 +181,7 @@ export default {
         start_date: '',
         end_date: '',
       },
-      inputTemp: '',
+      keywordSearch: '',
       isFetching: false,
       claimStatus: CLAIM_STATUS,
       labelDate: `Tìm theo ngày`,
@@ -196,12 +196,6 @@ export default {
       listclaim: (state) => state.claims,
       totalCount: (state) => state.totalCount,
     }),
-    getSearchValue() {
-      if (this.inputTemp !== '') {
-        return this.inputTemp
-      }
-      return this.filter.search
-    },
     displayClaims() {
       return (this.listclaim || []).map((item) => {
         const supports = (item.supports || []).map(({ full_name }) => full_name)
@@ -255,9 +249,6 @@ export default {
         return
       }
       this.isFetching = false
-    },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
     },
     selectDate(v) {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')

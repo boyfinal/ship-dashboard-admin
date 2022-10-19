@@ -19,9 +19,9 @@
             type="search"
             clearable
             @keyup.enter="handleSearch"
-            :value="getSearchValue"
+            v-model="keywordSearch"
             @clear="clearSearch"
-            @input="bindSearchTemp"
+            @input="checkClearSearch"
           >
           </p-input>
           <p-button @click="visibleModal" type="info">
@@ -174,6 +174,7 @@ export default {
         status: '',
         warehouseID: '',
       },
+      keywordSearch: '',
       shipmentAction: null,
       isLoading: [],
       isFetching: false,
@@ -181,7 +182,6 @@ export default {
       visibleConfirmIntransit: false,
       ShipmentClosed: ShipmentClosed,
       loadingCreateWarehouse: false,
-      inputTemp: '',
     }
   },
   created() {
@@ -199,12 +199,6 @@ export default {
         wareHouses: (state) => state.wareHouses,
       }),
     }),
-    getSearchValue() {
-      if (this.inputTemp !== '') {
-        return this.inputTemp
-      }
-      return this.filter.search
-    },
   },
   methods: {
     ...mapActions('shipment', [
@@ -247,9 +241,6 @@ export default {
         return
       }
       this.isFetching = false
-    },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
     },
     showIntransitButton(shipment) {
       return shipment.status === ShipmentClosed

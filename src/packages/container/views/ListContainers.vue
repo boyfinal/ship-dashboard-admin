@@ -21,8 +21,8 @@
               type="search"
               class="mr-8"
               clearable
-              :value="getSearchValue"
-              @input="bindSearchTemp"
+              v-model="keywordSearch"
+              @input="checkClearSearch"
               @keyup.enter="handleSearch"
               @clear="clearSearch"
             >
@@ -267,7 +267,7 @@ export default {
         warehouse: '',
         type: CONTAINER_TYPE_MANUAL,
       },
-      inputTemp: '',
+      keywordSearch: '',
       isSubmitting: false,
       isFetching: false,
       visibleUpdateModal: false,
@@ -294,12 +294,6 @@ export default {
       ...mapState('shared', {
         wareHouses: (state) => state.wareHouses,
       }),
-      getSearchValue() {
-        if (this.inputTemp !== '') {
-          return this.inputTemp
-        }
-        return this.filter.search
-      },
       mapStatus() {
         let status = cloneDeep(MAP_NAME_STATUS_CONTAINER)
         Object.keys(status).map((x) => {
@@ -380,9 +374,6 @@ export default {
         return
       }
       this.isFetching = false
-    },
-    bindSearchTemp(e) {
-      this.inputTemp = e.trim()
     },
     showBtnUpdate(container) {
       return (

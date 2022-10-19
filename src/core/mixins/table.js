@@ -127,7 +127,12 @@ export default {
       this.filter.page = 1
       this.$set(this.filter, 'search', e.target.value.trim())
     },
-
+    checkClearSearch(e) {
+      if (e.trim() === '') {
+        this.filter.page = 1
+        this.$set(this.filter, 'search', '')
+      }
+    },
     clearSearch() {
       this.$set(this.filter, 'search', '')
     },
