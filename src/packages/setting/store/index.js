@@ -24,7 +24,7 @@ export const UPDATE_USER_INFO = 'updateUserInfo'
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
-  // USER_CLASS_PARTNER,
+  USER_CLASS_PARTNER,
   MAP_USER_CLASS_TEXT,
 } from '../constants'
 
@@ -49,11 +49,11 @@ export const state = {
       value: USER_CLASS_PRIORITY,
       active: false,
     },
-    // {
-    //   text: 'Partner',
-    //   value: USER_CLASS_PARTNER,
-    //   active: false,
-    // },
+    {
+      text: 'Partner',
+      value: USER_CLASS_PARTNER,
+      active: false,
+    },
   ],
   filter: {
     user_class: USER_CLASS_PUBLIC,
