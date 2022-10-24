@@ -129,7 +129,7 @@ import valider from '@core/valider'
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
-  // USER_CLASS_PARTNER,
+  USER_CLASS_PARTNER,
   DEBT_LIMIT,
   DAY_LIMIT,
   CANCEL_MAX_AMOUNT,
@@ -177,10 +177,10 @@ export default {
           text: 'Priority',
           value: USER_CLASS_PRIORITY,
         },
-        // {
-        //   text: 'Partner',
-        //   value: USER_CLASS_PARTNER,
-        // },
+        {
+          text: 'Partner',
+          value: USER_CLASS_PARTNER,
+        },
       ].find((i) => {
         return i.value == this.current.class
       }),
@@ -193,10 +193,10 @@ export default {
           text: 'Priority',
           value: USER_CLASS_PRIORITY,
         },
-        // {
-        //   text: 'Partner',
-        //   value: USER_CLASS_PARTNER,
-        // },
+        {
+          text: 'Partner',
+          value: USER_CLASS_PARTNER,
+        },
       ],
       debtLimit: DEBT_LIMIT,
       dayLimit: DAY_LIMIT,
