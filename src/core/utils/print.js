@@ -53,10 +53,11 @@ export function printImage(url) {
 }
 
 export function printDocument(url) {
-  const old = document.getElementById('print')
-  old && document.body.removeChild(old)
+  let iframe = document.getElementById('print')
+  if (!iframe) {
+    iframe = document.createElement('iframe')
+  }
 
-  const iframe = document.createElement('iframe')
   iframe.style.display = 'none'
   iframe.src = url
   iframe.id = 'print'
