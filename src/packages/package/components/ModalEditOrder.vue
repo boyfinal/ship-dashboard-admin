@@ -543,7 +543,7 @@ export default {
           .string()
           .required('Mã vùng không để trống')
           .matches(
-            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,15}$/,
+            /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,30}$/,
             'Mã vùng không hợp lệ'
           ),
         postcode: y

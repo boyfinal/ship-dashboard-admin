@@ -785,7 +785,7 @@
 </style>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { printImage } from '@core/utils/print'
+import { print } from '@core/utils/print'
 
 import {
   FETCH_PACKAGE_DETAIL,
@@ -1209,26 +1209,9 @@ export default {
 
     async showContent() {
       document.activeElement && document.activeElement.blur()
-      if (this.blob && this.isImage) {
-        printImage(this.blob)
-        return
-      }
-      const res = await api.fetchBarcodeFile({
-        url: this.package_detail.package.label,
-        type: 'labels',
-      })
-      if (!res && res.error) {
-        this.$toast.open({
-          type: 'error',
-          message: res.errorMessage,
-          duration: 3000,
-        })
-        return
-      }
 
       try {
-        this.blob = (window.webkitURL || window.URL).createObjectURL(res)
-        printImage(this.blob)
+        print(this.package_detail.package.label)
       } catch (error) {
         this.$toast.error('File error !!!')
       }

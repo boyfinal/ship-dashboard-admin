@@ -97,7 +97,7 @@ export async function print(url) {
   )
 
   if (!res || res.error) {
-    return this.$toast.error(res.errorMessage || '')
+    throw res.error
   }
 
   const src = (window.webkitURL || window.URL).createObjectURL(res)
