@@ -885,7 +885,6 @@ export default {
         package_products: package_products,
       }
       this.isUpdate = false
-      this.handleClose()
       this.$emit('submit', params)
     },
 

@@ -1268,8 +1268,6 @@ export default {
     },
 
     async handleUpdate(params) {
-      this.isVisibleModal = false
-
       if (this.isSubmitting) return
 
       this.isSubmitting = true
@@ -1280,6 +1278,8 @@ export default {
         this.isSubmitting = false
         return
       }
+
+      this.isVisibleModal = false
       this.$toast.success('Sửa đơn hàng thành công', { duration: 3000 })
       await this.init2()
     },
