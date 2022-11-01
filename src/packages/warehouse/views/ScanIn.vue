@@ -714,8 +714,8 @@ export default {
     barcodeSubmit(keyword) {
       this.disableInput = true
       keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 23) {
+        keyword = keyword.slice(-23)
       }
       this.keyword = keyword
       this.beforeFetchPackage(this.keyword)
