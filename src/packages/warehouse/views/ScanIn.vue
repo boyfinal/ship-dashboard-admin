@@ -767,8 +767,8 @@ export default {
 
       this.iscaned = false
       this.reset()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 23) {
+        keyword = keyword.slice(-23)
       }
       const res = await this.fetchPackage(keyword)
       if (res.error) {
