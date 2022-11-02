@@ -15,8 +15,8 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "aws-sdk": "^2.1229.0",
     "@mdi/font": "^3.9.97",
+    "aws-sdk": "^2.1229.0",
     "crypto-js": "^3.3.0",
     "date-fns": "^2.16.1",
     "firebase": "^9.6.9",
@@ -66,14 +66,15 @@
     "expose-loader": "^2.0.0",
     "imagemin-lint-staged": "^0.4.0",
     "lint-staged": "^8.2.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.3",
     "npm-run-all": "^4.1.5",
     "sass": "^1.32.8",
     "sass-loader": "^7.3.1",
     "vue-cli-plugin-storybook": "^0.5.1",
     "vue-loader": "^15.9.6",
     "vue-svg-loader": "^0.12.0",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "selenium-webdriver": "^4.1.2"
   },
   "gitHooks": {
     "pre-commit": "cross-env PRE_COMMIT=true lint-staged"
