@@ -2,7 +2,7 @@ FROM node:12.13.0 as builder
 WORKDIR /shipping-admin
 ADD ./ /shipping-admin
 
-RUN yarn install
+RUN npm install
 ARG MODE
 RUN yarn run build --mode ${MODE}
 
