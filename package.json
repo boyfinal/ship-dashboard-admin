@@ -15,8 +15,8 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "aws-sdk": "^2.1229.0",
     "@mdi/font": "^3.9.97",
+    "aws-sdk": "^2.1229.0",
     "crypto-js": "^3.3.0",
     "date-fns": "^2.16.1",
     "firebase": "^9.6.9",
