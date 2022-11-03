@@ -332,8 +332,8 @@ export default {
 
     beforeFetchPackge(keyword) {
       keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 23) {
+        keyword = keyword.slice(-23)
       }
       if (this.keyword === keyword) return
 
