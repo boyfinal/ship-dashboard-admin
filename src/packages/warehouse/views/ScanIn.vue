@@ -713,7 +713,7 @@ export default {
 
     barcodeSubmit(keyword) {
       this.disableInput = true
-      keyword = keyword.trim()
+      keyword = keyword.replaceAll(']', ' ').trim()
       if (keyword.length > 23) {
         keyword = keyword.slice(-23)
       }
@@ -767,6 +767,7 @@ export default {
 
       this.iscaned = false
       this.reset()
+      keyword = keyword.replaceAll(']', ' ').trim()
       if (keyword.length > 23) {
         keyword = keyword.slice(-23)
       }
