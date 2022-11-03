@@ -38,14 +38,7 @@
             <div v-if="package_detail.package.tracking">
               <div>Last mile tracking </div>
               <div>
-                <a
-                  target="_blank"
-                  :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`"
-                >
-                  {{
-                    $evaluate('package_detail.package.tracking.tracking_number')
-                  }}
-                </a>
+                <track-link :current="package_detail.package" />
               </div>
             </div>
             <div>
@@ -829,6 +822,7 @@ import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
 import { ROLE_SUPPORT } from '@core/constants'
 import mixinTable from '@core/mixins/table'
+import TrackLink from '../components/TrackLink.vue'
 
 export default {
   name: 'PackageDetail',
@@ -838,6 +832,7 @@ export default {
     ModalConfirm,
     ModalCreateExtraFee,
     OverLoading,
+    TrackLink,
   },
   data() {
     return {
