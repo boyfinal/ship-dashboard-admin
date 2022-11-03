@@ -715,7 +715,7 @@ export default {
       this.disableInput = true
       keyword = keyword.replaceAll(']', ' ').trim()
       if (keyword.length > 23) {
-        keyword = keyword.slice(-23)
+        keyword = keyword.slice(-23).trim()
       }
       this.keyword = keyword
       this.beforeFetchPackage(this.keyword)
@@ -769,7 +769,7 @@ export default {
       this.reset()
       keyword = keyword.replaceAll(']', ' ').trim()
       if (keyword.length > 23) {
-        keyword = keyword.slice(-23)
+        keyword = keyword.slice(-23).trim()
       }
       const res = await this.fetchPackage(keyword)
       if (res.error) {

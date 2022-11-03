@@ -333,7 +333,7 @@ export default {
     beforeFetchPackge(keyword) {
       keyword = keyword.replaceAll(']', ' ').trim()
       if (keyword.length > 23) {
-        keyword = keyword.slice(-23)
+        keyword = keyword.slice(-23).trim()
       }
       if (this.keyword === keyword) return
 
