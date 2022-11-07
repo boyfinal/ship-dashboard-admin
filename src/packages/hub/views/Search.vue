@@ -7,7 +7,7 @@
           prefixIcon="text"
           type="search"
           clearable
-          v-model="keywordSearch"
+          v-model="filter.search"
           @input="checkClearSearch"
           @clear="clearSearch"
           @keyup.enter="searchHandle"
@@ -140,7 +140,6 @@ export default {
         end_date: '',
         page: 1,
       },
-      keywordSearch: '',
       barcode: '',
       tabStatus: HUB_TAB,
       isFetching: false,
