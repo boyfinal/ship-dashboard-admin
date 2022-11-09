@@ -24,7 +24,7 @@ export default {
     return http.put(`/shipments/cancel/${payload.id}`)
   },
   closeShipment(payload) {
-    return http.put(`/shipments/close/${payload.id}`, payload)
+    return http.put(`/shipments/close`, payload)
   },
   intransitShipment(payload) {
     return http.put(`/shipments/intransit/${payload.id}`)
