@@ -13,9 +13,11 @@
     display: flex;
     align-items: center;
     position: relative;
+    padding-left: 15px;
     input {
       position: absolute;
       bottom: 5px;
+      left: 0;
     }
     .select-export {
       margin-top: 0;
