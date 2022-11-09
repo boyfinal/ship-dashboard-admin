@@ -385,6 +385,7 @@ import {
   ShipmentDelivered,
   ShipmentIntransit,
   MAP_NAME_STATUS_SHIPMENT,
+  DEFAULT_ACCOUNT_UPS,
 } from '../constants'
 import Browser from '@core/helpers/browser'
 import {
@@ -455,6 +456,16 @@ export default {
       },
       containerTypeApi() {
         return CONTAINER_TYPE_API
+      },
+      showModalAccount() {
+        let isShow = false
+        const containers = this.containers || []
+        containers.map((item) => {
+          if (item.type === CONTAINER_TYPE_API) {
+            isShow = true
+          }
+        })
+        return isShow
       },
       displayContainers() {
         return (this.containers || []).map((item) => {
@@ -627,12 +638,20 @@ export default {
       this.init()
     },
     handleButtonClose() {
-      this.isShowModalAccount = true
+      if (this.showModalAccount) {
+        this.isShowModalAccount = true
+      } else {
+        const payload = {
+          ups_account: DEFAULT_ACCOUNT_UPS,
+        }
+        this.handleCloseShipment(payload)
+      }
     },
     async handleCloseShipment(payload) {
       this.loading = true
       payload.id = parseInt(this.$route.params.id)
       const result = await this[CLOSE_SHIPMENT](payload)
+      this.isShowModalAccount = false
       this.loading = false
       if (!result.success) {
         this.$toast.open({

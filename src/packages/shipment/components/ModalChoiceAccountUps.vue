@@ -11,14 +11,14 @@
         class="col-6 radio-inline"
         v-model="account_ups"
         :native-value="optionAccountDefault"
-        >Account 1 (default)</p-radio
+        >Phoenix (default)</p-radio
       >
       <p-radio
         type="info"
         class="col-6 radio-inline"
         v-model="account_ups"
         :native-value="optionAcocount2"
-        >Account 2</p-radio
+        >Viva</p-radio
       >
     </div>
 
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { DEFAULT_ACCOUNT_UPS, OPTION_ACCOUNT_UPS2 } from '../constants'
 export default {
   name: 'ModalChoiceAccountUps',
   props: {
@@ -52,9 +53,9 @@ export default {
   },
   data() {
     return {
-      optionAccountDefault: 1,
-      optionAcocount2: 2,
-      account_ups: 1,
+      optionAccountDefault: DEFAULT_ACCOUNT_UPS,
+      optionAcocount2: OPTION_ACCOUNT_UPS2,
+      account_ups: DEFAULT_ACCOUNT_UPS,
     }
   },
   methods: {
@@ -63,7 +64,7 @@ export default {
     },
     async handleSave() {
       const payload = {
-        account_ups: this.account_ups,
+        ups_account: this.account_ups,
       }
       this.$emit('close', payload)
     },
@@ -77,7 +78,7 @@ export default {
 }
 @media screen and (min-width: 1088px) {
   .modal-custom {
-    width: 360px !important;
+    width: 340px !important;
   }
 }
 .p-modal-content .p-radio {

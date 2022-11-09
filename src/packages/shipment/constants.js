@@ -8,6 +8,8 @@ export const WareHouseTypeInternational = 1
 
 export const WAREHOUSE_STATUS_ACTIVE = 1
 export const WAREHOUSE_TYPE_INTERNATIONAL = 1
+export const DEFAULT_ACCOUNT_UPS = 1
+export const OPTION_ACCOUNT_UPS2 = 2
 
 export const SHIPMENT_STATUS_TAB = [
   {
