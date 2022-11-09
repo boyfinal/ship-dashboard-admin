@@ -56,8 +56,8 @@
                         <p-svg name="eye" stroke="black"></p-svg>
                       </a>
                       <a
-                        v-if="!$isMarketing()"
                         href="#"
+                        v-if="!$isMarketing()"
                         @click.prevent="loadDetailPromotion(item)"
                       >
                         <p-svg
