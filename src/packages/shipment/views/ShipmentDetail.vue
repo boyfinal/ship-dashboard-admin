@@ -109,7 +109,7 @@
             >
             <p-button
               type="info"
-              @click="handleCloseShipment"
+              @click="handleButtonClose"
               :loading="loading"
               :class="`mr-3`"
             >
@@ -344,6 +344,12 @@
       :visible.sync="visibleUpdateModal"
     >
     </modal-update-container>
+    <modal-choice-account-ups
+      :visible.sync="isShowModalAccount"
+      @close="handleCloseShipment"
+      :loading="loading"
+    >
+    </modal-choice-account-ups>
   </div>
 </template>
 
@@ -365,6 +371,7 @@ import {
 } from '../store'
 import { CONTAINER_CLOSE } from '@/packages/container/contants'
 import ModalUpdateContainer from '@/packages/container/components/ModalUpdateContainer'
+import ModalChoiceAccountUps from '../components/ModalChoiceAccountUps'
 import ModalListContainer from '../components/ModalListContainer'
 import { GET_LABEL, UPDATE_CONTAINER } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
@@ -393,6 +400,7 @@ export default {
     ModalListContainer,
     ModalConfirm,
     ModalUpdateContainer,
+    ModalChoiceAccountUps,
   },
   data() {
     return {
@@ -411,6 +419,7 @@ export default {
       loadingLabel: false,
       ShipmentClosed: ShipmentClosed,
       isShowModalListContainer: false,
+      isShowModalAccount: false,
       visibleConfirmIntransit: false,
     }
   },
@@ -617,11 +626,12 @@ export default {
       })
       this.init()
     },
-    async handleCloseShipment() {
+    handleButtonClose() {
+      this.isShowModalAccount = true
+    },
+    async handleCloseShipment(payload) {
       this.loading = true
-      const payload = {
-        id: parseInt(this.$route.params.id),
-      }
+      payload.id = parseInt(this.$route.params.id)
       const result = await this[CLOSE_SHIPMENT](payload)
       this.loading = false
       if (!result.success) {
