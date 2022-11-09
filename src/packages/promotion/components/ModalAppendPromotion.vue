@@ -33,10 +33,18 @@
           </div>
           <div class="action">
             <div class="icon-container">
-              <p-svg name="add_all" @click="addAllUser"></p-svg>
-              <p-svg name="add" @click="addSelectedUser"></p-svg>
-              <p-svg name="remove" @click="removeSelectedUser"></p-svg>
-              <p-svg name="remove_all" @click="removeAllUser"></p-svg>
+              <a href="#" @click.prevent="addAllUser">
+                <p-svg name="add_all"></p-svg>
+              </a>
+              <a href="#" @click.prevent="addSelectedUser">
+                <p-svg name="add"></p-svg>
+              </a>
+              <a href="#" @click.prevent="removeSelectedUser">
+                <p-svg name="remove"></p-svg>
+              </a>
+              <a href="#" @click.prevent="removeAllUser">
+                <p-svg name="remove_all"></p-svg>
+              </a>
             </div>
           </div>
           <div>
@@ -238,6 +246,7 @@ export default {
       this.removeSelectedUser()
     },
     addSelectedUser() {
+      console.log(1)
       let checked = []
       this.users = this.users.filter((i) => {
         if (this.checkedLeft.includes(i.id) && this.selected.indexOf(i) < 0) {

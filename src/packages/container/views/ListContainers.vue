@@ -111,6 +111,7 @@
                     </td>
                     <td>
                       <router-link
+                        v-if="item.shipment_id"
                         :to="{
                           name: 'shipment-detail',
                           params: {
@@ -147,11 +148,9 @@
                         type="dark"
                         :active="true"
                       >
-                        <p-svg
-                          name="clock"
-                          class="mr-8"
-                          @click="showHistoryContainer(item)"
-                        ></p-svg>
+                        <a href="#" @click="showHistoryContainer(item)">
+                          <p-svg name="clock" class="mr-8"></p-svg>
+                        </a>
                       </p-tooltip>
                       <p-tooltip
                         :label="`Sửa tracking`"
@@ -160,11 +159,13 @@
                         type="dark"
                         :active="true"
                       >
-                        <p-svg
-                          name="update"
-                          v-if="showBtnUpdate(item)"
+                        <a
+                          href="#"
                           @click="handleShowUpdateModal(item)"
-                        ></p-svg>
+                          v-if="showBtnUpdate(item)"
+                        >
+                          <p-svg name="update"></p-svg>
+                        </a>
                       </p-tooltip>
                     </td>
                   </tr>

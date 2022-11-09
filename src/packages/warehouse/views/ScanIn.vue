@@ -254,10 +254,12 @@
                       </td>
                       <td v-html="item.statusHTML"></td>
                       <td width="10">
-                        <p-svg
-                          name="return"
+                        <a
+                          href="#"
                           @click.prevent="showModalReturnHandle(item)"
-                        ></p-svg>
+                        >
+                          <p-svg name="return"></p-svg>
+                        </a>
                       </td>
                     </tr>
                   </tbody>
