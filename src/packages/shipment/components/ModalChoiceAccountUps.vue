@@ -50,16 +50,11 @@ export default {
       default: () => [],
     },
   },
-  computed: {
-    getDefaultOp() {
-      return this.optionAccountDefault
-    },
-  },
   data() {
     return {
       optionAccountDefault: 1,
       optionAcocount2: 2,
-      account_ups: this.getDefaultOp,
+      account_ups: 1,
     }
   },
   methods: {
