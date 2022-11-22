@@ -1027,7 +1027,7 @@ export default {
         !this.isPkgExceedNotEstimate
       ) {
         result.push({
-          extra_fee_types: { name: 'Phụ phí cao điểm' },
+          extra_fee_types: { name: 'Peak season surcharge' },
           amount: this.calculateFee(this.package_detail.package.weight),
         })
       }
