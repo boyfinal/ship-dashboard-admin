@@ -19,8 +19,9 @@
             type="search"
             clearable
             @keyup.enter="handleSearch"
-            :value="filter.search"
+            v-model="keywordSearch"
             @clear="clearSearch"
+            @input="checkClearSearch"
           >
           </p-input>
           <p-button @click="visibleModal" type="info">
@@ -173,6 +174,7 @@ export default {
         status: '',
         warehouseID: '',
       },
+      keywordSearch: '',
       shipmentAction: null,
       isLoading: [],
       isFetching: false,

@@ -16,7 +16,7 @@
         :class="`wb-${suffixIcon}`"
       ></i>
       <i
-        class="form-control-icon form-control-icon-right "
+        class="form-control-icon form-control-icon-right"
         v-else-if="isShowClear"
         @click="clear"
       >
@@ -46,12 +46,16 @@
         <slot name="prepend"></slot>
       </div>
 
-      <p-svg
+      <a
+        href="#"
+        @click.prevent="togglePasswordVisibelity()"
         v-if="hiddenPass == 'on'"
-        class="form-control-icon-eye form-control-icon-right"
-        :name="`${typeInputPassword == 'password' ? 'eye' : 'eye-close'}`"
-        @click="togglePasswordVisibelity()"
-      ></p-svg>
+      >
+        <p-svg
+          class="form-control-icon-eye form-control-icon-right"
+          :name="`${typeInputPassword == 'password' ? 'eye' : 'eye-close'}`"
+        ></p-svg>
+      </a>
 
       <input
         :class="formControlClasses"
@@ -99,16 +103,17 @@
         v-if="prefixIcon"
       ></p-svg>
 
-      <p-svg
-        name="search"
+      <i
         class="form-control-icon form-control-icon-right"
         v-if="suffixIcon"
         style="cursor: pointer"
         @click="suffixFunc"
-      ></p-svg>
+      >
+        <p-svg name="search"></p-svg>
+      </i>
 
       <i
-        class="form-control-icon form-control-icon-right "
+        class="form-control-icon form-control-icon-right"
         v-else-if="isShowClear"
         @click="clear"
       >

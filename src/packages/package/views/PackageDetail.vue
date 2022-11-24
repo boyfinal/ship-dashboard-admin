@@ -38,14 +38,7 @@
             <div v-if="package_detail.package.tracking">
               <div>Last mile tracking </div>
               <div>
-                <a
-                  target="_blank"
-                  :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${package_detail.package.tracking.tracking_number}`"
-                >
-                  {{
-                    $evaluate('package_detail.package.tracking.tracking_number')
-                  }}
-                </a>
+                <track-link :current="package_detail.package" />
               </div>
             </div>
             <div>
@@ -785,7 +778,7 @@
 </style>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { printImage } from '@core/utils/print'
+import { print } from '@core/utils/print'
 
 import {
   FETCH_PACKAGE_DETAIL,
@@ -829,6 +822,7 @@ import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
 import { ROLE_SUPPORT } from '@core/constants'
 import mixinTable from '@core/mixins/table'
+import TrackLink from '../components/TrackLink.vue'
 
 export default {
   name: 'PackageDetail',
@@ -838,6 +832,7 @@ export default {
     ModalConfirm,
     ModalCreateExtraFee,
     OverLoading,
+    TrackLink,
   },
   data() {
     return {
@@ -1032,7 +1027,7 @@ export default {
         !this.isPkgExceedNotEstimate
       ) {
         result.push({
-          extra_fee_types: { name: 'Phụ phí cao điểm' },
+          extra_fee_types: { name: 'Peak season surcharge' },
           amount: this.calculateFee(this.package_detail.package.weight),
         })
       }
@@ -1209,26 +1204,9 @@ export default {
 
     async showContent() {
       document.activeElement && document.activeElement.blur()
-      if (this.blob && this.isImage) {
-        printImage(this.blob)
-        return
-      }
-      const res = await api.fetchBarcodeFile({
-        url: this.package_detail.package.label,
-        type: 'labels',
-      })
-      if (!res && res.error) {
-        this.$toast.open({
-          type: 'error',
-          message: res.errorMessage,
-          duration: 3000,
-        })
-        return
-      }
 
       try {
-        this.blob = (window.webkitURL || window.URL).createObjectURL(res)
-        printImage(this.blob)
+        print(this.package_detail.package.label)
       } catch (error) {
         this.$toast.error('File error !!!')
       }
@@ -1285,8 +1263,6 @@ export default {
     },
 
     async handleUpdate(params) {
-      this.isVisibleModal = false
-
       if (this.isSubmitting) return
 
       this.isSubmitting = true
@@ -1297,6 +1273,8 @@ export default {
         this.isSubmitting = false
         return
       }
+
+      this.isVisibleModal = false
       this.$toast.success('Sửa đơn hàng thành công', { duration: 3000 })
       await this.init2()
     },

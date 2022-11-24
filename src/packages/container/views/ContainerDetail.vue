@@ -504,8 +504,10 @@ export default {
         return
       }
 
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 40) {
+        keyword = keyword.slice(-23).trim()
+      } else if (keyword.length > 24) {
+        keyword = keyword.slice(-22).trim()
       }
 
       const payload = {

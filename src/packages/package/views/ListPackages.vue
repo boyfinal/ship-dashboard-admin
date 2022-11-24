@@ -8,7 +8,8 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="keywordSearch"
+            v-model="keywordSearch"
+            @input="checkClearSearch"
             @keyup.enter="handleSearch"
             @clear="clearSearch"
           >
@@ -155,7 +156,12 @@
                       >
                         N/A
                       </span>
-                      <span class="svg" v-if="showPackageCode(item)">
+                      <span
+                        class="svg"
+                        v-if="
+                          showPackageCode(item) && item.country_code != 'AU'
+                        "
+                      >
                         <p-tooltip
                           class="item_name"
                           :label="` Track `"
@@ -200,14 +206,7 @@
                       </span>
                     </td>
                     <td class="text-nowrap">
-                      <a
-                        v-if="item.tracking"
-                        target="_blank"
-                        class="on-hover"
-                        :href="`https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${item.tracking.tracking_number}`"
-                      >
-                        {{ item.tracking.tracking_number }}
-                      </a>
+                      <track-link v-if="item.tracking" :current="item" />
                       <span
                         :class="{ 'no-track-code': totalSelected <= 0 }"
                         v-else
@@ -306,6 +305,7 @@ import {
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import TrackLink from '../components/TrackLink.vue'
 
 export default {
   name: 'ListPackages',
@@ -314,6 +314,7 @@ export default {
     EmptySearchResult,
     PackageStatusTab,
     ModalExport,
+    TrackLink,
   },
   props: {
     user_id: {
@@ -370,7 +371,6 @@ export default {
       count: (state) => state.countPackages,
       count_status: (state) => state.count_status,
     }),
-
     hiddenClass() {
       return this.action.selected.length > 0 || this.isAllChecked
     },
@@ -416,7 +416,6 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      this.keywordSearch = this.filter.search.trim()
       const result = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
       if (!result.success) {

@@ -182,6 +182,7 @@ export default {
       searchSubmit: HUB_SEARCH_ITEMS,
       countSearchSubmit: HUB_COUNT_SEARCH_ITEMS,
     }),
+    ...mapActions('container', [GET_LABEL]),
     async searchHandle() {
       this.handleUpdateRouteQuery()
 

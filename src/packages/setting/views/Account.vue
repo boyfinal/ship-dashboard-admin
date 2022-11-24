@@ -8,7 +8,8 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="filter.search"
+            @input="checkClearSearch"
+            v-model="keywordSearch"
             @keyup.enter="handleSearch"
           >
           </p-input>
@@ -205,6 +206,7 @@ export default {
         search: '',
         role: '',
       },
+      keywordSearch: '',
       actions: {
         status: {
           title: 'Cập nhật trạng thái',
@@ -266,7 +268,6 @@ export default {
       }
       this.isFetching = false
     },
-
     checkActive(status) {
       return status == this.statusActive ? true : false
     },
@@ -363,7 +364,7 @@ export default {
   },
   watch: {
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

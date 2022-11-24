@@ -52,11 +52,13 @@
                           <td width="200">{{ item.code }}</td>
                           <td>{{ item.type }}</td>
                           <td>
-                            <p-svg
-                              @click="handelModalConfirm(item)"
-                              name="x"
-                            ></p-svg
-                          ></td>
+                            <a
+                              href="#"
+                              @click.prevent="handelModalConfirm(item)"
+                            >
+                              <p-svg name="x"></p-svg>
+                            </a>
+                          </td>
                         </tr>
                       </tbody>
                     </table>

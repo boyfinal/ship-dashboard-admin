@@ -4,10 +4,11 @@
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
           placeholder="Nhập mã Ups, mã kiện, mã đơn,..."
-          prefixIcon="search"
+          prefixIcon="text"
           type="search"
           clearable
           v-model="filter.search"
+          @input="checkClearSearch"
           @clear="clearSearch"
           @keyup.enter="searchHandle"
         >
@@ -173,7 +174,6 @@ export default {
     barcodeSubmit() {},
     async searchHandle() {
       this.handleUpdateRouteQuery()
-
       const filters = Object.assign({}, this.filter)
       filters.status = HUB_TAB_IDS[this.filter.status]
       if (this.filter.search.length > 22) {

@@ -7,7 +7,8 @@
             :placeholder="getPlaceHolder"
             prefixIcon="search"
             type="search"
-            :value="filter.search"
+            v-model="keywordSearch"
+            @input="checkClearSearch"
             @keyup.enter="handleSearch"
           >
           </p-input>
@@ -233,6 +234,7 @@ export default {
       selectedItem: null,
       money: [],
       validateErrors: [],
+      keywordSearch: '',
     }
   },
   created() {

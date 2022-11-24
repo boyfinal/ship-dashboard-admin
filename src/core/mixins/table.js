@@ -127,7 +127,12 @@ export default {
       this.filter.page = 1
       this.$set(this.filter, 'search', e.target.value.trim())
     },
-
+    checkClearSearch(e) {
+      if (e.trim() === '') {
+        this.filter.page = 1
+        this.$set(this.filter, 'search', '')
+      }
+    },
     clearSearch() {
       this.$set(this.filter, 'search', '')
     },
@@ -155,17 +160,14 @@ export default {
      * @param weight
      */
 
-    calculateFee(weight) {
-      const rate = this.$store.state.shared.configs.extra_fee
-      const min = +rate * 0.1
-      if (+rate == 0) {
+    calculateFee() {
+      if (
+        !this.$store.state.shared.configs ||
+        !this.$store.state.shared.configs.extra_fee
+      )
         return 0
-      }
-      var fee = (+rate * weight) / 1000
-      if (fee < min) {
-        fee = min
-      }
-      return roundNumberToTwoDecimalPlaces(+fee, 2)
+      const fee = parseFloat(this.$store.state.shared.configs.extra_fee)
+      return roundNumberToTwoDecimalPlaces(fee, 2)
     },
   },
   watch: {

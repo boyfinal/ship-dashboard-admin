@@ -109,7 +109,7 @@
             >
             <p-button
               type="info"
-              @click="handleCloseShipment"
+              @click="handleButtonClose"
               :loading="loading"
               :class="`mr-3`"
             >
@@ -344,6 +344,12 @@
       :visible.sync="visibleUpdateModal"
     >
     </modal-update-container>
+    <modal-choice-account-ups
+      :visible.sync="isShowModalAccount"
+      @close="handleCloseShipment"
+      :loading="loading"
+    >
+    </modal-choice-account-ups>
   </div>
 </template>
 
@@ -365,6 +371,7 @@ import {
 } from '../store'
 import { CONTAINER_CLOSE } from '@/packages/container/contants'
 import ModalUpdateContainer from '@/packages/container/components/ModalUpdateContainer'
+import ModalChoiceAccountUps from '../components/ModalChoiceAccountUps'
 import ModalListContainer from '../components/ModalListContainer'
 import { GET_LABEL, UPDATE_CONTAINER } from '../../container/store'
 import { cloneDeep } from '../../../core/utils'
@@ -378,6 +385,7 @@ import {
   ShipmentDelivered,
   ShipmentIntransit,
   MAP_NAME_STATUS_SHIPMENT,
+  DEFAULT_ACCOUNT_UPS,
 } from '../constants'
 import Browser from '@core/helpers/browser'
 import {
@@ -393,6 +401,7 @@ export default {
     ModalListContainer,
     ModalConfirm,
     ModalUpdateContainer,
+    ModalChoiceAccountUps,
   },
   data() {
     return {
@@ -411,6 +420,7 @@ export default {
       loadingLabel: false,
       ShipmentClosed: ShipmentClosed,
       isShowModalListContainer: false,
+      isShowModalAccount: false,
       visibleConfirmIntransit: false,
     }
   },
@@ -446,6 +456,16 @@ export default {
       },
       containerTypeApi() {
         return CONTAINER_TYPE_API
+      },
+      showModalAccount() {
+        let isShow = false
+        const containers = this.containers || []
+        containers.map((item) => {
+          if (item.type === CONTAINER_TYPE_API) {
+            isShow = true
+          }
+        })
+        return isShow
       },
       displayContainers() {
         return (this.containers || []).map((item) => {
@@ -617,12 +637,21 @@ export default {
       })
       this.init()
     },
-    async handleCloseShipment() {
-      this.loading = true
-      const payload = {
-        id: parseInt(this.$route.params.id),
+    handleButtonClose() {
+      if (this.showModalAccount) {
+        this.isShowModalAccount = true
+      } else {
+        const payload = {
+          ups_account: DEFAULT_ACCOUNT_UPS,
+        }
+        this.handleCloseShipment(payload)
       }
+    },
+    async handleCloseShipment(payload) {
+      this.loading = true
+      payload.id = parseInt(this.$route.params.id)
       const result = await this[CLOSE_SHIPMENT](payload)
+      this.isShowModalAccount = false
       this.loading = false
       if (!result.success) {
         this.$toast.open({

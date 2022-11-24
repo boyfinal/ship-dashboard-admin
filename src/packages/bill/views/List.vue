@@ -251,11 +251,10 @@
                   type="dark"
                   :active="true"
                 >
-                  <p-svg
-                    name="download"
-                    @click.prevent="handleShowModalExport"
-                  ></p-svg
-                ></p-tooltip>
+                  <a href="#" @click.prevent="handleShowModalExport">
+                    <p-svg name="download"></p-svg>
+                  </a>
+                </p-tooltip>
 
                 <p-tooltip
                   :label="'Cài đặt'"
@@ -265,10 +264,9 @@
                   :active="true"
                   v-if="$isAdmin()"
                 >
-                  <p-svg
-                    name="setting_user"
-                    @click.prevent="handleShowModalSetting"
-                  ></p-svg>
+                  <a href="#" @click.prevent="handleShowModalSetting">
+                    <p-svg name="setting_user"></p-svg>
+                  </a>
                 </p-tooltip>
               </div>
             </div>

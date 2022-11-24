@@ -182,9 +182,8 @@ import {
 import { mapActions, mapState, mapMutations } from 'vuex'
 import { PACKAGE_WAREHOUSE_STATUS_PICK } from '../constants'
 import mixinBarcode from '@core/mixins/barcode'
-import { printImage } from '@core/utils/print'
+import { print } from '@core/utils/print'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
-import http from '@core/services/http'
 import { FETCH_SERVICE, FETCH_WAREHOUSE } from '../../shared/store'
 
 export default {
@@ -333,8 +332,10 @@ export default {
 
     beforeFetchPackge(keyword) {
       keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 40) {
+        keyword = keyword.slice(-23).trim()
+      } else if (keyword.length > 24) {
+        keyword = keyword.slice(-22).trim()
       }
       if (this.keyword === keyword) return
 
@@ -529,24 +530,7 @@ export default {
 
       try {
         if (!this.tracking.label_url) return
-        const url = this.tracking.label_url
-
-        if (/^http/gi.test(url)) {
-          printImage(url)
-          return
-        }
-
-        const res = await http.get(
-          `/uploads/file-export/download?type=labels&url=${url}`,
-          { type: 'blob' }
-        )
-
-        if (!res || res.error) {
-          return this.$toast.error(res.errorMessage || '')
-        }
-
-        const src = (window.webkitURL || window.URL).createObjectURL(res)
-        printImage(src)
+        print(this.tracking.label_url)
       } catch (error) {
         this.$toast.error('File error !!!')
       }

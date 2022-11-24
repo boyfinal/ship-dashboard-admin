@@ -8,7 +8,8 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            :value.sync="keywordSearch"
+            @input="checkClearSearch"
+            v-model="keywordSearch"
             @keyup.enter="handleSearch"
             @clear="clearSearch"
           >
@@ -226,7 +227,6 @@ export default {
     }
   },
   created() {
-    this.keywordSearch = this.filter.search.trim()
     this.init()
   },
   computed: {
@@ -266,7 +266,7 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      this.keywordSearch = this.filter.search.trim()
+      // this.keywordSearch = this.filter.search.trim()
 
       const { request_reship, ...filters } = this.filter
       const payload = {

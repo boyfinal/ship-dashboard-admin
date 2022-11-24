@@ -197,11 +197,10 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { truncate } from '@core/utils/string'
-import { printImage } from '@core/utils/print'
+import { print } from '@core/utils/print'
 import ModalExport from '../components/ModalExport'
 import ModalWrongWeight from '../components/ModalWrongWeight'
 import ModalLabel from '../components/ModalLabel'
-import api from '../api'
 import { date } from '@core/utils/datetime'
 import {
   PACKAGE_IN_WAREHOUSE_STATUS_TAB,
@@ -388,26 +387,8 @@ export default {
       }
 
       document.activeElement && document.activeElement.blur()
-      if (this.blob && this.isImage) {
-        printImage(this.blob)
-        return
-      }
-      const res = await api.fetchBarcodeFile({
-        url: label,
-        type: 'labels',
-      })
-      if (!res && res.error) {
-        this.$toast.open({
-          type: 'error',
-          message: res.errorMessage,
-          duration: 3000,
-        })
-        return
-      }
-
       try {
-        this.blob = (window.webkitURL || window.URL).createObjectURL(res)
-        printImage(this.blob)
+        print(label)
       } catch (error) {
         this.$toast.error('File error !!!')
       }

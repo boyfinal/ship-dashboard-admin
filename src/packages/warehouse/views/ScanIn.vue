@@ -254,10 +254,12 @@
                       </td>
                       <td v-html="item.statusHTML"></td>
                       <td width="10">
-                        <p-svg
-                          name="return"
+                        <a
+                          href="#"
                           @click.prevent="showModalReturnHandle(item)"
-                        ></p-svg>
+                        >
+                          <p-svg name="return"></p-svg>
+                        </a>
                       </td>
                     </tr>
                   </tbody>
@@ -714,8 +716,10 @@ export default {
     barcodeSubmit(keyword) {
       this.disableInput = true
       keyword = keyword.trim()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 40) {
+        keyword = keyword.slice(-23).trim()
+      } else if (keyword.length > 24) {
+        keyword = keyword.slice(-22).trim()
       }
       this.keyword = keyword
       this.beforeFetchPackage(this.keyword)
@@ -767,8 +771,11 @@ export default {
 
       this.iscaned = false
       this.reset()
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      keyword = keyword.trim()
+      if (keyword.length > 40) {
+        keyword = keyword.slice(-23).trim()
+      } else if (keyword.length > 24) {
+        keyword = keyword.slice(-22).trim()
       }
       const res = await this.fetchPackage(keyword)
       if (res.error) {
