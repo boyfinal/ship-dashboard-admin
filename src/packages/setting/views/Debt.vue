@@ -249,7 +249,7 @@ export default {
     this.filter = {
       limit: 30,
       search: '',
-      status: USER_STATUS_ACTIVE,
+      status: '',
       price_arr: [],
       postpaid: '',
       prepaid: '',
