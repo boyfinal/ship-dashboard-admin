@@ -12,6 +12,7 @@
           :emitID="false"
           :is-tester="isTester"
           @input="handleSearch"
+          :arr-status="this.filter.arrStatus"
         />
         <button
           @click="handleShowModalExport"
