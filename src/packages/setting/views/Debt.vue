@@ -12,6 +12,7 @@
           :emitID="false"
           :is-tester="isTester"
           @input="handleSearch"
+          :arr-status="this.filter.arrStatus"
         />
         <button
           @click="handleShowModalExport"
@@ -211,6 +212,7 @@ import {
   MAP_USER_CLASS_TEXT,
   MAP_USER_CLASS_ICON,
   USER_STATUS_ACTIVE,
+  USER_STATUS_DEACTIVE,
 } from '../constants'
 import UserResource from '@/components/shared/resource/UsersActive'
 
@@ -229,7 +231,7 @@ export default {
       filter: {
         limit: 30,
         search: '',
-        status: USER_STATUS_ACTIVE,
+        arrStatus: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
       },
       isTester: this.$route.query.tester
         ? parseInt(this.$route.query.tester)
@@ -249,8 +251,8 @@ export default {
     this.filter = {
       limit: 30,
       search: '',
-      status: USER_STATUS_ACTIVE,
-      price_arr: [],
+      status: '',
+      arrStatus: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
       postpaid: '',
       prepaid: '',
     }
