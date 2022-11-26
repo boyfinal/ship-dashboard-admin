@@ -39,10 +39,10 @@ export default {
       type: Object,
       default: () => {},
     },
-    arrStatus: {
-      type: String,
-      default: '',
-    },
+    // isTester: {
+    //   type: Number,
+    //   default: 0,
+    // },
     label: {
       type: String,
       default: 'Search user',
@@ -82,7 +82,6 @@ export default {
           not_limit: true,
           status: 1,
           tester: this.isTester,
-          arrStatus: this.arrStatus,
         })
       )
       if (response && response.errorMessage) {
