@@ -26,7 +26,6 @@
             :emitID="false"
             @input="handleSearch"
             :isTester="tester"
-            :arr-status="this.search_status_filter"
           />
           <div class="">
             <select
@@ -397,10 +396,6 @@ import {
   CHANGE_STATUS_TRANSACTION,
 } from '../../transaction/store'
 import {
-  USER_STATUS_ACTIVE,
-  USER_STATUS_DEACTIVE,
-} from '../../setting/constants'
-import {
   TRANSACTION_TYPE,
   TransactionLogTypeTopup,
   TransactionLogTypePay,
@@ -467,7 +462,6 @@ export default {
         status: '',
         tab: 'bill',
       },
-      search_status_filter: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
       isSubmitting: false,
       visibleCreateExtraFeeModal: false,
       isFetching: false,
