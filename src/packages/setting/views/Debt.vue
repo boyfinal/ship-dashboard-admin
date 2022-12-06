@@ -11,6 +11,7 @@
           :label="`Tìm khách hàng`"
           :emitID="false"
           :is-tester="isTester"
+          :arr-status="this.filter.arrStatus"
           @input="handleSearch"
         />
         <button

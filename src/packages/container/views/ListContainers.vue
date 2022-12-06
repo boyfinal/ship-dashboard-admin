@@ -51,9 +51,12 @@
                 v-for="(text, k) in containerTypes"
                 :key="k"
               >
-                <a href="#" class="nav-link" @click.prevent="changeType(k)">{{
-                  text
-                }}</a>
+                <a
+                  href="javascript:void(0)"
+                  class="nav-link"
+                  @click.prevent="changeType(k)"
+                  >{{ text }}</a
+                >
               </li>
             </ul>
           </div>
@@ -516,7 +519,9 @@ export default {
   watch: {
     filter: {
       handler: function () {
-        this.init()
+        if (!this.isFetching) {
+          this.init()
+        }
       },
       deep: true,
     },

@@ -23,18 +23,44 @@
                 shipment.created_at | datetime('dd/MM/yyyy HH:mm:ss')
               }}</div>
             </div>
-            <div
-              class="info"
-              v-if="shipment.manifest && shipment.manifest.manifest_number"
-            >
+            <div class="info" v-if="manifest.length">
               <div>Manifest: </div>
               <div>
-                <a
-                  class="text-no-underline"
-                  href="javascript:void(0)"
-                  @click="downloadLabel(shipment.manifest.manifest_url)"
-                  >{{ shipment.manifest.manifest_number }}</a
-                >
+                <div class="navbar__header-manifest d-flex">
+                  <div class="navbar__header-name">
+                    <span class="mr-2">
+                      <a
+                        class="text-no-underline"
+                        href="javascript:void(0)"
+                        @click="downloadLabel(manifest[0].manifest_url)"
+                        >{{ manifest[0].manifest_number }}</a
+                      ></span
+                    >
+                    <a href="javascript:void(0)" @click="toogleMenuManifest">
+                      <p-svg name="dropdown"></p-svg
+                    ></a>
+                  </div>
+                  <div
+                    class="dropdown-menu"
+                    :class="{ active: showMenuManifest }"
+                    v-click-outside="hideMenuManifest"
+                  >
+                    <div class="dropdown-content">
+                      <div
+                        class="dropdown-item"
+                        v-for="(item, i) in manifest"
+                        :key="i"
+                      >
+                        <a
+                          class="text-no-underline"
+                          href="javascript:void(0)"
+                          @click="downloadLabel(item.manifest_url)"
+                          >{{ item.manifest_number }}</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="info">
@@ -411,6 +437,7 @@ export default {
         page: 1,
         search: '',
       },
+      showMenuManifest: false,
       code: '',
       isSubmitting: false,
       visibleUpdateModal: false,
@@ -428,6 +455,7 @@ export default {
     ...mapState('shipment', {
       shipment: (state) => state.shipment,
       containers: (state) => state.containers,
+      manifest: (state) => state.manifest,
       count: (state) => state.container_count,
       isCanceledShipment() {
         return this.shipment.status === ShipmentCanceled
@@ -505,6 +533,12 @@ export default {
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
       }
+    },
+    toogleMenuManifest() {
+      this.showMenuManifest = !this.showMenuManifest
+    },
+    hideMenuManifest() {
+      this.showMenuManifest = false
     },
     getBoxInfo(container) {
       return `${container.length} x ${container.width}  x ${container.height}`
@@ -798,6 +832,28 @@ export default {
 }
 </script>
 <style>
+.shipment-detail .navbar__header-name {
+  cursor: pointer;
+}
+.shipment-detail .dropdown-menu.active {
+  display: block !important;
+}
+.shipment-detail .navbar__header-manifest .dropdown-menu {
+  right: -5px;
+  left: unset;
+  top: 24px;
+  background: #f6f7f7;
+  box-shadow: 0px 0px 2px rgb(40 41 61 / 4%), 0px 4px 8px rgb(96 97 112 / 16%);
+  border-radius: 0px;
+  border: none;
+}
+.shipment-detail .navbar__header-manifest .dropdown-menu .dropdown-item {
+  font-size: 16px;
+  font-weight: 600;
+}
+.navbar__header-manifest {
+  position: relative;
+}
 .shipment-detail .btn-add-container {
   background-color: #dff6f7;
   color: #00b4c3;

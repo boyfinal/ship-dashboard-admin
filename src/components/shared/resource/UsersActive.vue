@@ -110,6 +110,7 @@ export default {
           search: search.trim(),
           status: 1,
           tester: this.isTester,
+          arrStatus: this.arrStatus,
         })
       )
       this.isLoading = false

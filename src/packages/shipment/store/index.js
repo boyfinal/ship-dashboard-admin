@@ -16,6 +16,7 @@ export const DOWNLOAD_SHIPMENT_LABEL_ZIP = 'downloadShipmentLabelZip'
 export const state = {
   shipment: {},
   containers: [],
+  manifest: [],
   container_count: 0,
   shipments: [],
   count: 0,
@@ -26,6 +27,7 @@ export const mutations = {
   [FETCH_SHIPMENT_DETAIL]: (state, payload) => {
     state.shipment = payload.shipment
     state.containers = payload.shipment.containers
+    state.manifest = payload.shipment.manifest
     state.container_count = payload.container_count
   },
   [FETCH_LIST_SHIPMENT]: (state, payload) => {
