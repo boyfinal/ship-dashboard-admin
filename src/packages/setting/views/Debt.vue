@@ -212,7 +212,6 @@ import {
   MAP_USER_CLASS_TEXT,
   MAP_USER_CLASS_ICON,
   USER_STATUS_ACTIVE,
-  USER_STATUS_DEACTIVE,
 } from '../constants'
 import UserResource from '@/components/shared/resource/UsersActive'
 
@@ -231,7 +230,7 @@ export default {
       filter: {
         limit: 30,
         search: '',
-        arrStatus: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
+        status: USER_STATUS_ACTIVE,
       },
       isTester: this.$route.query.tester
         ? parseInt(this.$route.query.tester)
@@ -251,8 +250,8 @@ export default {
     this.filter = {
       limit: 30,
       search: '',
-      status: '',
-      arrStatus: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
+      status: USER_STATUS_ACTIVE,
+      price_arr: [],
       postpaid: '',
       prepaid: '',
     }
