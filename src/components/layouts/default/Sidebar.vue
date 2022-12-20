@@ -217,6 +217,17 @@ export default {
                 this.$isSupportLeader() ||
                 this.$isWarehouse(),
             },
+            {
+              route: '/statistics-claims',
+              title: 'Khiếu nại',
+              alias: ['/statistics-claims'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isHub() ||
+                this.$isSupportLeader() ||
+                this.$isWarehouse(),
+            },
           ],
         },
         // {
