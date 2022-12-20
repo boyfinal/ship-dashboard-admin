@@ -218,9 +218,9 @@ export default {
                 this.$isWarehouse(),
             },
             {
-              route: '/statistics-claims',
+              route: '/statistic-claims',
               title: 'Khiếu nại',
-              alias: ['/statistics-claims'],
+              alias: ['/statistic-claims'],
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
