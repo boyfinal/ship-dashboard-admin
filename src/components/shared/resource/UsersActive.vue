@@ -39,10 +39,10 @@ export default {
       type: Object,
       default: () => {},
     },
-    // isTester: {
-    //   type: Number,
-    //   default: 0,
-    // },
+    arrStatus: {
+      type: String,
+      default: '',
+    },
     label: {
       type: String,
       default: 'Search user',
@@ -82,6 +82,7 @@ export default {
           not_limit: true,
           status: 1,
           tester: this.isTester,
+          arrStatus: this.arrStatus,
         })
       )
       if (response && response.errorMessage) {
@@ -110,6 +111,7 @@ export default {
           search: search.trim(),
           status: 1,
           tester: this.isTester,
+          arrStatus: this.arrStatus,
         })
       )
       this.isLoading = false

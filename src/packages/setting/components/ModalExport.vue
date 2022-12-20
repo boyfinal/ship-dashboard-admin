@@ -14,6 +14,7 @@
           :filter="{ role: 'customer' }"
           :label="`Tìm khách hàng`"
           :search="user ? user.email : ''"
+          :arr-status="this.search_status_filter"
         />
       </div>
       <div class="col-6">
@@ -80,7 +81,7 @@
 <script>
 import UserResource from '@/components/shared/resource/UsersActive'
 import { date } from '@core/utils/datetime'
-
+import { USER_STATUS_ACTIVE, USER_STATUS_DEACTIVE } from '../constants'
 export default {
   name: 'ModalExport',
   components: { UserResource },
@@ -110,6 +111,7 @@ export default {
       end_date: '',
       labelStart: 'Chọn ngày tạo hóa đơn',
       labelEnd: 'Chọn ngày tạo hóa đơn',
+      search_status_filter: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
     }
   },
   methods: {
