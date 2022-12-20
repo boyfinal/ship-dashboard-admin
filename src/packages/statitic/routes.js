@@ -9,8 +9,8 @@ export const routes = [
       import(/* webpackChunkName: "package" */ './views/Statitic'),
   },
   {
-    path: '/statistics-claims',
-    name: 'statistics-claims',
+    path: '/statistic-claims',
+    name: 'statistic-claims',
     meta: {
       title: 'Khiếu nại',
     },
