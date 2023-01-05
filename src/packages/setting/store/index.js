@@ -295,6 +295,7 @@ export const actions = {
       }
     } else {
       result.url = response.download
+      result.is_queue = response.is_queue
     }
 
     return result

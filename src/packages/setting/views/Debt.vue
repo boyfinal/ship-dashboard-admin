@@ -344,7 +344,6 @@ export default {
       this.isExporting = true
       const result = await this[EXPORT_PACKAGE](payload)
       this.isExporting = false
-
       if (!result.success) {
         this.$toast.open({
           type: 'error',
@@ -353,7 +352,15 @@ export default {
         })
         return
       }
-      this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
+      if (result.is_queue) {
+        this.$toast.open({
+          type: 'success',
+          message: 'Yêu cầu đang được xử lý',
+          duration: 3000,
+        })
+      } else {
+        this.downloadPackage(result.url, 'packages', result.url.split('/')[1])
+      }
     },
 
     editUser(userId) {
