@@ -36,6 +36,8 @@
 import { mapState, mapActions } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
+import { NOTIFY_TYPE_EXPORT_FILE } from '../../../packages/notification/constant'
+import mixinDownload from '@/packages/shared/mixins/download'
 import {
   FETCH_NOTIFICATIONS,
   FETCH_NOTIFICATIONS_ALL,
@@ -45,7 +47,7 @@ import { NotificationRead, NotificationUnread } from '../../shared/constants'
 
 export default {
   name: 'Notification',
-  mixins: [mixinRoute, mixinTable],
+  mixins: [mixinRoute, mixinTable, mixinDownload],
   computed: {
     ...mapState('shared', {
       notifications: (state) => state.notificationAll,
@@ -77,9 +79,16 @@ export default {
     ]),
     handelReadNoti(item) {
       if (item.link) {
-        // eslint-disable-next-line no-useless-escape
-        var url = item.link.replace(/(http[s]?:\/\/)?([^\/\s]+(\/)|^[\/])/, '')
-        this.$router.push({ path: `/${url}` })
+        if (item.type == NOTIFY_TYPE_EXPORT_FILE) {
+          this.downloadPackage(item.link, 'packages', item.link.split('/')[1])
+        } else {
+          var url = item.link.replace(
+            // eslint-disable-next-line no-useless-escape
+            /(http[s]?:\/\/)?([^\/\s]+(\/)|^[\/])/,
+            ''
+          )
+          this.$router.push({ path: `/${url}` })
+        }
       }
       this.callRead(item)
     },

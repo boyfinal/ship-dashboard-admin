@@ -136,6 +136,8 @@ import {
   GET_COUNT,
   GET_NOTIFICATION,
 } from '../../../packages/shared/store'
+import { NOTIFY_TYPE_EXPORT_FILE } from '../../../packages/notification/constant'
+import mixinDownload from '@/packages/shared/mixins/download'
 import { numFormatter } from '@core/utils/formatter'
 import { mapActions, mapGetters } from 'vuex'
 import {
@@ -146,6 +148,7 @@ import {
 export default {
   components: {},
   name: 'Header',
+  mixins: [mixinDownload],
   props: {
     user: {
       type: Object,
@@ -207,9 +210,16 @@ export default {
     },
     async handelReadNoti(item) {
       if (item.link) {
-        // eslint-disable-next-line no-useless-escape
-        var url = item.link.replace(/(http[s]?:\/\/)?([^\/\s]+(\/)|^[\/])/, '')
-        this.$router.replace({ path: `/${url}` })
+        if (item.type == NOTIFY_TYPE_EXPORT_FILE) {
+          this.downloadPackage(item.link, 'packages', item.link.split('/')[1])
+        } else {
+          var url = item.link.replace(
+            // eslint-disable-next-line no-useless-escape
+            /(http[s]?:\/\/)?([^\/\s]+(\/)|^[\/])/,
+            ''
+          )
+          this.$router.replace({ path: `/${url}` })
+        }
       }
       if (item.readed === NotificationRead) return
       const arr = []

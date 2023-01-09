@@ -8,6 +8,7 @@ export const NOTIFY_TYPE_FINANCE_UPDATE = 2
 export const NOTIFY_TYPE_ANNOUNCEMENT = 3
 export const NOTIFY_TYPE_SERVICE_UPDATE = 4
 export const NOTIFY_TYPE_PROMOTION = 5
+export const NOTIFY_TYPE_EXPORT_FILE = 6
 
 export const NOTIFY_TYPE = [
   {
