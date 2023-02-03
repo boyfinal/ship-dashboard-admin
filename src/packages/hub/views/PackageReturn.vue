@@ -31,7 +31,7 @@
                     <template>
                       <th>Order Number</th>
                       <th>LIONBAY TRACKING</th>
-                      <th>Action</th>
+                      <th class="text-center">Action</th>
                     </template>
                   </tr>
                 </thead>
@@ -39,8 +39,13 @@
                   <tr v-for="(item, i) in returnItems" :key="i">
                     <td>{{ item.order_number }}</td>
                     <td>{{ item.package_code.code }}</td>
-                    <td>
-                      <p-button type="danger" @click="confirmRemove(item)">
+                    <td class="text-center">
+                      <p-button
+                        :style="`width:85px;`"
+                        class="btn-promotion"
+                        type="danger"
+                        @click="confirmRemove(item)"
+                      >
                         Xóa
                       </p-button>
                     </td>
