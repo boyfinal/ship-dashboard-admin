@@ -29,7 +29,7 @@ export const routes = [
     path: '/hub/return',
     name: 'hub-return',
     meta: {
-      title: 'Hàng return',
+      title: 'Quét hàng return',
     },
     component: () =>
       import(/* webpackChunkName: "sign-in" */ './views/PackageReturn'),

@@ -3,11 +3,11 @@
     <div class="page-header">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
-          placeholder="Nhập mã đơn"
+          placeholder="Tìm theo order number hoặc lionbay tracking"
           prefixIcon="search"
           type="search"
           clearable
-          v-model="filter.search"
+          v-model="search"
           @keyup.enter="searchHandle"
           @clear="clearSearch"
         >
@@ -23,235 +23,103 @@
     <div class="page-content">
       <div class="card">
         <div class="card-body">
-          <VclTable class="mt-20" v-if="isFetching"></VclTable>
-          <template v-else-if="items.length">
+          <template v-if="returnItems.length">
             <div class="table-responsive">
-              <table class="table table-hover" id="tbl-packages">
+              <table class="table table-hover">
                 <thead>
                   <tr>
                     <template>
-                      <th>MÃ ĐƠN HÀNG</th>
+                      <th>Order Number</th>
                       <th>LIONBAY TRACKING</th>
-                      <th>NGÀY RETURN</th>
-                      <th>NGÀY NHẬP KHO</th>
-                      <th>LÝ DO</th>
-                      <th>TRẠNG THÁI</th>
-                      <th></th>
+                      <th>Action</th>
                     </template>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in displayItems" :key="i">
+                  <tr v-for="(item, i) in returnItems" :key="i">
+                    <td>{{ item.order_number }}</td>
+                    <td>{{ item.package_code.code }}</td>
                     <td>
-                      <router-link
-                        class="package-id"
-                        :to="item.route"
-                        v-if="$isAdmin()"
-                      >
-                        #{{ item.id }}
-                      </router-link>
-                      <a href="#" class="package-id" v-else> #{{ item.id }} </a>
-                    </td>
-
-                    <td>{{ item.code }}</td>
-                    <td>
-                      <span v-if="item.returned_at">
-                        {{ item.returned_at | date('dd/MM/yyyy') }}
-                      </span>
-                      <span v-else>N/A</span>
-                    </td>
-                    <td>
-                      <span v-if="item.hub_imported_at">{{
-                        item.hub_imported_at | date('dd/MM/yyyy')
-                      }}</span>
-                      <span v-else>N/A</span>
-                    </td>
-                    <td>
-                      <span
-                        v-if="
-                          item.description == 'Return' || item.description == ''
-                        "
-                        >N/A</span
-                      >
-                      <span v-else>{{ item.description }}</span>
-                    </td>
-                    <td>
-                      <span
-                        class="reason"
-                        :class="item.package_return_id ? `sent` : ''"
-                      >
-                        {{ item.status_text }}
-                      </span>
-                    </td>
-                    <td class="text-right">
-                      <button
-                        class="btn btn-outline-info"
-                        @click="showModalReturnHandle(item)"
-                        >Lý do</button
-                      >
+                      <p-button type="danger" @click="confirmRemove(item)">
+                        Xóa
+                      </p-button>
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <div
-              class="d-flex justify-content-between align-items-center mb-16"
-              v-if="count > 0"
-            >
-              <p-pagination
-                :total="count"
-                :perPage.sync="filter.limit"
-                :current.sync="filter.page"
-                :filterLimit="true"
-                size="sm"
-              ></p-pagination>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
         </div>
       </div>
     </div>
-    <ModalReturn
-      :visible.sync="isShowModalReturn"
-      :submit="returnHandle"
-      :current="current"
-    />
+    <PageLoading :is-loading="isFetching" />
   </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import mixinBarcode from '@core/mixins/barcode'
-
 import EmptySearchResult from '@components/shared/EmptySearchResult'
-import {
-  FETCH_PACKAGE_DETAIL,
-  HUB_COUNT_SEARCH_ITEMS,
-  HUB_RETURN,
-  HUB_SEARCH_ITEMS,
-} from '../store'
-import { HUB_TAB_IDS } from '../constants'
-import ModalReturn from '../components/ModalReturn'
+import { HUB_SCAN_RETURN, REMOVE_SCAN_RETURN_ITEM } from '../store'
+import PageLoading from '@components/shared/OverLoading'
 export default {
   name: 'ListReturn',
   mixins: [mixinRoute, mixinTable, mixinBarcode],
-  components: { EmptySearchResult, ModalReturn },
+  components: { EmptySearchResult, PageLoading },
   data() {
     return {
       isFetching: false,
-      filter: {
-        search: '',
-        page: 1,
-        limit: 20,
-        status: 'return',
-      },
-      isShowModalReturn: false,
-      current: {},
+      search: '',
+      returnItems: [],
     }
   },
-  created() {
-    this.filter = this.getRouteQuery()
-    this.searchHandle()
-  },
-  computed: {
-    ...mapState('hub', {
-      items: (state) => state.items,
-      count: (state) => state.count,
-    }),
-    displayItems() {
-      return this.items.map((item) => {
-        item.status_text = item.package_return_id
-          ? 'Đã gửi lý do'
-          : 'Chưa gửi lý do'
-
-        item.route = { name: 'package-detail', params: { id: item.id } }
-        return item
-      })
-    },
-  },
   methods: {
-    ...mapActions('hub', {
-      searchSubmit: HUB_SEARCH_ITEMS,
-      countSearchSubmit: HUB_COUNT_SEARCH_ITEMS,
-      returnSubmit: HUB_RETURN,
-      fetchPackageDetail: FETCH_PACKAGE_DETAIL,
-    }),
-    select(item) {
-      this.$emit('select', item)
-    },
+    ...mapActions('hub', [HUB_SCAN_RETURN, REMOVE_SCAN_RETURN_ITEM]),
     async searchHandle() {
-      this.handleUpdateRouteQuery()
-
-      const filters = Object.assign({}, this.filter)
-      filters.status = HUB_TAB_IDS[this.filter.status]
-
       this.isFetching = true
-
-      const res = await Promise.all([
-        this.searchSubmit(filters),
-        this.countSearchSubmit(filters),
-      ])
-
+      const payload = {
+        search: this.search.trim(),
+      }
+      let result = await this[HUB_SCAN_RETURN](payload)
       this.isFetching = false
-
-      for (const v of res) {
-        if (v.error) {
-          this.$toast.error(v.message)
-        }
+      if (result.error) {
+        this.$toast.error(result.message)
+        return
       }
-    },
-    async showModalReturnHandle(item) {
-      const res = await this.fetchPackageDetail(item.id)
-      if (res.error) {
-        this.$toast.error(res.message)
-        return false
-      }
-
-      if (item.id != res.package.id) return
-
-      this.current = {
-        id: item.id,
-        code: item.code,
-        package_return: res.package.package_return,
-      }
-
-      this.isShowModalReturn = true
+      this.returnItems.push(result.package)
     },
     clearSearch() {
-      this.filter.search = ''
-      this.searchHandle()
+      this.search = ''
+    },
+    confirmRemove(item) {
+      this.$dialog.confirm({
+        title: `Xác nhận`,
+        message: 'Bạn có chắc chắn muốn thực hiện hành động này ?',
+        onConfirm: () => {
+          this.removeReturnPackage(item)
+        },
+      })
+    },
+    async removeReturnPackage(item) {
+      this.isFetching = true
+      const payload = {
+        id: item.id,
+      }
+      let result = await this[REMOVE_SCAN_RETURN_ITEM](payload)
+      this.isFetching = false
+      if (result.error) {
+        this.$toast.error(result.message)
+        return
+      }
+      this.returnItems = this.returnItems.filter((i) => i.id !== payload.id)
     },
     barcodeSubmit(keyword) {
       if (keyword.length > 22) {
         keyword = keyword.slice(-22)
       }
-      this.keyword = keyword
-      this.filter.search = this.keyword
-      this.searchHandle()
-    },
-    async returnHandle(payload) {
-      const res = await this.returnSubmit(payload)
-      if (res.error) {
-        this.$toast.error(res.message)
-        return false
-      }
-
-      this.isShowModalReturn = false
-      this.current = {}
-      this.$toast.success('Thêm lý do trả hàng thành công')
-
-      await this.searchHandle()
-
-      return true
-    },
-  },
-  watch: {
-    'filter.page': function () {
-      this.searchHandle()
-    },
-    'filter.limit': function () {
-      this.filter.page = 1
+      this.search = keyword
       this.searchHandle()
     },
   },
