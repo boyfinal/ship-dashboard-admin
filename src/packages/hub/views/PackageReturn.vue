@@ -160,6 +160,9 @@ export default {
   methods: {
     ...mapActions('hub', [HUB_SCAN_RETURN, REMOVE_SCAN_RETURN_ITEM]),
     async searchHandle() {
+      if (this.detecting_scanning) {
+        return
+      }
       this.isFetching = true
       const payload = {
         search: this.search.trim(),
@@ -222,8 +225,10 @@ export default {
       return items.slice(from, to)
     },
     barcodeSubmit(keyword) {
-      if (keyword.length > 22) {
-        keyword = keyword.slice(-22)
+      if (keyword.length > 40) {
+        keyword = keyword.slice(-23).trim()
+      } else if (keyword.length > 24) {
+        keyword = keyword.slice(-22).trim()
       }
       this.search = keyword
       this.searchHandle()
