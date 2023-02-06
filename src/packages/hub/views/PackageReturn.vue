@@ -3,7 +3,7 @@
     <div class="page-header">
       <div class="d-flex jc-sb mb-12 search-input">
         <p-input
-          placeholder="Tìm theo order number hoặc lionbay tracking"
+          placeholder="Tìm theo mã đơn hàng"
           prefixIcon="search"
           type="search"
           clearable
