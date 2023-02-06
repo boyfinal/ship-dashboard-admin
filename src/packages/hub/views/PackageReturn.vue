@@ -160,7 +160,7 @@ export default {
   methods: {
     ...mapActions('hub', [HUB_SCAN_RETURN, REMOVE_SCAN_RETURN_ITEM]),
     async searchHandle() {
-      if (this.detecting_scanning) {
+      if (this.detecting_scanning && this.input_stack.length) {
         return
       }
       this.isFetching = true
