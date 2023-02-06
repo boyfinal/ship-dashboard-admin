@@ -36,7 +36,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in returnItems" :key="i">
+                  <tr v-for="(item, i) in paginate(returnItems)" :key="i">
                     <td>{{ item.order_number }}</td>
                     <td>{{ item.package_code.code }}</td>
                     <td class="text-center">
@@ -52,6 +52,78 @@
                   </tr>
                 </tbody>
               </table>
+              <div
+                class="d-flex justify-content-between align-items-center mb-16"
+              >
+                <div class="pagination-box">
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item nav-button">
+                        <span
+                          class="page-linksy left-link"
+                          :class="{ disabled: filter.page == 1 }"
+                          @click="filter.page--"
+                        >
+                          <svgicon name="arrowright" class="text-white" />
+                        </span>
+                      </li>
+                      <li class="page-item">
+                        <span
+                          v-for="(pageNumber, index) in pages"
+                          :key="index"
+                          :class="{ active: isPageActive(pageNumber) }"
+                          @click="setPage(pageNumber)"
+                        >
+                          <span
+                            class="page-linksy"
+                            v-if="index == 0"
+                            @click="setPage(index + 1)"
+                            >{{ index + 1 }}</span
+                          >
+                          <span
+                            class="page-linksy"
+                            v-else-if="index === filter.page"
+                            >{{ index + 1 }}</span
+                          >
+                          <span
+                            class="page-linksy"
+                            v-else-if="index === filter.page - 1"
+                            >{{ index + 1 }}</span
+                          >
+                          <span
+                            class="page-linksy"
+                            v-else-if="index === filter.page - 2"
+                            >{{ index + 1 }}</span
+                          >
+                          <span
+                            class="page-linksy"
+                            v-else-if="index === pages.length - 1"
+                            >{{ index + 1 }}</span
+                          >
+                          <span
+                            class="page-linksy"
+                            v-else-if="
+                              index !== 4 &&
+                              filter.page !== pages.length - 2 &&
+                              index === pages.length - 2
+                            "
+                            >...</span
+                          >
+                        </span>
+                      </li>
+                      <li class="page-item nav-button">
+                        <span
+                          @click="filter.page++"
+                          :class="{ disabled: filter.page === pages.length }"
+                          class="page-linksy"
+                        >
+                          <svgicon name="arrowright" class="text-white" />
+                        </span>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
             </div>
           </template>
           <empty-search-result v-else></empty-search-result>
@@ -78,6 +150,11 @@ export default {
       isFetching: false,
       search: '',
       returnItems: [],
+      pages: [],
+      filter: {
+        limit: 30,
+        page: 1,
+      },
     }
   },
   methods: {
@@ -94,6 +171,7 @@ export default {
         return
       }
       this.returnItems.push(result.package)
+      this.setPages()
     },
     clearSearch() {
       this.search = ''
@@ -120,6 +198,29 @@ export default {
       }
       this.returnItems = this.returnItems.filter((i) => i.id !== payload.id)
     },
+    isPageActive(page) {
+      return this.filter.page === page
+    },
+    setPages() {
+      this.pages = []
+      let numberOfPages = Math.ceil(this.returnItems.length / this.filter.limit)
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.pages.push(index)
+      }
+    },
+    setPage(page) {
+      this.filter.page = page
+    },
+    paginate(items) {
+      if (!items) {
+        return
+      }
+      let page = this.filter.page
+      let perPage = this.filter.limit
+      let from = page * perPage - perPage
+      let to = page * perPage
+      return items.slice(from, to)
+    },
     barcodeSubmit(keyword) {
       if (keyword.length > 22) {
         keyword = keyword.slice(-22)
@@ -130,3 +231,46 @@ export default {
   },
 }
 </script>
+
+<style>
+.left-link svg {
+  transform: rotate(180deg);
+}
+.pagination .page-item > span {
+  cursor: pointer;
+  border-radius: 4px !important;
+}
+
+.pagination .disabled svg path {
+  stroke: #cfd0d0;
+}
+.pagination .nav-button:first-child {
+  margin-right: 20px;
+}
+.pagination .nav-button:last-child {
+  margin-left: 20px;
+}
+.pagination li.page-item {
+  height: 40px !important;
+}
+.pagination li.page-item > span {
+  display: inline-block;
+  margin: 0px 2px;
+}
+.pagination .nav-button > span {
+  padding: 3px 0 0px 9px !important;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #313232 !important;
+  box-sizing: border-box;
+  border-radius: 8px !important;
+  background-color: unset !important;
+  font-weight: 700;
+}
+.pagination .nav-button > span.disabled {
+  border: none !important;
+}
+.pagination .disabled {
+  pointer-events: none;
+}
+</style>
