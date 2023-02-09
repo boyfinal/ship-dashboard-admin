@@ -287,7 +287,11 @@ export default {
 
     async init() {
       this.apprai_user = null
-      this.filter.search = this.user ? this.user.email : ''
+      this.filter.search = this.user
+        ? this.user.email
+        : typeof this.$route.query.search !== undefined
+        ? this.$route.query.search
+        : ''
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.query = {}
