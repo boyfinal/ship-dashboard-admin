@@ -38,7 +38,7 @@
                 <tbody>
                   <tr v-for="(item, i) in paginate(returnItems)" :key="i">
                     <td>{{ item.order_number }}</td>
-                    <td>{{ item.code }}</td>
+                    <td>{{ item.package_code.code }}</td>
                     <td class="text-center">
                       <p-button
                         :style="`width:85px;`"
