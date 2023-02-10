@@ -9,6 +9,7 @@
           :label="`Tìm theo tên khách hàng, email hoặc mã khách hàng`"
           :emitID="false"
           v-model="user"
+          :search="initSearch"
           @input="init"
         />
       </div>
@@ -258,9 +259,13 @@ export default {
       role_admin: ROLE_ADMIN,
       isVisibleModalActiveUser: false,
       query: {},
+      initSearch: '',
     }
   },
   created() {
+    if (this.$route.query.search) {
+      this.initSearch = this.$route.query.search
+    }
     this.filter = this.getRouteQuery()
   },
   mounted() {
@@ -287,11 +292,7 @@ export default {
 
     async init() {
       this.apprai_user = null
-      this.filter.search = this.user
-        ? this.user.email
-        : typeof this.$route.query.search !== undefined
-        ? this.$route.query.search
-        : ''
+      this.filter.search = this.user ? this.user.email : ''
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.query = {}
