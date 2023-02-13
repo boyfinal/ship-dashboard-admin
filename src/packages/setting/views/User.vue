@@ -442,7 +442,6 @@ export default {
   watch: {
     'filter.page': {
       handler: function () {
-        console.log(this.firstLoad)
         if (this.firstLoad) {
           return
         }
