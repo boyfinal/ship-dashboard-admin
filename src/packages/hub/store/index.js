@@ -15,6 +15,8 @@ export const REMOVE_CONTAINER_IMPORT = 'removeContainerImport'
 export const COUNT_LIST_IMPORTED = 'countListImported'
 export const GET_IMPORT_HUB_DETAIL = 'getImportHubDetail'
 export const SCAN_EXPORT_HUB = 'scanExportHub'
+export const HUB_SCAN_RETURN = 'hubScanReturn'
+export const REMOVE_SCAN_RETURN_ITEM = 'hubRemoveScanReturnItem'
 
 export const state = {
   items: [],
@@ -93,6 +95,25 @@ export const actions = {
       return { error: true, message: res.errorMessage || SERVER_ERROR_MESSAGE }
     }
 
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [HUB_SCAN_RETURN]({ commit }, payload) {
+    const res = await api.scanReturn(payload)
+    if (!res || res.error || !res.package) {
+      return { error: true, message: res.errorMessage || SERVER_ERROR_MESSAGE }
+    }
+
+    return { error: false, package: res.package }
+  },
+
+  // eslint-disable-next-line
+  async [REMOVE_SCAN_RETURN_ITEM]({ commit }, payload) {
+    const res = await api.removeScanReturnItem(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || SERVER_ERROR_MESSAGE }
+    }
     return { error: false }
   },
 

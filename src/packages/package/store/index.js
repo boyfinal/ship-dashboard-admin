@@ -102,18 +102,27 @@ export const actions = {
   // eslint-disable-next-line no-unused-vars
   async fetchListPackages({ commit }, payload) {
     let result = { success: true }
-    let [list, count] = await Promise.all([
-      api.fetchListPackages(payload),
-      api.countListPackages(payload),
-    ])
-    if (!list.packages || !count) {
-      count = { count: 0 }
+    let list = await api.fetchListPackages(payload)
+    if (!list.packages) {
       result = {
         success: false,
         message: list.errorMessage || '',
       }
     }
     commit(FETCH_LIST_PACKAGES, list.packages)
+    return result
+  },
+
+  async countListPackages({ commit }, payload) {
+    let result = { success: true }
+    let count = await api.countListPackages(payload)
+    if (!count) {
+      count = { count: 0 }
+      result = {
+        success: false,
+        message: count.errorMessage || '',
+      }
+    }
     commit(COUNT_LIST_PACKAGES, count)
     return result
   },

@@ -297,6 +297,7 @@ import {
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
+  COUNT_LIST_PACKAGES,
   IMPORT_PACKAGE,
   EXPORT_PACKAGE,
   PROCESS_PACKAGE,
@@ -352,6 +353,7 @@ export default {
       keywordSearch: '',
       allowSearch: true,
       isFetching: false,
+      isFetchingCount: false,
       isVisibleConfirmWayBill: false,
       visibleConfirmCancel: false,
       isVisibleExport: false,
@@ -408,6 +410,7 @@ export default {
       EXPORT_PACKAGE,
       PROCESS_PACKAGE,
       CANCEL_PACKAGES,
+      COUNT_LIST_PACKAGES,
     ]),
     truncate,
     async init() {
@@ -416,10 +419,17 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      const result = await this[FETCH_LIST_PACKAGES](this.filter)
+      const r1 = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
+      if (!r1.success) {
+        this.$toast.open({ message: r1.message, type: 'error' })
+        return
+      }
+      this.isFetchingCount = true
+      const r2 = await this[COUNT_LIST_PACKAGES](this.filter)
+      this.isFetchingCount = false
+      if (!r2.success) {
+        this.$toast.open({ message: r2.message, type: 'error' })
       }
     },
     showPackageCode(item) {

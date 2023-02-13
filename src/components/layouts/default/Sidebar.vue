@@ -296,36 +296,36 @@ export default {
             this.$isSupportLeader() ||
             this.$isMarketing(),
           sub: [
-            {
-              route: '/hubs/search',
-              title: 'Tra cứu đơn',
-              alias: ['/hubs/search'],
-              disable:
-                this.$isSupport() ||
-                this.$isSupportLeader() ||
-                this.$isAccountant() ||
-                this.$isWarehouse(),
-            },
-            {
-              route: '/hub/import',
-              title: 'Quét nhập',
-              alias: ['/hub/import'],
-              disable:
-                this.$isSupport() ||
-                this.$isSupportLeader() ||
-                this.$isAccountant() ||
-                this.$isWarehouse(),
-            },
-            {
-              route: '/hub/export',
-              title: 'Quét xuất',
-              alias: ['/hub/export'],
-              disable:
-                this.$isSupport() ||
-                this.$isSupportLeader() ||
-                this.$isAccountant() ||
-                this.$isWarehouse(),
-            },
+            // {
+            //   route: '/hubs/search',
+            //   title: 'Tra cứu đơn',
+            //   alias: ['/hubs/search'],
+            //   disable:
+            //     this.$isSupport() ||
+            //     this.$isSupportLeader() ||
+            //     this.$isAccountant() ||
+            //     this.$isWarehouse(),
+            // },
+            // {
+            //   route: '/hub/import',
+            //   title: 'Quét nhập',
+            //   alias: ['/hub/import'],
+            //   disable:
+            //     this.$isSupport() ||
+            //     this.$isSupportLeader() ||
+            //     this.$isAccountant() ||
+            //     this.$isWarehouse(),
+            // },
+            // {
+            //   route: '/hub/export',
+            //   title: 'Quét xuất',
+            //   alias: ['/hub/export'],
+            //   disable:
+            //     this.$isSupport() ||
+            //     this.$isSupportLeader() ||
+            //     this.$isAccountant() ||
+            //     this.$isWarehouse(),
+            // },
             {
               route: '/hub/return',
               title: 'Hàng return',
@@ -336,16 +336,16 @@ export default {
                 this.$isAccountant() ||
                 this.$isWarehouse(),
             },
-            {
-              route: '/hub/reship',
-              title: 'Hàng reship',
-              alias: ['/hub/reship'],
-              disable:
-                this.$isSupport() ||
-                this.$isSupportLeader() ||
-                this.$isAccountant() ||
-                this.$isWarehouse(),
-            },
+            // {
+            //   route: '/hub/reship',
+            //   title: 'Hàng reship',
+            //   alias: ['/hub/reship'],
+            //   disable:
+            //     this.$isSupport() ||
+            //     this.$isSupportLeader() ||
+            //     this.$isAccountant() ||
+            //     this.$isWarehouse(),
+            // },
           ],
         },
 

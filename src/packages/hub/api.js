@@ -50,4 +50,10 @@ export default {
   scanExportHub(payload) {
     return http.post(`/hubs/export/scan`, payload)
   },
+  scanReturn(payload) {
+    return http.post(`/hubs/package/return`, payload)
+  },
+  removeScanReturnItem(payload) {
+    return http.delete(`/hubs/package/return/${payload.id}`)
+  },
 }
