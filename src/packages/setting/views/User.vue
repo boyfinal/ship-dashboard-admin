@@ -260,16 +260,17 @@ export default {
       isVisibleModalActiveUser: false,
       query: {},
       initSearch: '',
+      firstLoad: false,
     }
   },
-  created() {
+  async created() {
     if (this.$route.query.search) {
       this.initSearch = this.$route.query.search
     }
     this.filter = this.getRouteQuery()
-  },
-  mounted() {
-    this.init()
+    this.firstLoad = true
+    await this.init()
+    this.firstLoad = false
   },
   computed: {
     ...mapState('setting', {
@@ -293,6 +294,13 @@ export default {
     async init() {
       this.apprai_user = null
       this.filter.search = this.user ? this.user.email : ''
+      if (this.firstLoad && this.initSearch) {
+        this.filter.search = this.initSearch
+      }
+      if (this.isFetching) {
+        return
+      }
+
       this.isFetching = true
       this.handleUpdateRouteQuery()
       this.query = {}
@@ -434,12 +442,19 @@ export default {
   watch: {
     'filter.page': {
       handler: function () {
+        console.log(this.firstLoad)
+        if (this.firstLoad) {
+          return
+        }
         this.init()
       },
       deep: true,
     },
     'filter.status': {
       handler: function () {
+        if (this.firstLoad) {
+          return
+        }
         this.init()
       },
       deep: true,
