@@ -295,9 +295,7 @@
                           </p-tooltip>
                         </span>
                       </td>
-                      <td>{{
-                        item.container_items ? item.container_items.length : '0'
-                      }}</td>
+                      <td>{{ item.count_items }}</td>
                       <td>{{ item.weight }}</td>
                       <td>
                         {{ getBoxInfo(item) }}

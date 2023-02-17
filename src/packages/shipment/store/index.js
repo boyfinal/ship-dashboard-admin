@@ -26,9 +26,9 @@ export const state = {
 export const mutations = {
   [FETCH_SHIPMENT_DETAIL]: (state, payload) => {
     state.shipment = payload.shipment
-    state.containers = payload.shipment.containers
+    state.containers = payload.containers
     state.manifest = payload.shipment.manifest
-    state.container_count = payload.container_count
+    state.container_count = payload.count_container
   },
   [FETCH_LIST_SHIPMENT]: (state, payload) => {
     state.shipments = payload
