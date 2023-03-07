@@ -262,6 +262,7 @@ import {
 } from '../constants'
 import {
   FETCH_LIST_PACKAGES,
+  COUNT_LIST_PACKAGES,
   IMPORT_PACKAGE,
   EXPORT_PACKAGE,
   PROCESS_PACKAGE,
@@ -384,6 +385,7 @@ export default {
       EXPORT_PACKAGE,
       PROCESS_PACKAGE,
       CANCEL_PACKAGES,
+      COUNT_LIST_PACKAGES,
     ]),
     truncate,
     async init() {
@@ -394,10 +396,13 @@ export default {
       }
       // this.keywordSearch = this.filter.search.trim()
       this.filter.alert = PACKAGE_ALERT_TYPE_OVER_PRE_TRANSIT
-      const result = await this[FETCH_LIST_PACKAGES](this.filter)
+      let [r1, r2] = await Promise.all([
+        this[FETCH_LIST_PACKAGES](this.filter),
+        this[COUNT_LIST_PACKAGES](this.filter),
+      ])
       this.isFetching = false
-      if (!result.success) {
-        this.$toast.open({ message: result.message, type: 'error' })
+      if (!r1.success || !r2.success) {
+        this.$toast.open({ message: r1.message || r2.message, type: 'error' })
       }
     },
     customLabel({ key, name }) {
@@ -455,6 +460,9 @@ export default {
   watch: {
     filter: {
       handler: function () {
+        if (this.isFetching) {
+          return
+        }
         this.init()
       },
       deep: true,

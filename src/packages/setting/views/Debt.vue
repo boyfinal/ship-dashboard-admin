@@ -382,6 +382,9 @@ export default {
   watch: {
     filter: {
       handler: function () {
+        if (this.isFetching) {
+          return
+        }
         this.init()
       },
       deep: true,
