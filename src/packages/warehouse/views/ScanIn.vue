@@ -723,6 +723,7 @@ export default {
       } else if (keyword.length > 24) {
         keyword = keyword.slice(-22).trim()
       }
+
       this.keyword = keyword
       this.beforeFetchPackage(this.keyword)
       this.disableInput = false
@@ -774,9 +775,11 @@ export default {
       this.iscaned = false
       this.reset()
       keyword = keyword.trim()
-      if (keyword.length > 40) {
+      if (keyword.length == 38) {
+        keyword = keyword.slice(-26).trim()
+      } else if (keyword.length > 40) {
         keyword = keyword.slice(-23).trim()
-      } else if (keyword.length > 24) {
+      } else if (keyword.length > 24 && keyword.length != 26) {
         keyword = keyword.slice(-22).trim()
       }
       const res = await this.fetchPackage(keyword)
