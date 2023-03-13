@@ -491,6 +491,7 @@ export default {
             isShow = true
           }
         })
+        console.log(isShow)
         return isShow
       },
       displayContainers() {
