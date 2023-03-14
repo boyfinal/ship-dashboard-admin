@@ -312,7 +312,7 @@ export const CHANGE_PACKAGE_TYPE = {
   [PACKAGE_UPDATE_EXTRAFEE_TYPE_CANCEL_LABEL]: 'Hủy Label',
   [PACKAGE_UPDATE_EXTRAFEE_TYPE_OVERSIZE]: 'Phí quá thể tích',
   [PACKAGE_UPDATE_ADRESS_EXCEED_PACKAGE]: 'Phí sửa địa chỉ',
-  [PACKAGE_UPDATE_RETURN_PACKAGE]: 'Phí return đơn hàng',
+  [PACKAGE_UPDATE_RETURN_PACKAGE]: 'Return',
 }
 
 // cSpell:enable
