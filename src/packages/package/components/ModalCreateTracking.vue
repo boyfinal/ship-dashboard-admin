@@ -12,6 +12,7 @@
           :locale-data="{ format: 'dd-mm-yyyy HH:mm:ss' }"
           :time-picker="true"
           :show-dropdowns="true"
+          :time-picker-increment="1"
           v-model="time"
         ></p-datepicker>
       </div>

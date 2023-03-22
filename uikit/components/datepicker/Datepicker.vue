@@ -19,6 +19,7 @@
     :dateFormat="dateFormat"
     :close-on-esc="true"
     :ranges="ranges"
+    :time-picker-increment="timePickerIncrement"
   >
     <div slot="input" slot-scope="picker" style="width: 100%">
       <p-svg
@@ -162,6 +163,10 @@ export default {
       default() {
         return {}
       },
+    },
+    timePickerIncrement: {
+      type: Number,
+      default: 5,
     },
     ranges: {
       type: Boolean,
