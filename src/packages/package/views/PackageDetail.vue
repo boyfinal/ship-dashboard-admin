@@ -89,6 +89,14 @@
             >
               Tạo phí phát sinh
             </p-button>
+            <p-button
+              type="info"
+              @click="showModalCreateTracking"
+              v-if="showBtnCreateTracking"
+              id="btn_create_tracking"
+            >
+              Tạo tracking
+            </p-button>
           </div>
         </div>
       </div>
@@ -750,6 +758,10 @@
       :loading="isSubmitting"
       @save="handleSubmitExtraFee"
     ></modal-create-extra-fee>
+    <modal-create-tracking
+      @save="handleCreateTracking"
+      :visible.sync="isVisisbleModalCreateTracking"
+    ></modal-create-tracking>
     <OverLoading :is-loading="isSubmitting" />
   </div>
 </template>
@@ -787,10 +799,12 @@ import {
   RESHIP_PACKAGE,
   UPDATE_PACKAGE,
   FETCH_LIST_PRODUCTS,
+  CREATE_EVENT_TRACKING,
 } from '../store/index'
 import { CREATE_EXTRA_FEE } from '../../bill/store/index'
 import mixinChaining from '@/packages/shared/mixins/chaining'
 import ModalEditOrder from '../components/ModalEditOrder'
+import ModalCreateTracking from '../components/ModalCreateTracking'
 import {
   PACKAGE_STATUS_TAB,
   CHANGE_PACKAGE_TYPE,
@@ -830,6 +844,7 @@ export default {
   mixins: [mixinChaining, mixinTable],
   components: {
     ModalEditOrder,
+    ModalCreateTracking,
     ModalConfirm,
     ModalCreateExtraFee,
     OverLoading,
@@ -846,6 +861,7 @@ export default {
       isVisibleConfirmWayBill: false,
       isReLabel: false,
       isVisibleModalExtraFee: false,
+      isVisisbleModalCreateTracking: false,
       timelinePagination: {
         numberPage: 0,
         itemsPerPage: 10,
@@ -889,7 +905,9 @@ export default {
     ...mapState('shared', {
       user: (state) => state.user,
     }),
-
+    showBtnCreateTracking() {
+      return this.package_detail.package.status != PACKAGE_STATUS_CREATED
+    },
     showButtonEdit() {
       const { status } = (this.package_detail || {}).package || {}
       if (!status) return false
@@ -1088,6 +1106,7 @@ export default {
       CANCEL_PACKAGES,
       RESHIP_PACKAGE,
       UPDATE_PACKAGE,
+      CREATE_EVENT_TRACKING,
     ]),
     ...mapActions('bill', [CREATE_EXTRA_FEE]),
     truncate,
@@ -1120,6 +1139,26 @@ export default {
       if (res && !res.error) {
         Browser.downloadBlob(res, file.split('/').pop())
       }
+    },
+    async handleCreateTracking(data) {
+      this.isSubmitting = true
+      data.package_id = this.packageID
+      const res = await this[CREATE_EVENT_TRACKING](data)
+      this.isSubmitting = false
+      if (!res || res.error) {
+        return this.$toast.open({
+          type: 'error',
+          message: res.message,
+          duration: 3000,
+        })
+      }
+      this.isVisisbleModalCreateTracking = false
+      this.$toast.open({
+        type: 'success',
+        message: 'Tạo lịch sử tracking thành công',
+        duration: 3000,
+      })
+      this.init()
     },
     changeDisplayDeliverDetail() {
       this.displayDeliverDetail = !this.displayDeliverDetail
@@ -1164,7 +1203,9 @@ export default {
       this.actions.cancelPackage.Description = `Bạn có chắc chắn muốn hủy đơn?`
       this.visibleConfirmCancel = true
     },
-
+    showModalCreateTracking() {
+      this.isVisisbleModalCreateTracking = true
+    },
     async cancelPackageAction() {
       if (
         this.package_detail.package.status ==
