@@ -83,7 +83,11 @@ export default {
   },
   watch: {
     visible: {
-      handler: function () {},
+      handler: function () {
+        this.description = ''
+        this.location = ''
+        this.time = ''
+      },
     },
   },
 }
