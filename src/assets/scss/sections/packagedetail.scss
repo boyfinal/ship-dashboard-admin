@@ -23,6 +23,13 @@
                 cursor: pointer;
             }
         }
+        .grib_header{
+            display: grid !important;
+            grid-template-columns:auto auto auto auto auto;
+            &.three-col{
+                grid-template-columns:auto auto auto !important;
+            }
+        }
     }
     .page-header_back {
         margin-bottom: 16px;

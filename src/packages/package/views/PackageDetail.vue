@@ -12,7 +12,10 @@
         </div>
 
         <div class="page-header__subtitle">
-          <div class="page-header__info">
+          <div
+            class="page-header__info grib_header"
+            :class="{ 'three-col': package_detail.estimate_process_date }"
+          >
             <div>
               <div>LionBay tracking</div>
               <div class="package-code">
