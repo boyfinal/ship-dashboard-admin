@@ -44,4 +44,11 @@ export default {
       RESPONSE_TYPE_BLOB
     )
   },
+
+  createContainerEvent(payload) {
+    return http.post('/containers/events', payload)
+  },
+  importContainerEvent(payload) {
+    return http.post('/containers/events/import', payload)
+  },
 }
