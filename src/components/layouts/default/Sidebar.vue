@@ -163,7 +163,8 @@ export default {
             this.$isWarehouse() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isSupportLeader(),
+            this.$isSupportLeader() ||
+            this.$isShipPartner(),
           sub: [
             {
               route: '/debt',
@@ -208,7 +209,8 @@ export default {
             this.$isSupportLeader() ||
             this.$isWarehouse() ||
             this.$isMarketing() ||
-            this.$isBusinessManager(),
+            this.$isBusinessManager() ||
+            this.$isShipPartner(),
           sub: [
             {
               route: '/statistics',
@@ -247,7 +249,8 @@ export default {
             this.$isSupport() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isBusinessManager(),
+            this.$isBusinessManager() ||
+            this.$isShipPartner(),
           sub: [
             {
               route: '/warehouse',
@@ -303,7 +306,8 @@ export default {
             this.$isWarehouse() ||
             this.$isSupportLeader() ||
             this.$isMarketing() ||
-            this.$isBusinessManager(),
+            this.$isBusinessManager() ||
+            this.$isShipPartner(),
           sub: [
             {
               route: '/hub/return',
@@ -330,7 +334,8 @@ export default {
             this.$isWarehouse() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isBusinessManager(),
+            this.$isBusinessManager() ||
+            this.$isShipPartner(),
           sub: [
             {
               route: '/account',
@@ -386,7 +391,7 @@ export default {
         return i.route == this.$route.path
       })
       if (sub) {
-        validPath = !sub.disable
+        validPath = !sub.disable && !route.disable
       }
     })
     if (!validPath) {
