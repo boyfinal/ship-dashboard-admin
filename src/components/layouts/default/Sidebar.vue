@@ -379,7 +379,20 @@ export default {
       ],
     }
   },
-
+  created() {
+    let validPath = true
+    this.menus.map((route) => {
+      let sub = route.sub.find((i) => {
+        return i.route == this.$route.path
+      })
+      if (sub) {
+        validPath = !sub.disable
+      }
+    })
+    if (!validPath) {
+      this.$router.push({ path: '/' })
+    }
+  },
   methods: {
     isActive(route) {
       if (isObject(route)) {
