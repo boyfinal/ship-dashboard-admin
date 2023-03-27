@@ -62,12 +62,12 @@
       <div class="event-file mt-3" v-else>
         <p
           >Download a
-          <a :href="urlTemplateImport" target="_blank">sample csv template</a>
+          <a :href="urlTemplateImport" target="_blank">sample excel template</a>
           to see an example of the format required.</p
         >
         <upload
           :drag="true"
-          :accept="'.csv'"
+          :accept="'.csv,.xlsx,.xlsm,.xls'"
           :multiple="false"
           :on-change="onChangeFile"
           :auto-upload="false"
@@ -89,7 +89,7 @@
           >{{ `${item.code}: ${item.errors.join(', ')}` }}</span
         >
         <p class="upload-tip"
-          >Chúng tôi chỉ chấp nhận file dưới 5MB và có định dạng CSV</p
+          >Chúng tôi chỉ chấp nhận file dưới 5MB và có định dạng CSV, EXCEL</p
         >
       </div>
     </template>
@@ -150,7 +150,7 @@ export default {
       file: null,
       errFile: '',
       errResult: [],
-      urlTemplateImport: `${process.env.VUE_APP_ASSETS}/lionbay-template-container-event.csv`,
+      urlTemplateImport: `${process.env.VUE_APP_ASSETS}/lionbay-template-container-event.xlsx`,
     }
   },
   methods: {
