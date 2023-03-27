@@ -159,6 +159,7 @@ export default {
       importEvent: IMPORT_CONTAINER_EVENT,
     }),
     handleClose() {
+      this.reset()
       this.$emit('update:visible', false)
     },
     handleSubmit() {
