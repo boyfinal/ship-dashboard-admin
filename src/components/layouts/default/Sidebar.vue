@@ -159,7 +159,11 @@ export default {
           route: { name: 'finances' },
           class: '',
           isOpen: false,
-          disable: this.$isWarehouse() || this.$isHub() || this.$isMarketing(),
+          disable:
+            this.$isWarehouse() ||
+            this.$isHub() ||
+            this.$isMarketing() ||
+            this.$isSupportLeader(),
           sub: [
             {
               route: '/debt',
