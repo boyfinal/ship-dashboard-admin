@@ -24,6 +24,12 @@ const MainPlugin = {
     Vue.prototype.$isHub = function () {
       return this.$store.getters['auth/isHub']
     }
+    Vue.prototype.$isBusinessManager = function () {
+      return this.$store.getters['auth/isBusinessManager']
+    }
+    Vue.prototype.$isShipPartner = function () {
+      return this.$store.getters['auth/isShipPartner']
+    }
     Vue.prototype.$hasAuthorize = function (key) {
       if (typeof ACL[key] === 'undefined') {
         return false
