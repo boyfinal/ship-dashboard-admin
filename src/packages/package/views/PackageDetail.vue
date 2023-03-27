@@ -909,7 +909,10 @@ export default {
       user: (state) => state.user,
     }),
     showBtnCreateTracking() {
-      return this.package_detail.package.status != PACKAGE_STATUS_CREATED
+      return (
+        this.package_detail.package.status != PACKAGE_STATUS_CREATED &&
+        this.$isAdmin()
+      )
     },
     showButtonEdit() {
       const { status } = (this.package_detail || {}).package || {}
