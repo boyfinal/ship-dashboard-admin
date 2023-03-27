@@ -4,7 +4,7 @@
       <div class="d-flex ce-add-types">
         <label>
           <input type="radio" v-model="add_type" value="single" />
-          <span>Thêm thử công</span>
+          <span>Thêm thủ công</span>
         </label>
         <label>
           <input type="radio" v-model="add_type" value="file" />
@@ -25,7 +25,7 @@
           }}</span>
         </div>
         <div class="col-6 mb-3">
-          <label>Đại điểm nhận hàng: <span>*</span></label>
+          <label>Địa điểm nhận hàng: <span>*</span></label>
           <p-input
             type="text"
             v-model.trim="location"
@@ -189,8 +189,18 @@ export default {
         isValid = false
       }
 
+      if (this.location.length > 100) {
+        this.errLocation = 'Địa điểm không quá 100 ký tự'
+        isValid = false
+      }
+
       if (this.description == '') {
         this.errDescription = 'Nội dung là bắt buộc'
+        isValid = false
+      }
+
+      if (this.description.length > 150) {
+        this.errDescription = 'Nội dung không quá 150 ký tự'
         isValid = false
       }
 
