@@ -159,6 +159,7 @@ export default {
       importEvent: IMPORT_CONTAINER_EVENT,
     }),
     handleClose() {
+      this.reset()
       this.$emit('update:visible', false)
     },
     handleSubmit() {
@@ -236,7 +237,7 @@ export default {
       }
 
       const ext = this.file.name.split('.').pop()
-      if (ext != 'csv') {
+      if (!['csv', 'xlsx', 'xlsm', 'xls'].includes(ext)) {
         this.errFile = 'File không đúng định dạng'
         return
       }
