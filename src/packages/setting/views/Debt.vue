@@ -17,7 +17,11 @@
         <button
           @click="handleShowModalExport"
           class="btn btn-info ml-3 text-nowrap"
-          v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+          v-if="
+            user.role == ROLE_ADMIN ||
+            user.role == ROLE_ACCOUNTANT ||
+            user.role == ROLE_BU_MANGER
+          "
           >Export</button
         >
         <button
@@ -205,7 +209,11 @@ import mixinTable from '@core/mixins/table'
 import ModalExport from '../components/ModalExport'
 import { PACKAGE_STATUS_TAB } from '../../package/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
-import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import {
+  ROLE_ADMIN,
+  ROLE_ACCOUNTANT,
+  ROLER_BUSSINESS_MANAGER,
+} from '@core/constants'
 import ModalEditUser from '../components/ModalEdit'
 import ModalSearch from '../components/ModalSearch'
 import {
@@ -240,6 +248,7 @@ export default {
       visibleExportModal: false,
       isExporting: false,
       ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_BU_MANGER: ROLER_BUSSINESS_MANAGER,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
       userSelected: {},
       isVisibleEditUser: false,
