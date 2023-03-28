@@ -257,6 +257,16 @@ export const actions = {
   },
 
   // eslint-disable-next-line no-unused-vars
+  async [RESHIP_PACKAGE_ESTIMATE_COST]({ commit }, payload) {
+    const res = await api.reshipPackageEstimateCost(payload)
+    if (!res || res.error || res.message) {
+      return { error: true, message: res.errorMessage }
+    }
+
+    return { error: false, ...res }
+  },
+
+  // eslint-disable-next-line no-unused-vars
   async [CREATE_EVENT_TRACKING]({ commit }, payload) {
     const res = await api.createEventTracking(payload)
     if (!res || res.error || res.message) {
