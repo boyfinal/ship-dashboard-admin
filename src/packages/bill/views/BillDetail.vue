@@ -30,7 +30,11 @@
           <p-button
             @click="handleExportBill"
             class="btn btn-info ml-3 text-nowrap"
-            v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+            v-if="
+              user.role == ROLE_ADMIN ||
+              user.role == ROLE_ACCOUNTANT ||
+              user.role == ROLE_BU_MANAGER
+            "
             :loading="loading"
             >Export</p-button
           >
@@ -141,7 +145,8 @@
                       <th
                         v-if="
                           user.role == ROLE_ADMIN ||
-                          user.role == ROLE_ACCOUNTANT
+                          user.role == ROLE_ACCOUNTANT ||
+                          user.role == ROLE_BU_MANAGER
                         "
                         >Thao tác</th
                       >
@@ -189,7 +194,8 @@
                       <td
                         v-if="
                           user.role == ROLE_ADMIN ||
-                          user.role == ROLE_ACCOUNTANT
+                          user.role == ROLE_ACCOUNTANT ||
+                          user.role == ROLE_BU_MANAGER
                         "
                       >
                         <a @click="handelModal(item.id)" class="btn btn-danger">
@@ -235,7 +241,11 @@ import {
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
-import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import {
+  ROLE_ADMIN,
+  ROLE_ACCOUNTANT,
+  ROLER_BUSSINESS_MANAGER,
+} from '@core/constants'
 import mixinDownload from '@/packages/shared/mixins/download'
 
 export default {
@@ -257,6 +267,7 @@ export default {
       visibleConfirmFail: false,
       idExtra: 0,
       ROLE_ADMIN: ROLE_ADMIN,
+      ROLE_BU_MANAGER: ROLER_BUSSINESS_MANAGER,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
       loading: false,
     }
