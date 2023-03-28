@@ -141,14 +141,20 @@ export default {
               route: '/claims',
               title: 'Khiếu nại',
               alias: ['/claims', '/claims/:id'],
-              disable: this.$isWarehouse() || this.$isMarketing(),
+              disable:
+                this.$isWarehouse() ||
+                this.$isMarketing() ||
+                this.$isShipPartner(),
             },
             {
               route: '/promotions',
               title: 'Promotion',
               alias: ['/promotions'],
               disable:
-                this.$isAccountant() || this.$isWarehouse() || this.$isHub(),
+                this.$isAccountant() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isShipPartner(),
             },
           ],
         },
@@ -334,7 +340,6 @@ export default {
             this.$isWarehouse() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isBusinessManager() ||
             this.$isShipPartner(),
           sub: [
             {
@@ -353,7 +358,7 @@ export default {
               route: '/user',
               title: 'Tài khoản khách hàng',
               alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant() || this.$isBusinessManager(),
+              disable: this.$isAccountant(),
             },
             {
               route: '/notify/email',
@@ -382,20 +387,6 @@ export default {
           ],
         },
       ],
-    }
-  },
-  created() {
-    let validPath = true
-    this.menus.map((route) => {
-      let sub = route.sub.find((i) => {
-        return i.route == this.$route.path
-      })
-      if (sub) {
-        validPath = !sub.disable && !route.disable
-      }
-    })
-    if (!validPath) {
-      this.$router.push({ path: '/' })
     }
   },
   methods: {
@@ -447,6 +438,20 @@ export default {
         )
       }
     },
+    checkValidPath() {
+      let validPath = true
+      this.menus.map((route) => {
+        let sub = route.sub.find((i) => {
+          return i.route == this.$route.path
+        })
+        if (sub) {
+          validPath = !sub.disable && !route.disable
+        }
+      })
+      if (!validPath) {
+        this.$router.push({ path: '/' })
+      }
+    },
   },
   watch: {
     isSidebarOpen: function (value) {
@@ -455,6 +460,13 @@ export default {
           obj.isOpen == true ? { ...obj, isOpen: false } : obj
         )
       }
+    },
+    '$route.path': {
+      handler: function () {
+        this.checkValidPath()
+      },
+      deep: true,
+      immediate: true,
     },
   },
 }
