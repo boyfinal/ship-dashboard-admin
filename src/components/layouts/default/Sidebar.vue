@@ -340,7 +340,6 @@ export default {
             this.$isWarehouse() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isBusinessManager() ||
             this.$isShipPartner(),
           sub: [
             {
@@ -359,7 +358,7 @@ export default {
               route: '/user',
               title: 'Tài khoản khách hàng',
               alias: ['/user', '/user/:id'],
-              disable: this.$isAccountant() || this.$isBusinessManager(),
+              disable: this.$isAccountant(),
             },
             {
               route: '/notify/email',

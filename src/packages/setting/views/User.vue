@@ -95,7 +95,8 @@
                         @select="handleSelectAppraiser($event, i, item.id)"
                         :disabled="
                           current_user.role != role_support_leader &&
-                          current_user.role != role_admin
+                          current_user.role != role_admin &&
+                          current_user.role != role_bu_manager
                         "
                         :custom-label="customLabel"
                       ></multiselect>
@@ -109,7 +110,8 @@
                           deactive:
                             current_user.role != role_support_leader &&
                             current_user.role != role_support &&
-                            current_user.role != role_admin,
+                            current_user.role != role_admin &&
+                            current_user.role != role_bu_manager,
                         }"
                         @click="visibleModalApprai(item)"
                       >
@@ -122,7 +124,8 @@
                         :class="{
                           deactive:
                             current_user.role != role_support_leader &&
-                            current_user.role != role_admin,
+                            current_user.role != role_admin &&
+                            current_user.role != role_bu_manager,
                         }"
                         @click="visibleRole(item)"
                       >
@@ -219,7 +222,12 @@ import AllUser from '@/components/shared/resource/AllUser'
 import { ROLE_CUSTOMER } from '@core/constants'
 import ModalConfirm from '@components/shared/modal/ModalConfirm'
 import { cloneDeep } from '@core/utils'
-import { ROLE_SUPPORT, ROLE_SUPPORT_LEADER, ROLE_ADMIN } from '@core/constants'
+import {
+  ROLE_SUPPORT,
+  ROLE_SUPPORT_LEADER,
+  ROLE_ADMIN,
+  ROLER_BUSSINESS_MANAGER,
+} from '@core/constants'
 import ModalActiveUser from '../components/ModalActiveUser'
 
 export default {
@@ -257,6 +265,7 @@ export default {
       role_support: ROLE_SUPPORT,
       role_support_leader: ROLE_SUPPORT_LEADER,
       role_admin: ROLE_ADMIN,
+      role_bu_manager: ROLER_BUSSINESS_MANAGER,
       isVisibleModalActiveUser: false,
       query: {},
       initSearch: '',
