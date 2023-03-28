@@ -85,7 +85,8 @@
                 package_detail.package.status != statusCreated &&
                 package_detail.package.status != statusArchived &&
                 user.role != roleSupport &&
-                !$isWarehouse()
+                !$isWarehouse() &&
+                !$isShipPartner()
               "
               @click="showModalExtraFee"
               id="btn_ex_fee"
