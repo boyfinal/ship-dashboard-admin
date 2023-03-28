@@ -245,7 +245,9 @@
               <div
                 class="icon"
                 v-if="
-                  (user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT) &&
+                  (user.role == ROLE_ADMIN ||
+                    user.role == ROLE_ACCOUNTANT ||
+                    user.role == ROLE_BU_MANAGER) &&
                   userInfo
                 "
               >
