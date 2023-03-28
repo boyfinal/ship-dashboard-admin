@@ -269,7 +269,7 @@
                   position="top"
                   type="dark"
                   :active="true"
-                  v-if="$isAdmin()"
+                  v-if="$isAdmin() || $isBusinessManager()"
                 >
                   <a href="#" @click.prevent="handleShowModalSetting">
                     <p-svg name="setting_user"></p-svg>

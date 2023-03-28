@@ -139,7 +139,7 @@
                         <a
                           href="#"
                           class="btn_action ml-2"
-                          v-if="$isAdmin()"
+                          v-if="$isAdmin() || $isBusinessManager()"
                           @click.prevent="editUser(item.id)"
                         >
                           <p-tooltip
