@@ -14,7 +14,7 @@
       <p-button
         type="info"
         class="ml-8 add-user"
-        v-if="$isAdmin() || $isMarketing()"
+        v-if="$isAdmin() || $isMarketing() || $isBusinessManager()"
         @click="showModalCreateHandle"
       >
         Tạo mới
@@ -73,7 +73,7 @@
                         <p-svg name="edit-3" :stroke="item.edit_style"></p-svg>
                       </a>
                       <p-button
-                        v-if="$isAdmin()"
+                        v-if="$isAdmin() || $isBusinessManager()"
                         :type="typeBtn(item.status)"
                         class="btn-detail ml-15 btn-promotion"
                         @click="visibleModal(item)"
@@ -209,7 +209,8 @@ export default {
             : 'System',
           disabled_btn_accept:
             this.$isMarketing() ||
-            (item.type == PROMOTION_TYPE_MARKETING && this.$isAdmin()),
+            (item.type == PROMOTION_TYPE_MARKETING &&
+              (this.$isAdmin() || this.$isBusinessManager())),
           type_text:
             item.type == PROMOTION_TYPE_MARKETING ? 'Marketing' : 'System',
           status_text: MAP_PROMOTION_STATUS_TEXT[item.status] || 'Unknown',
@@ -217,7 +218,8 @@ export default {
             MAP_PROMOTION_STATUS_CLASS[item.status] || 'text-secondary',
           add_user_style:
             item.status != PROMOTION_STATUS_ACTIVE ? 'gray' : 'black',
-          is_edit: this.$isAdmin() || this.$isMarketing(),
+          is_edit:
+            this.$isAdmin() || this.$isMarketing() || this.$isBusinessManager(),
           edit_style: item.status != PROMOTION_STATUS_ACTIVE ? 'black' : 'gray',
         }
       })
