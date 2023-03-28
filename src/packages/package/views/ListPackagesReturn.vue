@@ -241,7 +241,7 @@ export default {
       return MAP_NAME_STATUS_STRING_PACKAGE
     },
     showBtn() {
-      return this.$isAdmin() || this.$isSupport()
+      return this.$isAdmin() || this.$isSupport() || this.$isBusinessManager()
     },
     searchPlaceholder() {
       const maptext = {
