@@ -911,7 +911,7 @@ export default {
     showBtnCreateTracking() {
       return (
         this.package_detail.package.status != PACKAGE_STATUS_CREATED &&
-        this.$isAdmin()
+        (this.$isAdmin() || this.$isBusinessManager())
       )
     },
     showButtonEdit() {
@@ -932,7 +932,10 @@ export default {
       ]
 
       return (
-        (this.$isSupport() || this.$isAdmin() || this.$isSupportLeader()) &&
+        (this.$isSupport() ||
+          this.$isAdmin() ||
+          this.$isSupportLeader() ||
+          this.$isBusinessManager()) &&
         (listStatus.includes(status) == false || this.isReturnPackage)
       )
     },
@@ -1080,7 +1083,10 @@ export default {
       if (!status) return false
 
       return (
-        (this.$isAdmin() || this.$isSupport() || this.$isSupportLeader()) &&
+        (this.$isAdmin() ||
+          this.$isSupport() ||
+          this.$isSupportLeader() ||
+          this.$isBusinessManager()) &&
         [
           PACKAGE_STATUS_CANCELLED,
           PACKAGE_STATUS_ARCHIVED,
