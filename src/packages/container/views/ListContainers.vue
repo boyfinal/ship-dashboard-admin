@@ -27,7 +27,12 @@
               @clear="clearSearch"
             >
             </p-input>
-            <p-button type="info" @click="addEventHandle" class="mr-8">
+            <p-button
+              type="info"
+              @click="addEventHandle"
+              class="mr-8"
+              v-if="$isAdmin()"
+            >
               Thêm hành trình
             </p-button>
             <p-button type="info" @click="CreateContainerHandle">

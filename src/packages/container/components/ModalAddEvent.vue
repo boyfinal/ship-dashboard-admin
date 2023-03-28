@@ -277,6 +277,7 @@ export default {
       this.errLocation = ''
       this.errDescription = ''
       this.errFile = ''
+      this.errResult = []
     },
     reset() {
       this.add_type = 'single'
@@ -290,6 +291,7 @@ export default {
       this.errDescription = ''
       this.file = null
       this.errFile = ''
+      this.errResult = []
     },
   },
   watch: {
