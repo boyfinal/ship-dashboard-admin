@@ -14,12 +14,16 @@
       <div class="row mt-3 event-form" v-if="add_type === 'single'">
         <div class="col-6 mb-3">
           <label>Thời gian: <span>*</span></label>
-          <p-input
-            type="datetime-local"
+          <p-datepicker
+            :label="'Chọn thời gian'"
+            :single-date-picker="true"
+            class="p-input-group input-group"
+            :locale-data="{ format: 'dd-mm-yyyy HH:mm:ss' }"
+            :time-picker="true"
+            :show-dropdowns="true"
+            :time-picker-increment="1"
             v-model="datetime"
-            placeholder="Thêm thời gian"
-            :class="{ 'has-error': !!errDatetime }"
-          ></p-input>
+          ></p-datepicker>
           <span class="invalid-error" v-if="!!errDatetime">{{
             errDatetime
           }}</span>
@@ -180,7 +184,7 @@ export default {
         isValid = false
       }
 
-      if (this.datetime == '') {
+      if (!this.datetime || !this.datetime.startDate) {
         this.errDatetime = 'Thời gian là bắt buộc'
         isValid = false
       }
@@ -210,7 +214,7 @@ export default {
       const payload = {
         code: this.code,
         location: this.location,
-        datetime: this.datetime,
+        datetime: this.datetime.startDate,
         description: this.description,
       }
 
@@ -328,5 +332,36 @@ export default {
 .upload-tip {
   font-size: 12px;
   color: #6f6f6f;
+}
+.reportrange-text {
+  line-height: 30px;
+}
+.daterangepicker .calendars .calendar-table {
+  height: auto !important;
+}
+.form-control.hourselect,
+.form-control.minuteselect {
+  text-align: center;
+  height: auto !important;
+  position: unset;
+  left: unset;
+  top: unset;
+  background: unset;
+  border: unset;
+  box-sizing: unset;
+  border-radius: unset !important;
+  font-size: unset;
+  box-shadow: none;
+  transition: unset;
+  padding: unset;
+  color: unset;
+}
+.p-modal-content {
+  z-index: 99;
+  overflow: unset;
+}
+
+.modal-body {
+  overflow: unset;
 }
 </style>
