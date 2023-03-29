@@ -99,7 +99,7 @@
               v-if="showBtnCreateTracking"
               id="btn_create_tracking"
             >
-              Tạo tracking
+              Thêm hành trình
             </p-button>
           </div>
         </div>

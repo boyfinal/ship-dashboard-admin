@@ -1,5 +1,5 @@
 <template>
-  <p-modal :active="visible" :title="`Tạo tracking`" @close="handleClose">
+  <p-modal :active="visible" :title="`Thêm hành trình`" @close="handleClose">
     <div class="row mb-16">
       <div class="col-6">
         <label for=""
