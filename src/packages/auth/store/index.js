@@ -6,6 +6,8 @@ import {
   ROLE_HUB,
   ROLE_SUPPORT_LEADER,
   USER_ROLE_MARKETING,
+  ROLER_BUSSINESS_MANAGER,
+  ROLER_SHIP_PARTNER,
 } from '@core/constants'
 import api from '../api'
 import AuthService from '@core/services/auth'
@@ -221,6 +223,12 @@ export const getters = {
   },
   isMarketing(state) {
     return state.user.role === USER_ROLE_MARKETING
+  },
+  isBusinessManager(state) {
+    return state.user.role === ROLER_BUSSINESS_MANAGER
+  },
+  isShipPartner(state) {
+    return state.user.role === ROLER_SHIP_PARTNER
   },
 }
 

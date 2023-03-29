@@ -12,6 +12,8 @@ export const CLOSE_CONTAINER = 'closeContainer'
 export const CANCEL_CONTAINER = 'cancelContainer'
 export const GET_LABEL = 'getLabel'
 export const UPDATE_CONTAINER = 'updateContainer'
+export const CREATE_CONTAINER_EVENT = 'createContainerEvent'
+export const IMPORT_CONTAINER_EVENT = 'createContainerImport'
 
 export const state = {
   containers: [],
@@ -205,5 +207,31 @@ export const actions = {
     }
     result.blob = response
     return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [CREATE_CONTAINER_EVENT]({ commit }, payload) {
+    const res = await api.createContainerEvent(payload)
+    if (!res || !res.success) {
+      return {
+        success: false,
+        message: res.errorMessage || '',
+      }
+    }
+    return { success: true }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [IMPORT_CONTAINER_EVENT]({ commit }, payload) {
+    const res = await api.importContainerEvent(payload)
+    if (!res || !res.success) {
+      return {
+        ...res,
+        success: false,
+        message: res.errorMessage,
+      }
+    }
+
+    return { success: true }
   },
 }

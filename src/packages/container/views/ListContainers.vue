@@ -27,6 +27,14 @@
               @clear="clearSearch"
             >
             </p-input>
+            <p-button
+              type="info"
+              @click="addEventHandle"
+              class="mr-8"
+              v-if="$isAdmin()"
+            >
+              Thêm hành trình
+            </p-button>
             <p-button type="info" @click="CreateContainerHandle">
               <svgicon name="plus" class="text-white add_container" />
               Tạo kiện hàng
@@ -215,6 +223,7 @@
       :visible.sync="visibleUpdateModal"
     >
     </modal-update-container>
+    <ModalAddEvent :visible.sync="isVisibleModalAddEvent" />
   </div>
 </template>
 <script>
@@ -250,6 +259,7 @@ import { printImage } from '@core/utils/print'
 import { cloneDeep } from '../../../core/utils'
 import ModalHistoryContainer from '../components/ModalHistoryContainer'
 import { WAREHOUSE_TYPE_INTERNATIONAL } from '../../shipment/constants'
+import ModalAddEvent from '../components/ModalAddEvent.vue'
 
 export default {
   name: 'ListContainers',
@@ -260,6 +270,7 @@ export default {
     ContainerStatusTab,
     ModalChoiceShippingBox,
     ModalUpdateContainer,
+    ModalAddEvent,
   },
   data() {
     return {
@@ -281,6 +292,7 @@ export default {
       visibleModalHistory: false,
       containerHistories: [],
       containerTypes: MAP_CONTAINER_TEXT_TYPES,
+      isVisibleModalAddEvent: false,
     }
   },
   created() {
@@ -514,6 +526,9 @@ export default {
     changeType(v) {
       this.filter.page = 1
       this.filter.type = v
+    },
+    addEventHandle() {
+      this.isVisibleModalAddEvent = true
     },
   },
   watch: {

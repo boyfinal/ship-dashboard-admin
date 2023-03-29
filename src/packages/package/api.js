@@ -81,4 +81,7 @@ export default {
   reshipPackageEstimateCost(payload) {
     return http.post(`/packages/${payload.id}/reship/estimate-cost`, payload)
   },
+  createEventTracking(payload) {
+    return http.post(`/packages/tracking`, payload)
+  },
 }

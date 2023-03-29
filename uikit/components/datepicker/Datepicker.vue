@@ -19,6 +19,7 @@
     :dateFormat="dateFormat"
     :close-on-esc="true"
     :ranges="ranges"
+    :time-picker-increment="timePickerIncrement"
   >
     <div slot="input" slot-scope="picker" style="width: 100%">
       <p-svg
@@ -59,6 +60,14 @@
         {{ dateRange.endDate | date('dd/MM/yyyy') }}
       </span>
       <span
+        v-else-if="timePicker && (dateRange.startDate || dateRange.endDate)"
+      >
+        {{
+          dateRange.startDate ||
+          dateRange.endDate | datetime('dd/MM/yyyy HH:mm:ss')
+        }}</span
+      >
+      <span
         class="label-date-picker"
         v-else-if="
           singleDatePicker &&
@@ -89,7 +98,7 @@
 </template>
 <script>
 import DateRangePicker from 'vue2-daterange-picker'
-export { date } from '@core/utils/datetime'
+export { date, datetime } from '@core/utils/datetime'
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
 
 export default {
@@ -154,6 +163,10 @@ export default {
       default() {
         return {}
       },
+    },
+    timePickerIncrement: {
+      type: Number,
+      default: 5,
     },
     ranges: {
       type: Boolean,

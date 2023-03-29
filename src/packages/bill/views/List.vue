@@ -42,7 +42,11 @@
         </div>
 
         <div
-          v-if="user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT"
+          v-if="
+            user.role == ROLE_ADMIN ||
+            user.role == ROLE_ACCOUNTANT ||
+            user.role == ROLE_BU_MANAGER
+          "
           class="ml-8"
         >
           <p-button type="info" @click="handleShowModalCreateExtraFee">
@@ -241,7 +245,9 @@
               <div
                 class="icon"
                 v-if="
-                  (user.role == ROLE_ADMIN || user.role == ROLE_ACCOUNTANT) &&
+                  (user.role == ROLE_ADMIN ||
+                    user.role == ROLE_ACCOUNTANT ||
+                    user.role == ROLE_BU_MANAGER) &&
                   userInfo
                 "
               >
@@ -263,7 +269,7 @@
                   position="top"
                   type="dark"
                   :active="true"
-                  v-if="$isAdmin()"
+                  v-if="$isAdmin() || $isBusinessManager()"
                 >
                   <a href="#" @click.prevent="handleShowModalSetting">
                     <p-svg name="setting_user"></p-svg>
@@ -391,7 +397,11 @@ import {
 } from '../store'
 import { mapActions, mapState } from 'vuex'
 import ModalCreateExtraFee from '../components/ModalCreateExtraFee'
-import { ROLE_ADMIN, ROLE_ACCOUNTANT } from '@core/constants'
+import {
+  ROLE_ADMIN,
+  ROLE_ACCOUNTANT,
+  ROLER_BUSSINESS_MANAGER,
+} from '@core/constants'
 import {
   FETCH_LIST_TRANSACTIONS,
   CHANGE_STATUS_TRANSACTION,
@@ -473,6 +483,7 @@ export default {
       isFetching: false,
       ROLE_ADMIN: ROLE_ADMIN,
       ROLE_ACCOUNTANT: ROLE_ACCOUNTANT,
+      ROLE_BU_MANAGER: ROLER_BUSSINESS_MANAGER,
       listTab: [
         {
           value: 'bill',

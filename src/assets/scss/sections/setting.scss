@@ -26,7 +26,8 @@
     .search-input {
         flex: auto;
         .search-type {
-            width: 15%
+            width: 15%;
+            min-width: 175px;
         }
     }
     .add-user {
