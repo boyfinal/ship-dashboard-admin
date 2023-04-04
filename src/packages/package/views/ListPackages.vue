@@ -40,6 +40,11 @@
             @clear="clearSearchDate"
           ></p-datepicker>
         </div>
+        <div class="filter-fba">
+          <p-checkbox class="fba-checkbox" v-model="filter.is_fba"
+            >Chỉ hiển thị đơn FBA</p-checkbox
+          >
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -346,6 +351,7 @@ export default {
         start_date: '',
         end_date: '',
         code: '',
+        is_fba: false,
       },
       labelDate: `Tìm theo ngày`,
       isUploading: false,
@@ -531,5 +537,11 @@ td.code {
   position: relative;
   left: 50px;
   display: inline-block;
+}
+.fba-checkbox {
+  position: relative !important;
+}
+.filter-fba {
+  flex: 1;
 }
 </style>
