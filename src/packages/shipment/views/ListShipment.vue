@@ -11,6 +11,12 @@
             @click="selectWarehouse(item.id)"
             >HUB {{ item ? item.state : '' }}</button
           >
+          <button
+            class="btn btn-warehouse mb-8"
+            :class="{ active: filter.fba > 0 }"
+            @click="selectFba(1)"
+            >FBA</button
+          >
         </div>
         <div class="d-flex jc-sb col-6" id="search-box">
           <p-input
@@ -173,6 +179,7 @@ export default {
         search: '',
         status: '',
         warehouseID: '',
+        fba: 0,
       },
       keywordSearch: '',
       shipmentAction: null,
@@ -220,7 +227,7 @@ export default {
         return
       }
 
-      if (!this.filter.warehouseID) {
+      if (!this.filter.warehouseID && !this.filter.fba) {
         const wareHouseActive = this.wareHouses.find(
           ({ type }) => type == WAREHOUSE_TYPE_INTERNATIONAL
         )
@@ -292,8 +299,14 @@ export default {
 
     selectWarehouse(id) {
       this.filter.page = 1
+      this.filter.fba = 0
       if (this.filter.warehouseID == id) return
       this.filter.warehouseID = id
+    },
+    selectFba(val) {
+      this.filter.page = 1
+      this.filter.fba = val
+      this.filter.warehouseID = 0
     },
     sumWeight(containers) {
       return containers

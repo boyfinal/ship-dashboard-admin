@@ -27,6 +27,15 @@ export default {
       return ''
     },
     link() {
+      const { service } = this.current
+      if (
+        service &&
+        service.code &&
+        service.code.toUpperCase().includes('FBA')
+      ) {
+        return 'https://www.ups.com/track'
+      }
+
       if (this.current.country_code == 'AU') {
         return `https://auspost.com.au/mypost/track/#/details/${this.trackingNumber}`
       }

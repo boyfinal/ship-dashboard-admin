@@ -13,6 +13,13 @@
             >
               HUB {{ warehouse ? warehouse.state : '' }}
             </button>
+            <button
+              :class="{ active: filter.fba }"
+              @click="handleFilterFba(1)"
+              class="choose-warehouse btn btn-default mr-8 mb-8"
+            >
+              FBA
+            </button>
           </div>
           <div class="page__container-search d-flex jc-sb col-6">
             <p-input
@@ -281,6 +288,7 @@ export default {
         search: '',
         warehouse: '',
         type: CONTAINER_TYPE_MANUAL,
+        fba: 0,
       },
       keywordSearch: '',
       isSubmitting: false,
@@ -368,7 +376,7 @@ export default {
         this.isFetching = false
         this.$toast.open({ message: result.message, type: 'error' })
       }
-      if (!this.filter.warehouse) {
+      if (!this.filter.warehouse && !this.filter.fba) {
         const wareHouseActive = this.wareHouses.find(
           ({ type }) => type == WAREHOUSE_TYPE_INTERNATIONAL
         )
@@ -522,6 +530,12 @@ export default {
     handleFilter(id) {
       this.filter.page = 1
       this.filter.warehouse = id
+      this.filter.fba = 0
+    },
+    handleFilterFba(val) {
+      this.filter.page = 1
+      this.filter.fba = val
+      this.filter.warehouse = 0
     },
     changeType(v) {
       this.filter.page = 1
