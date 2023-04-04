@@ -33,7 +33,7 @@ export default {
         service.code &&
         service.code.toUpperCase().includes('FBA')
       ) {
-        return 'https://www.ups.com/track'
+        return `https://www.ups.com/track?trackingNumber=${this.trackingNumber}`
       }
 
       if (this.current.country_code == 'AU') {
