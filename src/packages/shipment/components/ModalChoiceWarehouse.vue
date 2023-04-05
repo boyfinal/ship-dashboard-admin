@@ -74,6 +74,7 @@ export default {
     visible(value) {
       this.isShow = value
       this.warehouseID = 0
+      this.isFBA = false
     },
   },
 }
