@@ -18,11 +18,13 @@
       </p-select>
     </div>
 
+    <div class="mt-24" style="position: relative">
+      <p-checkbox v-model="isFBA" style="padding: 11px 0 0">IS FBA</p-checkbox>
+    </div>
+
     <template slot="footer">
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleClose">
-          Bỏ qua
-        </p-button>
+        <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button type="info" :loading="loading" @click="handleSave">
           Tạo
         </p-button>
@@ -53,6 +55,7 @@ export default {
       isShow: this.visible,
       warehouse: {},
       warehouseID: 0,
+      isFBA: false,
     }
   },
   methods: {
@@ -62,6 +65,7 @@ export default {
     async handleSave() {
       const payload = {
         warehouse_id: this.warehouseID,
+        is_fba: this.isFBA,
       }
       this.$emit('save', payload)
     },
@@ -74,7 +78,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 .modal-footer {
   justify-content: flex-end !important;
 }
@@ -86,5 +90,8 @@ export default {
 }
 .p-modal-content label {
   margin-bottom: 0.4rem;
+}
+.checkbox-custom {
+  position: relative;
 }
 </style>
