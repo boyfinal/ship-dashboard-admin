@@ -76,9 +76,7 @@
     <template slot="footer">
       <div></div>
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleClose">
-          Bỏ qua
-        </p-button>
+        <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button
           type="info"
           :disabled="!selected.length"
@@ -115,9 +113,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    hub: {
-      type: Number,
-      default: 0,
+    shipment: {
+      type: Object,
+      default: () => {},
     },
   },
   computed: {
@@ -136,6 +134,7 @@ export default {
         page: 1,
         status: 2,
         search: '',
+        fba: 0,
       },
       selected: [],
       isFetching: false,
@@ -148,7 +147,8 @@ export default {
       this.filter.limit = 10
       let payload = cloneDeep(this.filter)
       payload.not_in_shipment = true
-      payload.warehouse = this.hub
+      payload.warehouse = this.shipment.hub_id
+      payload.fba = this.shipment.is_fba ? 1 : 0
       payload.search = payload.search.toUpperCase()
       const result = await this[FETCH_LIST_CONTAINERS_NO_BOX](payload)
       this.isFetching = false
@@ -176,21 +176,21 @@ export default {
   },
   watch: {
     visible: {
-      handler: function(value) {
+      handler: function (value) {
         if (value) {
           this.init()
         }
       },
     },
     loading: {
-      handler: function(value) {
+      handler: function (value) {
         if (!value) {
           this.init()
         }
       },
     },
     filter: {
-      handler: function() {
+      handler: function () {
         this.init()
       },
       deep: true,

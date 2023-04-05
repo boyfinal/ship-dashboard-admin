@@ -346,7 +346,7 @@
     </div>
     <modal-list-container
       :visible.sync="isShowModalListContainer"
-      :hub="shipment.hub_id"
+      :shipment="shipment"
       :loading="loading"
       @save="handleAddContainer"
     >
