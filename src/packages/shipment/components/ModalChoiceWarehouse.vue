@@ -22,7 +22,7 @@
       <p-checkbox v-model="isFBA" style="padding: 11px 0 0">IS FBA</p-checkbox>
     </div>
 
-    <template slot="footer">
+    <template slot="footer justify-content-end">
       <div class="group-button modal-confirm">
         <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button type="info" :loading="loading" @click="handleSave">
