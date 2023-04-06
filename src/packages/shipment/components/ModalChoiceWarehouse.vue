@@ -7,7 +7,12 @@
   >
     <div>
       <label for=""><b>Kho:</b></label>
-      <p-select class="floating" v-model="warehouseID" name="warehouseID">
+      <p-select
+        class="floating"
+        v-model="warehouseID"
+        name="warehouseID"
+        :disabled="isFBA"
+      >
         <option value="0">Chọn kho</option>
         <option
           v-for="warehouse in warehouses"
