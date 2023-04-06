@@ -499,12 +499,12 @@ export default {
       }
     },
     async createContainerSubmit(body) {
-      if (body.warehouse_id == 0) {
+      if (body.warehouse_id == 0 && !body.is_fba) {
         this.$toast.error('Chưa chọn kho')
         return
       }
 
-      if (body.type == 0) {
+      if (body.type == 0 && !body.is_fba) {
         this.$toast.error('Chưa chọn kiểu kiện')
         return
       }
