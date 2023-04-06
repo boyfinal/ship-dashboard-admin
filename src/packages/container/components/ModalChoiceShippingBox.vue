@@ -375,6 +375,8 @@ export default {
       this.isShow = value
       this.type = 0
       this.warehouseID = 0
+      this.isFBA = false
+      this.isTypeManual = false
       this.containerType = 0
     },
     type(val) {
