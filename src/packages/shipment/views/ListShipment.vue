@@ -278,22 +278,23 @@ export default {
       this.init()
     },
     async handleCreate(body) {
-      if (body.warehouse_id == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Warehouse id is required',
-        })
+      if (!body.is_fba && body.warehouse_id == 0) {
+        this.$toast.error('Warehouse id is required')
         return
       }
+
       this.loadingCreateWarehouse = true
       const result = await this[CREATE_SHIPMENT](body)
       this.loadingCreateWarehouse = false
+
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+
       this.$toast.open({ message: 'Tạo lô thành công', type: 'success' })
       this.visibleConfirm = false
+      this.filter.fba = body.is_fba ? 1 : 0
       this.init()
     },
 
