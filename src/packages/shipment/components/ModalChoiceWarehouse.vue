@@ -22,7 +22,7 @@
       <p-checkbox v-model="isFBA" style="padding: 11px 0 0">IS FBA</p-checkbox>
     </div>
 
-    <template slot="footer justify-content-end">
+    <template slot="footer">
       <div class="group-button modal-confirm">
         <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button type="info" :loading="loading" @click="handleSave">
@@ -80,8 +80,9 @@ export default {
 }
 </script>
 <style scoped>
-.modal-footer {
-  justify-content: flex-end !important;
+.group-button {
+  width: 100%;
+  text-align: right;
 }
 @media screen and (min-width: 1088px) {
   .p-modal-content.modal-lg,
