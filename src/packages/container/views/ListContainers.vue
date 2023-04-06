@@ -504,7 +504,7 @@ export default {
         return
       }
 
-      if (body.type == 0 && !body.is_fba) {
+      if (body.type == 0) {
         this.$toast.error('Chưa chọn kiểu kiện')
         return
       }
