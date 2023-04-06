@@ -1,23 +1,34 @@
 <template>
   <p-modal :active.sync="isShow" :title="title" @close="handleClose">
-    <div v-if="isCreate" class="row">
-      <div class="col">
-        <label for=""><b>Kho:</b></label>
-        <p-select class="floating" v-model="warehouseID" name="warehouseID">
-          <option value="0">Chọn kho</option>
-          <option
-            v-for="warehouse in warehouses"
-            :key="warehouse.id"
-            :value="warehouse.id"
-            >HUB {{ warehouse.state }}
-          </option>
-        </p-select>
+    <div v-if="isCreate">
+      <div class="row" v-if="!isFBA">
+        <div class="col">
+          <label for=""><b>Kho:</b></label>
+          <p-select class="floating" v-model="warehouseID" name="warehouseID">
+            <option value="0">Chọn kho</option>
+            <option
+              v-for="warehouse in warehouses"
+              :key="warehouse.id"
+              :value="warehouse.id"
+              >HUB {{ warehouse.state }}
+            </option>
+          </p-select>
+        </div>
+        <div class="col">
+          <label for=""><b>Chọn kiểu label:</b></label>
+          <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
+            >Label ngoài</p-checkbox
+          >
+        </div>
       </div>
-      <div class="col">
-        <label for=""><b>Chọn kiểu label:</b></label>
-        <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
-          >Label ngoài</p-checkbox
-        >
+      <div
+        class="row"
+        style="margin-top: 10px; height: 23px"
+        v-if="warehouseID == 0 && !isTypeManual"
+      >
+        <div class="col">
+          <p-checkbox v-model="isFBA">IS FBA</p-checkbox>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -265,6 +276,7 @@ export default {
         width: 0,
         max_weight: 0,
       },
+      isFBA: false,
       actual_weight: 0,
       weight: 0,
       tracking_number: '',
@@ -329,6 +341,10 @@ export default {
         payload = { warehouse_id: this.warehouseID, type: CONTAINER_TYPE_API }
         if (this.isTypeManual) {
           payload.type = CONTAINER_TYPE_MANUAL
+        }
+        payload.is_fba = false
+        if (this.isFBA) {
+          payload.is_fba = true
         }
       } else {
         payload = {
