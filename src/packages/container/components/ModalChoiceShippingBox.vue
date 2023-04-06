@@ -342,7 +342,10 @@ export default {
 
       let payload = {}
       if (this.isCreate) {
-        payload = { warehouse_id: this.warehouseID, type: CONTAINER_TYPE_API }
+        payload = {
+          warehouse_id: parseInt(this.warehouseID),
+          type: CONTAINER_TYPE_API,
+        }
         if (this.isTypeManual) {
           payload.type = CONTAINER_TYPE_MANUAL
         }
