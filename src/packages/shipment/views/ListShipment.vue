@@ -294,7 +294,12 @@ export default {
 
       this.$toast.open({ message: 'Tạo lô thành công', type: 'success' })
       this.visibleConfirm = false
-      this.filter.fba = body.is_fba ? 1 : 0
+
+      this.filter.fba = 0
+      if (body.is_fba) {
+        this.filter.fba = 1
+        this.filter.warehouseID = 0
+      }
       this.init()
     },
 
