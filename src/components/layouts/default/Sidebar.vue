@@ -215,7 +215,7 @@ export default {
             this.$isSupportLeader() ||
             this.$isWarehouse() ||
             this.$isMarketing() ||
-            this.$isShipPartner(),
+            this.$isShipPartner()
           sub: [
             {
               route: '/statistics',
