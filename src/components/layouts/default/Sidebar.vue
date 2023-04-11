@@ -215,7 +215,7 @@ export default {
             this.$isSupportLeader() ||
             this.$isWarehouse() ||
             this.$isMarketing() ||
-            this.$isShipPartner()
+            this.$isShipPartner(),
           sub: [
             {
               route: '/statistics',
@@ -226,7 +226,7 @@ export default {
                 this.$isSupport() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
-                this.$isWarehouse() ||
+                this.$isWarehouse(),
             },
             {
               route: '/statistic-claims',
@@ -237,7 +237,7 @@ export default {
                 this.$isSupport() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
-                this.$isWarehouse() ||
+                this.$isWarehouse(),
             },
           ],
         },
