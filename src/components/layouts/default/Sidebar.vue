@@ -348,8 +348,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
             {
               route: '/user',
@@ -366,8 +365,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
             {
               route: '/notify/customer',
@@ -378,8 +376,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
           ],
         },
