@@ -25,7 +25,7 @@
             </div>
             <div>
               <div>Khối lượng: </div>
-              <div> {{ shipment.weight | formatWeight }} kg </div>
+              <div> {{ shipment.weight | formatWeight }}kg </div>
             </div>
             <div>
               <div>Tổng giá: </div>
