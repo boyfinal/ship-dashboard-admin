@@ -142,7 +142,7 @@
                                 <th>LionBay tracking</th>
                                 <th>Last mile tracking</th>
                                 <th>Trọng lượng</th>
-                                <th>Dài x Rộng x Cao</th>
+                                <th>Dài x Rộng x Cao (cm)</th>
                                 <th></th>
                               </thead>
                               <tbody>
@@ -168,7 +168,7 @@
                                       ? item.tracking.tracking_number
                                       : 'N/A'
                                   }}</td>
-                                  <td>{{ item.weight }} gram</td>
+                                  <td>{{ item.weight | formatWeight }}kg</td>
                                   <td
                                     >{{ item.length }} x {{ item.width }} x{{
                                       item.height
@@ -208,6 +208,7 @@ import mixinTable from '@core/mixins/table'
 import { FETCH_DETAIL_CUSTOMER_SHIPMENT } from '../store'
 import Status from '../components/Status.vue'
 import { print } from '@core/utils/print'
+import { KG_TO_GRAM } from '@core/constants'
 export default {
   name: 'PackageDetail',
   mixins: [mixinTable],
@@ -252,6 +253,11 @@ export default {
       } catch (error) {
         this.$toast.error('File error !!!')
       }
+    },
+  },
+  filters: {
+    formatWeight(val) {
+      return (val / KG_TO_GRAM).toFixed(2).replace('.00', '')
     },
   },
 }
