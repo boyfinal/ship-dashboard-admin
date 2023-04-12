@@ -12,7 +12,7 @@
         </div>
 
         <div class="page-header__subtitle">
-          <div class="page-header__info grib_header">
+          <div class="page-header__info grib_header" v-if="!isFetching">
             <div>
               <div>Mã lô hàng:</div>
               <div> #{{ shipment.id }} </div>
@@ -53,7 +53,10 @@
                       <div class="card-header">
                         <div class="card-title">Người nhận</div>
                       </div>
-                      <div class="card-content">
+                      <div class="card-content text-center" v-if="isFetching">
+                        <img src="@assets/img/no_data.png" />
+                      </div>
+                      <div class="card-content" v-else>
                         <div class="row">
                           <div class="col-5 mb-8">Họ và tên:</div>
                           <div class="col-7">
@@ -124,26 +127,23 @@
                 </div>
               </div>
               <div class="col-9" style="padding: 0 30px 0 30px">
-                <div class="row" style="height: 100%">
+                <div class="row">
                   <div class="col-12 p-0">
                     <div class="card-block">
                       <div class="card-header">
                         <div class="card-title">Chi tiết lô hàng</div>
                       </div>
-                      <div class="card-content">
+                      <div class="card-content text-center">
                         <template v-if="packages.length">
                           <div class="table-responsive" style="overflow: unset">
-                            <table
-                              class="table table-hover table-packages"
-                              id="tbl-packages"
-                            >
+                            <table class="table table-hover table-packages">
                               <thead>
                                 <th>ORDER NO.</th>
                                 <th>LionBay tracking</th>
                                 <th>Last mile tracking</th>
                                 <th>Trọng lượng</th>
                                 <th>Dài</th>
-                                <th>Rộng</th>
+                                <th>Rộng</th> <template></template>
                                 <th>Cao</th>
                                 <th></th>
                               </thead>
