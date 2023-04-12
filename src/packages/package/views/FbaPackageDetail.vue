@@ -138,18 +138,16 @@
                           <div class="table-responsive" style="overflow: unset">
                             <table class="table table-hover table-packages">
                               <thead>
-                                <th>ORDER NO.</th>
+                                <th width="80">ORDER NO.</th>
                                 <th>LionBay tracking</th>
                                 <th>Last mile tracking</th>
                                 <th>Trọng lượng</th>
-                                <th>Dài</th>
-                                <th>Rộng</th> <template></template>
-                                <th>Cao</th>
+                                <th>Dài x Rộng x Cao</th>
                                 <th></th>
                               </thead>
                               <tbody>
                                 <tr v-for="(item, i) in packages" :key="i">
-                                  <td>
+                                  <td width="80">
                                     <router-link
                                       class="text-no-underline"
                                       :to="{
@@ -171,9 +169,11 @@
                                       : 'N/A'
                                   }}</td>
                                   <td>{{ item.weight }} gram</td>
-                                  <td>{{ item.length }}</td>
-                                  <td>{{ item.width }}</td>
-                                  <td>{{ item.height }}</td>
+                                  <td
+                                    >{{ item.length }} x {{ item.width }} x{{
+                                      item.height
+                                    }}</td
+                                  >
                                   <td>
                                     <p-button
                                       v-if="item.label"
