@@ -149,7 +149,17 @@
                               </thead>
                               <tbody>
                                 <tr v-for="(item, i) in packages" :key="i">
-                                  <td>{{ item.order_number }}</td>
+                                  <td>
+                                    <router-link
+                                      class="text-no-underline"
+                                      :to="{
+                                        name: 'package-detail',
+                                        params: { id: item.id },
+                                      }"
+                                    >
+                                      {{ item.order_number }}
+                                    </router-link>
+                                  </td>
                                   <td>{{
                                     item.package_code
                                       ? item.package_code.code
