@@ -178,7 +178,7 @@
                                     <p-button
                                       v-if="item.label"
                                       @click.prevent="downloadLabel(item)"
-                                      class="btn-sm"
+                                      class="btn-sm btn-info"
                                       >Tải label</p-button
                                     >
                                   </td>
