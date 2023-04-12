@@ -130,7 +130,7 @@ export default {
             {
               route: '/packages/fba',
               title: 'Đơn hàng FBA',
-              alias: ['/packages/fba'],
+              alias: ['/packages/fba', '/packages/fba/:id'],
               disable:
                 this.$isSupportLeader() ||
                 this.$isWarehouse() ||
