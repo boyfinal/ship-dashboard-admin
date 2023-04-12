@@ -9,7 +9,6 @@
             type="search"
             :clearable="true"
             v-model="filter.keyword"
-            @input="checkClearSearch"
             @keyup.enter="handleSearch"
             @clear="clearSearch"
           >
@@ -144,12 +143,6 @@ export default {
     handleClearSearch() {
       this.filter.keyword = ''
       this.filter.page = 1
-    },
-    checkClearSearch(e) {
-      if (e.trim() === '') {
-        this.filter.page = 1
-        this.$set(this.filter, 'keyword', '')
-      }
     },
     selectDate(v) {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
