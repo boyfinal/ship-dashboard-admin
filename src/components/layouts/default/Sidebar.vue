@@ -225,7 +225,6 @@ export default {
             this.$isSupportLeader() ||
             this.$isWarehouse() ||
             this.$isMarketing() ||
-            this.$isBusinessManager() ||
             this.$isShipPartner(),
           sub: [
             {
@@ -237,8 +236,7 @@ export default {
                 this.$isSupport() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
-                this.$isWarehouse() ||
-                this.$isBusinessManager(),
+                this.$isWarehouse(),
             },
             {
               route: '/statistic-claims',
@@ -249,8 +247,7 @@ export default {
                 this.$isSupport() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
-                this.$isWarehouse() ||
-                this.$isBusinessManager(),
+                this.$isWarehouse(),
             },
           ],
         },
@@ -361,8 +358,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
             {
               route: '/user',
@@ -379,8 +375,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
             {
               route: '/notify/customer',
@@ -391,8 +386,7 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isSupportLeader(),
             },
           ],
         },
