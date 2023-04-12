@@ -4,7 +4,7 @@
       <div class="d-flex jc-sb mb-12 search-input">
         <div class="group d-flex">
           <p-input
-            :placeholder="`Tìm theo mã lô hàng, mã đơn hàng, mã tracking`"
+            :placeholder="`Tìm theo mã lô hàng | LionBay tracking | Last mile tracking`"
             prefixIcon="search"
             type="search"
             :clearable="true"
