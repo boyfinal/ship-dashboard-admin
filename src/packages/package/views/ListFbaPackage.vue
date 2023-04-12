@@ -8,9 +8,9 @@
             prefixIcon="search"
             type="search"
             :clearable="true"
-            v-model="filter.keyword"
+            :value="filter.keyword"
             @keyup.enter="handleSearch"
-            @clear="clearSearch"
+            @clear="handleClearSearch"
           >
           </p-input>
         </div>
