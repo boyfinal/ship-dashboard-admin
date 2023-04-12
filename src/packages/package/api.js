@@ -84,4 +84,13 @@ export default {
   createEventTracking(payload) {
     return http.post(`/packages/tracking`, payload)
   },
+  fetchCustomerShipment(payload) {
+    return http.get(`/shipments/customer?${buildQueryString(payload)}`)
+  },
+  countCustomerShipment(payload) {
+    return http.get(`/shipments/customer/count?${buildQueryString(payload)}`)
+  },
+  fetchDetailCustomerShipment(payload) {
+    return http.get(`/shipments/customer/${payload.id}`)
+  },
 }
