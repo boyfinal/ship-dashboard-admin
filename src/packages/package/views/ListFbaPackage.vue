@@ -98,6 +98,7 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import Status from '../components/Status.vue'
 import StatusTab from '../components/StatusTab.vue'
+import { KG_TO_GRAM } from '@core/constants'
 export default {
   name: 'ListPackages',
   mixins: [mixinRoute, mixinTable, mixinDownload],
@@ -165,6 +166,11 @@ export default {
         this.init()
       },
       deep: true,
+    },
+  },
+  filters: {
+    formatWeight(val) {
+      return (val / KG_TO_GRAM).toFixed(2).replace('.00', '')
     },
   },
 }
