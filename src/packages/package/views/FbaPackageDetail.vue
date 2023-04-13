@@ -24,6 +24,10 @@
               }}</div>
             </div>
             <div>
+              <div>Khách hàng </div>
+              <div>{{ shipment.user.full_name }}</div>
+            </div>
+            <div>
               <div>Khối lượng: </div>
               <div> {{ shipment.weight | formatWeight }}kg </div>
             </div>
