@@ -172,12 +172,31 @@
                                       ? item.tracking.tracking_number
                                       : 'N/A'
                                   }}</td>
-                                  <td>{{ item.weight | formatWeight }}kg</td>
-                                  <td
-                                    >{{ item.length }} x {{ item.width }} x{{
+                                  <td>
+                                    {{ item.weight | formatWeight }}kg
+                                    <span
+                                      v-if="item.actual_weight > item.weight"
+                                      >({{
+                                        item.actual_weight | formatWeight
+                                      }}kg)</span
+                                    >
+                                  </td>
+                                  <td>
+                                    {{ item.length }} x {{ item.width }} x{{
                                       item.height
-                                    }}</td
-                                  >
+                                    }}
+                                    <span
+                                      v-if="
+                                        item.length * item.width * item.height <
+                                        item.actual_length *
+                                          item.actual_width *
+                                          item.actual_height
+                                      "
+                                      >({{ item.actual_length }}x{{
+                                        item.actual_width
+                                      }}x{{ item.actual_height }})</span
+                                    >
+                                  </td>
                                   <td>
                                     <p-button
                                       v-if="item.label"
