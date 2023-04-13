@@ -41,6 +41,7 @@
                   <th>Shipment No.</th>
                   <th>WEIGHT</th>
                   <th>CREATED DATE</th>
+                  <th>CUSTOMER</th>
                   <th>PRICE</th>
                   <th>STATUS</th>
                 </thead>
@@ -57,10 +58,11 @@
                         #{{ item.id }}
                       </router-link>
                     </td>
-                    <td>{{ item.weight }} gram</td>
+                    <td>{{ item.weight | formatWeight }}kg</td>
                     <td>{{
                       item.created_at | datetime('dd/MM/yyyy HH:mm')
                     }}</td>
+                    <td>{{ item.user.full_name }}</td>
                     <td>{{ item.price | formatPrice }}</td>
                     <td><Status :status="item.status" /></td>
                   </tr>
