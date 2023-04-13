@@ -107,3 +107,5 @@ export const OPTIONS_PACKAGES = [
   { id: 5, value: '3000 - 6000 đơn' },
   { id: 6, value: '> 6000 đơn' },
 ]
+
+export const SERVICE_CODE_FBA = 'FBA'
