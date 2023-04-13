@@ -1,5 +1,5 @@
 <template>
-  <div class="package-detail pages">
+  <div class="package-detail fba pages">
     <div class="page-content">
       <div class="page-header">
         <div class="page-header_back">
