@@ -134,7 +134,7 @@
                         <div class="card-title">Chi tiết lô hàng</div>
                       </div>
                       <div class="card-content text-center">
-                        <template v-if="packages.length">
+                        <template v-if="!isFetching">
                           <div class="table-responsive" style="overflow: unset">
                             <table class="table table-hover table-packages">
                               <thead>
