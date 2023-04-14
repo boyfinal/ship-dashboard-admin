@@ -524,7 +524,7 @@ export default {
       this.filter.page = 1
       this.filter.type = body.type
       this.filter.warehouse = body.warehouse_id
-      this.filter.fba = body.is_fba
+      this.filter.fba = body.is_fba ? 1 : 0
 
       this.init()
     },
