@@ -201,7 +201,7 @@
                                   </td>
                                   <td>{{ item.shipping_fee | formatPrice }}</td>
                                   <td>{{ getExtraFee(item) | formatPrice }}</td>
-                                  <td>
+                                  <td width="100">
                                     <p-button
                                       v-if="item.label"
                                       @click.prevent="downloadLabel(item)"
