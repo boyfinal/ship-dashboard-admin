@@ -1,4 +1,5 @@
 import api from '../api'
+import { SERVICE_CODE_FBA } from '../constants'
 
 /**
  * Type
@@ -96,6 +97,7 @@ export const mutations = {
           user_class,
           service_id: service.id,
           service_name: service.name,
+          service_code: service.code,
           type_name: MAP_USER_CLASS_TEXT[parseInt(user_class)],
         })
       }
@@ -171,8 +173,11 @@ export const getters = {
       let preweight = key > 0 ? prices[key - 1].weight || 0 : 0
       item.weight_text =
         preweight == 0 ? `<${item.weight}` : `${preweight}-${item.weight}`
-
-      display.push(item)
+      if (item.service_code != SERVICE_CODE_FBA) {
+        display.push(item)
+      } else if (preweight != 0) {
+        display.push(item)
+      }
     }
 
     return display

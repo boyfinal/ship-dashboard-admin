@@ -41,7 +41,11 @@
             }
         }
     }
-    .page-header {}
+    .page-header {
+        &_back_icon{
+            margin: unset !important;
+        }
+    }
     .page-content {
         .text-no-underline,
         .router-link-active {

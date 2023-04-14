@@ -7,7 +7,12 @@
   >
     <div>
       <label for=""><b>Kho:</b></label>
-      <p-select class="floating" v-model="warehouseID" name="warehouseID">
+      <p-select
+        class="floating"
+        v-model="warehouseID"
+        name="warehouseID"
+        :disabled="isFBA"
+      >
         <option value="0">Chọn kho</option>
         <option
           v-for="warehouse in warehouses"
@@ -18,11 +23,13 @@
       </p-select>
     </div>
 
+    <div class="mt-24" style="position: relative">
+      <p-checkbox v-model="isFBA" style="padding: 11px 0 0">IS FBA</p-checkbox>
+    </div>
+
     <template slot="footer">
       <div class="group-button modal-confirm">
-        <p-button type="default" @click="handleClose">
-          Bỏ qua
-        </p-button>
+        <p-button type="default" @click="handleClose"> Bỏ qua </p-button>
         <p-button type="info" :loading="loading" @click="handleSave">
           Tạo
         </p-button>
@@ -53,6 +60,7 @@ export default {
       isShow: this.visible,
       warehouse: {},
       warehouseID: 0,
+      isFBA: false,
     }
   },
   methods: {
@@ -62,6 +70,7 @@ export default {
     async handleSave() {
       const payload = {
         warehouse_id: this.warehouseID,
+        is_fba: this.isFBA,
       }
       this.$emit('save', payload)
     },
@@ -70,13 +79,15 @@ export default {
     visible(value) {
       this.isShow = value
       this.warehouseID = 0
+      this.isFBA = false
     },
   },
 }
 </script>
-<style>
-.modal-footer {
-  justify-content: flex-end !important;
+<style scoped>
+.group-button {
+  width: 100%;
+  text-align: right;
 }
 @media screen and (min-width: 1088px) {
   .p-modal-content.modal-lg,
@@ -86,5 +97,8 @@ export default {
 }
 .p-modal-content label {
   margin-bottom: 0.4rem;
+}
+.checkbox-custom {
+  position: relative;
 }
 </style>

@@ -17,6 +17,9 @@ export const CANCEL_PACKAGES = 'cancelPackages'
 export const FETCH_LIST_PACKAGES_RETURN = 'fetchListPackagesReturn'
 export const COUNT_LIST_PACKAGES_RETURN = 'countListPackagesReturn'
 export const CREATE_EVENT_TRACKING = 'createEventTracking'
+export const FETCH_CUSTOMER_SHIPMENT = 'fetchCustomerShipment'
+export const COUNT_CUSTOMER_SHIPMENT = 'countCustomerShipment'
+export const FETCH_DETAIL_CUSTOMER_SHIPMENT = 'fetchDetailCustomerShipment'
 
 export const EXPORT_PACKAGE = 'exportPackage'
 export const GET_SERVICE = 'getService'
@@ -42,6 +45,10 @@ export const state = {
   products: [],
   service: [],
   countProducts: 0,
+  customerShipments: [],
+  customerShipment: {},
+  customerShipmentPkgs: [],
+  countCustomerShipments: 0,
 }
 /**
  * Getters
@@ -83,6 +90,17 @@ export const mutations = {
   },
   [COUNT_LIST_PACKAGES_RETURN]: (state, payload) => {
     state.countReturnPackages = payload.count
+  },
+  [FETCH_CUSTOMER_SHIPMENT]: (state, payload) => {
+    state.customerShipments = payload.shipments
+  },
+  [COUNT_CUSTOMER_SHIPMENT]: (state, payload) => {
+    state.countCustomerShipments = payload.count
+  },
+  [FETCH_DETAIL_CUSTOMER_SHIPMENT]: (state, payload) => {
+    state.customerShipment = payload.shipment
+    state.customerShipmentPkgs = payload.packages
+    state.customerShipment.total_amount = payload.total_amount
   },
 }
 
@@ -274,5 +292,37 @@ export const actions = {
     }
 
     return { error: false, ...res }
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [FETCH_CUSTOMER_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let [list, count] = await Promise.all([
+      api.fetchCustomerShipment(payload),
+      api.countCustomerShipment(payload),
+    ])
+    if (list.error || !count) {
+      result = {
+        success: false,
+        message: list.errorMessage || count.errorMessage || '',
+      }
+    }
+    commit(COUNT_CUSTOMER_SHIPMENT, count)
+    commit(FETCH_CUSTOMER_SHIPMENT, list)
+    return result
+  },
+
+  // eslint-disable-next-line no-unused-vars
+  async [FETCH_DETAIL_CUSTOMER_SHIPMENT]({ commit }, payload) {
+    let result = { success: true }
+    let response = await api.fetchDetailCustomerShipment(payload)
+    if (!response.shipment) {
+      result = {
+        success: false,
+        message: response.errorMessage || '',
+      }
+    }
+    commit(FETCH_DETAIL_CUSTOMER_SHIPMENT, response)
+    return result
   },
 }

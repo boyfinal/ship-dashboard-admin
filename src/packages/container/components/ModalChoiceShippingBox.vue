@@ -1,23 +1,38 @@
 <template>
   <p-modal :active.sync="isShow" :title="title" @close="handleClose">
-    <div v-if="isCreate" class="row">
-      <div class="col">
-        <label for=""><b>Kho:</b></label>
-        <p-select class="floating" v-model="warehouseID" name="warehouseID">
-          <option value="0">Chọn kho</option>
-          <option
-            v-for="warehouse in warehouses"
-            :key="warehouse.id"
-            :value="warehouse.id"
-            >HUB {{ warehouse.state }}
-          </option>
-        </p-select>
-      </div>
-      <div class="col">
-        <label for=""><b>Chọn kiểu label:</b></label>
-        <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
-          >Label ngoài</p-checkbox
-        >
+    <div v-if="isCreate">
+      <div class="row">
+        <div class="col">
+          <label for="" v-if="!isFBA"><b>Kho:</b></label>
+          <p-select
+            class="floating"
+            v-model="warehouseID"
+            name="warehouseID"
+            v-if="!isFBA"
+          >
+            <option value="0">Chọn kho</option>
+            <option
+              v-for="warehouse in warehouses"
+              :key="warehouse.id"
+              :value="warehouse.id"
+              >HUB {{ warehouse.state }}
+            </option>
+          </p-select>
+          <div v-if="warehouseID == 0" style="height: 23px; margin: 11px 0">
+            <p-checkbox v-model="isFBA" class="fb-cb">IS FBA</p-checkbox>
+          </div>
+        </div>
+        <div class="col">
+          <div
+            class="space"
+            style="height: 23px"
+            v-if="!isFBA && warehouseID == 0"
+          ></div>
+          <label for=""><b>Chọn kiểu label:</b></label>
+          <p-checkbox v-model="isTypeManual" style="padding: 11px 13px 0"
+            >Label ngoài</p-checkbox
+          >
+        </div>
       </div>
     </div>
     <div v-else>
@@ -265,6 +280,7 @@ export default {
         width: 0,
         max_weight: 0,
       },
+      isFBA: false,
       actual_weight: 0,
       weight: 0,
       tracking_number: '',
@@ -326,9 +342,16 @@ export default {
 
       let payload = {}
       if (this.isCreate) {
-        payload = { warehouse_id: this.warehouseID, type: CONTAINER_TYPE_API }
+        payload = {
+          warehouse_id: parseInt(this.warehouseID),
+          type: CONTAINER_TYPE_API,
+        }
         if (this.isTypeManual) {
           payload.type = CONTAINER_TYPE_MANUAL
+        }
+        payload.is_fba = false
+        if (this.isFBA) {
+          payload.is_fba = true
         }
       } else {
         payload = {
@@ -352,6 +375,8 @@ export default {
       this.isShow = value
       this.type = 0
       this.warehouseID = 0
+      this.isFBA = false
+      this.isTypeManual = false
       this.containerType = 0
     },
     type(val) {
@@ -375,5 +400,8 @@ export default {
 
 .p-modal-content label {
   margin-bottom: 0.4rem;
+}
+.fb-cb {
+  top: unset !important;
 }
 </style>

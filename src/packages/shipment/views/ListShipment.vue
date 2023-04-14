@@ -11,6 +11,12 @@
             @click="selectWarehouse(item.id)"
             >HUB {{ item ? item.state : '' }}</button
           >
+          <button
+            class="btn btn-warehouse mb-8"
+            :class="{ active: filter.fba > 0 }"
+            @click="selectFba(1)"
+            >FBA</button
+          >
         </div>
         <div class="d-flex jc-sb col-6" id="search-box">
           <p-input
@@ -173,6 +179,7 @@ export default {
         search: '',
         status: '',
         warehouseID: '',
+        fba: 0,
       },
       keywordSearch: '',
       shipmentAction: null,
@@ -220,7 +227,7 @@ export default {
         return
       }
 
-      if (!this.filter.warehouseID) {
+      if (!this.filter.warehouseID && !this.filter.fba) {
         const wareHouseActive = this.wareHouses.find(
           ({ type }) => type == WAREHOUSE_TYPE_INTERNATIONAL
         )
@@ -271,29 +278,41 @@ export default {
       this.init()
     },
     async handleCreate(body) {
-      if (body.warehouse_id == 0) {
-        this.$toast.open({
-          type: 'error',
-          message: 'Warehouse id is required',
-        })
+      if (!body.is_fba && body.warehouse_id == 0) {
+        this.$toast.error('Warehouse id is required')
         return
       }
+
       this.loadingCreateWarehouse = true
       const result = await this[CREATE_SHIPMENT](body)
       this.loadingCreateWarehouse = false
+
       if (!result.success) {
         this.$toast.open({ message: result.message, type: 'error' })
         return
       }
+
       this.$toast.open({ message: 'Tạo lô thành công', type: 'success' })
       this.visibleConfirm = false
+
+      this.filter.fba = 0
+      if (body.is_fba) {
+        this.filter.fba = 1
+        this.filter.warehouseID = 0
+      }
       this.init()
     },
 
     selectWarehouse(id) {
       this.filter.page = 1
+      this.filter.fba = 0
       if (this.filter.warehouseID == id) return
       this.filter.warehouseID = id
+    },
+    selectFba(val) {
+      this.filter.page = 1
+      this.filter.fba = val
+      this.filter.warehouseID = 0
     },
     sumWeight(containers) {
       return containers

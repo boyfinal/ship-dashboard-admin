@@ -25,3 +25,5 @@ export const ACL = {}
 export const NOT_STAFF_GET_LIMIT = 200
 
 export const MAX_DESIGN_FILE = 15
+
+export const KG_TO_GRAM = 1000

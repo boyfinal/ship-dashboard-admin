@@ -128,6 +128,12 @@ export default {
                 this.$isMarketing(),
             },
             {
+              route: '/packages/fba',
+              title: 'Đơn hàng FBA',
+              alias: ['/packages/fba', '/packages/fba/:id'],
+              disable: this.$isMarketing(),
+            },
+            {
               route: '/packages/alert',
               title: 'Đơn hàng bị chậm',
               alias: ['/packages/alert'],
