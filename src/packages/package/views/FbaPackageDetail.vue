@@ -147,6 +147,8 @@
                                 <th>Last mile tracking</th>
                                 <th>Trọng lượng</th>
                                 <th>Dài x Rộng x Cao (cm)</th>
+                                <th>Phí ship</th>
+                                <th>Extra fee</th>
                                 <th></th>
                               </thead>
                               <tbody>
@@ -197,6 +199,8 @@
                                       }}x{{ item.actual_height }})</span
                                     >
                                   </td>
+                                  <td>{{ item.shipping_fee | formatPrice }}</td>
+                                  <td>{{ getExtraFee(item) | formatPrice }}</td>
                                   <td>
                                     <p-button
                                       v-if="item.label"
@@ -276,6 +280,14 @@ export default {
       } catch (error) {
         this.$toast.error('File error !!!')
       }
+    },
+    getExtraFee(item) {
+      if (!item.extra_fee.length) {
+        return 0
+      }
+      return item.extra_fee.reduce(function (a, b) {
+        return a + b.amount
+      }, 0)
     },
   },
   filters: {
