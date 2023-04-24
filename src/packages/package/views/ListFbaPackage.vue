@@ -115,6 +115,9 @@ export default {
         keyword: '',
         start_date: '',
         end_date: '',
+        tester: this.$route.query.tester
+          ? parseInt(this.$route.query.tester)
+          : 0,
       },
       isFetching: false,
       labelDate: `Tìm theo ngày`,
