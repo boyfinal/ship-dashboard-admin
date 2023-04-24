@@ -96,7 +96,8 @@
                         :disabled="
                           current_user.role != role_support_leader &&
                           current_user.role != role_admin &&
-                          current_user.role != role_bu_manager
+                          current_user.role != role_bu_manager &&
+                          current_user.role != role_ship_partner
                         "
                         :custom-label="customLabel"
                       ></multiselect>
@@ -111,7 +112,8 @@
                             current_user.role != role_support_leader &&
                             current_user.role != role_support &&
                             current_user.role != role_admin &&
-                            current_user.role != role_bu_manager,
+                            current_user.role != role_bu_manager &&
+                            current_user.role != role_ship_partner,
                         }"
                         @click="visibleModalApprai(item)"
                       >
@@ -125,7 +127,8 @@
                           deactive:
                             current_user.role != role_support_leader &&
                             current_user.role != role_admin &&
-                            current_user.role != role_bu_manager,
+                            current_user.role != role_bu_manager &&
+                            current_user.role != role_ship_partner,
                         }"
                         @click="visibleRole(item)"
                       >
@@ -227,6 +230,7 @@ import {
   ROLE_SUPPORT_LEADER,
   ROLE_ADMIN,
   ROLER_BUSSINESS_MANAGER,
+  ROLER_SHIP_PARTNER,
 } from '@core/constants'
 import ModalActiveUser from '../components/ModalActiveUser'
 
@@ -266,6 +270,7 @@ export default {
       role_support_leader: ROLE_SUPPORT_LEADER,
       role_admin: ROLE_ADMIN,
       role_bu_manager: ROLER_BUSSINESS_MANAGER,
+      role_ship_partner: ROLER_SHIP_PARTNER,
       isVisibleModalActiveUser: false,
       query: {},
       initSearch: '',

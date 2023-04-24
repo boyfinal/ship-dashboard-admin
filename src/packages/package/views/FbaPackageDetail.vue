@@ -43,6 +43,10 @@
                 <Status :status="shipment.status" />
               </div>
             </div>
+            <div>
+              <div>Dịch vụ: </div>
+              <div>{{ service.name || '' }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -201,13 +205,22 @@
                                   </td>
                                   <td>{{ item.shipping_fee | formatPrice }}</td>
                                   <td>{{ getExtraFee(item) | formatPrice }}</td>
-                                  <td width="100">
-                                    <p-button
+                                  <td width="50">
+                                    <a
                                       v-if="item.label"
+                                      href="#"
+                                      class="label-print"
                                       @click.prevent="downloadLabel(item)"
-                                      class="btn-sm btn-info"
-                                      >Tải label</p-button
                                     >
+                                      <p-tooltip
+                                        label="Print"
+                                        size="large"
+                                        position="top"
+                                        type="dark"
+                                      >
+                                        <p-svg :name="'print'"></p-svg>
+                                      </p-tooltip>
+                                    </a>
                                   </td>
                                 </tr>
                               </tbody>
@@ -247,6 +260,12 @@ export default {
       shipment: (state) => state.customerShipment,
       packages: (state) => state.customerShipmentPkgs,
     }),
+    service() {
+      if (!this.packages || !this.packages.length) return ''
+
+      const first = this.packages[0]
+      return first.service || {}
+    },
   },
   data() {
     return {
@@ -318,5 +337,8 @@ export default {
 .through-line td {
   text-decoration-line: line-through;
   color: #aaabab !important;
+}
+.label-print:hover path {
+  fill: #00978c;
 }
 </style>
