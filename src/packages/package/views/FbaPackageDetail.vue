@@ -38,6 +38,12 @@
               </div>
             </div>
             <div>
+              <div>Phí phát sinh: </div>
+              <div>
+                {{ extraFee | formatPrice }}
+              </div>
+            </div>
+            <div>
               <div>Trạng thái: </div>
               <div>
                 <Status :status="shipment.status" />
@@ -260,6 +266,13 @@ export default {
       shipment: (state) => state.customerShipment,
       packages: (state) => state.customerShipmentPkgs,
     }),
+    extraFee() {
+      return this.shipment.extra_fees
+        ? this.shipment.extra_fees.reduce((total, fee) => {
+            return total + fee.amount
+          }, 0)
+        : 0
+    },
     service() {
       if (!this.packages || !this.packages.length) return ''
 
