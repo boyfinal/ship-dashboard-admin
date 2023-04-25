@@ -34,13 +34,7 @@
             <div>
               <div>Tổng giá: </div>
               <div>
-                {{ shipment.total_amount | formatPrice }}
-              </div>
-            </div>
-            <div>
-              <div>Phí phát sinh: </div>
-              <div>
-                {{ extraFee | formatPrice }}
+                {{ (shipment.total_amount + extraFee) | formatPrice }}
               </div>
             </div>
             <div>
