@@ -157,6 +157,7 @@
                     <tr v-for="(item, i) in feeExtra" :key="i">
                       <td>
                         <router-link
+                          v-if="item.package && item.package.package_code"
                           class="text-no-underline"
                           :to="{
                             name: 'package-detail',
@@ -166,9 +167,11 @@
                           }"
                         >
                           {{
-                            item.package.package_code
-                              ? item.package.package_code.code
-                              : ''
+                            item.package
+                              ? item.package.package_code
+                                ? item.package.package_code.code
+                                : ''
+                              : null
                           }}
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
