@@ -138,6 +138,7 @@
                   <thead>
                     <tr>
                       <th>LionBay tracking</th>
+                      <th>MÃ LÔ FBA</th>
                       <th>Thời gian</th>
                       <th>Phí phát sinh</th>
                       <th>Loại phí</th>
@@ -176,6 +177,20 @@
                           <span class="link-icon">
                             <p-svg name="external"></p-svg>
                           </span>
+                        </router-link>
+                      </td>
+                      <td>
+                        <router-link
+                          v-if="item.customer_shipment_id"
+                          class="text-no-underline"
+                          :to="{
+                            name: 'package-fba-detail',
+                            params: {
+                              id: item.customer_shipment_id,
+                            },
+                          }"
+                        >
+                          #{{ item.customer_shipment_id }}
                         </router-link>
                       </td>
                       <td>{{
