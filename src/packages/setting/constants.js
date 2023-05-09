@@ -109,3 +109,6 @@ export const OPTIONS_PACKAGES = [
 ]
 
 export const SERVICE_CODE_FBA = 'FBA'
+
+export const CARRIER_CODE_IBBLUE = 'IBBLUE'
+export const CARRIER_CODE_SHIPPO = 'SHIPPO'

@@ -384,6 +384,17 @@ export default {
                 this.$isHub() ||
                 this.$isSupportLeader(),
             },
+            {
+              route: '/carrier-prices',
+              title: 'So sánh giá',
+              alias: ['/carrier-prices'],
+              disable:
+                this.$isAccountant() ||
+                this.$isSupport() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isSupportLeader(),
+            },
           ],
         },
       ],
