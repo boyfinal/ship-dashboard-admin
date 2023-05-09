@@ -339,11 +339,7 @@ export default {
           route: { name: 'setting' },
           class: '',
           isOpen: false,
-          disable:
-            this.$isWarehouse() ||
-            this.$isHub() ||
-            this.$isMarketing() ||
-            this.$isShipPartner(),
+          disable: this.$isWarehouse() || this.$isHub() || this.$isMarketing(),
           sub: [
             {
               route: '/account',
@@ -354,7 +350,8 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isSupportLeader() ||
+                this.$isShipPartner(),
             },
             {
               route: '/user',
@@ -371,7 +368,8 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isSupportLeader() ||
+                this.$isShipPartner(),
             },
             {
               route: '/notify/customer',
@@ -382,7 +380,8 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isSupportLeader() ||
+                this.$isShipPartner(),
             },
             {
               route: '/carrier-prices',
