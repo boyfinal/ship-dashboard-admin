@@ -136,7 +136,8 @@ export default {
     visible: {
       handler: function (val) {
         if (this.current.code) {
-          this.carrier = { text: val.name, value: val.code }
+          const { name, code } = this.current
+          this.carrier = { text: name, value: code }
         } else {
           this.carrier = {}
         }
