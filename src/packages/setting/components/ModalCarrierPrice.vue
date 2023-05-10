@@ -46,7 +46,7 @@ import { mapActions } from 'vuex'
 import { UPDATE_CARRIER_SERVICE } from '../store'
 
 export default {
-  name: 'ModalEditUser',
+  name: 'ModalEditCarrierService',
   props: {
     visible: {
       type: Boolean,
@@ -135,7 +135,11 @@ export default {
   watch: {
     visible: {
       handler: function (val) {
-        this.carrier = {}
+        if (this.current.code) {
+          this.carrier = { text: val.name, value: val.code }
+        } else {
+          this.carrier = {}
+        }
         this.isVisible = val
       },
       deep: true,
