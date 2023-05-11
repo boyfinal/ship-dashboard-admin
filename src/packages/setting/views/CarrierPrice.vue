@@ -14,21 +14,12 @@
               <tr>
                 <td>
                   <span>{{ small.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(small)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
                 <td>
                   <span>{{ large.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(large)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
                 <td>
                   <span>{{ over.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(over)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
               </tr>
             </table>
@@ -42,41 +33,21 @@
             <div class="table-responsive">
               <table class="table table-hover table-log">
                 <tr>
-                  <th width="200"></th>
-                  <th colspan="2" v-text="'<450'"></th>
-                  <th colspan="2" v-text="'>450'"></th>
-                  <th colspan="2" v-text="'>3000'"></th>
-                </tr>
-                <tr>
-                  <th width="200">Thời gian</th>
+                  <th>CÂN NẶNG</th>
                   <th>IB BLUE</th>
                   <th>SHIPPO</th>
-                  <th>IB BLUE</th>
-                  <th>SHIPPO</th>
-                  <th>IB BLUE</th>
-                  <th>SHIPPO</th>
+                  <th>THỜI GIAN</th>
                 </tr>
                 <tr v-for="item in items" :key="item.id">
+                  <td>{{ item.name }}</td>
+                  <td :class="item.ibblue.class">{{
+                    item.ibblue.price | formatPrice
+                  }}</td>
+                  <td :class="item.shippo.class">{{
+                    item.shippo.price | formatPrice
+                  }}</td>
                   <td width="200">{{
                     item.created_at | datetime('dd/MM/yyyy HH:mm:ss')
-                  }}</td>
-                  <td :class="item.small.ibblue.class">{{
-                    item.small.ibblue.price | formatPrice
-                  }}</td>
-                  <td :class="item.small.shippo.class">{{
-                    item.small.shippo.price | formatPrice
-                  }}</td>
-                  <td :class="item.large.ibblue.class">{{
-                    item.large.ibblue.price | formatPrice
-                  }}</td>
-                  <td :class="item.large.shippo.class">{{
-                    item.large.shippo.price | formatPrice
-                  }}</td>
-                  <td :class="item.over.ibblue.class">{{
-                    item.over.ibblue.price | formatPrice
-                  }}</td>
-                  <td :class="item.over.shippo.class">{{
-                    item.over.shippo.price | formatPrice
                   }}</td>
                 </tr>
               </table>
@@ -84,44 +55,23 @@
           </template>
         </div>
       </div>
-      <div
-        class="d-flex justify-content-between align-items-center"
-        v-if="count > 0"
-      >
-        <p-pagination
-          :total="count"
-          :perPage.sync="filter.limit"
-          :current.sync="filter.page"
-          size="sm"
-        ></p-pagination>
-      </div>
     </div>
-    <ModalEdit
-      :visible.sync="isVisibleModalEdit"
-      :carriers="carriers"
-      :current="current"
-      @success="onEditSuccess"
-    />
   </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 import {
   FETCH_LIST_CHECK_PRICE_LOGS,
-  FETCH_COUNT_CHECK_PRICE_LOGS,
   FETCH_CARRIER_SERVICE,
   UPDATE_CARRIER_SERVICE,
 } from '../store'
 import { CARRIER_CODE_IBBLUE, CARRIER_CODE_SHIPPO } from '../constants'
-import ModalEdit from '../components/ModalCarrierPrice'
 
 export default {
   name: 'CarrierPrice',
-  components: { ModalEdit },
   computed: {
     ...mapState('setting', {
       logs: (state) => state.check_price_logs || [],
-      count: (state) => state.count_check_price_logs || 0,
       carrier_service: (state) => state.carrier_service || {},
     }),
     carriers() {
@@ -147,7 +97,7 @@ export default {
       return item ? { size: 'oversize', ...item } : {}
     },
     items() {
-      const items = []
+      let items = []
 
       let ibblueID = 0
       let shippoID = 0
@@ -161,41 +111,6 @@ export default {
       }
 
       for (const log of this.logs) {
-        const item = {
-          id: log.id,
-          created_at: log.created_at,
-          small: {
-            ibblue: {
-              price: 0,
-              class: '',
-            },
-            shippo: {
-              price: 0,
-              class: '',
-            },
-          },
-          large: {
-            ibblue: {
-              price: 0,
-              class: '',
-            },
-            shippo: {
-              price: 0,
-              class: '',
-            },
-          },
-          over: {
-            ibblue: {
-              price: 0,
-              class: '',
-            },
-            shippo: {
-              price: 0,
-              class: '',
-            },
-          },
-        }
-
         if (typeof log.data === 'string') {
           try {
             log.data = JSON.parse(log.data)
@@ -205,7 +120,10 @@ export default {
         }
 
         for (const line of log.data) {
-          const prices = {
+          const item = {
+            name: '',
+            point: line.point,
+            created_at: log.created_at,
             ibblue: {
               price: 0,
               class: '',
@@ -218,32 +136,36 @@ export default {
 
           for (const { carrier_id, price } of line.data) {
             if (carrier_id == ibblueID) {
-              prices.ibblue.price = price
+              item.ibblue.price = price
             }
 
             if (carrier_id == shippoID) {
-              prices.shippo.price = price
+              item.shippo.price = price
             }
           }
 
-          if (prices.shippo.price < prices.ibblue.price) {
-            prices.shippo.class = 'selected'
+          if (item.shippo.price < item.ibblue.price) {
+            item.shippo.class = 'selected'
           } else {
-            prices.ibblue.class = 'selected'
+            item.ibblue.class = 'selected'
           }
 
-          if (line.point == 0) {
-            item.small = prices
-          }
-          if (line.point == 450) {
-            item.large = prices
-          }
-          if (line.point == 3000) {
-            item.over = prices
-          }
+          items.push(item)
         }
+      }
 
-        items.push(item)
+      items = items.sort((a, b) => a.point - b.point)
+      const n = items.length
+
+      if (n < 3) {
+        return items
+      }
+
+      items[0].name = `<${items[1].point}`
+      items[n - 1].name = `>${items[n - 1].point}`
+
+      for (let i = 1; i < n - 1; i++) {
+        items[i].name = `${items[i].point}-${items[i + 1].point}`
       }
 
       return items
@@ -256,7 +178,7 @@ export default {
       isVisibleModalEdit: false,
       filter: {
         page: 1,
-        limit: 25,
+        limit: 1,
       },
     }
   },
@@ -268,7 +190,6 @@ export default {
       updateCarrierService: UPDATE_CARRIER_SERVICE,
       fetchCarrierService: FETCH_CARRIER_SERVICE,
       fetchListLogs: FETCH_LIST_CHECK_PRICE_LOGS,
-      fetchCountLogs: FETCH_COUNT_CHECK_PRICE_LOGS,
     }),
 
     async init() {
@@ -276,8 +197,7 @@ export default {
 
       const arrResponse = await Promise.all([
         this.fetchCarrierService(),
-        this.fetchListLogs(),
-        this.fetchCountLogs(),
+        this.fetchListLogs({ limit: 1, page: 1 }),
       ])
 
       for (const res of arrResponse) {
@@ -345,6 +265,7 @@ export default {
     }
   }
 }
+
 .table-log {
   margin-bottom: 0;
 
@@ -353,11 +274,11 @@ export default {
     td {
       padding: 12px;
       border: 0;
-      text-align: center;
 
       &:first-child {
-        border: 0;
+        border-radius: 0;
       }
+
       &:last-child {
         border-right: 0;
       }
@@ -366,14 +287,9 @@ export default {
     td {
       border-top: 1px solid #e0e0e0;
       border-right: 1px solid #e0e0e0;
+
       &:first-child {
         border-top: 1px solid #e0e0e0;
-      }
-
-      &:first-child,
-      &:nth-child(3),
-      &:nth-child(5) {
-        border-right: 4px solid #e5e5e5;
       }
 
       &.selected {
@@ -382,35 +298,17 @@ export default {
       }
     }
 
-    &:nth-child(2) {
-      th {
-        background: #f6f7f7;
+    th {
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+
+      &:first-child {
         border-top: 1px solid #e0e0e0;
-        border-right: 1px solid #e0e0e0;
-
-        &:first-child {
-          border-top: 1px solid #e0e0e0;
-        }
-
-        &:last-child {
-          border-right: 0;
-        }
-
-        &:first-child,
-        &:nth-child(3),
-        &:nth-child(5) {
-          border-right: 4px solid #e5e5e5;
-        }
       }
-    }
 
-    &:first-child {
-      th {
-        &:first-child,
-        &:nth-child(2),
-        &:nth-child(3) {
-          border-right: 4px solid #e5e5e5;
-        }
+      &:last-child {
+        border-right: 0;
       }
     }
   }
