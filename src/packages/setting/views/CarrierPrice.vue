@@ -1,31 +1,6 @@
 <template>
-  <div class="pages setting">
+  <div class="pages setting page-sm">
     <div class="page-content">
-      <div class="card">
-        <div class="card-body p-24">
-          <VclTable v-if="isFetching"></VclTable>
-          <div class="table-responsive" v-else>
-            <table class="table table-hover table-services">
-              <tr>
-                <th width="200" v-text="'<450'"></th>
-                <th width="200" v-text="'>450'"></th>
-                <th width="200" v-text="'>3000'"></th>
-              </tr>
-              <tr>
-                <td>
-                  <span>{{ small.name }}</span>
-                </td>
-                <td>
-                  <span>{{ large.name }}</span>
-                </td>
-                <td>
-                  <span>{{ over.name }}</span>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
       <div class="card mt-24">
         <div class="card-body p-0">
           <VclTable v-if="isFetching"></VclTable>
@@ -36,7 +11,6 @@
                   <th>CÂN NẶNG</th>
                   <th>IB BLUE</th>
                   <th>SHIPPO</th>
-                  <th>THỜI GIAN</th>
                 </tr>
                 <tr v-for="item in items" :key="item.id">
                   <td>{{ item.name }}</td>
@@ -45,9 +19,6 @@
                   }}</td>
                   <td :class="item.shippo.class">{{
                     item.shippo.price | formatPrice
-                  }}</td>
-                  <td width="200">{{
-                    item.created_at | datetime('dd/MM/yyyy HH:mm:ss')
                   }}</td>
                 </tr>
               </table>
