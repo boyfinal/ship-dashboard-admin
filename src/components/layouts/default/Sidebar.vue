@@ -387,16 +387,7 @@ export default {
               route: '/carrier-prices',
               title: 'So sánh giá',
               alias: ['/carrier-prices'],
-              disable:
-                this.$isAccountant() ||
-                this.$isSupport() ||
-                this.$isWarehouse() ||
-                this.$isHub() ||
-                this.$isSupportLeader() ||
-                this.$isSupportLeader() ||
-                this.$isMarketing() ||
-                this.$isBusinessManager() ||
-                this.$isShipPartner(),
+              disable: !this.$isAdmin(),
             },
           ],
         },
