@@ -392,7 +392,11 @@ export default {
                 this.$isSupport() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isSupportLeader(),
+                this.$isSupportLeader() ||
+                this.$isSupportLeader() ||
+                this.$isMarketing() ||
+                this.$isBusinessManager() ||
+                this.$isShipPartner(),
             },
           ],
         },
