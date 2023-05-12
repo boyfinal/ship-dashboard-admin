@@ -72,4 +72,19 @@ export default {
   updateUserInfo(payload) {
     return http.put(`/users/${payload.id}/info`, payload)
   },
+
+  fetchListCheckPriceLogs(payload) {
+    return http.get(`/carriers/check-price-logs?${buildQueryString(payload)}`)
+  },
+  fetchCountCheckPriceLogs(payload) {
+    return http.get(
+      `/carriers/check-price-logs/count?${buildQueryString(payload)}`
+    )
+  },
+  fetchCarrierService(payload) {
+    return http.get(`/carriers/service-point`, payload)
+  },
+  updateCarrierService(payload) {
+    return http.post(`/carriers/service-point`, payload)
+  },
 }

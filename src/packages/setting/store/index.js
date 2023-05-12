@@ -22,6 +22,11 @@ export const UPDATE_PRICE = 'updatePrice'
 export const DISCARD_UPDATE_PRICE = 'discard_update_price'
 export const UPDATE_USER_INFO = 'updateUserInfo'
 
+export const FETCH_LIST_CHECK_PRICE_LOGS = 'fetchListCheckPriceLogs'
+export const FETCH_COUNT_CHECK_PRICE_LOGS = 'fetchCountCheckPriceLogs'
+export const FETCH_CARRIER_SERVICE = 'fetchCarrierService'
+export const UPDATE_CARRIER_SERVICE = 'updateCarrierService'
+
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -62,6 +67,9 @@ export const state = {
   },
   rate_exchange: 0,
   user_info: {},
+  check_price_logs: [],
+  count_check_price_logs: 0,
+  carrier_service: {},
 }
 
 /**
@@ -148,6 +156,15 @@ export const mutations = {
   },
   [UPDATE_USER_INFO]: (state, payload) => {
     state.user_info = payload
+  },
+  [FETCH_LIST_CHECK_PRICE_LOGS]: (state, payload) => {
+    state.check_price_logs = payload
+  },
+  [FETCH_COUNT_CHECK_PRICE_LOGS]: (state, payload) => {
+    state.count_check_price_logs = payload
+  },
+  [FETCH_CARRIER_SERVICE]: (state, payload) => {
+    state.carrier_service = payload
   },
 }
 
@@ -363,6 +380,7 @@ export const actions = {
     commit(FETCH_RATE_EXCHANGE, res.rate_exchange.price)
     return { error: false }
   },
+
   // eslint-disable-next-line
   async [UPDATE_RATE_EXCHANGE]({ commit }, payload) {
     const res = await api.updateRateExchange(payload)
@@ -370,6 +388,49 @@ export const actions = {
       return { error: true, message: res.errorMessage || '' }
     }
 
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [UPDATE_CARRIER_SERVICE]({ commit }, payload) {
+    const res = await api.updateCarrierService(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false }
+  },
+
+  async [FETCH_CARRIER_SERVICE]({ commit }, payload) {
+    const res = await api.fetchCarrierService(payload)
+    if (!res || res.error) {
+      commit(FETCH_CARRIER_SERVICE, {})
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_CARRIER_SERVICE, res)
+    return { error: false }
+  },
+
+  async [FETCH_LIST_CHECK_PRICE_LOGS]({ commit }, payload) {
+    const res = await api.fetchListCheckPriceLogs(payload)
+    if (!res || res.error) {
+      commit(FETCH_LIST_CHECK_PRICE_LOGS, [])
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_LIST_CHECK_PRICE_LOGS, res.logs)
+    return { error: false }
+  },
+
+  async [FETCH_COUNT_CHECK_PRICE_LOGS]({ commit }, payload) {
+    const res = await api.fetchCountCheckPriceLogs(payload)
+    if (!res || res.error) {
+      commit(FETCH_COUNT_CHECK_PRICE_LOGS, 0)
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_COUNT_CHECK_PRICE_LOGS, res.count)
     return { error: false }
   },
 }

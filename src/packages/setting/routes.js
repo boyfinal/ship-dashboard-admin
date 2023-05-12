@@ -52,4 +52,13 @@ export const routes = [
     },
     component: () => import(/* webpackChunkName: "bills" */ './views/Debt.vue'),
   },
+  {
+    path: '/carrier-prices',
+    name: 'carrier_price',
+    meta: {
+      title: 'So sánh giá',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/CarrierPrice.vue'),
+  },
 ]

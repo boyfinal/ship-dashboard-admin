@@ -34,7 +34,7 @@
             <div>
               <div>Tổng giá: </div>
               <div>
-                {{ shipment.total_amount | formatPrice }}
+                {{ (shipment.total_amount + extraFee) | formatPrice }}
               </div>
             </div>
             <div>
@@ -57,7 +57,7 @@
               <div class="col-3">
                 <div class="row mb-24">
                   <div class="col">
-                    <div class="card-block">
+                    <div class="card-block" style="height: auto">
                       <div class="card-header">
                         <div class="card-title">Người nhận</div>
                       </div>
@@ -128,6 +128,45 @@
                               packages.length ? packages[0].country_code : ''
                             }}</div>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="card-block"
+                      style="height: auto"
+                      v-if="extraFees.length"
+                    >
+                      <div class="card-header">
+                        <div class="card-title">Chi tiết phí phát sinh</div>
+                      </div>
+                      <div class="card-content">
+                        <div class="ship-recipient">
+                          <p v-for="item in extraFees" :key="item.id">
+                            <span class="fee-col text-left">{{
+                              item.description
+                            }}</span>
+                            <span class="fee-col text-right">{{
+                              item.amount | formatPrice
+                            }}</span>
+                          </p>
+                          <p
+                            style="
+                              border-top: 1px solid #edeeee;
+                              margin: 0;
+                              padding-top: 12px;
+                            "
+                          >
+                            <span
+                              class="fee-col text-left"
+                              style="color: #161616"
+                              >Tổng phí phát sinh</span
+                            >
+                            <span
+                              class="fee-col text-right"
+                              style="color: #161616"
+                              >{{ extraFee | formatPrice }}</span
+                            >
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -260,6 +299,16 @@ export default {
       shipment: (state) => state.customerShipment,
       packages: (state) => state.customerShipmentPkgs,
     }),
+    extraFees() {
+      return this.shipment.extra_fees || []
+    },
+    extraFee() {
+      return this.shipment.extra_fees
+        ? this.shipment.extra_fees.reduce((total, fee) => {
+            return total + fee.amount
+          }, 0)
+        : 0
+    },
     service() {
       if (!this.packages || !this.packages.length) return ''
 
@@ -340,5 +389,9 @@ export default {
 }
 .label-print:hover path {
   fill: #00978c;
+}
+.fee-col {
+  display: inline-block;
+  width: 50%;
 }
 </style>

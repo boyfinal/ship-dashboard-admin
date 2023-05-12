@@ -383,6 +383,12 @@ export default {
                 this.$isSupportLeader() ||
                 this.$isShipPartner(),
             },
+            {
+              route: '/carrier-prices',
+              title: 'So sánh giá',
+              alias: ['/carrier-prices'],
+              disable: !this.$isAdmin(),
+            },
           ],
         },
       ],
