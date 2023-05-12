@@ -1,7 +1,10 @@
 <template>
   <div class="pages setting page-sm">
     <div class="page-content">
-      <div class="card mt-24">
+      <p class="text-right mt-24"
+        >Ngày cập nhật: {{ updatedAt | datetime('dd/MM/yyyy HH:mm:ss') }}</p
+      >
+      <div class="card">
         <div class="card-body p-0">
           <VclTable v-if="isFetching"></VclTable>
           <template v-else-if="logs.length">
@@ -140,6 +143,10 @@ export default {
       }
 
       return items
+    },
+    updatedAt() {
+      if (!this.items.length) return new Date()
+      return this.items[0].created_at
     },
   },
   data() {
