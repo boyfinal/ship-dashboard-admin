@@ -11,18 +11,27 @@
             <div class="table-responsive">
               <table class="table table-hover table-log">
                 <tr>
+                  <th></th>
+                  <th v-for="zone in zones" :key="zone" colspan="2">{{
+                    zone
+                  }}</th>
+                </tr>
+                <tr>
                   <th>CÂN NẶNG</th>
-                  <th>IB BLUE</th>
-                  <th>SHIPPO</th>
+                  <th v-for="(name, i) in headers" :key="i">{{ name }}</th>
                 </tr>
                 <tr v-for="item in items" :key="item.id">
                   <td>{{ item.name }}</td>
-                  <td :class="item.ibblue.class">{{
-                    item.ibblue.price | formatPrice
-                  }}</td>
-                  <td :class="item.shippo.class">{{
-                    item.shippo.price | formatPrice
-                  }}</td>
+                  <td
+                    v-for="(price, i) in item.prices"
+                    :key="i"
+                    :class="price.class"
+                  >
+                    <span :title="`Mốc: ${item.name}`" v-if="price.price > 0">{{
+                      price.price | formatPrice
+                    }}</span>
+                    <span v-else>-</span>
+                  </td>
                 </tr>
               </table>
             </div>
@@ -70,6 +79,20 @@ export default {
       const item = this.carriers.find(({ code }) => code == size_over)
       return item ? { size: 'oversize', ...item } : {}
     },
+    zones() {
+      if (!this.logs || !this.logs.length) return []
+      const items = ((this.logs[0] || {}).data[0] || {}).data
+      const zones = items.map(({ zone }) => zone)
+      return [...new Set(zones)]
+    },
+    headers() {
+      const headers = []
+      for (let i = 0; i < this.zones.length; i++) {
+        headers.push('IB BLUE', 'SHIPPO')
+      }
+
+      return headers
+    },
     items() {
       let items = []
 
@@ -98,30 +121,52 @@ export default {
             name: '',
             point: line.point,
             created_at: log.created_at,
-            ibblue: {
-              price: 0,
-              class: '',
-            },
-            shippo: {
-              price: 0,
-              class: '',
-            },
+            prices: [],
           }
 
-          for (const { carrier_id, price } of line.data) {
-            if (carrier_id == ibblueID) {
-              item.ibblue.price = price
+          const zones = []
+          let zone = {}
+          let zoneName = ''
+          for (const lineItem of line.data) {
+            if (zoneName != lineItem.zone && zoneName != '') {
+              zones.push(zone)
+              zone = {}
             }
 
-            if (carrier_id == shippoID) {
-              item.shippo.price = price
+            zoneName = lineItem.zone
+            if (lineItem.carrier_id == shippoID) {
+              zone.shippo = lineItem
+            }
+            if (lineItem.carrier_id == ibblueID) {
+              zone.ibblue = lineItem
             }
           }
 
-          if (item.shippo.price < item.ibblue.price) {
-            item.shippo.class = 'selected'
-          } else {
-            item.ibblue.class = 'selected'
+          if (zoneName != '') {
+            zones.push(zone)
+          }
+
+          for (const izone of zones) {
+            const ibblue = izone.ibblue
+              ? { class: '', price: izone.ibblue.price }
+              : { class: '', price: 0 }
+            const shippo = izone.shippo
+              ? { class: '', price: izone.shippo.price }
+              : { class: '', price: 0 }
+
+            if (shippo.price == 0 && ibblue.price > 0) {
+              ibblue.class = 'selected'
+            } else if (shippo.price > 0 && ibblue.price == 0) {
+              shippo.class = 'selected'
+            } else if (shippo.price > 0 && ibblue.price > 0) {
+              if (shippo.price < ibblue.price) {
+                shippo.class = 'selected'
+              } else {
+                ibblue.class = 'selected'
+              }
+            }
+
+            item.prices.push(ibblue, shippo)
           }
 
           items.push(item)
@@ -252,6 +297,7 @@ export default {
     td {
       padding: 12px;
       border: 0;
+      white-space: nowrap;
 
       &:first-child {
         border-radius: 0;
