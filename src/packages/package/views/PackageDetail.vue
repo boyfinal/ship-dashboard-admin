@@ -265,6 +265,16 @@
                             >
                           </div>
                         </div>
+                        <div class="row">
+                          <div class="col-5 mb-8">Hàng có pin:</div>
+                          <div class="col-7">
+                            {{
+                              package_detail.package.include_battery
+                                ? 'Có'
+                                : 'Không'
+                            }}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

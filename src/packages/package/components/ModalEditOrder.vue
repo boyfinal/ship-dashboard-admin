@@ -333,6 +333,12 @@
                       <div class="card__w-unit">cm</div>
                     </div>
                   </div>
+                  <div class="card__w-item">
+                    <label class="card__w-label"> Hàng có pin:</label>
+                    <div class="card__w-input">
+                      <p-checkbox v-mode="form.include_battery"></p-checkbox>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="card__w">
@@ -500,6 +506,7 @@ export default {
         address: '',
         address2: '',
         amount: '',
+        include_battery: false,
         description: '',
       },
       loading: false,
@@ -646,6 +653,7 @@ export default {
       this.form.address2 = pkg.address_2
       this.form.order_number = pkg.order_number
       this.form.detail = pkg.detail
+      this.form.include_battery = pkg.include_battery
       this.service = this.form.service
 
       if (this.form.weight < pkg.actual_weight) {
@@ -764,6 +772,7 @@ export default {
       this.form.address = ''
       this.form.amount = ''
       this.form.description = ''
+      this.form.include_battery = false
       this.valider.errors = null
       this.package_prods = []
       this.product_sku = []
@@ -881,6 +890,7 @@ export default {
         address_2: this.form.address2,
         amount: parseFloat(amount),
         description: this.form.description,
+        include_battery: this.form.include_battery,
         is_reship: this.isReLabel,
         package_products: package_products,
       }
