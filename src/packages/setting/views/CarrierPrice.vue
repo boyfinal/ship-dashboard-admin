@@ -1,6 +1,40 @@
 <template>
   <div class="pages setting page-sm">
     <div class="page-content">
+      <div class="card">
+        <div class="card-body p-24">
+          <VclTable v-if="isFetching"></VclTable>
+          <div class="table-responsive" v-else>
+            <table class="table table-hover table-services">
+              <tr>
+                <th width="200" v-text="'<450'"></th>
+                <th width="200" v-text="'>450'"></th>
+                <th width="200" v-text="'>3000'"></th>
+              </tr>
+              <tr>
+                <td>
+                  <span>{{ small.name }}</span>
+                  <a href="#" class="ml-8" @click="editHandle(small)">
+                    <svgicon name="pencil"></svgicon>
+                  </a>
+                </td>
+                <td>
+                  <span>{{ large.name }}</span>
+                  <a href="#" class="ml-8" @click="editHandle(large)">
+                    <svgicon name="pencil"></svgicon>
+                  </a>
+                </td>
+                <td>
+                  <span>{{ over.name }}</span>
+                  <a href="#" class="ml-8" @click="editHandle(over)">
+                    <svgicon name="pencil"></svgicon>
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
       <p class="text-right mt-24"
         >Ngày cập nhật: {{ updatedAt | datetime('dd/MM/yyyy HH:mm:ss') }}</p
       >
@@ -39,6 +73,12 @@
         </div>
       </div>
     </div>
+    <ModalEdit
+      :visible.sync="isVisibleModalEdit"
+      :carriers="carriers"
+      :current="current"
+      @success="onEditSuccess"
+    />
   </div>
 </template>
 <script>
@@ -49,9 +89,11 @@ import {
   UPDATE_CARRIER_SERVICE,
 } from '../store'
 import { CARRIER_CODE_IBBLUE, CARRIER_CODE_SHIPPO } from '../constants'
+import ModalEdit from '../components/ModalCarrierPrice'
 
 export default {
   name: 'CarrierPrice',
+  components: { ModalEdit },
   computed: {
     ...mapState('setting', {
       logs: (state) => state.check_price_logs || [],
