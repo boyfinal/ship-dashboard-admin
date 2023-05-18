@@ -336,7 +336,7 @@
                   <div class="card__w-item">
                     <label class="card__w-label"> Hàng có pin:</label>
                     <div class="card__w-input">
-                      <p-checkbox v-mode="form.include_battery"></p-checkbox>
+                      <p-checkbox v-model="form.include_battery"></p-checkbox>
                     </div>
                   </div>
                 </div>
@@ -632,6 +632,7 @@ export default {
       this.loading = false
 
       const pkg = (this.package_detail || {}).package || {}
+
       this.form.fullname = pkg.recipient
       this.form.phone = pkg.phone_number
       this.form.city = pkg.city
@@ -655,7 +656,6 @@ export default {
       this.form.detail = pkg.detail
       this.form.include_battery = pkg.include_battery
       this.service = this.form.service
-
       if (this.form.weight < pkg.actual_weight) {
         this.form.weight = pkg.actual_weight
       }
