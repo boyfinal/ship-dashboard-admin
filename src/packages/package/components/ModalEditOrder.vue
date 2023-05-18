@@ -336,7 +336,10 @@
                   <div class="card__w-item">
                     <label class="card__w-label"> Hàng có pin:</label>
                     <div class="card__w-input">
-                      <p-checkbox v-model="form.include_battery"></p-checkbox>
+                      <p-checkbox
+                        v-model="form.include_battery"
+                        :disabled="isDisableCheckBattery"
+                      ></p-checkbox>
                     </div>
                   </div>
                 </div>
@@ -423,6 +426,7 @@ import {
   FETCH_PACKAGE_DETAIL,
   RESHIP_PACKAGE_ESTIMATE_COST,
 } from '../store'
+import { PACKAGE_STATUS_CREATED } from '../constants'
 import PButton from '../../../../uikit/components/button/Button'
 import valider from '@core/valider'
 import OverLoading from '@components/shared/OverLoading'
@@ -457,6 +461,9 @@ export default {
     ...mapGetters('package', {
       services: GET_SERVICE,
     }),
+    isDisableCheckBattery() {
+      return this.package_detail.package.status !== PACKAGE_STATUS_CREATED
+    },
     code() {
       return this.package_detail && this.package_detail.package.package_code
         ? this.package_detail.package.package_code.code
