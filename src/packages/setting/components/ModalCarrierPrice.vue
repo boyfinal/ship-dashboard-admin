@@ -75,7 +75,7 @@ export default {
       }))
     },
     hasChange() {
-      return this.current.code != this.carrier.value
+      return this.current && this.current.code != this.carrier.value
     },
   },
   data() {
@@ -147,6 +147,10 @@ export default {
     },
     current: {
       handler: function (val) {
+        if (!this.current) {
+          this.handleClose()
+        }
+
         this.carrier = { text: val.name, value: val.code }
       },
       deep: true,
