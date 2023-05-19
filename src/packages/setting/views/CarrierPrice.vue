@@ -14,21 +14,12 @@
               <tr>
                 <td>
                   <span>{{ small.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(small)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
                 <td>
                   <span>{{ large.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(large)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
                 <td>
                   <span>{{ over.name }}</span>
-                  <a href="#" class="ml-8" @click="editHandle(over)">
-                    <svgicon name="pencil"></svgicon>
-                  </a>
                 </td>
               </tr>
             </table>
