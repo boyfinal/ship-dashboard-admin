@@ -205,6 +205,12 @@ export default {
                 this.$isSupport() ||
                 this.$isBusinessManager(),
             },
+            {
+              route: '/claims-process',
+              title: 'Xét duyệt khiếu nại',
+              alias: ['/claims-process'],
+              disable: !this.$isAdmin() && !this.$isAccountant(),
+            },
           ],
         },
         {

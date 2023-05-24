@@ -202,6 +202,14 @@
             }
         }
     }
+
+    .list-note {
+        li.br {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #edeeee;
+        }
+    }
 }
 
 .modal-reply-ticket {

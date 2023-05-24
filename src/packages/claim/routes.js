@@ -9,6 +9,15 @@ export const routes = [
       import(/* webpackChunkName: "claim" */ './views/ListClaim.vue'),
   },
   {
+    path: '/claims-process',
+    name: 'list-claim-process',
+    meta: {
+      title: 'Xét duyệt khiếu nại',
+    },
+    component: () =>
+      import(/* webpackChunkName: "claim" */ './views/ListConfirm.vue'),
+  },
+  {
     path: '/claims/:id',
     name: 'claim-detail',
     meta: {

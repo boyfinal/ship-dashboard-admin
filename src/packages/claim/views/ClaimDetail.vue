@@ -26,15 +26,12 @@
               {{ truncate(claim.title, 50) }}
             </p-tooltip>
           </div>
-          <div
-            class="page-header-group-actions__right"
-            v-if="claim.status != claimStatusProcessed"
-          >
-            <p-button type="info" class="" @click="showModalReply">
-              Trả lời
+          <div class="page-header-group-actions__right" v-if="!isProcessed">
+            <p-button type="info" @click="showModalHandle" v-if="!isProcessing">
+              Xử lý khiếu nại
             </p-button>
-            <p-button type="info ml-8" @click="showModalClose">
-              Đã xử lý
+            <p-button type="info ml-8" class="" @click="showModalReply">
+              Trả lời
             </p-button>
           </div>
         </div>
@@ -78,10 +75,24 @@
                   {{ claim.created_at | datetime('HH:mm:ss') }}
                 </li>
                 <li class="item-note">
-                  <span class="item-title">Ngày cập nhật gần nhất: </span>
+                  <span class="item-title">Ngày cập nhật: </span>
                   {{ claim.updated_at | datetime('dd/MM/yyyy') }} -
                   {{ claim.updated_at | datetime('HH:mm:ss') }}
                 </li>
+                <template v-if="claim.type > 0">
+                  <li class="item-note br">
+                    <span class="item-title">Hướng xử lý: </span>
+                    {{ typeText }}
+                  </li>
+                  <li class="item-note" v-if="claim.amount > 0">
+                    <span class="item-title">Số tiền thêm: </span>
+                    {{ Math.abs(claim.amount) | formatPrice }}
+                  </li>
+                  <li class="item-note" v-if="claim.amount < 0">
+                    <span class="item-title">Số tiền hoàn: </span>
+                    {{ Math.abs(claim.amount) | formatPrice }}
+                  </li>
+                </template>
               </ul>
             </div>
           </div>
@@ -154,15 +165,11 @@
       v-if="isVisibleModalReply"
       @success="replySuccess"
     ></modal-reply>
-    <modal-confirm
-      :visible.sync="visibleConfirmClose"
-      :actionConfirm="`Xác nhận`"
-      :cancel="`Bỏ qua`"
-      :description="`Bạn có chắc chắn muốn đóng khiếu nại?`"
-      :title="`Xác nhận`"
-      @action="handleCancelTicket"
-      :type="`danger`"
-    ></modal-confirm>
+    <modal-handle
+      :visible.sync="isVisibleModalHandle"
+      @success="init"
+      :claim="claim"
+    ></modal-handle>
   </div>
 </template>
 
@@ -174,7 +181,7 @@ import Browser from '@core/helpers/browser'
 import ModalReply from '../components/ModalReply'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import Message from '../components/Message'
-import ModalConfirm from '@components/shared/modal/ModalConfirm'
+import ModalHandle from '../components/ModalHandle.vue'
 import {
   UPDATE_TICKET,
   UPDATE_FILE_TICKET,
@@ -188,6 +195,7 @@ import {
   CLAIM_STATUS_PROCESSED,
   MAP_REASON_CATEGORY_TEXT,
   REASON_CATEGORY_OTHER_TEXT,
+  CLAIM_TYPES,
 } from '../constants'
 import { truncate } from '@core/utils/string'
 
@@ -198,7 +206,7 @@ export default {
     File,
     ModalReply,
     Message,
-    ModalConfirm,
+    ModalHandle,
   },
   props: {
     visible: {
@@ -228,7 +236,6 @@ export default {
       isTicketOpen: false,
       attach_files: [],
       isVisibleModalReply: false,
-      visibleConfirmClose: false,
       messages: [],
       isMessageLoading: false,
       filter: {
@@ -236,8 +243,7 @@ export default {
       },
       styleObject: {},
       styleInfoObject: {},
-      claimStatusPending: CLAIM_STATUS_PENDING,
-      claimStatusProcessed: CLAIM_STATUS_PROCESSED,
+      isVisibleModalHandle: false,
     }
   },
   computed: {
@@ -245,6 +251,21 @@ export default {
       claim: (state) => state.ticket,
       count: (state) => state.countMess,
     }),
+    isProcessed() {
+      return this.claim.status == CLAIM_STATUS_PROCESSED
+    },
+    isProcessing() {
+      return this.claim.status == CLAIM_STATUS_PENDING
+    },
+    typeText() {
+      for (const { id, name } of CLAIM_TYPES) {
+        if (id == this.claim.type) {
+          return name
+        }
+      }
+
+      return ''
+    },
   },
   created() {
     ;(this.filter = this.getRouteQuery()), this.init()
@@ -338,8 +359,8 @@ export default {
     hasFiles() {
       return this.claim.attachment && this.claims.attachment.length
     },
-    showModalClose() {
-      this.visibleConfirmClose = true
+    showModalHandle() {
+      this.isVisibleModalHandle = true
     },
     extenionFileUrl(val) {
       const rex = /(?:\.([^.]+))?$/
@@ -442,7 +463,7 @@ export default {
         id: this.claim.id,
       }
       const result = await this[CANCEL_TICKET](payload)
-      this.visibleConfirmClose = false
+      this.isVisibleModalHandle = false
       if (result.error) {
         this.$toast.open({
           type: 'error',

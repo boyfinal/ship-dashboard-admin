@@ -19,16 +19,6 @@
               {{ value }}
             </option>
           </p-select>
-          <!-- <p-select
-            class="ml-8"
-            placeholder="Please select"
-            v-model="filter.type"
-          >
-            <option value="">Tất cả</option>
-            <option :value="key" v-for="(value, key) in optionType" :key="key">
-              {{ value }}
-            </option>
-          </p-select> -->
         </div>
       </div>
       <div class="card">

@@ -82,4 +82,10 @@ export default {
   reply(id, payload) {
     return http.post(`/tickets/${id}/messages`, payload)
   },
+  processClaim({ id, ...payload }) {
+    return http.post(`/tickets/${id}/process`, payload)
+  },
+  confirmClaim({ id, ...payload }) {
+    return http.post(`/tickets/${id}/confirm`, payload)
+  },
 }
