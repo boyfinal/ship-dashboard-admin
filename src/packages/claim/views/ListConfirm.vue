@@ -230,7 +230,7 @@ export default {
           status: item.status,
           user_name: customer,
           accountant: accountant,
-          amount: Math.abs(item.amount | 0),
+          amount: Math.abs(item.amount || 0),
           is_processed: item.status == CLAIM_STATUS_PROCESSED,
         }
       })
