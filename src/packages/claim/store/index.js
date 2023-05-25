@@ -141,7 +141,6 @@ export const actions = {
       error: false,
       status: res.ticket.status,
       id: res.ticket.id,
-      // create_at:res.ticket.create_at
     }
   },
   // eslint-disable-next-line no-unused-vars
@@ -174,17 +173,22 @@ export const actions = {
     return { error: false }
   },
   async [FETCH_MESSAGE]({ commit }, payload) {
-    const [res, count] = await Promise.all([
-      api.fetchMessageTickets(payload),
-      api.countMessage(payload),
-    ])
-    if (!res || res.error || count.error) {
+    const res = await api.fetchMessageTickets(payload)
+    if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
 
     commit(APPEND_MESSAGE, res.messages)
-    commit(COUNT_MESSAGE, count.count)
     return { error: false, ...res }
+  },
+  async [COUNT_MESSAGE]({ commit }, payload) {
+    const res = await api.countMessage(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(COUNT_MESSAGE, res.count)
+    return { error: false }
   },
 
   // eslint-disable-next-line no-empty-pattern

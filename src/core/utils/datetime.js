@@ -161,3 +161,5 @@ export const unixTime = (date) => getTime(date ? parseISO(date) : new Date())
 export function getTimeSecondNow() {
   return Math.round(new Date().getTime() / 1000)
 }
+
+export { format }

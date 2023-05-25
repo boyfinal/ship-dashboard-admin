@@ -1,30 +1,11 @@
 <template>
   <div class="claim-detail-page pages">
     <div class="content-page">
-      <div class="page-header">
-        <div class="page-header_back">
-          <router-link :to="{ name: 'list-claim' }" class="text">
-            <img
-              src="@/assets/img/Arrow - Left Square 24px.png"
-              class="page-header_back_icon"
-            />
-
-            Đơn hàng khiếu nại
-          </router-link>
-        </div>
+      <div class="page-header claim-header">
         <div class="page-header-group">
-          <div class="page-header_title header-2">
-            <p-tooltip
-              :label="claim.title"
-              size="large"
-              position="top"
-              type="dark"
-              style="font-weight: bold"
-              v-if="claim.title"
-              :active="claim.title.length > 50"
-            >
-              {{ truncate(claim.title, 50) }}
-            </p-tooltip>
+          <div class="page-header-title">
+            <h1>{{ claim.title }}</h1>
+            <div class="sub-title" v-html="claim.content"></div>
           </div>
           <div class="page-header-group-actions__right" v-if="!isProcessed">
             <p-button type="info" @click="showModalHandle" v-if="!isProcessing">
@@ -37,159 +18,149 @@
         </div>
       </div>
       <div class="page-content">
-        <div class="page-content_note">
-          <div class="card" :style="styleInfoObject" ref="claimInfo">
-            <div class="note-content">
-              <ul class="list-note">
-                <li class="item-note">
-                  <span class="item-title">Trạng thái:</span>
-                  <span
-                    style="margin-left: 10px"
-                    v-status="claim.status"
-                    type="claim"
-                  ></span>
-                </li>
-                <li class="item-note">
-                  <span class="item-title">Lý do: </span>
-                  {{ formatReason(claim.category) }}
-                </li>
-                <li class="item-note">
-                  <span class="item-title">LionBay tracking: </span>
-                  <router-link
-                    v-if="claim.package"
-                    :to="{
-                      name: 'package-detail',
-                      params: { id: claim.package.id },
-                    }"
-                  >
-                    {{
-                      claim.package.package_code
-                        ? claim.package.package_code.code
-                        : ''
-                    }}
-                  </router-link>
-                </li>
-                <li class="item-note">
-                  <span class="item-title">Ngày tạo: </span>
-                  {{ claim.created_at | datetime('dd/MM/yyyy') }} -
-                  {{ claim.created_at | datetime('HH:mm:ss') }}
-                </li>
-                <li class="item-note">
-                  <span class="item-title">Ngày cập nhật: </span>
-                  {{ claim.updated_at | datetime('dd/MM/yyyy') }} -
-                  {{ claim.updated_at | datetime('HH:mm:ss') }}
-                </li>
-                <template v-if="claim.type > 0">
-                  <li class="item-note br">
-                    <span class="item-title">Hướng xử lý: </span>
-                    {{ typeText }}
-                  </li>
-                  <li class="item-note" v-if="claim.amount > 0">
-                    <span class="item-title">Số tiền thêm: </span>
-                    {{ Math.abs(claim.amount) | formatPrice }}
-                  </li>
-                  <li class="item-note" v-if="claim.amount < 0">
-                    <span class="item-title">Số tiền hoàn: </span>
-                    {{ Math.abs(claim.amount) | formatPrice }}
-                  </li>
-                </template>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="menu_content">
-          <div class="page-content_drag claim-messages" ref="messages">
-            <div
-              class="user-content card main-claim"
-              :style="styleObject"
-              ref="mainClaim"
-            >
-              <div
-                class="user-title d-flex justify-content-between align-items-center"
-              >
-                <div class="info-user">
-                  <img
-                    src="~@/assets/img/avatar.png"
-                    alt="avatar"
-                    class="avatar-user"
-                  />
-                  <span v-if="claim.user" class="user-name">{{
-                    claim.user.full_name || claim.user.email
-                  }}</span>
-                </div>
-                <div class="user-time">
-                  {{ claim.created_at | datetime('dd/MM/yyyy HH:mm:ss') }}
-                </div>
-              </div>
-              <div class="user-text">
-                {{ claim.content }}
-              </div>
-              <div class="gallery ticket-attach-files" v-if="hasFiles">
-                <div class="list-item">
-                  <div
-                    class="item"
-                    v-for="(file, i) in claim.attachment"
-                    :key="i"
-                  >
-                    <div
-                      class="gallery-item"
-                      :class="{ 'ticket-file': isImage(file) }"
-                    >
-                      <file :src="file" />
-                    </div>
+        <div class="row">
+          <div class="col-md-8 claim-left">
+            <div class="claim-messages mb-24">
+              <div class="card">
+                <div class="box-messages" v-on:scroll="onscroll">
+                  <div class="messages">
+                    <Message
+                      v-for="(mes, i) in displayMessages"
+                      :key="i"
+                      :current="mes"
+                    />
                   </div>
                 </div>
               </div>
             </div>
-
-            <Message v-for="(mes, i) in messages" :key="i" :current="mes" />
-            <div
-              class="d-flex justify-content-between align-items-center mb-16"
-              v-if="count > 0"
-            >
-              <p-pagination
-                :total="count"
-                :perPage.sync="filter.limit"
-                :current.sync="filter.page"
-                size="sm"
-              ></p-pagination>
+            <FormReply :claim="claim" @success="replySuccess" />
+          </div>
+          <div class="col-md-4 claim-right">
+            <div class="card-block">
+              <div class="card-header">
+                <div class="card-title">Thông tin</div>
+              </div>
+              <div class="card-content claim-info">
+                <ul class="list-note">
+                  <li class="item-note">
+                    <span class="item-title">Trạng thái:</span>
+                    <div class="item-value">
+                      <span v-status="claim.status" type="claim"></span>
+                    </div>
+                  </li>
+                  <li class="item-note">
+                    <span class="item-title">Lý do: </span>
+                    <span class="item-value">{{
+                      formatReason(claim.category)
+                    }}</span>
+                  </li>
+                  <li class="item-note">
+                    <span class="item-title">LionBay tracking: </span>
+                    <span class="item-value">
+                      <router-link
+                        v-if="claim.package"
+                        :to="{
+                          name: 'package-detail',
+                          params: { id: claim.package.id },
+                        }"
+                      >
+                        {{
+                          claim.package.package_code
+                            ? claim.package.package_code.code
+                            : ''
+                        }}
+                      </router-link>
+                    </span>
+                  </li>
+                  <li class="item-note">
+                    <span class="item-title">Ngày tạo: </span>
+                    <span class="item-value">{{
+                      claim.created_at | datetime('dd/MM/yyyy HH:mm')
+                    }}</span>
+                  </li>
+                  <li class="item-note">
+                    <span class="item-title">Ngày cập nhật: </span>
+                    <span class="item-value">{{
+                      claim.updated_at | datetime('dd/MM/yyyy HH:mm')
+                    }}</span>
+                  </li>
+                  <template v-if="claim.type > 0">
+                    <li class="item-note br">
+                      <span class="item-title">Hướng xử lý: </span>
+                      <span class="item-value">{{ typeText }}</span>
+                    </li>
+                    <li class="item-note" v-if="claim.amount > 0">
+                      <span class="item-title">Số tiền thêm: </span>
+                      <span class="item-value">{{
+                        Math.abs(claim.amount) | formatPrice
+                      }}</span>
+                    </li>
+                    <li class="item-note" v-if="claim.amount < 0">
+                      <span class="item-title">Số tiền hoàn: </span>
+                      <span class="item-value">{{
+                        Math.abs(claim.amount) | formatPrice
+                      }}</span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+            </div>
+            <div class="card-block claim-attachment">
+              <div class="card-header">
+                <div class="card-title">Tài liệu đính kèm</div>
+              </div>
+              <div class="card-content">
+                <div v-if="attachments.length" class="claim-attachments">
+                  <p
+                    class="item d-flex"
+                    v-for="(item, i) in attachments"
+                    :key="i"
+                  >
+                    <file :src="item.src" :name="item.name" class="thumb">
+                      <i class="icon center">
+                        <img src="~@/assets/img/download.svg" />
+                      </i>
+                    </file>
+                    <span>
+                      {{ item.name }}
+                      <time>{{
+                        item.created_at | date('dd/MM/yyyy hh:mm aa')
+                      }}</time>
+                    </span>
+                  </p>
+                </div>
+                <template v-else>
+                  <div class="text-center p-5">
+                    <img src="~@/assets/img/empty.svg" alt="" />
+                    <p>Chưa có file đính kèm</p>
+                  </div>
+                </template>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <modal-reply
-      :claim="claim"
-      :visible.sync="isVisibleModalReply"
-      v-if="isVisibleModalReply"
-      @success="replySuccess"
-    ></modal-reply>
-    <modal-handle
+    <ModalHandle
       :visible.sync="isVisibleModalHandle"
       @success="init"
       :claim="claim"
-    ></modal-handle>
+    />
   </div>
 </template>
 
 <script>
-import mixinUpload from '@core/mixins/upload'
-import mixinRoute from '@core/mixins/route'
 import File from '../components/File'
-import Browser from '@core/helpers/browser'
-import ModalReply from '../components/ModalReply'
+import FormReply from '../components/FormReply'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import Message from '../components/Message'
 import ModalHandle from '../components/ModalHandle.vue'
 import {
+  FETCH_TICKET,
   UPDATE_TICKET,
-  UPDATE_FILE_TICKET,
-  CANCEL_TICKET,
   FETCH_MESSAGE,
-  GET_FILE_TICKET,
+  UPDATE_MESSAGE_TICKET,
 } from '../store'
-import { FETCH_TICKET } from '@/packages/claim/store'
 import {
   CLAIM_STATUS_PENDING,
   CLAIM_STATUS_PROCESSED,
@@ -198,13 +169,17 @@ import {
   CLAIM_TYPES,
 } from '../constants'
 import { truncate } from '@core/utils/string'
+import { datetime, format } from '@core/utils/datetime'
+import { cloneDeep } from '@core/utils'
+import debounce from 'lodash/debounce'
+
+const regexName = /_\w{8}-\w{4}-\w{4}-\w{4}-\w{12}.(xlsx|jpg|png|jpeg)$/gi
 
 export default {
   name: 'ClaimDetail',
-  mixins: [mixinUpload, mixinRoute],
   components: {
     File,
-    ModalReply,
+    FormReply,
     Message,
     ModalHandle,
   },
@@ -220,36 +195,25 @@ export default {
   },
   data() {
     return {
-      content: '',
-      reply: '',
-      reason: null,
-      files: [],
-      isUploading: false,
-      title: '',
-      urls: [],
-      requiredReason: false,
-      selectReason: false,
-      solution: null,
-      isVisibleConfirmDelete: false,
-      deleteFile: null,
-      validTitle: false,
-      isTicketOpen: false,
-      attach_files: [],
+      isFistScroll: false,
+      isVisibleModalHandle: false,
       isVisibleModalReply: false,
-      messages: [],
       isMessageLoading: false,
       filter: {
-        limit: 20,
+        limit: 50,
+        last_id: 0,
+        next: true,
       },
-      styleObject: {},
-      styleInfoObject: {},
-      isVisibleModalHandle: false,
     }
   },
   computed: {
+    claimID() {
+      const { id } = this.$route.params
+      return parseInt(id)
+    },
     ...mapState('claim', {
       claim: (state) => state.ticket,
-      count: (state) => state.countMess,
+      messages: (state) => state.message,
     }),
     isProcessed() {
       return this.claim.status == CLAIM_STATUS_PROCESSED
@@ -266,225 +230,159 @@ export default {
 
       return ''
     },
+    attachments() {
+      const attachments = []
+
+      if (this.messages && this.messages.length) {
+        for (const message of this.messages) {
+          const files = (message.attachment || []).map((src) => ({
+            src,
+            name: src.replace(regexName, `.$1`).split('/').pop(),
+            created_at: message.created_at,
+          }))
+
+          attachments.push(...files)
+        }
+      }
+
+      const files = (this.claim.attachment || []).map((src) => ({
+        src,
+        name: src.replace(regexName, `.$1`).split('/').pop(),
+        created_at: this.claim.created_at,
+      }))
+
+      attachments.push(...files)
+      return attachments
+    },
+    displayMessages() {
+      let last = null
+      const results = []
+      let messages = [...(this.messages || [])]
+      messages.reverse()
+
+      const now = format(new Date(), 'yyyyMMdd')
+      const nowYear = format(new Date(), 'yyyy')
+
+      for (const message of messages) {
+        const dd = datetime(message.created_at, 'yyyyMMdd')
+
+        if (last) {
+          if (last.user_id != message.user_id) {
+            results.push(last)
+            last = null
+          } else if (last.dd != dd) {
+            results.push(last)
+            last = null
+          }
+        }
+
+        if (!last) {
+          last = cloneDeep(message)
+          last.dd = dd
+        }
+
+        last.datetime = datetime(last.created_at, 'dd/MM hh:mm aa')
+        if (now == dd) {
+          last.datetime = datetime(last.created_at, 'hh:mm aa')
+        } else if (nowYear != datetime(message.created_at, 'yyyy')) {
+          last.datetime = datetime(last.created_at, 'dd/MM/yyyy hh:mm aa')
+        }
+
+        if (last.items) {
+          last.items.push(message.content)
+        } else {
+          last.items = [message.content]
+        }
+      }
+
+      if (last) {
+        results.push(last)
+      }
+
+      return results
+    },
   },
   created() {
-    ;(this.filter = this.getRouteQuery()), this.init()
+    this.init()
   },
-  mounted() {
-    this.scrollHandle()
+  updated() {
+    this.$nextTick(function () {
+      if (this.isFistScroll || !this.messages.length) return
+
+      setTimeout(() => {
+        this.isFistScroll = true
+        this.scrollHandle()
+      }, 100)
+    })
   },
   methods: {
-    ...mapActions('claim', [
-      FETCH_TICKET,
-      UPDATE_FILE_TICKET,
-      UPDATE_TICKET,
-      CANCEL_TICKET,
-      FETCH_MESSAGE,
-      GET_FILE_TICKET,
-    ]),
-    ...mapMutations(['updateTicketMessage']),
     truncate,
+    ...mapActions('claim', [FETCH_TICKET, UPDATE_TICKET, FETCH_MESSAGE]),
+    ...mapMutations('claim', [UPDATE_MESSAGE_TICKET]),
     async init() {
-      this.handleUpdateRouteQuery()
-      window.scrollTo(0, 0)
-      const { id } = this.$route.params
-      await this[FETCH_TICKET](id)
-      await this.handlerFetchTicketMessages(id)
-      this.reason = this.claim.category
-      this.orderId = this.claim.object_id
-      this.title = this.claim.subject
-      this.content = this.claim.content
-      this.solution = this.claim.solution
-      this.reply = this.claim.reply
-      if (this.claim.attach_files != null) {
-        this.claim.attach_files.forEach((x) =>
-          this.files.push({ name: x, url: x })
-        )
+      this[UPDATE_MESSAGE_TICKET]([])
+
+      this.handlerFetchTicketMessages()
+      const res = await this[FETCH_TICKET](this.claimID)
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
       }
-    },
-
-    scrollHandle() {
-      let eMain = null
-      let eMessage = null
-      let eInfo = null
-      window.onscroll = () => {
-        if (!eMain) {
-          eMain = this.$refs.mainClaim
-        }
-
-        if (!eInfo) {
-          eInfo = this.$refs.claimInfo
-        }
-
-        if (!eMessage) {
-          eMessage = this.$refs.messages
-        }
-
-        if (!eMain || !eMessage) return
-        const { height } = eMain.getBoundingClientRect()
-        const { top, left, width } = eMessage.getBoundingClientRect()
-        const rectInfo = eInfo.getBoundingClientRect()
-
-        if (top - 56 < 0) {
-          if (this.classMainClaim === 'fixed') return
-
-          this.styleObject = {
-            top: '56px',
-            left,
-            width: width + 'px',
-            position: 'fixed',
-            'z-index': 999,
-          }
-
-          this.styleInfoObject = {
-            top: '56px',
-            left: rectInfo.left,
-            width: rectInfo.width + 'px',
-            position: 'fixed',
-            'z-index': 999,
-          }
-
-          let hh = height + 12
-          eMessage.style.paddingTop = hh + 'px'
-        } else {
-          if (this.classMainClaim === '') return
-
-          this.styleObject = {}
-          this.styleInfoObject = {}
-          eMessage.style.paddingTop = 0
-        }
-      }
-    },
-
-    hasFiles() {
-      return this.claim.attachment && this.claims.attachment.length
     },
     showModalHandle() {
       this.isVisibleModalHandle = true
     },
-    extenionFileUrl(val) {
-      const rex = /(?:\.([^.]+))?$/
-      const ext = rex.exec(val)[1]
-      if (ext === undefined) {
-        return ''
+    handlerFetchTicketMessages: debounce(async function () {
+      if (!this.filter.next || this.isMessageFetching) return
+
+      if (this.messages.length) {
+        const n = this.messages.length - 1
+        this.filter.last_id = this.messages[n].id || 0
       }
 
-      return ext
-    },
-    isImage(url) {
-      const ext = this.extenionFileUrl(url)
-      if (['png', 'jpg', 'jpeg'].indexOf(ext) !== -1) {
-        return true
-      }
-      return false
-    },
-
-    async getTicketFile(url, isFile) {
-      let result = ''
-
-      this.isFetching = true
-      try {
-        const payload = {
-          url: url,
-          type: 'tickets',
-        }
-        result = await this.getFileTicket(payload)
-
-        if (!result.success) {
-          this.$toast.open({ type: 'error', message: `Download failed ! ` })
-          return false
-        }
-      } catch (e) {
-        this.$toast.open({ type: 'error', message: `Download failed !` })
-      }
-      this.isFetching = false
-
-      if (isFile) {
-        Browser.downloadBlob(result.blob, url.split('/').pop())
-      } else {
-        return window.URL.createObjectURL(result.blob)
-      }
-    },
-
-    getTicketFiles() {
-      if (!this.attach_files.length) return false
-
-      this.attach_files.forEach(async (el, i) => {
-        if (this.isImage(el)) {
-          let result = this.getTicketFile(el, false)
-          result.then((response) => {
-            this.$set(this.attach_files, i, {
-              url: el,
-              blob: response,
-            })
-          })
-        }
-      })
-    },
-    async handlerFetchTicketMessages(id) {
-      this.isMessageLoading = true
-      let payload = this.filter
-      payload.ticket_id = id
-      const res = await this[FETCH_MESSAGE](payload)
-      this.isMessageLoading = false
-
-      if (!res || res.error) {
-        this.$toast.open({ type: 'error', message: res.message })
+      let { limit, last_id } = this.filter
+      if (last_id == 1) {
+        this.filter.next = false
         return
       }
 
-      this.messages = res.messages
-    },
+      this.isMessageLoading = true
+      const res = await this[FETCH_MESSAGE]({
+        limit,
+        last_id,
+        ticket_id: this.claimID,
+      })
+      this.isMessageLoading = false
 
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+
+      if (res.messages.length < 1) {
+        this.filter.next = false
+      }
+    }, 500),
     formatReason(reason) {
       return MAP_REASON_CATEGORY_TEXT[reason] || REASON_CATEGORY_OTHER_TEXT
     },
-
-    formatStatus(value) {
-      for (const status of this.claimStatus) {
-        if (status.value == value) {
-          return status.text
-        }
-      }
-    },
-
     showModalReply() {
       this.isVisibleModalReply = true
     },
-    replySuccess(reply) {
-      const { id } = this.$route.params
-      this[FETCH_TICKET](id)
-      this.messages.unshift(reply)
-      this.init()
+    replySuccess() {
+      this.scrollHandle()
     },
+    scrollHandle() {
+      const $el = document.querySelector('.box-messages')
+      const $messages = document.querySelector('.box-messages .messages')
+      const height = $messages.offsetHeight || 0
 
-    async handleCancelTicket() {
-      let payload = {
-        id: this.claim.id,
-      }
-      const result = await this[CANCEL_TICKET](payload)
-      this.isVisibleModalHandle = false
-      if (result.error) {
-        this.$toast.open({
-          type: 'error',
-          message: result.message,
-        })
-        return
-      }
-      this.$toast.open({
-        type: 'success',
-        message: 'Thành công',
-      })
-      this.files = []
-      this.init()
+      $el.scrollTop = height
     },
-  },
-  watch: {
-    filter: {
-      handler: function () {
-        this.init()
-      },
-      deep: true,
+    onscroll(e) {
+      if (e.target.scrollTop < 50) {
+        this.handlerFetchTicketMessages()
+      }
     },
   },
 }
