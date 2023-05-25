@@ -11,9 +11,6 @@
             <p-button type="info" @click="showModalHandle" v-if="!isProcessing">
               Xử lý khiếu nại
             </p-button>
-            <p-button type="info ml-8" class="" @click="showModalReply">
-              Trả lời
-            </p-button>
           </div>
         </div>
       </div>
@@ -33,7 +30,11 @@
                 </div>
               </div>
             </div>
-            <FormReply :claim="claim" @success="replySuccess" />
+            <FormReply
+              v-if="!isProcessed"
+              :claim="claim"
+              @success="replySuccess"
+            />
           </div>
           <div class="col-md-4 claim-right">
             <div class="card-block">

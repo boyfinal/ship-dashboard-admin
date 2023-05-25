@@ -47,6 +47,11 @@
     background-color: #fff;
     border-radius: 4px;
     border-left: 2px solid #87e8de;
+
+    button {
+      white-space: nowrap;
+      margin-left: 30px;
+    }
   }
 
   .page-header-title {
