@@ -109,7 +109,11 @@
                       <td>
                         <button
                           class="btn btn-info"
-                          v-if="!item.is_processed && $isAccountant()"
+                          v-if="
+                            !item.is_processed && [
+                              $isAccountant() || $isAdmin(),
+                            ]
+                          "
                           @click="confirmHandle(item)"
                           >Xác nhận</button
                         >
