@@ -2,7 +2,7 @@
   <div class="claim-detail-page pages">
     <div class="content-page">
       <div class="page-header claim-header">
-        <div class="page-header-group">
+        <div class="page-header-group" :class="headClass">
           <div class="page-header-title">
             <h1>{{ claim.title }}</h1>
             <div class="sub-title" v-html="claim.content"></div>
@@ -168,6 +168,7 @@ import {
   MAP_REASON_CATEGORY_TEXT,
   REASON_CATEGORY_OTHER_TEXT,
   CLAIM_TYPES,
+  MAP_CLAIM_STATUS,
 } from '../constants'
 import { truncate } from '@core/utils/string'
 import { datetime, format } from '@core/utils/datetime'
@@ -301,6 +302,10 @@ export default {
       }
 
       return results
+    },
+    headClass() {
+      return (MAP_CLAIM_STATUS[this.claim.status] || { className: '' })
+        .className
     },
   },
   created() {
