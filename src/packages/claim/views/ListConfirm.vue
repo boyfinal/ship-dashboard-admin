@@ -143,11 +143,7 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import {
-  CLAIM_STATUS_PENDING,
-  CLAIM_STATUS_PROCESSED,
-  CLAIM_TYPE_REFUND,
-} from '../constants'
+import { CLAIM_STATUS_PENDING, CLAIM_STATUS_PROCESSED } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
@@ -263,7 +259,7 @@ export default {
         filter.user_id = this.user_id
       }
 
-      filter.type = CLAIM_TYPE_REFUND
+      filter.is_refund = true
       filter.search = (filter.search || '').toUpperCase()
 
       this[FETCH_COUNT_CLAIMS](filter)
