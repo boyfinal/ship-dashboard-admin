@@ -109,10 +109,13 @@ export default {
       )
     },
     isExtraAmountDisable() {
-      return this.type != CLAIM_TYPE_RESHIP
+      return this.type != CLAIM_TYPE_RESHIP || !!this.refund_amount
     },
     isRefundAmountDisable() {
-      return this.type != CLAIM_TYPE_REFUND
+      return !(
+        this.type == CLAIM_TYPE_REFUND ||
+        (this.type == CLAIM_TYPE_RESHIP && !this.extra_amount)
+      )
     },
   },
   data() {
