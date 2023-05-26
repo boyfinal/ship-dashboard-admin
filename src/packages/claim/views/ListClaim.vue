@@ -147,10 +147,10 @@
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
 import {
   CLAIM_STATUS,
-  CLAIM_CUSTOMER_REPLY,
   MAP_REASON_CATEGORY_TEXT,
   REASON_CATEGORY_OTHER_TEXT,
   CLAIM_TYPES,
+  CLAIM_STATUS_PROCESSED,
 } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
@@ -231,7 +231,7 @@ export default {
           created_at: item.created_at,
           updated_at: item.updated_at,
           status: item.status,
-          isCustomerReply: item.status_rep == CLAIM_CUSTOMER_REPLY,
+          isCustomerReply: item.status != CLAIM_STATUS_PROCESSED,
           user_id: item.user_id,
           user_name: item.user ? item.user.full_name : '',
           type_text: mapTypes.get(item.type) || '-',
