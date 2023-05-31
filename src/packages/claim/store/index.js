@@ -149,11 +149,8 @@ export const actions = {
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
-    commit(UPDATE_TICKET, res)
-    commit(FETCH_TICKET, res)
-    return {
-      error: false,
-    }
+
+    return { error: false }
   },
   // eslint-disable-next-line
   async updateFileTicket({ commit }, payload) {

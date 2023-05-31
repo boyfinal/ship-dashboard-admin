@@ -156,12 +156,7 @@ import FormReply from '../components/FormReply'
 import { mapActions, mapState, mapMutations } from 'vuex'
 import Message from '../components/Message'
 import ModalHandle from '../components/ModalHandle.vue'
-import {
-  FETCH_TICKET,
-  UPDATE_TICKET,
-  FETCH_MESSAGE,
-  UPDATE_MESSAGE_TICKET,
-} from '../store'
+import { FETCH_TICKET, FETCH_MESSAGE, UPDATE_MESSAGE_TICKET } from '../store'
 import {
   CLAIM_STATUS_PENDING,
   CLAIM_STATUS_PROCESSED,
@@ -323,7 +318,7 @@ export default {
   },
   methods: {
     truncate,
-    ...mapActions('claim', [FETCH_TICKET, UPDATE_TICKET, FETCH_MESSAGE]),
+    ...mapActions('claim', [FETCH_TICKET, FETCH_MESSAGE]),
     ...mapMutations('claim', [UPDATE_MESSAGE_TICKET]),
     async init() {
       this[UPDATE_MESSAGE_TICKET]([])

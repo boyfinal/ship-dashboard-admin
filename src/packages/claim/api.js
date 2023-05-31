@@ -50,8 +50,8 @@ export default {
   fetchTicket(payload) {
     return http.get(`/tickets/${payload}`)
   },
-  updateTicket(payload) {
-    return http.put(`/tickets/${payload.id}`, payload.tickets)
+  updateTicket({ id, ...body }) {
+    return http.put(`/tickets/${id}`, body)
   },
   cancelTicket(payload) {
     return http.put(`/tickets/${payload.id}/cancel`)

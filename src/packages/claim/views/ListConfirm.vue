@@ -94,9 +94,9 @@
                           size="large"
                           position="top"
                           type="dark"
-                          :active="item.title.length > 30"
+                          :active="item.title.length > 25"
                         >
-                          {{ truncate(item.title, 30) }}
+                          {{ truncate(item.title, 25) }}
                         </p-tooltip>
                       </td>
                       <td>{{ item.supports }}</td>
@@ -116,6 +116,16 @@
                           "
                           @click="confirmHandle(item)"
                           >Xác nhận</button
+                        >
+                        <button
+                          class="btn btn-danger ml-1"
+                          v-if="
+                            !item.is_processed && [
+                              $isAccountant() || $isAdmin(),
+                            ]
+                          "
+                          @click="cancelHandle(item)"
+                          >Từ chối</button
                         >
                       </td>
                     </tr>
@@ -143,12 +153,21 @@
 </template>
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
-import { CLAIM_STATUS_PENDING, CLAIM_STATUS_PROCESSED } from '../constants'
+import {
+  CLAIM_STATUS_PENDING,
+  CLAIM_STATUS_PROCESSED,
+  CLAIM_STATUS_APPLYING,
+} from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { date } from '@core/utils/datetime'
-import { FETCH_LIST_CLAIMS, FETCH_COUNT_CLAIMS, CONFIRM_CLAIM } from '../store'
+import {
+  FETCH_LIST_CLAIMS,
+  FETCH_COUNT_CLAIMS,
+  CONFIRM_CLAIM,
+  UPDATE_TICKET,
+} from '../store'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -247,6 +266,7 @@ export default {
       FETCH_LIST_CLAIMS,
       FETCH_COUNT_CLAIMS,
       CONFIRM_CLAIM,
+      UPDATE_TICKET,
     ]),
     truncate,
     async init() {
@@ -299,6 +319,27 @@ export default {
       }
 
       this.$toast.success('Xác nhận duyệt khiếu nại thành công!')
+      this.init()
+    },
+    cancelHandle(item) {
+      this.$dialog.confirm({
+        title: `Từ chối xác nhận duyệt khiếu nại #${item.id}`,
+        message: `Bạn có chắc chắn muốn từ chối xác nhận duyệt khiếu nại này?`,
+        onConfirm: () => this.submitCancelHandle(item),
+      })
+    },
+    async submitCancelHandle({ id }) {
+      this.isFetching
+
+      const payload = { id, status: CLAIM_STATUS_APPLYING }
+      const res = await this[UPDATE_TICKET](payload)
+
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.$toast.success('Từ chối xác nhận duyệt khiếu nại thành công!')
       this.init()
     },
   },
