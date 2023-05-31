@@ -106,7 +106,7 @@ export const CLAIM_TYPE_REFUND = 3
 export const CLAIM_TYPES = [
   {
     id: CLAIM_TYPE_DEFAULT,
-    name: 'Không làm gì cả',
+    name: 'Đóng',
   },
   {
     id: CLAIM_TYPE_RESHIP,
