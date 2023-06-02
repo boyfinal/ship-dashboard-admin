@@ -9,7 +9,9 @@
       <div class="menu_content">
         <div class="page-content_drag card2">
           <div class="form-group" v-if="isRefund">
-            <label class="text-bold mb-5">Số tiền hoàn:</label>
+            <label class="text-bold mb-5"
+              >Số tiền hoàn (USD): <span class="text-danger">*</span></label
+            >
             <input
               type="text"
               class="form-control"
@@ -142,6 +144,11 @@ export default {
     onChangeRefundAmount(e) {
       try {
         this.errorRefundAmount = ''
+        const amount = amountToNumber(e.target.value)
+        if (amount > CLAIM_REFUND_MAX) {
+          e.target.value = CLAIM_REFUND_MAX
+        }
+
         this.refund_amount = formatAmount(e.target.value)
         e.target.value = this.refund_amount
       } catch {
@@ -181,14 +188,21 @@ export default {
 
       try {
         payload.refund_amount = amountToNumber(this.refund_amount)
-      } catch (e) {
-        console.log(e)
+      } catch {
         this.errorRefundAmount = 'Số tiền không hợp lệ!'
         return
       }
 
       if (payload.type == CLAIM_TYPE_REFUND && payload.refund_amount <= 0) {
         this.errorRefundAmount = 'Số tiền hoàn > $0'
+        return
+      }
+
+      if (
+        payload.type == CLAIM_TYPE_REFUND &&
+        payload.refund_amount > CLAIM_REFUND_MAX
+      ) {
+        this.errorRefundAmount = `Số tiền hoàn tối đa $${CLAIM_REFUND_MAX}`
         return
       }
 

@@ -8,23 +8,25 @@
             <div class="sub-title" v-html="claim.content"></div>
           </div>
           <div class="page-header-group-actions__right" v-if="!isProcessed">
-            <p-button type="info" @click="showModalHandle" v-if="!isProcessing">
-              Đóng
-            </p-button>
-            <p-button
-              type="info"
-              @click="showModalRefundHandle"
-              v-if="!isProcessing"
-            >
-              Hoàn tiền
-            </p-button>
-            <p-button
-              type="info"
-              @click="showModalReshipHandle"
-              v-if="!isProcessing"
-            >
-              Vận chuyển lại
-            </p-button>
+            <div class="actions">
+              <a href="#" class="name">Xử lý khiếu nại</a>
+              <p-svg name="dropdown"></p-svg>
+              <ul>
+                <li class="danger">
+                  <a href="#" @click="showModalHandle">Đóng</a>
+                </li>
+                <li>
+                  <a href="#" @click.prevent="showModalRefundHandle"
+                    >Hoàn tiền</a
+                  >
+                </li>
+                <li :class="{ disable: !isHasReship }">
+                  <a href="#" @click.prevent="showModalReshipHandle"
+                    >Vận chuyển lại</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -353,6 +355,9 @@ export default {
       )
 
       return shipping_fee + extra
+    },
+    isHasReship() {
+      return this.claim.package.alert == PACKAGE_ALERT_TYPE_HUB_RETURN
     },
   },
   created() {
