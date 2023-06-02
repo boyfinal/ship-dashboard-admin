@@ -117,3 +117,6 @@ export const CLAIM_TYPES = [
     name: 'Hoàn tiền',
   },
 ]
+
+export const CLAIM_REFUND_RATE = 2.5
+export const CLAIM_REFUND_MAX = 50

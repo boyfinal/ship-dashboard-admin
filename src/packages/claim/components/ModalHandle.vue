@@ -2,46 +2,28 @@
   <p-modal
     class="modal-handle-ticket"
     :active="visible"
-    title="Xử lý khiếu nại"
+    :title="title"
     @close="handleClose"
   >
     <div class="page-content">
       <div class="menu_content">
         <div class="page-content_drag card2">
-          <div class="form-group">
-            <label class="text-bold mb-5">Hướng xử lý:</label>
-            <select v-model="type" class="form-control">
-              <option :value="item.id" v-for="item in types" :key="item.id">{{
-                item.name
-              }}</option>
-            </select>
-            <span class="invalid-error" v-if="errorType">{{ errorType }}</span>
-          </div>
-          <div class="form-group">
-            <label class="text-bold mb-5">Số tiền thêm:</label>
-            <input
-              type="text"
-              class="form-control"
-              :value="extra_amount"
-              @input="onChangeExtraAmount"
-              :disabled="isExtraAmountDisable"
-            />
-            <span class="invalid-error" v-if="errorExtraAmount">{{
-              errorExtraAmount
-            }}</span>
-          </div>
-          <div class="form-group">
+          <div class="form-group" v-if="isRefund">
             <label class="text-bold mb-5">Số tiền hoàn:</label>
             <input
               type="text"
               class="form-control"
               :value="refund_amount"
               @input="onChangeRefundAmount"
-              :disabled="isRefundAmountDisable"
             />
             <span class="invalid-error" v-if="errorRefundAmount">{{
               errorRefundAmount
             }}</span>
+          </div>
+          <div class="form-group">
+            <label class="text-bold mb-5">Ghi chú:</label>
+            <textarea class="form-control" v-model.trim="note"></textarea>
+            <span class="invalid-error" v-if="errorNote">{{ errorNote }}</span>
           </div>
         </div>
       </div>
@@ -80,8 +62,9 @@ import { formatAmount, amountToNumber } from '@core/utils/formatter'
 import {
   CLAIM_TYPES,
   CLAIM_TYPE_DEFAULT,
-  CLAIM_TYPE_RESHIP,
   CLAIM_TYPE_REFUND,
+  CLAIM_REFUND_RATE,
+  CLAIM_REFUND_MAX,
 } from '../constants'
 
 export default {
@@ -99,23 +82,27 @@ export default {
       type: Object,
       default: () => {},
     },
+    type: Number,
+    amount: Number,
   },
   computed: {
     isButtonDisable() {
       return (
         this.errorType != '' ||
         this.errorExtraAmount != '' ||
-        this.errorRefundAmount != ''
+        this.errorRefundAmount != '' ||
+        this.errorNote != ''
       )
     },
-    isExtraAmountDisable() {
-      return this.type != CLAIM_TYPE_RESHIP || !!this.refund_amount
+    isRefund() {
+      return this.type == CLAIM_TYPE_REFUND
     },
-    isRefundAmountDisable() {
-      return !(
-        this.type == CLAIM_TYPE_REFUND ||
-        (this.type == CLAIM_TYPE_RESHIP && !this.extra_amount)
-      )
+    title() {
+      if (this.type == CLAIM_TYPE_REFUND) {
+        return `Xử lý hoàn tiền khiếu nại`
+      }
+
+      return `Đóng khiếu nại`
     },
   },
   data() {
@@ -123,12 +110,13 @@ export default {
       isVisibleConfirmDelete: false,
       isSubmitting: false,
       types: CLAIM_TYPES,
-      type: 1,
       extra_amount: '',
       refund_amount: '',
       errorType: '',
       errorExtraAmount: '',
       errorRefundAmount: '',
+      note: '',
+      errorNote: '',
     }
   },
   methods: {
@@ -173,6 +161,7 @@ export default {
       const payload = {
         id: this.claim.id,
         type: 0,
+        note: this.note,
         extra_amount: 0,
         refund_amount: 0,
       }
@@ -192,7 +181,8 @@ export default {
 
       try {
         payload.refund_amount = amountToNumber(this.refund_amount)
-      } catch {
+      } catch (e) {
+        console.log(e)
         this.errorRefundAmount = 'Số tiền không hợp lệ!'
         return
       }
@@ -202,7 +192,15 @@ export default {
         return
       }
 
+      if (payload.note.length > 1000) {
+        this.errorNote = 'Ghi chú không được vượt quá 1000 ký tự'
+        return
+      }
+
+      this.isSubmitting = true
       const res = await this.processClaim(payload)
+      this.isSubmitting = false
+
       if (res.error) {
         this.$toast.error(res.message)
         return
@@ -218,10 +216,19 @@ export default {
       this.errorType = ''
       if (val != CLAIM_TYPE_DEFAULT) return
 
+      this.note = ''
       this.extra_amount = ''
       this.refund_amount = ''
       this.errorExtraAmount = ''
       this.errorRefundAmount = ''
+      this.errorNote = ''
+    },
+    visible: function () {
+      const refund = this.amount * CLAIM_REFUND_RATE
+      this.refund_amount =
+        refund > CLAIM_REFUND_MAX
+          ? CLAIM_REFUND_MAX
+          : Math.round(refund * 100) / 100
     },
   },
 }

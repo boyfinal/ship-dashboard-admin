@@ -9,7 +9,21 @@
           </div>
           <div class="page-header-group-actions__right" v-if="!isProcessed">
             <p-button type="info" @click="showModalHandle" v-if="!isProcessing">
-              Xử lý khiếu nại
+              Đóng
+            </p-button>
+            <p-button
+              type="info"
+              @click="showModalRefundHandle"
+              v-if="!isProcessing"
+            >
+              Hoàn tiền
+            </p-button>
+            <p-button
+              type="info"
+              @click="showModalReshipHandle"
+              v-if="!isProcessing"
+            >
+              Vận chuyển lại
             </p-button>
           </div>
         </div>
@@ -102,6 +116,10 @@
                         Math.abs(claim.amount) | formatPrice
                       }}</span>
                     </li>
+                    <li class="item-note" v-if="claim.note">
+                      <span class="item-title">Ghi chú: </span>
+                      <span class="item-value">{{ claim.note }}</span>
+                    </li>
                   </template>
                 </ul>
               </div>
@@ -142,10 +160,22 @@
         </div>
       </div>
     </div>
+    <OverLoading :is-loading="isLoading" />
     <ModalHandle
       :visible.sync="isVisibleModalHandle"
-      @success="init"
+      :loading.sync="isLoading"
       :claim="claim"
+      :type="typeHandle"
+      :amount="totalAmount"
+      @success="init"
+    />
+    <ModalReship
+      v-if="claim.package"
+      :visible.sync="isVisibleModalReship"
+      :claim="claim"
+      :package="claim"
+      @submit="reshipHandle"
+      @success="init"
     />
   </div>
 </template>
@@ -164,11 +194,17 @@ import {
   REASON_CATEGORY_OTHER_TEXT,
   CLAIM_TYPES,
   MAP_CLAIM_STATUS,
+  CLAIM_TYPE_DEFAULT,
+  CLAIM_TYPE_REFUND,
+  CLAIM_TYPE_RESHIP,
 } from '../constants'
 import { truncate } from '@core/utils/string'
 import { datetime, format } from '@core/utils/datetime'
 import { cloneDeep } from '@core/utils'
 import debounce from 'lodash/debounce'
+import { PACKAGE_ALERT_TYPE_HUB_RETURN } from '@/packages/package/constants'
+import OverLoading from '@components/shared/OverLoading'
+import ModalReship from '../components/ModalReship.vue'
 
 const regexName = /_\w{8}-\w{4}-\w{4}-\w{4}-\w{12}.(xlsx|jpg|png|jpeg)$/gi
 
@@ -179,6 +215,8 @@ export default {
     FormReply,
     Message,
     ModalHandle,
+    OverLoading,
+    ModalReship,
   },
   props: {
     visible: {
@@ -192,10 +230,13 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       isFistScroll: false,
       isVisibleModalHandle: false,
       isVisibleModalReply: false,
       isMessageLoading: false,
+      isVisibleModalReship: false,
+      typeHandle: 0,
       filter: {
         limit: 50,
         last_id: 0,
@@ -302,6 +343,17 @@ export default {
       return (MAP_CLAIM_STATUS[this.claim.status] || { className: '' })
         .className
     },
+    totalAmount() {
+      if (!this.claim || !this.claim.package) return 0
+
+      const { shipping_fee, extra_fee } = this.claim.package
+      const extra = (extra_fee || []).reduce(
+        (sum, { amount }) => sum + amount,
+        0
+      )
+
+      return shipping_fee + extra
+    },
   },
   created() {
     this.init()
@@ -323,15 +375,14 @@ export default {
     async init() {
       this[UPDATE_MESSAGE_TICKET]([])
 
+      this.isLoading = true
       this.handlerFetchTicketMessages()
       const res = await this[FETCH_TICKET](this.claimID)
+      this.isLoading = false
       if (res.error) {
         this.$toast.error(res.message)
         return
       }
-    },
-    showModalHandle() {
-      this.isVisibleModalHandle = true
     },
     handlerFetchTicketMessages: debounce(async function () {
       if (!this.filter.next || this.isMessageFetching) return
@@ -384,6 +435,26 @@ export default {
       if (e.target.scrollTop < 50) {
         this.handlerFetchTicketMessages()
       }
+    },
+    showModalHandle() {
+      this.typeHandle = CLAIM_TYPE_DEFAULT
+      this.isVisibleModalHandle = true
+    },
+    showModalRefundHandle() {
+      this.typeHandle = CLAIM_TYPE_REFUND
+      this.isVisibleModalHandle = true
+    },
+    showModalReshipHandle() {
+      if (this.claim.package.alert != PACKAGE_ALERT_TYPE_HUB_RETURN) {
+        this.$toast.error(`Đơn không hợp lệ`)
+        return
+      }
+
+      this.typeHandle = CLAIM_TYPE_RESHIP
+      this.isVisibleModalReship = true
+    },
+    async reshipHandle(payload) {
+      console.log(payload)
     },
   },
 }

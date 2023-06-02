@@ -133,6 +133,10 @@ export function formatAmount(amount) {
 export function amountToNumber(amount) {
   if (!amount) return 0
 
+  if (typeof amount !== 'string') {
+    amount = amount.toString()
+  }
+
   amount = amount.replace(/\s+/g, '').replaceAll(',', '')
   if (!isFinite(amount)) {
     throw new Error('Number is invalid')
