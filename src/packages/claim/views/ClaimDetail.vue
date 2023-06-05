@@ -7,7 +7,10 @@
             <h1>{{ claim.title }}</h1>
             <div class="sub-title" v-html="claim.content"></div>
           </div>
-          <div class="page-header-group-actions__right" v-if="!isProcessed">
+          <div
+            class="page-header-group-actions__right"
+            v-if="!isProcessed && !isProcessing"
+          >
             <div class="actions">
               <a href="#" class="name">Xử lý khiếu nại</a>
               <p-svg name="dropdown"></p-svg>
