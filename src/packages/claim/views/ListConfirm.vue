@@ -106,7 +106,7 @@
                         <span v-status="item.status" type="claim"></span>
                       </td>
                       <td>{{ item.amount | formatPrice }}</td>
-                      <td>
+                      <td style="white-space: nowrap">
                         <button
                           class="btn btn-info"
                           v-if="

@@ -242,6 +242,8 @@ export default {
       this.refund_amount =
         refund > CLAIM_REFUND_MAX
           ? CLAIM_REFUND_MAX
+          : refund < 0
+          ? 0
           : Math.round(refund * 100) / 100
     },
   },

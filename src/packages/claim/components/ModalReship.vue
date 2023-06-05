@@ -384,13 +384,7 @@ export default {
           /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{1,50}$/,
           'Thành phố không hợp lệ'
         ),
-      country: y
-        .string()
-        .required('Mã quốc gia không để trống')
-        .matches(
-          /^[\s+a-zA-Z0-9_.,\-\u00A1-\uFFFF]{2}$/,
-          'Mã quốc gia không hợp lệ'
-        ),
+      country: y.string().required('Mã quốc gia không để trống'),
       state: y
         .string()
         .required('Mã vùng không để trống')
