@@ -15,6 +15,11 @@ export const UPDATE_MESSAGE_TICKET = 'updateTicketMessage'
 export const PUSH_MESSAGE = 'pushMessage'
 export const APPEND_MESSAGE = 'appendMessage'
 export const SET_MESSAGES = 'setMessages'
+export const PROCESS_CLAIM = 'processClaim'
+export const CONFIRM_CLAIM = 'confirmClaim'
+export const FETCH_LIST_CLAIMS = 'fetchListClaims'
+export const FETCH_COUNT_CLAIMS = 'fetchCountClaims'
+
 export const state = {
   claims: [],
   count: 0,
@@ -23,6 +28,7 @@ export const state = {
   countMess: 0,
   totalCount: [],
 }
+
 export const mutations = {
   [FETCH_CLAIMS]: (state, payload) => {
     state.claims = payload
@@ -86,6 +92,28 @@ export const actions = {
     return { error: false }
   },
 
+  async [FETCH_LIST_CLAIMS]({ commit }, payload) {
+    const res = await api.fetchClaim(payload)
+    if (!res || res.error) {
+      commit(FETCH_CLAIMS, [])
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_CLAIMS, res.tickets)
+    return { error: false }
+  },
+
+  async [FETCH_COUNT_CLAIMS]({ commit }, payload) {
+    const res = await api.countClaim(payload)
+    if (!res || res.error) {
+      commit(COUNT_CLAIMS, 0)
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(COUNT_CLAIMS, res.count)
+    return { error: false }
+  },
+
   /**
    * Creat Claim
    * @param commit
@@ -113,7 +141,6 @@ export const actions = {
       error: false,
       status: res.ticket.status,
       id: res.ticket.id,
-      // create_at:res.ticket.create_at
     }
   },
   // eslint-disable-next-line no-unused-vars
@@ -122,11 +149,8 @@ export const actions = {
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
-    commit(UPDATE_TICKET, res)
-    commit(FETCH_TICKET, res)
-    return {
-      error: false,
-    }
+
+    return { error: false }
   },
   // eslint-disable-next-line
   async updateFileTicket({ commit }, payload) {
@@ -146,17 +170,22 @@ export const actions = {
     return { error: false }
   },
   async [FETCH_MESSAGE]({ commit }, payload) {
-    const [res, count] = await Promise.all([
-      api.fetchMessageTickets(payload),
-      api.countMessage(payload),
-    ])
-    if (!res || res.error || count.error) {
+    const res = await api.fetchMessageTickets(payload)
+    if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
 
     commit(APPEND_MESSAGE, res.messages)
-    commit(COUNT_MESSAGE, count.count)
     return { error: false, ...res }
+  },
+  async [COUNT_MESSAGE]({ commit }, payload) {
+    const res = await api.countMessage(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(COUNT_MESSAGE, res.count)
+    return { error: false }
   },
 
   // eslint-disable-next-line no-empty-pattern
@@ -182,5 +211,25 @@ export const actions = {
 
     commit(PUSH_MESSAGE, res.message)
     return { success: true, reply: res.message }
+  },
+
+  // eslint-disable-next-line
+  async [PROCESS_CLAIM]({ commit }, payload) {
+    const res = await api.processClaim(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { ...res, error: false }
+  },
+
+  // eslint-disable-next-line
+  async [CONFIRM_CLAIM]({ commit }, payload) {
+    const res = await api.confirmClaim(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { ...res, error: false }
   },
 }

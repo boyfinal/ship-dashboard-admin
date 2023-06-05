@@ -1,40 +1,32 @@
 <template>
-  <div class="cs-reply">
-    <div class="user-content card">
-      <div class="user-title d-flex justify-content-between align-items-center">
-        <div class="info-user">
-          <span class="avatar-user">
-            <p-svg name="avatar-dark"></p-svg>
-          </span>
-          <span class="user-name">{{ displayName }}</span>
-          <span class="role-user" v-show="roleName">{{ roleName }}</span>
-        </div>
-        <div class="user-time">
-          {{ current.created_at | datetime('dd/MM/yyyy HH:mm:ss') }}
-        </div>
+  <div class="message" :class="{ me: isMeReply }">
+    <div class="user">
+      <div class="avatar">
+        <p-svg name="avatar-dark"></p-svg>
       </div>
-      <div class="user-text">
-        <span v-html="formatText(current.content)"></span>
+      <div class="info">
+        <p class="user-name">
+          <span>{{ displayName }}</span>
+          <span class="user-role" v-show="roleName">{{ roleName }}</span>
+        </p>
+        <time class="post-time">{{ current.datetime }}</time>
       </div>
-      <div class="gallery ticket-attach-files" v-if="hasFiles">
-        <div class="list-item">
-          <div class="item" v-for="(file, i) in files" :key="i">
-            <div :class="classImage(file)">
-              <File :src="file" />
-            </div>
-          </div>
+    </div>
+    <div class="message-content">
+      <div class="message-text" v-for="(item, i) in current.items" :key="i">
+        <div class="w-text">
+          <p v-html="formatText(item)"></p>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import File from './File'
+import AuthService from '@core/services/auth'
 import { ROLE_ADMIN, ROLE_SUPPORT, ROLE_ACCOUNTANT } from '@core/constants'
 
 export default {
   name: 'TicketMessage',
-  components: { File },
   props: {
     current: {
       type: Object,
@@ -44,6 +36,9 @@ export default {
   computed: {
     files() {
       return this.current.attachment || []
+    },
+    messageId() {
+      return this.current.id || 0
     },
     hasFiles() {
       return this.files.length
@@ -62,19 +57,17 @@ export default {
 
       return ''
     },
+    authId() {
+      return AuthService.getId()
+    },
+    isMeReply() {
+      return this.current.user_id == this.authId
+    },
   },
   methods: {
-    classImage(url) {
-      const re = /(?:.jpg|.png|.jpeg)$/i
-      if (re.test(url)) {
-        return 'gallery-item ticket-file'
-      }
-
-      return 'gallery-item'
-    },
     formatText(text) {
       var urlRegex = /(https?:\/\/[^\s]+)/g
-      return text.replace(urlRegex, function(url) {
+      return text.replace(urlRegex, function (url) {
         return '<a href="' + url + '" target="_blank">' + url + '</a>'
       })
     },

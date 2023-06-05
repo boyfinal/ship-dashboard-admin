@@ -117,6 +117,7 @@ export const actions = {
     }
 
     commit(FETCH_PACKAGE_DETAIL, res)
+    return { error: false }
   },
   // eslint-disable-next-line no-unused-vars
   async fetchListPackages({ commit }, payload) {

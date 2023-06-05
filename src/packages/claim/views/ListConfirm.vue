@@ -8,7 +8,7 @@
             prefixIcon="search"
             type="search"
             clearable
-            v-model="keywordSearch"
+            v-model="filter.search"
             @input="checkClearSearch"
             @keyup.enter="handleSearch"
           >
@@ -45,22 +45,22 @@
             <status-tab
               v-model="filter.status"
               :status="claimStatus"
-              :count="totalCount"
+              :has-all="false"
             />
             <vcl-table class="md-20" v-if="isFetching"></vcl-table>
-            <template v-else-if="listclaim.length > 0">
+            <template v-else-if="claims.length > 0">
               <div class="table-responsive">
                 <table class="table table-hover">
                   <thead>
                     <tr class="list__claim-title">
-                      <th>MÃ</th>
-                      <th>LIONBAY TRACKING </th>
-                      <th>LÝ DO</th>
+                      <th>MÃ KHIẾU NẠI</th>
+                      <th>MÃ VẬN ĐƠN</th>
+                      <th>TIÊU ĐỀ</th>
                       <th>NGƯỜI XỬ LÝ</th>
+                      <th>NGƯỜI XÉT DUYỆT</th>
                       <th>NGÀY TẠO</th>
-                      <th>CẬP NHẬT</th>
                       <th>TRẠNG THÁI</th>
-                      <th>KẾT QUẢ</th>
+                      <th>TIỀN HOÀN</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -90,35 +90,43 @@
                       </td>
                       <td>
                         <p-tooltip
-                          :label="item.reason"
+                          :label="item.title"
                           size="large"
                           position="top"
                           type="dark"
-                          :active="item.reason.length > 30"
+                          :active="item.title.length > 25"
                         >
-                          {{ truncate(item.reason, 30) }}
+                          {{ truncate(item.title, 25) }}
                         </p-tooltip>
                       </td>
                       <td>{{ item.supports }}</td>
+                      <td>{{ item.accountant }}</td>
                       <td>{{ item.created_at | datetime('dd/MM/yyyy') }}</td>
-                      <td>{{ item.updated_at | datetime('dd/MM/yyyy') }}</td>
                       <td>
                         <span v-status="item.status" type="claim"></span>
                       </td>
-                      <td>
-                        {{ item.type_text }}
-                      </td>
-                      <td width="40">
-                        <router-link
-                          v-if="item.isCustomerReply"
-                          class="text-no-underline"
-                          :to="{
-                            name: 'claim-detail',
-                            params: { id: item.id },
-                          }"
+                      <td>{{ item.amount | formatPrice }}</td>
+                      <td style="white-space: nowrap">
+                        <button
+                          class="btn btn-info"
+                          v-if="
+                            !item.is_processed && [
+                              $isAccountant() || $isAdmin(),
+                            ]
+                          "
+                          @click="confirmHandle(item)"
+                          >Xác nhận</button
                         >
-                          <p-svg name="messenger"></p-svg>
-                        </router-link>
+                        <button
+                          class="btn btn-danger ml-1"
+                          v-if="
+                            !item.is_processed && [
+                              $isAccountant() || $isAdmin(),
+                            ]
+                          "
+                          @click="cancelHandle(item)"
+                          >Từ chối</button
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -146,18 +154,20 @@
 <script>
 import EmptySearchResult from '../../../components/shared/EmptySearchResult'
 import {
-  CLAIM_STATUS,
-  MAP_REASON_CATEGORY_TEXT,
-  REASON_CATEGORY_OTHER_TEXT,
-  CLAIM_TYPES,
+  CLAIM_STATUS_PENDING,
   CLAIM_STATUS_PROCESSED,
-  CLAIM_CUSTOMER_REPLY,
+  CLAIM_STATUS_APPLYING,
 } from '../constants'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { date } from '@core/utils/datetime'
-import { FETCH_CLAIMS } from '../store'
+import {
+  FETCH_LIST_CLAIMS,
+  FETCH_COUNT_CLAIMS,
+  CONFIRM_CLAIM,
+  UPDATE_TICKET,
+} from '../store'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -175,10 +185,10 @@ export default {
       type: Object,
       default() {
         return {
-          code: 'Mã tracking',
-          customer_code: 'Mã khách hàng',
-          recipient: 'Người xử lý',
           id: 'Mã khiếu nại',
+          code: 'Mã tracking',
+          recipient: 'Người xử lý',
+          customer_code: 'Mã khách hàng',
         }
       },
     },
@@ -188,14 +198,23 @@ export default {
       filter: {
         limit: 30,
         search: '',
-        status: '',
+        status: CLAIM_STATUS_PENDING,
         search_by: 'code',
         start_date: '',
         end_date: '',
       },
       keywordSearch: '',
       isFetching: false,
-      claimStatus: CLAIM_STATUS,
+      claimStatus: [
+        {
+          value: CLAIM_STATUS_PENDING,
+          text: 'Chờ xét duyệt',
+        },
+        {
+          value: CLAIM_STATUS_PROCESSED,
+          text: 'Đã xét duyệt',
+        },
+      ],
       labelDate: `Tìm theo ngày`,
     }
   },
@@ -206,38 +225,28 @@ export default {
   computed: {
     ...mapState('claim', {
       count: (state) => state.count,
-      listclaim: (state) => state.claims,
-      totalCount: (state) => state.totalCount,
+      claims: (state) => state.claims,
     }),
     displayClaims() {
-      const mapTypes = new Map()
-      for (const { id, name } of CLAIM_TYPES) {
-        mapTypes.set(id, name)
-      }
-
-      return (this.listclaim || []).map((item) => {
+      return (this.claims || []).map((item) => {
         const supports = (item.supports || []).map(({ full_name }) => full_name)
+        const customer = (item.user || {}).full_name || '-'
+        const accountant = (item.accountant || {}).full_name || '-'
+        const code = ((item.package || {}).package_code || {}).code || '-'
+
         return {
           id: item.id,
           package_id: item.package ? item.package.id : 0,
-          package_code:
-            item.package && item.package.package_code
-              ? item.package.package_code.code
-              : '',
+          package_code: code,
           title: item.title,
-          reason:
-            MAP_REASON_CATEGORY_TEXT[item.category] ||
-            REASON_CATEGORY_OTHER_TEXT,
           supports: supports.join(', '),
           created_at: item.created_at,
           updated_at: item.updated_at,
           status: item.status,
-          isCustomerReply:
-            item.status_rep == CLAIM_CUSTOMER_REPLY &&
-            item.status != CLAIM_STATUS_PROCESSED,
-          user_id: item.user_id,
-          user_name: item.user ? item.user.full_name : '',
-          type_text: mapTypes.get(item.type) || '-',
+          user_name: customer,
+          accountant: accountant,
+          amount: Math.abs(item.amount || 0),
+          is_processed: item.status == CLAIM_STATUS_PROCESSED,
         }
       })
     },
@@ -253,23 +262,34 @@ export default {
     },
   },
   methods: {
-    ...mapActions('claim', [FETCH_CLAIMS]),
+    ...mapActions('claim', [
+      FETCH_LIST_CLAIMS,
+      FETCH_COUNT_CLAIMS,
+      CONFIRM_CLAIM,
+      UPDATE_TICKET,
+    ]),
     truncate,
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
+
+      const filter = { ...this.filter }
+
       if (this.user_id > 0) {
-        this.filter.user_id = this.user_id
+        filter.user_id = this.user_id
       }
-      this.filter.search = this.filter.search
-        ? this.filter.search.toUpperCase()
-        : ''
-      let result = await this[FETCH_CLAIMS](this.filter)
-      if (result.error) {
-        this.$toast.open({ type: 'danger', message: result.message })
+
+      filter.is_refund = true
+      filter.search = (filter.search || '').toUpperCase()
+
+      this[FETCH_COUNT_CLAIMS](filter)
+      const res = await this[FETCH_LIST_CLAIMS](filter)
+      this.isFetching = false
+
+      if (res.error) {
+        this.$toast.error(res.message)
         return
       }
-      this.isFetching = false
     },
     selectDate(v) {
       this.filter.start_date = date(v.startDate, 'yyyy-MM-dd')
@@ -279,6 +299,48 @@ export default {
       this.filter.end_date = ''
       this.filter.start_date = ''
       this.filter.page = 1
+    },
+    confirmHandle(item) {
+      this.$dialog.confirm({
+        title: `Xác nhận duyệt khiếu nại #${item.id}`,
+        message: `Bạn có chắc chắn muốn xác nhận duyệt khiếu nại này?`,
+        onConfirm: () => this.submitHandle(item),
+      })
+    },
+    async submitHandle({ id }) {
+      this.isFetching
+
+      const payload = { id }
+      const res = await this[CONFIRM_CLAIM](payload)
+
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.$toast.success('Xác nhận duyệt khiếu nại thành công!')
+      this.init()
+    },
+    cancelHandle(item) {
+      this.$dialog.confirm({
+        title: `Từ chối xác nhận duyệt khiếu nại #${item.id}`,
+        message: `Bạn có chắc chắn muốn từ chối xác nhận duyệt khiếu nại này?`,
+        onConfirm: () => this.submitCancelHandle(item),
+      })
+    },
+    async submitCancelHandle({ id }) {
+      this.isFetching
+
+      const payload = { id, status: CLAIM_STATUS_APPLYING }
+      const res = await this[UPDATE_TICKET](payload)
+
+      if (res.error) {
+        this.$toast.error(res.message)
+        return
+      }
+
+      this.$toast.success('Từ chối xác nhận duyệt khiếu nại thành công!')
+      this.init()
     },
   },
   watch: {

@@ -59,3 +59,7 @@ export const extension = (str) => {
   if (arr === null || arr.length < 2) return ''
   return arr[1].toLowerCase()
 }
+
+export const isImage = (src) => {
+  return ['png', 'jpg', 'jpeg'].includes(extension(src))
+}

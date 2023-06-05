@@ -1,30 +1,39 @@
-export const CLAIM_STATUS = [
-  {
-    value: 1,
-    text: 'Đang xử lý',
-  },
-  {
-    value: 2,
-    text: 'Đã xử lý',
-  },
-]
-
-export const CLAIM_STATUS_PENDING = 1
-export const CLAIM_STATUS_PROCESSED = 2
+export const CLAIM_STATUS_APPLYING = 1
+export const CLAIM_STATUS_PENDING = 2
+export const CLAIM_STATUS_PROCESSED = 3
 
 export const CLAIM_CUSTOMER_REPLY = 0
 export const CLAIM_ADMIN_REPLY = 1
 
 export const MAXIMUM_SIZE = 5
 
+export const CLAIM_STATUS = [
+  {
+    value: CLAIM_STATUS_APPLYING,
+    text: 'Xét duyệt',
+  },
+  {
+    value: CLAIM_STATUS_PENDING,
+    text: 'Đang xử lý',
+  },
+  {
+    value: CLAIM_STATUS_PROCESSED,
+    text: 'Đã xử lý',
+  },
+]
+
 export const MAP_CLAIM_STATUS = {
+  [CLAIM_STATUS_APPLYING]: {
+    text: 'Xét duyệt',
+    className: 'await',
+  },
   [CLAIM_STATUS_PENDING]: {
     text: 'Đang xử lý',
-    className: 'pending',
+    className: 'info',
   },
   [CLAIM_STATUS_PROCESSED]: {
     text: 'Đã xử lý',
-    className: 'done',
+    className: 'success',
   },
 }
 
@@ -89,3 +98,25 @@ export const REASON_CATEGORIES = [
     name: REASON_CATEGORY_OTHER_TEXT,
   },
 ]
+
+export const CLAIM_TYPE_DEFAULT = 1
+export const CLAIM_TYPE_RESHIP = 2
+export const CLAIM_TYPE_REFUND = 3
+
+export const CLAIM_TYPES = [
+  {
+    id: CLAIM_TYPE_DEFAULT,
+    name: 'Đóng',
+  },
+  {
+    id: CLAIM_TYPE_RESHIP,
+    name: 'Vận chuyển lại',
+  },
+  {
+    id: CLAIM_TYPE_REFUND,
+    name: 'Hoàn tiền',
+  },
+]
+
+export const CLAIM_REFUND_RATE = 2.5
+export const CLAIM_REFUND_MAX = 50

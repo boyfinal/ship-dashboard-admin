@@ -50,8 +50,8 @@ export default {
   fetchTicket(payload) {
     return http.get(`/tickets/${payload}`)
   },
-  updateTicket(payload) {
-    return http.put(`/tickets/${payload.id}`, payload.tickets)
+  updateTicket({ id, ...body }) {
+    return http.put(`/tickets/${id}`, body)
   },
   cancelTicket(payload) {
     return http.put(`/tickets/${payload.id}/cancel`)
@@ -81,5 +81,11 @@ export default {
   },
   reply(id, payload) {
     return http.post(`/tickets/${id}/messages`, payload)
+  },
+  processClaim({ id, ...payload }) {
+    return http.post(`/tickets/${id}/process`, payload)
+  },
+  confirmClaim({ id, ...payload }) {
+    return http.post(`/tickets/${id}/confirm`, payload)
   },
 }

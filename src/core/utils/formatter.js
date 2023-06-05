@@ -105,3 +105,42 @@ export const formatPrice2 = (value) => {
   }
   return `+$${val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 }
+
+export function formatAmount(amount) {
+  amount = amount.replace(/\s+/g, '').replaceAll(',', '')
+
+  if (!isFinite(amount)) {
+    throw new Error('Number is invalid')
+  }
+
+  const arrNumber = amount.split('.')
+  let number = arrNumber[0]
+  number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+  if (!amount.includes('.')) {
+    return number
+  }
+
+  let decimal = arrNumber[1]
+  if (decimal === undefined) {
+    return `${number}.`
+  }
+
+  decimal = decimal.length >= 2 ? decimal.toString().slice(0, 2) : decimal
+  return `${number}.${decimal}`
+}
+
+export function amountToNumber(amount) {
+  if (!amount) return 0
+
+  if (typeof amount !== 'string') {
+    amount = amount.toString()
+  }
+
+  amount = amount.replace(/\s+/g, '').replaceAll(',', '')
+  if (!isFinite(amount)) {
+    throw new Error('Number is invalid')
+  }
+
+  return parseFloat(amount)
+}
