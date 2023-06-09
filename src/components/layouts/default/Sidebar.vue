@@ -366,6 +366,12 @@ export default {
               disable: this.$isAccountant(),
             },
             {
+              route: '/sales',
+              title: 'Quản lý sales',
+              alias: ['/sales', '/sales/:id'],
+              disable: !this.$isAdmin(),
+            },
+            {
               route: '/notify/email',
               title: 'Thông báo',
               alias: ['/notify/email'],

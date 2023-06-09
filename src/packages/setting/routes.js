@@ -61,4 +61,13 @@ export const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/CarrierPrice.vue'),
   },
+  {
+    path: '/sales',
+    name: 'list-sales',
+    meta: {
+      title: 'Quản lý sales',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/ListSales.vue'),
+  },
 ]

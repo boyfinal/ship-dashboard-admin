@@ -87,4 +87,10 @@ export default {
   updateCarrierService(payload) {
     return http.post(`/carriers/service-point`, payload)
   },
+  fetchListSales(payload) {
+    return http.get(`/users/sales?${buildQueryString(payload)}`)
+  },
+  fetchCountSales(payload) {
+    return http.get(`/users/sales/count?${buildQueryString(payload)}`)
+  },
 }

@@ -27,6 +27,9 @@ export const FETCH_COUNT_CHECK_PRICE_LOGS = 'fetchCountCheckPriceLogs'
 export const FETCH_CARRIER_SERVICE = 'fetchCarrierService'
 export const UPDATE_CARRIER_SERVICE = 'updateCarrierService'
 
+export const FETCH_LIST_SALES = 'fetchListSales'
+export const FETCH_COUNT_SALES = 'fetchCountSales'
+
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -70,6 +73,8 @@ export const state = {
   check_price_logs: [],
   count_check_price_logs: 0,
   carrier_service: {},
+  sales: [],
+  count_sales: 0,
 }
 
 /**
@@ -165,6 +170,12 @@ export const mutations = {
   },
   [FETCH_CARRIER_SERVICE]: (state, payload) => {
     state.carrier_service = payload
+  },
+  [FETCH_LIST_SALES]: (state, payload) => {
+    state.sales = payload
+  },
+  [FETCH_COUNT_SALES]: (state, payload) => {
+    state.count_sales = payload
   },
 }
 
@@ -431,6 +442,26 @@ export const actions = {
     }
 
     commit(FETCH_COUNT_CHECK_PRICE_LOGS, res.count)
+    return { error: false }
+  },
+  async [FETCH_LIST_SALES]({ commit }, payload) {
+    const res = await api.fetchListSales(payload)
+    if (!res || res.error) {
+      commit(FETCH_LIST_SALES, [])
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_LIST_SALES, res.sales)
+    return { error: false }
+  },
+  async [FETCH_COUNT_SALES]({ commit }, payload) {
+    const res = await api.fetchCountSales(payload)
+    if (!res || res.error) {
+      commit(FETCH_COUNT_SALES, 0)
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_COUNT_SALES, res.count)
     return { error: false }
   },
 }
