@@ -112,6 +112,17 @@
             </table>
           </template>
           <empty-search-result v-else></empty-search-result>
+          <div
+            class="d-flex justify-content-between align-items-center"
+            v-if="customerCount > 0"
+          >
+            <p-pagination
+              :total="customerCount"
+              :perPage.sync="filter.limit"
+              :current.sync="filter.page"
+              size="sm"
+            ></p-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -142,6 +153,7 @@ export default {
     ...mapState('setting', {
       saler: (state) => state.saler,
       customers: (state) => state.customers || [],
+      countCustomers: (state) => state.countCustomers,
       totalRevenue: (state) => state.totalRevenue,
       topCustomers: (state) => state.topCustomers || [],
       getNoteCustomerBlock() {
@@ -161,8 +173,7 @@ export default {
     return {
       filter: {
         limit: 30,
-        search: '',
-        status: 2,
+        page: 1,
       },
       isFetching: false,
       customerCount: 0,
@@ -195,9 +206,7 @@ export default {
 
     async init() {
       this.isFetching = true
-      const payload = {
-        id: this.userID,
-      }
+      const payload = Object.assign({}, this.filter, { id: this.userID })
       let [r1, r2, r3] = await Promise.all([
         this[FETCH_DETAIL_SALER](payload),
         this[FETCH_CUSTOMER_SALER](payload),
@@ -213,6 +222,16 @@ export default {
       this.series = this.topCustomers.map((i) => i.revenue)
       this.chartOptions = { labels: this.topCustomers.map((i) => i.full_name) }
     },
+    async loadCustomers() {
+      this.isFetching = true
+      const payload = Object.assign({}, this.filter, { id: this.userID })
+      let r = await this[FETCH_CUSTOMER_SALER](payload)
+      this.isFetching = false
+      if (r.error) {
+        this.$toast.error(r.errorMessage)
+        return
+      }
+    },
     calStarsRating(tickets) {
       const ticketRatedCount = this.tickets
         ? this.tickets.filter((i) => i.is_rated).length
@@ -224,6 +243,17 @@ export default {
         : 0
       this.config.rating = ticketRatedCount ? total / ticketRatedCount : 0
       return this.config
+    },
+  },
+  watch: {
+    filter: {
+      handler: function () {
+        if (this.isFetching) {
+          return
+        }
+        this.loadCustomers()
+      },
+      deep: true,
     },
   },
 }
