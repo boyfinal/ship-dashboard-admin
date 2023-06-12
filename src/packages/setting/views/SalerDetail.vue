@@ -27,7 +27,7 @@
               </div>
               <div id="chart">
                 <apexchart
-                  v-if="topCustomers"
+                  v-if="topCustomers.length"
                   type="pie"
                   width="350"
                   height="100%"
