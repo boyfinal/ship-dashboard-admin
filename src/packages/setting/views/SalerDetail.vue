@@ -29,7 +29,7 @@
                 <apexchart
                   v-if="topCustomers.length"
                   type="pie"
-                  width="350"
+                  width="450"
                   height="100%"
                   :options="chartOptions"
                   :series="series"
