@@ -214,12 +214,15 @@ export default {
       this.chartOptions = { labels: this.topCustomers.map((i) => i.full_name) }
     },
     calStarsRating(tickets) {
+      const ticketRatedCount = this.tickets
+        ? this.tickets.filter((i) => i.is_rated).length
+        : 0
       const total = tickets
         ? tickets.reduce(function (a, b) {
-            return a + b.rating
+            return b.is_rated ? a + b.rating : a
           }, 0)
         : 0
-      this.config.rating = tickets ? total / tickets.length : 0
+      this.config.rating = ticketRatedCount ? total / ticketRatedCount : 0
       return this.config
     },
   },

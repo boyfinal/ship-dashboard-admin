@@ -106,6 +106,9 @@
     top: 16px;
     .apx-legend-position-right{
       right: 15px !important;
+      .apexcharts-legend-marker{
+        margin-bottom: -1px;
+      }
     }
   }
   .star-rating{

@@ -8,9 +8,10 @@
         {{ avgStars }}
         <span
           >({{
-            tickets ? `${tickets.length} đánh giá` : 'Chưa có đánh giá'
-          }}
-          )</span
+            totalRatedTicket
+              ? `${totalRatedTicket} đánh giá`
+              : 'Chưa có đánh giá'
+          }})</span
         >
       </div>
       <div class="detail-rate">
@@ -59,14 +60,17 @@ export default {
     },
   },
   computed: {
+    totalRatedTicket() {
+      return this.tickets ? this.tickets.filter((i) => i.is_rated).length : 0
+    },
     avgStars() {
-      if (!this.tickets) {
+      if (!this.totalRatedTicket) {
         return 0
       }
       const total = this.tickets.reduce(function (a, b) {
-        return a + b.rating
+        return b.is_rated ? a + b.rating : a
       }, 0)
-      return total / this.tickets.length
+      return total / this.totalRatedTicket
     },
   },
   data() {
@@ -82,10 +86,10 @@ export default {
       return this.tickets.filter((i) => i.rating === star).length
     },
     getStarPercent(star) {
-      if (!this.tickets) {
+      if (!this.totalRatedTicket) {
         return 0
       }
-      return Math.floor((this.getStarCount(star) * 100) / this.tickets.length)
+      return Math.floor((this.getStarCount(star) * 100) / this.totalRatedTicket)
     },
   },
 }
@@ -105,7 +109,7 @@ export default {
   transition: opacity 700ms ease, visibility 500ms ease;
   z-index: 9999;
   top: -160px;
-  left: -40px;
+  left: -50px;
   svg {
     position: absolute;
     content: '';
