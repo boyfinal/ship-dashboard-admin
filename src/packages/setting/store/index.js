@@ -26,8 +26,10 @@ export const FETCH_LIST_CHECK_PRICE_LOGS = 'fetchListCheckPriceLogs'
 export const FETCH_COUNT_CHECK_PRICE_LOGS = 'fetchCountCheckPriceLogs'
 export const FETCH_CARRIER_SERVICE = 'fetchCarrierService'
 export const UPDATE_CARRIER_SERVICE = 'updateCarrierService'
-export const FETCH_CUSTOMER_SALER = 'fetchCustomerSaler'
 
+export const FETCH_CUSTOMER_SALER = 'fetchCustomerSaler'
+export const FETCH_DETAIL_SALER = 'fetchDetailSaler'
+export const FETCH_REVENUE_SALER = 'fetchRevenueSaler'
 export const FETCH_LIST_SALES = 'fetchListSales'
 export const FETCH_COUNT_SALES = 'fetchCountSales'
 
@@ -76,6 +78,8 @@ export const state = {
   carrier_service: {},
   saler: {},
   customers: [],
+  totalRevenue: 0,
+  topCustomers: [],
   sales: [],
   count_sales: 0,
 }
@@ -175,8 +179,14 @@ export const mutations = {
     state.carrier_service = payload
   },
   [FETCH_CUSTOMER_SALER]: (state, payload) => {
-    state.saler = payload.sale
     state.customers = payload.customers
+  },
+  [FETCH_DETAIL_SALER]: (state, payload) => {
+    state.saler = payload.sale
+  },
+  [FETCH_REVENUE_SALER]: (state, payload) => {
+    state.totalRevenue = payload.total_revenue
+    state.topCustomers = payload.top_customers
   },
   [FETCH_LIST_SALES]: (state, payload) => {
     state.sales = payload
@@ -459,6 +469,25 @@ export const actions = {
     }
 
     commit(FETCH_CUSTOMER_SALER, res)
+    return { error: false }
+  },
+  async [FETCH_REVENUE_SALER]({ commit }, payload) {
+    const res = await api.fetchRevenueSaler(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_REVENUE_SALER, res)
+    return { error: false }
+  },
+  async [FETCH_DETAIL_SALER]({ commit }, payload) {
+    const res = await api.fetchDetailSaler(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_DETAIL_SALER, res)
+    return { error: false, customer_count: res.customer_count }
   },
   async [FETCH_LIST_SALES]({ commit }, payload) {
     const res = await api.fetchListSales(payload)

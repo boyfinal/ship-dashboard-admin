@@ -16,19 +16,21 @@
     </div>
     <div class="page-content">
       <div class="row">
-        <div class="col-8">
+        <div class="col-7">
           <div class="card-block mdd-blk">
             <div class="card-header">
               <div class="card-title">Doanh thu</div>
             </div>
             <div class="card-body">
               <div class="txt-number">
-                {{ getRevenue | formatPrice }}
+                {{ totalRevenue | formatPrice }}
               </div>
               <div id="chart">
                 <apexchart
+                  v-if="topCustomers"
                   type="pie"
-                  width="280"
+                  width="350"
+                  height="100%"
                   :options="chartOptions"
                   :series="series"
                 ></apexchart>
@@ -36,15 +38,15 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <div class="card-block mdd-blk">
             <div class="card-header">
               <div class="card-title">Khách hàng</div>
             </div>
             <div class="card-body">
-              <div class="txt-number"> 1.299 </div>
-              <div class="customer-note-block">
-                Tăng 24 khách hàng mới so với tuần trước
+              <div class="txt-number"> {{ customerCount }} </div>
+              <div class="customer-note-block" v-if="newCustomer">
+                Tăng {{ newCustomer }} khách hàng mới so với tuần trước
               </div>
             </div>
           </div>
@@ -83,13 +85,15 @@
                     {{ item.total_package }}
                   </td>
                   <td>
-                    {{ item.revenue }}
+                    {{ item.revenue | formatPrice }}
                   </td>
                   <td>
                     {{ item.tickets ? item.tickets.length : 0 }}
                   </td>
                   <td>
-                    <stars-rating :config="config"></stars-rating>
+                    <stars-rating
+                      :config="calStarsRating(item.tickets)"
+                    ></stars-rating>
                     <total-feedback></total-feedback>
                   </td>
                 </tr>
@@ -107,8 +111,11 @@ import { mapState, mapActions } from 'vuex'
 import { truncate } from '@core/utils/string'
 import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
-
-import { FETCH_CUSTOMER_SALER } from '../store'
+import {
+  FETCH_CUSTOMER_SALER,
+  FETCH_DETAIL_SALER,
+  FETCH_REVENUE_SALER,
+} from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import starsRating from '../components/rating-stars'
 import TotalFeedback from '../components/TotalFeedback'
@@ -120,6 +127,14 @@ export default {
     EmptySearchResult,
     starsRating,
   },
+  computed: {
+    ...mapState('setting', {
+      saler: (state) => state.saler,
+      customers: (state) => state.customers,
+      totalRevenue: (state) => state.totalRevenue,
+      topCustomers: (state) => state.topCustomers,
+    }),
+  },
   data() {
     return {
       filter: {
@@ -127,30 +142,11 @@ export default {
         search: '',
         status: 2,
       },
-      star: 3,
       isFetching: false,
-
+      customerCount: 0,
+      newCustomer: 0,
       series: [44, 55, 13, 43, 22],
-      chartOptions: {
-        chart: {
-          width: '100%',
-          type: 'pie',
-        },
-        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: 'bottom',
-              },
-            },
-          },
-        ],
-      },
+      chartOptions: {},
       config: {
         rating: 4.7,
         isIndicatorActive: false,
@@ -167,33 +163,42 @@ export default {
     this.userID = parseInt(this.$route.params.id, 10)
     this.init()
   },
-  computed: {
-    ...mapState('setting', {
-      saler: (state) => state.saler,
-      customers: (state) => state.customers,
-      getRevenue() {
-        return (
-          this.customers.reduce(function (a, b) {
-            return a + b.revenue
-          }, 0) || 0
-        )
-      },
-    }),
-  },
   methods: {
     truncate,
-    ...mapActions('setting', [FETCH_CUSTOMER_SALER]),
+    ...mapActions('setting', [
+      FETCH_CUSTOMER_SALER,
+      FETCH_DETAIL_SALER,
+      FETCH_REVENUE_SALER,
+    ]),
 
     async init() {
       this.isFetching = true
       const payload = {
         id: this.userID,
       }
-      let res = await this[FETCH_CUSTOMER_SALER](payload)
+      let [r1, r2, r3] = await Promise.all([
+        this[FETCH_DETAIL_SALER](payload),
+        this[FETCH_CUSTOMER_SALER](payload),
+        this[FETCH_REVENUE_SALER](payload),
+      ])
       this.isFetching = false
-      if (res && res.error) {
-        this.$toast.error(res.errorMessage)
+      if (r1.error || r2.error || r3.error) {
+        this.$toast.error(r1.errorMessage || r2.errorMessage || r3.errorMessage)
+        return
       }
+      this.customerCount = r1.customer_count
+      this.newCustomer = r1.new_customer_count
+      this.series = this.topCustomers.map((i) => i.revenue)
+      this.chartOptions = { labels: this.topCustomers.map((i) => i.full_name) }
+    },
+    calStarsRating(tickets) {
+      let total = tickets
+        ? tickets.reduce(function (a, b) {
+            return a + b.rating
+          }, 0)
+        : 0
+      this.config.rating = tickets ? total / tickets.length : 0
+      return this.config
     },
   },
 }

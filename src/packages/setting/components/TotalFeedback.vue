@@ -150,6 +150,7 @@ export default {
   padding: 16px !important;
   margin: unset;
   position: absolute;
+  visibility: hidden;
   z-index: 9999;
   top: -160px;
   left: -40px;
