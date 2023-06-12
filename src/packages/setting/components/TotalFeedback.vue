@@ -5,93 +5,30 @@
     </div>
     <div class="card-body">
       <div class="avg">
-        4,1
-        <span>(225 đánh giá)</span>
+        {{ avgStars }}
+        <span
+          >({{
+            tickets ? `${tickets.length} đánh giá` : 'Chưa có đánh giá'
+          }}
+          )</span
+        >
       </div>
       <div class="detail-rate">
-        <div class="row-detail">
-          <div class="label">5.</div>
+        <div class="row-detail" v-for="(star, i) in listStars" :key="i">
+          <div class="label">{{ star }}.</div>
           <div class="progress">
             <div
               class="progress-bar"
               role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
+              :style="`width: ${getStarPercent(star)}%`"
+              :aria-valuenow="getStarPercent(star)"
               aria-valuemin="0"
               aria-valuemax="100"
             ></div>
           </div>
-          <div class="per">
-            75%
-            <span class="count">198</span>
-          </div>
-        </div>
-        <div class="row-detail">
-          <div class="label">4.</div>
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <div class="per">
-            75%
-            <span class="count">198</span>
-          </div>
-        </div>
-        <div class="row-detail">
-          <div class="label">3.</div>
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <div class="per">
-            75%
-            <span class="count">198</span>
-          </div>
-        </div>
-        <div class="row-detail">
-          <div class="label">2.</div>
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <div class="per">
-            75%
-            <span class="count">198</span>
-          </div>
-        </div>
-        <div class="row-detail">
-          <div class="label">1.</div>
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <div class="per">
-            75%
-            <span class="count">198</span>
+          <div class="number-rate">
+            <span class="per">{{ getStarPercent(star) }}%</span>
+            <span class="count">{{ getStarCount(star) }}</span>
           </div>
         </div>
       </div>
@@ -116,33 +53,46 @@ export default {
   name: 'TotalFeedback',
   components: {},
   props: {
-    visible: {
-      type: Boolean,
-      default: false,
-    },
-    data: {
-      type: Object,
-      default: () => {},
+    tickets: {
+      type: Array,
+      default: () => [],
     },
   },
-
-  computed: {},
+  computed: {
+    avgStars() {
+      if (!this.tickets) {
+        return 0
+      }
+      const total = this.tickets.reduce(function (a, b) {
+        return a + b.rating
+      }, 0)
+      return total / this.tickets.length
+    },
+  },
   data() {
-    return {}
+    return {
+      listStars: [5, 4, 3, 2, 1],
+    }
   },
-  methods: {},
-  watch: {
-    visible: {
-      handler: function () {},
-      deep: true,
-      immediate: true,
+  methods: {
+    getStarCount(star) {
+      if (!this.tickets) {
+        return 0
+      }
+      return this.tickets.filter((i) => i.rating === star).length
+    },
+    getStarPercent(star) {
+      if (!this.tickets) {
+        return 0
+      }
+      return Math.floor((this.getStarCount(star) * 100) / this.tickets.length)
     },
   },
 }
 </script>
 <style scoped lang="scss">
 .block-star {
-  width: 208px;
+  min-width: 210px;
   border: 1px solid #edeeee;
   box-shadow: 0px 0px 2px rgba(17, 18, 18, 0.04),
     0px 4px 8px rgba(17, 18, 18, 0.08) !important;
@@ -151,6 +101,8 @@ export default {
   margin: unset;
   position: absolute;
   visibility: hidden;
+  opacity: 0;
+  transition: opacity 700ms ease, visibility 500ms ease;
   z-index: 9999;
   top: -160px;
   left: -40px;
@@ -214,9 +166,11 @@ export default {
       font-weight: 400;
       font-size: 12px;
       line-height: 16px;
+      width: 12px;
+      text-align: right;
       color: #aaabab;
     }
-    .per {
+    .number-rate {
       position: absolute;
       left: 120px;
       top: -4px;
@@ -224,9 +178,16 @@ export default {
       font-size: 12px;
       line-height: 16px;
       color: #313232;
+      .per {
+        display: inline-block;
+        width: 28px;
+      }
       .count {
         font-weight: 400;
         color: #aaabab;
+        display: inline-block;
+        min-width: 24px;
+        margin-left: 4px;
       }
     }
   }

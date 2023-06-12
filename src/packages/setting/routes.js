@@ -27,7 +27,7 @@ export const routes = [
       import(/* webpackChunkName: "settings" */ './views/UserDetail.vue'),
   },
   {
-    path: '/user/sale/:id',
+    path: '/sales/:id',
     name: 'saler-detail',
     meta: {
       title: 'Chi tiết Sales',

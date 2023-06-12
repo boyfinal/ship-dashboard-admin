@@ -33,7 +33,15 @@
                 <tbody>
                   <tr v-for="item in sales" :key="item.id">
                     <td>
-                      <router-link :to="{ name: 'list-sales' }">
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'saler-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
                         {{ item.full_name }}
                       </router-link>
                     </td>

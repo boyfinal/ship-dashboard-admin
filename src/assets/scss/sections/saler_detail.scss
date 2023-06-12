@@ -54,6 +54,18 @@
         line-height: 54px;
         display: inline-block;
       }
+      .customer-note-block{
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #898A8A;
+        svg{
+          margin-top: -4px;
+        }
+        .up-trend{
+          color: #48BE78;
+        }
+      }
     }
     &.mdd-blk{
       height: 168px;
@@ -94,6 +106,12 @@
     top: 16px;
     .apx-legend-position-right{
       right: 15px !important;
+    }
+  }
+  .star-rating{
+    &:hover+.block-star{
+      visibility: visible;
+      opacity: 1;
     }
   }
 }
