@@ -87,4 +87,7 @@ export default {
   updateCarrierService(payload) {
     return http.post(`/carriers/service-point`, payload)
   },
+  fetchCustomerSaler(payload) {
+    return http.get(`/users/sale/customer/${payload.id}`)
+  },
 }

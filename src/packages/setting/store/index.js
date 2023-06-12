@@ -26,6 +26,7 @@ export const FETCH_LIST_CHECK_PRICE_LOGS = 'fetchListCheckPriceLogs'
 export const FETCH_COUNT_CHECK_PRICE_LOGS = 'fetchCountCheckPriceLogs'
 export const FETCH_CARRIER_SERVICE = 'fetchCarrierService'
 export const UPDATE_CARRIER_SERVICE = 'updateCarrierService'
+export const FETCH_CUSTOMER_SALER = 'fetchCustomerSaler'
 
 import {
   USER_CLASS_PUBLIC,
@@ -70,6 +71,8 @@ export const state = {
   check_price_logs: [],
   count_check_price_logs: 0,
   carrier_service: {},
+  saler: {},
+  customers: [],
 }
 
 /**
@@ -165,6 +168,10 @@ export const mutations = {
   },
   [FETCH_CARRIER_SERVICE]: (state, payload) => {
     state.carrier_service = payload
+  },
+  [FETCH_CUSTOMER_SALER]: (state, payload) => {
+    state.saler = payload.sale
+    state.customers = payload.customers
   },
 }
 
@@ -431,6 +438,16 @@ export const actions = {
     }
 
     commit(FETCH_COUNT_CHECK_PRICE_LOGS, res.count)
+    return { error: false }
+  },
+
+  async [FETCH_CUSTOMER_SALER]({ commit }, payload) {
+    const res = await api.fetchCustomerSaler(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    commit(FETCH_CUSTOMER_SALER, res)
     return { error: false }
   },
 }

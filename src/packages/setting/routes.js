@@ -27,6 +27,15 @@ export const routes = [
       import(/* webpackChunkName: "settings" */ './views/UserDetail.vue'),
   },
   {
+    path: '/user/sale/:id',
+    name: 'saler-detail',
+    meta: {
+      title: 'Chi tiết Sales',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/SalerDetail.vue'),
+  },
+  {
     path: '/prices',
     name: 'prices',
     meta: {

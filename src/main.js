@@ -17,6 +17,11 @@ import VueQuillEditor from 'vue-quill-editor/dist/ssr'
 Vue.use(VueQuillEditor)
 import * as Quill from 'quill'
 
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+
+Vue.component('apexchart', VueApexCharts)
+
 const alignClass = Quill.import('attributors/style/align')
 const backgroundClass = Quill.import('attributors/style/background')
 const colorClass = Quill.import('attributors/style/color')

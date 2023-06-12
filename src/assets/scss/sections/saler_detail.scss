@@ -1,0 +1,99 @@
+.saler-detail{
+  font-family: "Be VietNam Pro", sans-serif;
+  .page-header{
+    background: #FFFFFF;
+    margin-top:-24px;
+    margin-left:-24px;
+    margin-right:-24px;
+    margin-bottom: 24px;
+    padding: 24px;
+    .sale-info{
+      .txt-col{
+        margin-right: 55px;
+        &>div:first-child{
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 16px;
+          letter-spacing: 0.2px;
+          color: #898A8A;
+          margin-bottom: 4px;
+        }
+        &>div:last-child{
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
+          color: #111212;
+        }
+      }
+    }
+  }
+  .card-block{
+    padding: 24px;
+    box-shadow:unset;
+    border-radius: unset;
+    .card-header{
+      padding: unset;
+      border-radius: unset !important;
+      border-bottom: unset;
+      margin-bottom: 12px;
+      .card-title{
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: 0.75px;
+        text-transform: uppercase;
+        color: #898A8A;
+      }
+    }
+    .card-body{
+      padding: unset;
+      .txt-number{
+        color: #111212;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 54px;
+        display: inline-block;
+      }
+    }
+    &.mdd-blk{
+      height: 168px;
+    }
+  }
+  .tbl-customers{
+    th{
+      border-top: 1px solid #EDEEEE;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 14px;
+      color: #111212;
+      letter-spacing: 0.75px;
+      text-transform: uppercase;
+      height: 60px;
+    }
+    td{
+      border-top: 1px solid #EDEEEE;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #111212;
+      height: 44px;
+    }
+    tr:hover{
+      box-shadow: unset;
+    }
+    tr:first-child td{
+      border-top: 1px solid #E1E2E2;
+    }
+    tr:last-child td{
+      border-bottom: unset;
+    }
+  }
+  #chart{
+    position: absolute;
+    right: 115px;
+    top: 12px;
+    .apx-legend-position-right{
+      right: 15px !important;
+    }
+  }
+}
