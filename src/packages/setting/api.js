@@ -90,4 +90,10 @@ export default {
   fetchCustomerSaler(payload) {
     return http.get(`/users/sale/customer/${payload.id}`)
   },
+  fetchListSales(payload) {
+    return http.get(`/users/sales?${buildQueryString(payload)}`)
+  },
+  fetchCountSales(payload) {
+    return http.get(`/users/sales/count?${buildQueryString(payload)}`)
+  },
 }

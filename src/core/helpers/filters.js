@@ -5,6 +5,7 @@ export {
   formatPrice,
   formatNumber as numberFormat,
   formatNumber,
+  formatNumberV2,
   formatPrice2,
   formatTwoDigits as twoDigits,
   formatUnitString,
