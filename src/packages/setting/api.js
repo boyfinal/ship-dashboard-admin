@@ -88,7 +88,9 @@ export default {
     return http.post(`/carriers/service-point`, payload)
   },
   fetchCustomerSaler(payload) {
-    return http.get(`/users/sales/customers/${payload.id}`)
+    return http.get(
+      `/users/sales/customers/${payload.id}?${buildQueryString(payload)}`
+    )
   },
   fetchDetailSaler(payload) {
     return http.get(`/users/sales/${payload.id}`)
