@@ -211,7 +211,23 @@ export default {
       this.customerCount = r1.customer_count
       this.newCustomer = r1.new_customer_count
       this.series = this.topCustomers.map((i) => i.revenue)
-      this.chartOptions = { labels: this.topCustomers.map((i) => i.full_name) }
+      this.chartOptions = {
+        labels: this.topCustomers.map((i) => i.full_name),
+        responsive: [
+          {
+            breakpoint: 1500,
+            options: {
+              chart: {
+                width: 340,
+                height: '120%',
+              },
+              legend: {
+                position: 'bottom',
+              },
+            },
+          },
+        ],
+      }
     },
     async loadCustomers() {
       this.isFetching = true
