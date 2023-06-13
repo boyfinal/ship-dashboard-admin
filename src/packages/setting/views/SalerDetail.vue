@@ -234,11 +234,11 @@ export default {
     },
     calStarsRating(tickets) {
       const ticketRatedCount = this.tickets
-        ? this.tickets.filter((i) => i.is_rated).length
+        ? this.tickets.filter((i) => i.rating > 0).length
         : 0
       const total = tickets
         ? tickets.reduce(function (a, b) {
-            return b.is_rated ? a + b.rating : a
+            return b.rating > 0 ? a + b.rating : a
           }, 0)
         : 0
       this.config.rating = ticketRatedCount ? total / ticketRatedCount : 0

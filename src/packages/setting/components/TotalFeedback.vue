@@ -61,14 +61,14 @@ export default {
   },
   computed: {
     totalRatedTicket() {
-      return this.tickets ? this.tickets.filter((i) => i.is_rated).length : 0
+      return this.tickets ? this.tickets.filter((i) => i.rating > 0).length : 0
     },
     avgStars() {
       if (!this.totalRatedTicket) {
         return 0
       }
       const total = this.tickets.reduce(function (a, b) {
-        return b.is_rated ? a + b.rating : a
+        return b.rating > 0 ? a + b.rating : a
       }, 0)
       return total / this.totalRatedTicket
     },
