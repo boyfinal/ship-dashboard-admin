@@ -103,7 +103,7 @@
                   </td>
                   <td>
                     <stars-rating
-                      :config="calStarsRating(item.tickets)"
+                      :config="calStarsRating(item.tickets, i)"
                     ></stars-rating>
                     <total-feedback :tickets="item.tickets"></total-feedback>
                   </td>
@@ -180,16 +180,7 @@ export default {
       newCustomer: 0,
       series: [44, 55, 13, 43, 22],
       chartOptions: {},
-      config: {
-        rating: 4.7,
-        isIndicatorActive: false,
-        style: {
-          fullStarColor: '#FAAD14',
-          emptyStarColor: '#aba9a9',
-          starWidth: 20,
-          starHeight: 20,
-        },
-      },
+      config: [],
     }
   },
   created() {
@@ -232,17 +223,26 @@ export default {
         return
       }
     },
-    calStarsRating(tickets) {
-      const ticketRatedCount = this.tickets
-        ? this.tickets.filter((i) => i.rating > 0).length
+    calStarsRating(tickets, i) {
+      const ticketRatedCount = tickets
+        ? tickets.filter((i) => i.rating > 0).length
         : 0
       const total = tickets
         ? tickets.reduce(function (a, b) {
             return b.rating > 0 ? a + b.rating : a
           }, 0)
         : 0
-      this.config.rating = ticketRatedCount ? total / ticketRatedCount : 0
-      return this.config
+      this.config[i] = {
+        rating: ticketRatedCount ? total / ticketRatedCount : 0,
+        isIndicatorActive: false,
+        style: {
+          fullStarColor: '#FAAD14',
+          emptyStarColor: '#aba9a9',
+          starWidth: 20,
+          starHeight: 20,
+        },
+      }
+      return this.config[i]
     },
   },
   watch: {
