@@ -487,7 +487,11 @@ export const actions = {
     }
 
     commit(FETCH_DETAIL_SALER, res)
-    return { error: false, customer_count: res.customer_count }
+    return {
+      error: false,
+      customer_count: res.customer_count,
+      new_customer_count: res.new_customer_count,
+    }
   },
   async [FETCH_LIST_SALES]({ commit }, payload) {
     const res = await api.fetchListSales(payload)
