@@ -87,7 +87,7 @@
                     <td>
                       {{ item.full_name }}
                     </td>
-                    <td>
+                    <td :title="item.email">
                       {{ item.email }}
                     </td>
                     <td>
