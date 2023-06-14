@@ -369,7 +369,7 @@ export default {
               route: '/sales',
               title: 'Quản lý sales',
               alias: ['/sales', '/sales/:id'],
-              disable: !this.$isAdmin(),
+              disable: !this.$isAdmin() && !this.$isBusinessManager(),
             },
             {
               route: '/notify/email',
