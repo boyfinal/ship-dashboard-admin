@@ -57,59 +57,61 @@
         <div class="card-body">
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="customers.length">
-            <table class="table table-hover tbl-customers">
-              <thead>
-                <th>ID</th>
-                <th>Tên khách hàng</th>
-                <th>Email</th>
-                <th>Ngày tạo</th>
-                <th>Đơn hàng</th>
-                <th>Doanh thu</th>
-                <th>Khiếu nại</th>
-                <th>Phản hồi</th>
-              </thead>
-              <tbody>
-                <tr v-for="(item, i) in customers" :key="i">
-                  <td>
-                    <router-link
-                      class="text-no-underline"
-                      :to="{
-                        name: 'user-detail',
-                        params: {
-                          id: item.id,
-                        },
-                      }"
-                    >
-                      U{{ item.id }}
-                    </router-link>
-                  </td>
-                  <td>
-                    {{ item.full_name }}
-                  </td>
-                  <td>
-                    {{ item.email }}
-                  </td>
-                  <td>
-                    {{ item.created_at | date('dd/MM/yyyy') }}
-                  </td>
-                  <td>
-                    {{ item.total_package }}
-                  </td>
-                  <td>
-                    {{ item.revenue | formatPrice }}
-                  </td>
-                  <td>
-                    {{ item.tickets ? item.tickets.length : 0 }}
-                  </td>
-                  <td>
-                    <stars-rating
-                      :config="calStarsRating(item.tickets, i)"
-                    ></stars-rating>
-                    <total-feedback :tickets="item.tickets"></total-feedback>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="table table-hover tbl-customers">
+                <thead>
+                  <th>ID</th>
+                  <th>Tên khách hàng</th>
+                  <th>Email</th>
+                  <th>Ngày tạo</th>
+                  <th>Đơn hàng</th>
+                  <th>Doanh thu</th>
+                  <th>Khiếu nại</th>
+                  <th>Phản hồi</th>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, i) in customers" :key="i">
+                    <td>
+                      <router-link
+                        class="text-no-underline"
+                        :to="{
+                          name: 'user-detail',
+                          params: {
+                            id: item.id,
+                          },
+                        }"
+                      >
+                        U{{ item.id }}
+                      </router-link>
+                    </td>
+                    <td>
+                      {{ item.full_name }}
+                    </td>
+                    <td>
+                      {{ item.email }}
+                    </td>
+                    <td>
+                      {{ item.created_at | date('dd/MM/yyyy') }}
+                    </td>
+                    <td>
+                      {{ item.total_package }}
+                    </td>
+                    <td>
+                      {{ item.revenue | formatPrice }}
+                    </td>
+                    <td>
+                      {{ item.tickets ? item.tickets.length : 0 }}
+                    </td>
+                    <td>
+                      <stars-rating
+                        :config="calStarsRating(item.tickets, i)"
+                      ></stars-rating>
+                      <total-feedback :tickets="item.tickets"></total-feedback>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </template>
           <empty-search-result v-else></empty-search-result>
           <div
