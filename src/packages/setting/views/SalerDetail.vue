@@ -87,7 +87,7 @@
                     <td>
                       {{ item.full_name }}
                     </td>
-                    <td :title="item.email">
+                    <td :title="item.email" class="txt-eclipse">
                       {{ item.email }}
                     </td>
                     <td>
@@ -276,3 +276,11 @@ export default {
   },
 }
 </script>
+<style scoped>
+.txt-eclipse {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
