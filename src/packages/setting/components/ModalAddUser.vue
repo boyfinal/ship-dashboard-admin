@@ -58,7 +58,7 @@
               :class="{ 'input-valid': errorRole }"
               @selected="handleSelectRole"
               @unselected="handleRemoveRole"
-              :optionSearch="listRole"
+              :optionSearch="roles"
               :placeHolder="'Quyền'"
               :item="user"
             />
@@ -205,6 +205,13 @@ export default {
         .filter(({ type }) => type == HUB_TYPE)
         .map(({ id, name }) => ({ key: id, name }))
     },
+    roles() {
+      if (this.$isBusinessManager()) {
+        return ROLE.filter(({ key }) => key == ROLE_SUPPORT)
+      }
+
+      return ROLE
+    },
   },
 
   data() {
@@ -221,7 +228,6 @@ export default {
       listUsers: [],
       loading: false,
       valider: null,
-      listRole: ROLE,
       errorRole: false,
       errorWarehouse: false,
       errorCustomer: false,
@@ -399,7 +405,6 @@ export default {
         if (this.visible) {
           this.user = Object.assign({}, this.data)
         }
-        this.listRole = ROLE
       },
       deep: true,
       immediate: true,
