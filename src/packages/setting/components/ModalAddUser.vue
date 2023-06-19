@@ -8,7 +8,7 @@
             <p-input
               placeholder="Nhập tên"
               v-model="user.full_name"
-              @keyup.enter="handleCreate"
+              @keyup.enter="handleSubmit"
               :error="valider.error('full_name')"
             />
           </div>
@@ -19,7 +19,7 @@
             <p-input
               placeholder="Nhập Slack ID"
               v-model="user.slack_id"
-              @keyup.enter="handleCreate"
+              @keyup.enter="handleSubmit"
             />
           </div>
         </div>
@@ -31,7 +31,7 @@
             <p-input
               placeholder="Nhập tài khoản"
               v-model="user.email"
-              @keyup.enter="handleCreate"
+              @keyup.enter="handleSubmit"
               :error="valider.error('email')"
             />
           </div>
@@ -44,7 +44,7 @@
               type="password"
               hiddenPass="on"
               v-model="user.password"
-              @keyup.enter="handleCreate"
+              @keyup.enter="handleSubmit"
               :error="valider.error('password')"
             />
           </div>
@@ -121,6 +121,31 @@
             >
           </div>
         </div>
+
+        <div class="row mb-16" v-if="isRoleSupport">
+          <div class="col-12 mb-10">
+            <label class="color-newtral-10 font-weight-600 mb-5"
+              >Chuyển support:</label
+            >
+            <UserResource
+              v-model="user.support_id"
+              label="Chọn support mới"
+              class="user-resource is-fullwidth"
+              :emit-id="true"
+              :filter="{ role: 'support', not_in: user.id ? `${user.id}` : '' }"
+            />
+            <i
+              style="
+                font-size: 12px;
+                color: #aaabab;
+                line-height: 16px;
+                margin-top: 8px;
+              "
+              >* Sau khi nhấn nút Lưu, danh sách khách hàng trên sẽ chuyển sang
+              support mới quản lý</i
+            >
+          </div>
+        </div>
       </template>
 
       <template slot="footer">
@@ -133,7 +158,7 @@
             <p-button
               class="ml-8"
               type="info"
-              @click="handleCreate"
+              @click="handleSubmit"
               :loading="loading"
             >
               {{ data.id ? 'Sửa' : 'Tạo' }}
@@ -144,32 +169,29 @@
     </p-modal>
   </div>
 </template>
-
 <script>
 import { mapActions } from 'vuex'
 import valider from '@core/valider'
-import { CREATE_USER } from '../store/index'
+import { CREATE_USER, UPDATE_USER } from '../store/index'
 import SelectRole from './SelectRole.vue'
 import SelectCustomer from './SelectCustomer.vue'
 import { ROLE_SUPPORT, ROLE_WAREHOUSE, ROLE_HUB } from '@core/constants'
 
 import { ROLE, HUB_TYPE, WAREHOUSE_TYPE } from '../constants'
 import api from '@/packages/shared/api'
+import UserResource from '../../../components/shared/resource/UsersActive.vue'
 
 export default {
   name: 'ModalAddUser',
   components: {
     SelectRole,
     SelectCustomer,
+    UserResource,
   },
   props: {
     visible: {
       type: Boolean,
       default: false,
-    },
-    title: {
-      type: String,
-      default: 'Thêm quản lý',
     },
     data: {
       type: Object,
@@ -212,6 +234,11 @@ export default {
 
       return ROLE
     },
+    title() {
+      return this.data.id > 0
+        ? `Chỉnh sửa thông tin “${this.data.full_name}”`
+        : 'Thêm quản lý'
+    },
   },
 
   data() {
@@ -224,6 +251,7 @@ export default {
         warehouse_id: 0,
         customer_id: [],
         slack_id: '',
+        support_id: 0,
       },
       listUsers: [],
       loading: false,
@@ -248,7 +276,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('setting', [CREATE_USER]),
+    ...mapActions('setting', [CREATE_USER, UPDATE_USER]),
 
     async fetchCustomer() {
       let req = {
@@ -262,7 +290,7 @@ export default {
       }
       const result = await api.fetchUsersByRole(req)
       if (result && result.errorMessage) {
-        this.users = []
+        this.listUsers = []
         return
       }
 
@@ -273,7 +301,7 @@ export default {
       }))
     },
 
-    async handleCreate() {
+    async handleSubmit() {
       if (!this.user.role) {
         this.errorRole = true
       }
@@ -309,6 +337,7 @@ export default {
         role: this.user.role,
         slack_id: this.user.slack_id,
         customer_id: this.user.customer_id,
+        support_id: this.user.support_id,
       }
 
       if (this.user.email.includes('@')) {
@@ -333,17 +362,21 @@ export default {
         payload.warehouse_id = this.user.warehouse_id
       }
 
+      this.loading = true
+
+      let res = null
       if (this.user.id > 0) {
         payload.id = this.user.id
+        res = await this[UPDATE_USER](payload)
+      } else {
+        res = await this.createUser(payload)
       }
 
-      this.loading = true
-      const res = await this.createUser(payload)
       this.loading = false
 
       if (!res.success) {
         const message = Array.isArray(res.message)
-          ? res.message.join(',')
+          ? res.message.join(', ')
           : res.message
         this.$toast.error(message, { duration: 3000 })
         return
@@ -404,6 +437,7 @@ export default {
       handler: function () {
         if (this.visible) {
           this.user = Object.assign({}, this.data)
+          this.user.support_id = 0
         }
       },
       deep: true,

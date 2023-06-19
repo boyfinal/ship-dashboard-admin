@@ -21,6 +21,7 @@ export const UPDATE_PRICES = 'updatePrices'
 export const UPDATE_PRICE = 'updatePrice'
 export const DISCARD_UPDATE_PRICE = 'discard_update_price'
 export const UPDATE_USER_INFO = 'updateUserInfo'
+export const UPDATE_USER = 'updateUser'
 
 export const FETCH_LIST_CHECK_PRICE_LOGS = 'fetchListCheckPriceLogs'
 export const FETCH_COUNT_CHECK_PRICE_LOGS = 'fetchCountCheckPriceLogs'
@@ -512,5 +513,18 @@ export const actions = {
 
     commit(FETCH_COUNT_SALES, res.count)
     return { error: false }
+  },
+  // eslint-disable-next-line
+  async [UPDATE_USER]({ commit }, payload) {
+    const res = await api.updateUser(payload)
+
+    if (res && res.success) {
+      return { success: true }
+    }
+
+    return {
+      success: false,
+      message: res.errors || res.error,
+    }
   },
 }

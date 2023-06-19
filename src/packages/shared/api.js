@@ -5,7 +5,7 @@ export default {
     return http.get(`/users`)
   },
   updateProfile(payload) {
-    return http.post('/users/profile', payload)
+    return http.put('/users/profile', payload)
   },
   fetchUsersByRole(payload) {
     return http.get(`/users/role?${buildQueryString(payload)}`)

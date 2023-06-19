@@ -25,7 +25,16 @@ export default {
    * @return {*}
    */
   createUser(payload) {
-    return http.post(`/users/create`, payload)
+    return http.post(`/users`, payload)
+  },
+
+  /**
+   * Update user
+   * @param payload
+   * @return {*}
+   */
+  updateUser({ id, ...payload }) {
+    return http.put(`/users/${id}`, payload)
   },
 
   /**
