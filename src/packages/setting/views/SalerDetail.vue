@@ -100,7 +100,20 @@
                       {{ item.revenue | formatPrice }}
                     </td>
                     <td>
-                      {{ item.tickets ? item.tickets.length : 0 }}
+                      <router-link
+                        v-if="item.tickets"
+                        class="text-no-underline"
+                        :to="{
+                          name: 'list-claim',
+                          query: {
+                            search_by: 'recipient',
+                            search: saler.full_name,
+                          },
+                        }"
+                      >
+                        {{ item.tickets.length }}
+                      </router-link>
+                      <span v-else>0</span>
                     </td>
                     <td>
                       <stars-rating

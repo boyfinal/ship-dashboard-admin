@@ -201,6 +201,9 @@ export default {
   },
   created() {
     this.filter = { ...this.filter, ...this.getRouteQuery() }
+    if (this.filter.search) {
+      this.keywordSearch = this.filter.search
+    }
     this.init()
   },
   computed: {
