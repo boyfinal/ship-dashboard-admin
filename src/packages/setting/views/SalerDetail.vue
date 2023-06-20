@@ -16,7 +16,7 @@
     </div>
     <div class="page-content">
       <div class="row">
-        <div class="col-7">
+        <div class="col-7 col-md-9">
           <div class="card-block mdd-blk">
             <div class="card-header">
               <div class="card-title">Doanh thu</div>
@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div class="col-5">
+        <div class="col-5 col-md-3">
           <div class="card-block mdd-blk">
             <div class="card-header">
               <div class="card-title">Khách hàng</div>
