@@ -1,7 +1,7 @@
 <template>
   <div class="setting setting-account pages">
     <div class="page-content">
-      <div class="mb-16">
+      <div class="mb-16 d-flex">
         <all-user
           id="search"
           class="user-resource is-fullwidth"
@@ -12,6 +12,21 @@
           :search="initSearch"
           @input="init"
         />
+        <p-button
+          type="info"
+          style="
+            width: 152px;
+            height: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 20px;
+            margin-left: 8px;
+          "
+          class="btn btn-special"
+          @click="showModalInvitesCustomer"
+        >
+          Mời khách hàng
+        </p-button>
       </div>
       <div class="card">
         <div class="card-body">
@@ -199,6 +214,9 @@
       @init="init"
     >
     </modal-apprai>
+    <modal-invite-customer
+      :visible.sync="visibleModalInvite"
+    ></modal-invite-customer>
   </div>
 </template>
 <script>
@@ -233,11 +251,13 @@ import {
   ROLER_SHIP_PARTNER,
 } from '@core/constants'
 import ModalActiveUser from '../components/ModalActiveUser'
+import ModalInviteCustomer from '../components/ModalInviteCustomer'
 
 export default {
   name: 'Debt',
   mixins: [mixinRoute, mixinTable],
   components: {
+    ModalInviteCustomer,
     EmptySearchResult,
     AllUser,
     ModalConfirm,
@@ -259,6 +279,7 @@ export default {
       statusInActive: USER_STATUS_INACTIVE,
       visibleConfirmLock: false,
       visibleConfirmUnlock: false,
+      visibleModalInvite: false,
       cloneUsers: [],
       isVisibleApprai: false,
       apprai_user: null,
@@ -364,7 +385,9 @@ export default {
       }
       return this.appraiserOption
     },
-
+    showModalInvitesCustomer() {
+      this.visibleModalInvite = true
+    },
     getPackage(i) {
       let a = this.mapPackage.find((pkg) => pkg.id == i)
       return a ? a.value : 'N/A'
