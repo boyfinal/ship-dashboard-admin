@@ -66,7 +66,21 @@
                   <th>Ngày tạo</th>
                   <th>Đơn hàng</th>
                   <th>Doanh thu</th>
-                  <th>Khiếu nại</th>
+                  <th
+                    >Khiếu nại
+                    <router-link
+                      class="text-no-underline"
+                      :to="{
+                        name: 'list-claim',
+                        query: {
+                          search_by: 'recipient',
+                          search: saler.full_name,
+                        },
+                      }"
+                    >
+                      <p-svg name="link_to" style="margin-top: -2px"></p-svg
+                    ></router-link>
+                  </th>
                   <th>Phản hồi</th>
                 </thead>
                 <tbody>
@@ -100,20 +114,7 @@
                       {{ item.revenue | formatPrice }}
                     </td>
                     <td>
-                      <router-link
-                        v-if="item.tickets"
-                        class="text-no-underline"
-                        :to="{
-                          name: 'list-claim',
-                          query: {
-                            search_by: 'recipient',
-                            search: saler.full_name,
-                          },
-                        }"
-                      >
-                        {{ item.tickets.length }}
-                      </router-link>
-                      <span v-else>0</span>
+                      {{ item.tickets ? item.tickets.length : 0 }}
                     </td>
                     <td>
                       <stars-rating
