@@ -175,7 +175,12 @@ import valider from '@core/valider'
 import { CREATE_USER, UPDATE_USER } from '../store/index'
 import SelectRole from './SelectRole.vue'
 import SelectCustomer from './SelectCustomer.vue'
-import { ROLE_SUPPORT, ROLE_WAREHOUSE, ROLE_HUB } from '@core/constants'
+import {
+  ROLE_SUPPORT,
+  ROLE_WAREHOUSE,
+  ROLE_HUB,
+  ROLE_SALE,
+} from '@core/constants'
 
 import { ROLE, HUB_TYPE, WAREHOUSE_TYPE } from '../constants'
 import api from '@/packages/shared/api'
@@ -208,7 +213,7 @@ export default {
       return this.user.role == ROLE_HUB
     },
     isRoleSupport() {
-      return this.user.role == ROLE_SUPPORT
+      return this.user.role == ROLE_SUPPORT || this.user.role == ROLE_SALE
     },
     isRoleWarehouse() {
       return this.user.role == ROLE_WAREHOUSE
@@ -229,7 +234,7 @@ export default {
     },
     roles() {
       if (this.$isBusinessManager()) {
-        return ROLE.filter(({ key }) => key == ROLE_SUPPORT)
+        return ROLE.filter(({ key }) => key == ROLE_SUPPORT || key == ROLE_SALE)
       }
 
       return ROLE

@@ -235,13 +235,18 @@ export default {
       count: (state) => state.countReturnPackages,
     }),
     showDetailPackage() {
-      return !this.$isAccountant() && !this.$isSupport()
+      return !this.$isAccountant() && !this.$isSupport() && !this.$isSale()
     },
     mapStatus() {
       return MAP_NAME_STATUS_STRING_PACKAGE
     },
     showBtn() {
-      return this.$isAdmin() || this.$isSupport() || this.$isBusinessManager()
+      return (
+        this.$isAdmin() ||
+        this.$isSupport() ||
+        this.$isBusinessManager() ||
+        this.$isSale()
+      )
     },
     searchPlaceholder() {
       const maptext = {

@@ -203,6 +203,7 @@ export default {
               disable:
                 this.$isSupportLeader() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isBusinessManager(),
             },
             {
@@ -223,6 +224,7 @@ export default {
           disable:
             this.$isAccountant() ||
             this.$isSupport() ||
+            this.$isSale() ||
             this.$isHub() ||
             this.$isSupportLeader() ||
             this.$isWarehouse() ||
@@ -236,6 +238,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
                 this.$isWarehouse(),
@@ -247,6 +250,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
                 this.$isWarehouse(),
@@ -262,6 +266,7 @@ export default {
           isOpen: false,
           disable:
             this.$isSupport() ||
+            this.$isSale() ||
             this.$isHub() ||
             this.$isMarketing() ||
             this.$isBusinessManager() ||
@@ -274,6 +279,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isHub() ||
                 this.$isBusinessManager(),
             },
@@ -290,6 +296,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
                 this.$isBusinessManager(),
@@ -317,6 +324,7 @@ export default {
           isOpen: false,
           disable:
             this.$isSupport() ||
+            this.$isSale() ||
             this.$isAccountant() ||
             this.$isWarehouse() ||
             this.$isSupportLeader() ||
@@ -330,6 +338,7 @@ export default {
               alias: ['/hub/return'],
               disable:
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isSupportLeader() ||
                 this.$isAccountant() ||
                 this.$isWarehouse() ||
@@ -354,6 +363,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
@@ -378,6 +388,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
@@ -390,6 +401,7 @@ export default {
               disable:
                 this.$isAccountant() ||
                 this.$isSupport() ||
+                this.$isSale() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||

@@ -43,6 +43,10 @@ const MainPlugin = {
       return this.$store.getters['auth/isMarketing']
     }
 
+    Vue.prototype.$isSale = function () {
+      return this.$store.getters['auth/isSale']
+    }
+
     Vue.directive('click-outside', clickoutside)
   },
 }

@@ -8,6 +8,7 @@ import {
   USER_ROLE_MARKETING,
   ROLER_BUSSINESS_MANAGER,
   ROLER_SHIP_PARTNER,
+  ROLE_SALE,
 } from '@core/constants'
 import api from '../api'
 import AuthService from '@core/services/auth'
@@ -229,6 +230,9 @@ export const getters = {
   },
   isShipPartner(state) {
     return state.user.role === ROLER_SHIP_PARTNER
+  },
+  isSale(state) {
+    return state.user.role === ROLE_SALE
   },
 }
 

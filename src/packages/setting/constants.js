@@ -8,6 +8,7 @@ import {
   USER_ROLE_MARKETING,
   ROLER_BUSSINESS_MANAGER,
   ROLER_SHIP_PARTNER,
+  ROLE_SALE,
 } from '@core/constants'
 
 export const USER_STATUS_DEACTIVE = 0
@@ -65,6 +66,10 @@ export const ROLE = [
   {
     key: ROLER_SHIP_PARTNER,
     name: 'Ship Partner',
+  },
+  {
+    key: ROLE_SALE,
+    name: 'Sale',
   },
 ]
 
