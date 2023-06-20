@@ -26,6 +26,7 @@
                     <th>EMAIL</th>
                     <th>SỐ KHÁCH HÀNG</th>
                     <th>SỐ TICKET</th>
+                    <th>DOANH THU</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -48,6 +49,7 @@
                     <td>{{ item.email }}</td>
                     <td>{{ item.count_customer | formatNumberV2 }}</td>
                     <td>{{ item.count_ticket | formatNumberV2 }}</td>
+                    <td>{{ item.revenue | formatPrice }}</td>
                   </tr>
                 </tbody>
               </table>
