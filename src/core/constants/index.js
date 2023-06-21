@@ -9,6 +9,7 @@ export const ROLE_HUB = 'hub'
 export const USER_ROLE_MARKETING = 'marketing'
 export const ROLER_BUSSINESS_MANAGER = 'business_manager'
 export const ROLER_SHIP_PARTNER = 'ship_partner'
+export const ROLE_SALE = 'sale'
 
 export const ACL_KEYS = {
   setStatusPaid: 'setStatusPaid',

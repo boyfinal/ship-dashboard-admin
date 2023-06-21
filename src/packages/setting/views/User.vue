@@ -59,7 +59,7 @@
                   <tr v-for="(item, i) in users" :key="i">
                     <td>
                       <router-link
-                        v-if="!$isSupport()"
+                        v-if="!$isSupport() && !$isSale()"
                         class="text-no-underline"
                         :to="{
                           name: 'user-detail',
@@ -126,6 +126,7 @@
                           deactive:
                             current_user.role != role_support_leader &&
                             current_user.role != role_support &&
+                            current_user.role != role_sale &&
                             current_user.role != role_admin &&
                             current_user.role != role_bu_manager &&
                             current_user.role != role_ship_partner,
@@ -150,7 +151,10 @@
                         Phân quyền
                       </a>
                       <a
-                        v-if="current_user.role != role_support"
+                        v-if="
+                          current_user.role != role_support &&
+                          current_user.role != role_sale
+                        "
                         href="#"
                         class="btn"
                         :class="{
@@ -249,6 +253,7 @@ import {
   ROLE_ADMIN,
   ROLER_BUSSINESS_MANAGER,
   ROLER_SHIP_PARTNER,
+  ROLE_SALE,
 } from '@core/constants'
 import ModalActiveUser from '../components/ModalActiveUser'
 import ModalInviteCustomer from '../components/ModalInviteCustomer'
@@ -288,6 +293,7 @@ export default {
       item: { full_name: '' },
       mapPackage: OPTIONS_PACKAGES,
       role_support: ROLE_SUPPORT,
+      role_sale: ROLE_SALE,
       role_support_leader: ROLE_SUPPORT_LEADER,
       role_admin: ROLE_ADMIN,
       role_bu_manager: ROLER_BUSSINESS_MANAGER,
@@ -340,7 +346,7 @@ export default {
       this.handleUpdateRouteQuery()
       this.query = {}
       this.query.role = ROLE_CUSTOMER
-      if (this.$isSupport()) {
+      if (this.$isSupport() || this.$isSale()) {
         this.statusUser = { 'Chờ kích hoạt': 2 }
         this.query.appraiser_id = this.current_user.id
       }

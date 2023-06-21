@@ -85,6 +85,7 @@
                 package_detail.package.status != statusCreated &&
                 package_detail.package.status != statusArchived &&
                 user.role != roleSupport &&
+                user.role != roleSale &&
                 !$isWarehouse() &&
                 !$isShipPartner()
               "
@@ -849,7 +850,7 @@ import OverLoading from '@components/shared/OverLoading'
 import Uniq from 'lodash/uniq'
 import { datetime } from '../../../core/utils/datetime'
 import Browser from '@core/helpers/browser'
-import { ROLE_SUPPORT } from '@core/constants'
+import { ROLE_SUPPORT, ROLE_SALE } from '@core/constants'
 import mixinTable from '@core/mixins/table'
 import TrackLink from '../components/TrackLink.vue'
 
@@ -909,6 +910,7 @@ export default {
       isVisibleModalLabel: false,
       blob: null,
       roleSupport: ROLE_SUPPORT,
+      roleSale: ROLE_SALE,
     }
   },
   computed: {
@@ -946,7 +948,8 @@ export default {
         (this.$isSupport() ||
           this.$isAdmin() ||
           this.$isSupportLeader() ||
-          this.$isBusinessManager()) &&
+          this.$isBusinessManager() ||
+          this.$isSale()) &&
         (listStatus.includes(status) == false || this.isReturnPackage)
       )
     },
@@ -1096,6 +1099,7 @@ export default {
       return (
         (this.$isAdmin() ||
           this.$isSupport() ||
+          this.$isSale() ||
           this.$isSupportLeader() ||
           this.$isBusinessManager()) &&
         [

@@ -355,7 +355,7 @@ export default {
       return this.packages
     },
     showDetailPackage() {
-      return !this.$isAccountant() && !this.$isSupport()
+      return !this.$isAccountant() && !this.$isSupport() && !this.$isSale()
     },
     statusTab() {
       return PACKAGE_STATUS_TAB

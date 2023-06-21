@@ -23,7 +23,12 @@
 </template>
 <script>
 import AuthService from '@core/services/auth'
-import { ROLE_ADMIN, ROLE_SUPPORT, ROLE_ACCOUNTANT } from '@core/constants'
+import {
+  ROLE_ADMIN,
+  ROLE_SUPPORT,
+  ROLE_ACCOUNTANT,
+  ROLE_SALE,
+} from '@core/constants'
 
 export default {
   name: 'TicketMessage',
@@ -50,6 +55,7 @@ export default {
       if (
         this.current.role === ROLE_ADMIN ||
         this.current.role === ROLE_SUPPORT ||
+        this.current.role === ROLE_SALE ||
         this.current.role === ROLE_ACCOUNTANT
       ) {
         return 'CSKH'
