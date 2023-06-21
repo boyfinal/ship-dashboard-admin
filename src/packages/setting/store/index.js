@@ -179,9 +179,6 @@ export const mutations = {
   [FETCH_CARRIER_SERVICE]: (state, payload) => {
     state.carrier_service = payload
   },
-  [FETCH_CUSTOMER_SALER]: (state, payload) => {
-    state.customers = payload.customers
-  },
   [FETCH_DETAIL_SALER]: (state, payload) => {
     state.saler = payload.sale
   },
@@ -463,14 +460,13 @@ export const actions = {
     return { error: false }
   },
 
+  // eslint-disable-next-line no-unused-vars
   async [FETCH_CUSTOMER_SALER]({ commit }, payload) {
     const res = await api.fetchCustomerSaler(payload)
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
-
-    commit(FETCH_CUSTOMER_SALER, res)
-    return { error: false }
+    return { error: false, ...res }
   },
   async [FETCH_REVENUE_SALER]({ commit }, payload) {
     const res = await api.fetchRevenueSaler(payload)
@@ -491,7 +487,6 @@ export const actions = {
     return {
       error: false,
       customer_count: res.customer_count,
-      new_customer_count: res.new_customer_count,
     }
   },
   async [FETCH_LIST_SALES]({ commit }, payload) {
