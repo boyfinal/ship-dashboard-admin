@@ -53,7 +53,7 @@
         <div class="card-body">
           <VclTable class="mt-20" v-if="isFetching"></VclTable>
           <template v-else-if="customers.length">
-            <div class="table-responsive">
+            <div class="">
               <table class="table table-hover tbl-customers">
                 <thead>
                   <th>ID</th>
