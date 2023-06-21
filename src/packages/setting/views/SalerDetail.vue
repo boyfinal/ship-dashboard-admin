@@ -45,10 +45,6 @@
             </div>
             <div class="card-body">
               <div class="txt-number"> {{ customerCount }} </div>
-              <div
-                class="customer-note-block"
-                v-html="getNoteCustomerBlock"
-              ></div>
             </div>
           </div>
         </div>
@@ -172,17 +168,6 @@ export default {
       countCustomers: (state) => state.countCustomers,
       totalRevenue: (state) => state.totalRevenue,
       topCustomers: (state) => state.topCustomers || [],
-      getNoteCustomerBlock() {
-        if (!this.newCustomer) {
-          return ``
-        }
-        return (
-          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">\n' +
-          '<path d="M10.8332 6.5237V16.6667H9.16658V6.5237L4.69657 10.9937L3.51807 9.81518L9.99992 3.33334L16.4817 9.81518L15.3032 10.9937L10.8332 6.5237Z" fill="#48BE78"/>\n' +
-          '</svg>' +
-          `<span class='up-trend'>Tăng ${this.newCustomer} khách hàng mới</span> so với tuần trước`
-        )
-      },
     }),
   },
   data() {
