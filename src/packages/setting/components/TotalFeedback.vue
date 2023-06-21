@@ -87,7 +87,9 @@ export default {
       if (!this.tickets) {
         return 0
       }
-      return this.tickets.find((x) => x.rating === star).count
+      return this.tickets.find((x) => x.rating === star)
+        ? this.tickets.find((x) => x.rating === star).count
+        : 0
     },
     getStarPercent(star) {
       if (!this.totalRatedTicket) {
