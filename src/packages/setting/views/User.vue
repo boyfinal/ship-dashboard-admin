@@ -24,6 +24,7 @@
           "
           class="btn btn-special"
           @click="showModalInvitesCustomer"
+          v-if="!$isSale()"
         >
           Mời khách hàng
         </p-button>
