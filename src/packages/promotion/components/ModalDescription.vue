@@ -12,7 +12,7 @@
           />
         </div>
         <div class="form-group" v-if="price">
-          <b>Giá/Đơn ($):</b>
+          <b>Giá ($):</b>
           <input type="text" class="form-control" :value="price" disabled />
         </div>
         <div class="form-group">
