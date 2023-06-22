@@ -88,6 +88,34 @@
       height: 250px;
     }
   }
+
+  .el-date-editor--monthrange{
+    position: absolute;
+    right: 25px;
+    top: 8px;
+    width: 208px !important;
+    padding: 2px 5px;
+    border-radius: unset;
+  }
+
+  .el-date-editor .el-range-input{
+    font-size: 12px;
+    font-family:  "Be VietNam Pro", sans-serif;
+  }
+
+  .el-date-editor .el-range-separator{
+    padding: unset !important;
+    font-family:  "Be VietNam Pro", sans-serif;
+    line-height: 26px;
+  }
+  .el-input__icon{
+    height: 30px;
+  }
+
+  .el-input__inner{
+    height: 30px;
+  }
+
   .tbl-customers{
     th{
       border-top: 1px solid #EDEEEE;

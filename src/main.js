@@ -3,7 +3,9 @@ import Notifications from 'vue-notification'
 import VueClipboard from 'vue-clipboard2'
 import App from './App.vue'
 import MainPlugin from './plugins/main'
-// import DashboardPlugin from './material-dashboard'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en'
 import * as filters from './core/helpers/filters'
 import initGlobalDirectives from '@core/vue/directives'
 import router from './core/router'
@@ -12,6 +14,7 @@ import '../uikit'
 import './core/icons'
 import { VclTable } from 'vue-content-loading'
 Vue.use(VueClipboard)
+Vue.use(ElementUI, { locale })
 
 import VueQuillEditor from 'vue-quill-editor/dist/ssr'
 Vue.use(VueQuillEditor)
