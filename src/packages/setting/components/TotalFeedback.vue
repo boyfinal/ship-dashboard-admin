@@ -61,14 +61,18 @@ export default {
   },
   computed: {
     totalRatedTicket() {
-      return this.tickets ? this.tickets.filter((i) => i.rating > 0).length : 0
+      return this.tickets
+        ? this.tickets.reduce(function (a, b) {
+            return b.rating > 0 ? a + b.count : a
+          }, 0)
+        : 0
     },
     avgStars() {
       if (!this.totalRatedTicket) {
         return 0
       }
       const total = this.tickets.reduce(function (a, b) {
-        return b.rating > 0 ? a + b.rating : a
+        return a + b.count * b.rating
       }, 0)
       return total / this.totalRatedTicket
     },
@@ -83,7 +87,9 @@ export default {
       if (!this.tickets) {
         return 0
       }
-      return this.tickets.filter((i) => i.rating === star).length
+      return this.tickets.find((x) => x.rating === star)
+        ? this.tickets.find((x) => x.rating === star).count
+        : 0
     },
     getStarPercent(star) {
       if (!this.totalRatedTicket) {
