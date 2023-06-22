@@ -20,6 +20,7 @@
     "aws-sdk": "^2.1229.0",
     "crypto-js": "^3.3.0",
     "date-fns": "^2.16.1",
+    "element-ui": "^2.15.13",
     "firebase": "^9.6.9",
     "is-plain-object": "^2.0.4",
     "ismobilejs": "^0.5.2",

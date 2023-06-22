@@ -25,6 +25,15 @@
               <div class="txt-number">
                 {{ totalRevenue | formatPrice }}
               </div>
+              <el-date-picker
+                v-model="month"
+                type="monthrange"
+                range-separator="~"
+                start-placeholder="Start month"
+                end-placeholder="End month"
+                @change="changeSelectMonth()"
+              >
+              </el-date-picker>
             </div>
           </div>
         </div>
@@ -273,6 +282,7 @@ export default {
         limit: 30,
         page: 1,
       },
+      month: '',
       isFetching: false,
       customerCount: 0,
       newCustomer: 0,
@@ -356,6 +366,9 @@ export default {
         this.$toast.error(r.errorMessage)
         return
       }
+    },
+    changeSelectMonth() {
+      console.log(this.month[0].toLocaleDateString('en-US'))
     },
     countAllTickets(ts) {
       return ts
