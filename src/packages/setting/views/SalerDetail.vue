@@ -31,6 +31,7 @@
                 range-separator="~"
                 start-placeholder="From"
                 end-placeholder="To"
+                format="MM/yyyy"
                 @change="loadChartRevenue()"
               >
               </el-date-picker>
