@@ -29,15 +29,15 @@
                 v-model="months"
                 type="monthrange"
                 range-separator="~"
-                start-placeholder="Start month"
-                end-placeholder="End month"
-                @change="changeSelectMonth()"
+                start-placeholder="From"
+                end-placeholder="To"
+                @change="loadChartRevenue()"
               >
               </el-date-picker>
               <div id="chart">
                 <apexchart
                   type="area"
-                  height="150"
+                  height="136"
                   width="100%"
                   :options="chartOptions2"
                   :series="series2"
@@ -56,7 +56,7 @@
                 <apexchart
                   v-if="topCustomers.length"
                   type="pie"
-                  height="100%"
+                  height="200"
                   :options="chartOptions"
                   :series="series"
                 ></apexchart>
@@ -265,6 +265,7 @@ import {
   FETCH_CUSTOMER_SALER,
   FETCH_DETAIL_SALER,
   FETCH_REVENUE_SALER,
+  FETCH_MONTH_REVENUE_SALER,
 } from '../store'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
 import starsRating from '../components/rating-stars'
@@ -295,7 +296,10 @@ export default {
         limit: 30,
         page: 1,
       },
-      months: [],
+      months: [
+        new Date(new Date().getFullYear(), new Date().getMonth() - 4, 0),
+        new Date(),
+      ],
       isFetching: false,
       isLoadingChart: false,
       customerCount: 0,
@@ -356,6 +360,7 @@ export default {
       FETCH_CUSTOMER_SALER,
       FETCH_DETAIL_SALER,
       FETCH_REVENUE_SALER,
+      FETCH_MONTH_REVENUE_SALER,
     ]),
 
     async init() {
@@ -410,6 +415,8 @@ export default {
           },
         ],
       }
+
+      this.loadChartRevenue()
     },
     async loadRevenueCustomers() {
       this.isFetching = true
@@ -441,7 +448,55 @@ export default {
       this.noneRevenueCus = r.customers || []
       this.countNoneRevenueCus = r.count
     },
-    async changeSelectMonth() {
+    isLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+    },
+    getDaysInMonth(year, month) {
+      return [
+        31,
+        this.isLeapYear(year) ? 29 : 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31,
+      ][month]
+    },
+    addMonths(date, value) {
+      let d = new Date(date)
+      let n = date.getDate()
+      d.setDate(1)
+      d.setMonth(d.getMonth() + value)
+      d.setDate(Math.min(n, this.getDaysInMonth(d.getFullYear(), d.getMonth())))
+      return d
+    },
+    monthDiff(date1, date2) {
+      const monthDiff = date1.getMonth() - date2.getMonth()
+      const yearDiff = date1.getYear() - date2.getYear()
+      return Math.abs(monthDiff + yearDiff * 12)
+    },
+    async loadChartRevenue() {
+      if (!this.months) {
+        return
+      }
+      const monthDiff = this.monthDiff(
+        this.months[0],
+        new Date(this.months[1].getFullYear(), this.months[1].getMonth() + 1, 0)
+      )
+      if (monthDiff > 11) {
+        this.$toast.error('Biểu đồ lọc doanh thu không quá 12 tháng')
+        return
+      }
+      if (monthDiff < 1) {
+        this.$toast.error('Biểu đồ lọc doanh thu ít nhất 2 tháng')
+        return
+      }
+
       let payload = {
         start_date: this.months[0].toLocaleDateString('en-GB'),
         end_date: new Date(
@@ -452,8 +507,25 @@ export default {
         id: this.userID,
       }
       this.isLoadingChart = true
-      let r = await this[FETCH_REVENUE_SALER](payload)
+      let r = await this[FETCH_MONTH_REVENUE_SALER](payload)
       this.isLoadingChart = false
+
+      let resultLabels = []
+      let resultValues = []
+      let start = this.months[0]
+      for (let i = 0; i <= monthDiff; i++) {
+        let month = this.addMonths(new Date(start), i)
+          .toLocaleDateString('en-GB')
+          .split('/')
+        month.shift()
+        resultLabels.push(month.join('/'))
+        let i = r.month_revenue.find((i) => i.month == month.join('/'))
+        if (i !== undefined) {
+          resultValues.push(i.revenue)
+        } else {
+          resultValues.push(0)
+        }
+      }
       this.chartOptions2 = {
         chart: {
           type: 'area',
@@ -469,13 +541,13 @@ export default {
         },
         xaxis: {
           type: 'category',
-          categories: r.month_revenue.map((i) => i.month),
+          categories: resultLabels,
         },
       }
       this.series2 = [
         {
           name: 'Doanh thu',
-          data: r.month_revenue.map((i) => i.revenue),
+          data: resultValues,
         },
       ]
     },

@@ -31,6 +31,7 @@ export const UPDATE_CARRIER_SERVICE = 'updateCarrierService'
 export const FETCH_CUSTOMER_SALER = 'fetchCustomerSaler'
 export const FETCH_DETAIL_SALER = 'fetchDetailSaler'
 export const FETCH_REVENUE_SALER = 'fetchRevenueSaler'
+export const FETCH_MONTH_REVENUE_SALER = 'fetchMonthRevenueSaler'
 export const FETCH_LIST_SALES = 'fetchListSales'
 export const FETCH_COUNT_SALES = 'fetchCountSales'
 
@@ -475,8 +476,18 @@ export const actions = {
     }
 
     commit(FETCH_REVENUE_SALER, res)
-    return { error: false, month_revenue: res.month_revenue }
+    return { error: false }
   },
+
+  // eslint-disable-next-line no-unused-vars
+  async [FETCH_MONTH_REVENUE_SALER]({ commit }, payload) {
+    const res = await api.fetchMonthRevenueSaler(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+    return { error: false, month_revenue: res.month_revenue || [] }
+  },
+
   async [FETCH_DETAIL_SALER]({ commit }, payload) {
     const res = await api.fetchDetailSaler(payload)
     if (!res || res.error) {
