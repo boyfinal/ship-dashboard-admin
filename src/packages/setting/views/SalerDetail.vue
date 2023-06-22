@@ -26,7 +26,7 @@
                 {{ totalRevenue | formatPrice }}
               </div>
               <el-date-picker
-                v-model="month"
+                v-model="months"
                 type="monthrange"
                 range-separator="~"
                 start-placeholder="Start month"
@@ -34,11 +34,20 @@
                 @change="changeSelectMonth()"
               >
               </el-date-picker>
+              <div id="chart">
+                <apexchart
+                  type="area"
+                  height="150"
+                  width="100%"
+                  :options="chartOptions2"
+                  :series="series2"
+                ></apexchart>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-4">
-          <div class="card-block mdd-blk">
+          <div class="card-block mdd-blk top-5">
             <div class="card-header">
               <div class="card-title">Top 5 Doanh thu</div>
             </div>
@@ -237,8 +246,8 @@
           >
             <p-pagination
               :total="countNoneRevenueCus"
-              :perPage.sync="filter.limit"
-              :current.sync="filter.page"
+              :perPage.sync="filter2.limit"
+              :current.sync="filter2.page"
               size="sm"
             ></p-pagination>
           </div>
@@ -282,8 +291,13 @@ export default {
         limit: 30,
         page: 1,
       },
-      month: '',
+      filter2: {
+        limit: 30,
+        page: 1,
+      },
+      months: [],
       isFetching: false,
+      isLoadingChart: false,
       customerCount: 0,
       newCustomer: 0,
       revenueCus: [],
@@ -292,6 +306,43 @@ export default {
       countNoneRevenueCus: 0,
       series: [44, 55, 13, 43, 22],
       chartOptions: {},
+      series2: [
+        {
+          name: 'Doanh thu',
+          data: [31, 40, 28, 51, 42, 109, 100],
+        },
+      ],
+      chartOptions2: {
+        chart: {
+          type: 'area',
+          sparkline: {
+            enabled: true,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        xaxis: {
+          type: 'datetime',
+          categories: [
+            '2018-09-19T00:00:00.000Z',
+            '2018-09-19T01:30:00.000Z',
+            '2018-09-19T02:30:00.000Z',
+            '2018-09-19T03:30:00.000Z',
+            '2018-09-19T04:30:00.000Z',
+            '2018-09-19T05:30:00.000Z',
+            '2018-09-19T06:30:00.000Z',
+          ],
+        },
+        tooltip: {
+          x: {
+            format: 'dd/MM/yy HH:mm',
+          },
+        },
+      },
       config: [],
     }
   },
@@ -313,7 +364,10 @@ export default {
         id: this.userID,
         is_revenue: true,
       })
-      const p2 = Object.assign({}, p1, { id: this.userID, is_revenue: false })
+      const p2 = Object.assign({}, this.filter2, {
+        id: this.userID,
+        is_revenue: false,
+      })
       let [r1, r2, r3, r4] = await Promise.all([
         this[FETCH_DETAIL_SALER](p1),
         this[FETCH_CUSTOMER_SALER](p1),
@@ -357,18 +411,73 @@ export default {
         ],
       }
     },
-    async loadCustomers() {
+    async loadRevenueCustomers() {
       this.isFetching = true
-      const payload = Object.assign({}, this.filter, { id: this.userID })
+      const payload = Object.assign({}, this.filter, {
+        id: this.userID,
+        is_revenue: true,
+      })
       let r = await this[FETCH_CUSTOMER_SALER](payload)
       this.isFetching = false
       if (r.error) {
         this.$toast.error(r.errorMessage)
         return
       }
+      this.revenueCus = r.customers || []
+      this.countRevenueCus = r.count
     },
-    changeSelectMonth() {
-      console.log(this.month[0].toLocaleDateString('en-US'))
+    async loadNonRevenueCustomers() {
+      this.isFetching = true
+      const payload = Object.assign({}, this.filter2, {
+        id: this.userID,
+        is_revenue: false,
+      })
+      let r = await this[FETCH_CUSTOMER_SALER](payload)
+      this.isFetching = false
+      if (r.error) {
+        this.$toast.error(r.errorMessage)
+        return
+      }
+      this.noneRevenueCus = r.customers || []
+      this.countNoneRevenueCus = r.count
+    },
+    async changeSelectMonth() {
+      let payload = {
+        start_date: this.months[0].toLocaleDateString('en-GB'),
+        end_date: new Date(
+          this.months[1].getFullYear(),
+          this.months[1].getMonth() + 1,
+          0
+        ).toLocaleDateString('en-GB'),
+        id: this.userID,
+      }
+      this.isLoadingChart = true
+      let r = await this[FETCH_REVENUE_SALER](payload)
+      this.isLoadingChart = false
+      this.chartOptions2 = {
+        chart: {
+          type: 'area',
+          sparkline: {
+            enabled: true,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        xaxis: {
+          type: 'category',
+          categories: r.month_revenue.map((i) => i.month),
+        },
+      }
+      this.series2 = [
+        {
+          name: 'Doanh thu',
+          data: r.month_revenue.map((i) => i.revenue),
+        },
+      ]
     },
     countAllTickets(ts) {
       return ts
@@ -405,7 +514,16 @@ export default {
         if (this.isFetching) {
           return
         }
-        this.loadCustomers()
+        this.loadRevenueCustomers()
+      },
+      deep: true,
+    },
+    filter2: {
+      handler: function () {
+        if (this.isFetching) {
+          return
+        }
+        this.loadNonRevenueCustomers()
       },
       deep: true,
     },

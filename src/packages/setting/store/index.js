@@ -475,7 +475,7 @@ export const actions = {
     }
 
     commit(FETCH_REVENUE_SALER, res)
-    return { error: false }
+    return { error: false, month_revenue: res.month_revenue }
   },
   async [FETCH_DETAIL_SALER]({ commit }, payload) {
     const res = await api.fetchDetailSaler(payload)

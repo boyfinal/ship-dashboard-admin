@@ -105,7 +105,9 @@ export default {
     return http.get(`/users/sales/${payload.id}`)
   },
   fetchRevenueSaler(payload) {
-    return http.get(`/users/sales/revenue/${payload.id}`)
+    return http.get(
+      `/users/sales/revenue/${payload.id}?${buildQueryString(payload)}`
+    )
   },
   fetchListSales(payload) {
     return http.get(`/users/sales?${buildQueryString(payload)}`)

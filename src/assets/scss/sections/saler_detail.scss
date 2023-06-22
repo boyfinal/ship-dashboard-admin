@@ -86,6 +86,10 @@
     }
     &.mdd-blk{
       height: 250px;
+      &.top-5 #chart{
+        margin-top: 20px;
+        height: 184px;
+      }
     }
   }
 
@@ -146,8 +150,6 @@
     }
   }
   #chart{
-    margin-top: 20px;
-    height: 184px;
     .apx-legend-position-right{
       right: 45px !important;
       .apexcharts-legend-marker{
