@@ -1,6 +1,7 @@
 <template>
   <div class="setting user-detail pages">
     <div class="page-content" v-if="user != null">
+      <CustomerStatistic :user_id="userID" />
       <div class="user-info mb-24 row">
         <div class="col-4">
           <div class="card">
@@ -192,6 +193,7 @@ import BillList from '../../bill/views/List.vue'
 import ListProduct from './ListProduct.vue'
 import { ROLE_SUPPORT_LEADER } from '@core/constants'
 import EmptySearchResult from '@components/shared/EmptySearchResult'
+import CustomerStatistic from '../../statitic/views/Customer.vue'
 
 export default {
   name: 'UserDetail',
@@ -203,6 +205,7 @@ export default {
     BillList,
     ListProduct,
     EmptySearchResult,
+    CustomerStatistic,
   },
   data() {
     return {
@@ -264,6 +267,9 @@ export default {
     },
     isTopup() {
       return this.tab === 'topup'
+    },
+    isStatistic() {
+      return this.tab === 'statistic'
     },
   },
   methods: {

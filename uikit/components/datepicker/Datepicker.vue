@@ -18,7 +18,7 @@
     :linkedCalendars="linkedCalendars"
     :dateFormat="dateFormat"
     :close-on-esc="true"
-    :ranges="ranges"
+    :ranges="listRanges"
     :time-picker-increment="timePickerIncrement"
   >
     <div slot="input" slot-scope="picker" style="width: 100%">
@@ -193,6 +193,34 @@ export default {
         text = `to ${this.picker.endDate}`
       }
       return text
+    },
+    listRanges() {
+      if (!this.ranges) return false
+
+      let today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      let yesterday = new Date()
+      yesterday.setDate(today.getDate() - 1)
+      yesterday.setHours(0, 0, 0, 0)
+
+      return {
+        Today: [today, today],
+        Yesterday: [yesterday, yesterday],
+        'This month': [
+          new Date(today.getFullYear(), today.getMonth(), 1),
+          today,
+        ],
+        'This year': [new Date(today.getFullYear(), 0, 1), today],
+        'Last month': [
+          new Date(today.getFullYear(), today.getMonth() - 1, 1),
+          new Date(today.getFullYear(), today.getMonth(), 0),
+        ],
+        'Last year': [
+          new Date(today.getFullYear() - 1, 0, 1),
+          new Date(today.getFullYear() - 1, 11, 31),
+        ],
+      }
     },
   },
   methods: {
