@@ -117,8 +117,11 @@ export default {
       statistic_ticket: [],
       filters: {
         customer_id: 0,
-        start_date: '',
-        end_date: '',
+        start_date: date(
+          new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
+          'yyyy-MM-dd'
+        ),
+        end_date: date(new Date(), 'yyyy-MM-dd'),
       },
       isFetching: false,
       chartOptions: {
