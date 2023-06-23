@@ -194,7 +194,14 @@ export default {
       this.statistic_revenue = []
       this.statistic_package = []
       this.statistic_ticket = []
-
+      let days = this.dateDiffInDays(
+        this.filters.start_date,
+        this.filters.end_date
+      )
+      if (days > 365) {
+        this.$toast.error('Thời gian lọc không quá 1 năm !')
+        return
+      }
       const filters = { ...this.filters, customer_id: this.user_id }
 
       this.isFetching = true
@@ -209,6 +216,14 @@ export default {
       this.statistic_revenue = res.statistic_revenue
       this.statistic_package = res.statistic_package
       this.statistic_ticket = res.statistic_ticket
+    },
+    dateDiffInDays(d1, d2) {
+      const a = new Date(d1)
+      const b = new Date(d2)
+      const _MS_PER_DAY = 1000 * 60 * 60 * 24
+      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
+      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
+      return Math.floor((utc2 - utc1) / _MS_PER_DAY)
     },
     clearSearchDate() {
       this.filters.end_date = ''
