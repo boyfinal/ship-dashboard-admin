@@ -182,6 +182,7 @@ import {
   ROLE_SALE,
 } from '@core/constants'
 
+import { cloneDeep } from '@core/utils'
 import { ROLE, HUB_TYPE, WAREHOUSE_TYPE } from '../constants'
 import api from '@/packages/shared/api'
 import UserResource from '../../../components/shared/resource/UsersActive.vue'
@@ -258,6 +259,7 @@ export default {
         slack_id: '',
         support_id: 0,
       },
+      tempCustomerIDs: [],
       listUsers: [],
       loading: false,
       valider: null,
@@ -269,6 +271,7 @@ export default {
   },
 
   created() {
+    this.tempCustomerIDs = cloneDeep(this.user.customer_id)
     this.valider = valider.schema((y) => ({
       full_name: y.string().required('Tên không để trống'),
       role: y.string().required('Quyền không để trống'),
@@ -311,7 +314,18 @@ export default {
         this.errorRole = true
       }
 
-      if (this.isRoleSupport && this.user.customer_id.length < 1) {
+      if (
+        this.isRoleSupport &&
+        this.tempCustomerIDs.length > 0 &&
+        this.user.customer_id.length < 1
+      ) {
+        this.user.customer_id = cloneDeep(this.tempCustomerIDs)
+      }
+      if (
+        this.isRoleSupport &&
+        this.user.customer_id.length < 1 &&
+        this.listUsers.length < 1
+      ) {
         this.errorCustomer = true
       }
 
