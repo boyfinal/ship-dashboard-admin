@@ -316,13 +316,6 @@ export default {
 
       if (
         this.isRoleSupport &&
-        this.tempCustomerIDs.length > 0 &&
-        this.user.customer_id.length < 1
-      ) {
-        this.user.customer_id = cloneDeep(this.tempCustomerIDs)
-      }
-      if (
-        this.isRoleSupport &&
         this.user.customer_id.length < 1 &&
         this.listUsers.length < 1
       ) {
@@ -410,6 +403,11 @@ export default {
       this.$set(this.user, 'role', value)
       this.$set(this.user, 'warehouse_id', '')
       this.$set(this.user, 'customer_id', [])
+      if (this.isRoleSupport) {
+        this.user.customer_id = this.user.customer_id.concat(
+          this.tempCustomerIDs
+        )
+      }
       this.errorRole = false
     },
 
