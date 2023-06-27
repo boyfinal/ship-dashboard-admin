@@ -192,10 +192,10 @@ export default {
             } else if (shippo.price > 0 && ibblue.price == 0) {
               shippo.class = 'selected'
             } else if (shippo.price > 0 && ibblue.price > 0) {
-              if (shippo.price < ibblue.price) {
-                shippo.class = 'selected'
-              } else {
+              if (shippo.price > ibblue.price) {
                 ibblue.class = 'selected'
+              } else {
+                shippo.class = 'selected'
               }
             }
 
