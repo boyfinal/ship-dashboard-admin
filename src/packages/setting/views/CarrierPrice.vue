@@ -6,22 +6,20 @@
           <VclTable v-if="isFetching"></VclTable>
           <div class="table-responsive" v-else>
             <table class="table table-hover table-services">
-              <tr>
-                <th width="200" v-text="'<450'"></th>
-                <th width="200" v-text="'>450'"></th>
-                <th width="200" v-text="'>3000'"></th>
-              </tr>
-              <tr>
-                <td>
-                  <span>{{ small.name }}</span>
-                </td>
-                <td>
-                  <span>{{ large.name }}</span>
-                </td>
-                <td>
-                  <span>{{ over.name }}</span>
-                </td>
-              </tr>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th v-for="zone in zones" :key="zone">{{ zone }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in sizes" :key="item.name">
+                  <td>{{ item.name }}</td>
+                  <td v-for="(zone, i) in item.zones" :key="i">{{
+                    zone.carrier_code
+                  }}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -97,20 +95,8 @@ export default {
       carriers.sort((a, b) => a.id > b.id)
       return carriers
     },
-    small() {
-      const { size_small } = this.carrier_service
-      const item = this.carriers.find(({ code }) => code == size_small)
-      return item ? { size: 'smallsize', ...item } : {}
-    },
-    large() {
-      const { size_large } = this.carrier_service
-      const item = this.carriers.find(({ code }) => code == size_large)
-      return item ? { size: 'largesize', ...item } : {}
-    },
-    over() {
-      const { size_over } = this.carrier_service
-      const item = this.carriers.find(({ code }) => code == size_over)
-      return item ? { size: 'oversize', ...item } : {}
+    sizes() {
+      return this.carrier_service.sizes || []
     },
     zones() {
       if (!this.logs || !this.logs.length) return []
@@ -283,41 +269,67 @@ export default {
 </script>
 <style lang="scss">
 .table-services {
-  max-width: 500px;
   margin: 0 auto;
 
   tr {
+    th,
     td {
-      border: 1px solid #007672;
-      border-right: 1px solid transparent;
-      background-color: #e8fffe;
-      padding: 16px 12px;
-      font-weight: bold;
+      white-space: nowrap;
+      border-top: 0;
+      text-align: center;
+    }
+  }
 
-      &:first-child,
-      &:last-child {
+  tbody {
+    tr {
+      td {
+        border: 1px solid #007672;
+        border: 0;
+        border-top: 1px solid #007672;
         border-left: 1px solid #007672;
-        border-radius: 0;
+        background-color: #fff;
+        padding: 16px 12px;
+        font-weight: bold;
+
+        &:last-child {
+          border-right: 0;
+          border-radius: 0;
+        }
+
+        &:first-child {
+          border-radius: 0;
+          color: #aaabab;
+          font-weight: 500;
+        }
+
+        span {
+          vertical-align: text-top;
+        }
       }
 
-      &:last-child {
-        border-right: 1px solid #007672;
+      &:first-child td {
+        border-top: 1px solid #007672;
       }
 
-      span {
-        vertical-align: text-top;
+      &:last-child td {
+        border-bottom: 0;
+      }
+
+      &:nth-child(2n + 1) td {
+        background-color: #e8fffe;
       }
     }
+  }
 
-    th {
-      background-color: #e8fffe;
-      padding: 12px;
-      border-left: 1px solid #007672;
-      border-top: 1px solid #007672;
+  thead th {
+    background-color: #fff;
+    padding: 12px;
+    border-left: 1px solid #007672;
+    font-weight: 600;
+    height: 48px;
 
-      &:last-child {
-        border-right: 1px solid #007672;
-      }
+    &:first-child {
+      border-left: 0;
     }
   }
 }
