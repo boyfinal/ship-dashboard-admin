@@ -8,7 +8,7 @@
             <table class="table table-hover table-services">
               <thead>
                 <tr>
-                  <th></th>
+                  <th>CÂN NẶNG (OZ)</th>
                   <th v-for="zone in zones" :key="zone">{{ zone }}</th>
                 </tr>
               </thead>
@@ -40,7 +40,7 @@
                   }}</th>
                 </tr>
                 <tr>
-                  <th>CÂN NẶNG</th>
+                  <th>CÂN NẶNG (OZ)</th>
                   <th v-for="(name, i) in headers" :key="i">{{ name }}</th>
                 </tr>
                 <tr v-for="item in items" :key="item.id">
