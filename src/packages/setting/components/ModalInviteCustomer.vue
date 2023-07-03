@@ -88,6 +88,11 @@ export default {
       this.$emit('update:visible', false)
     },
   },
+  watch: {
+    visible: function () {
+      this.email = ''
+    },
+  },
 }
 </script>
 <style>
