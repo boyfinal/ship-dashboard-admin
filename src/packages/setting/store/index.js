@@ -35,6 +35,8 @@ export const FETCH_MONTH_REVENUE_SALER = 'fetchMonthRevenueSaler'
 export const FETCH_LIST_SALES = 'fetchListSales'
 export const FETCH_COUNT_SALES = 'fetchCountSales'
 
+export const INVITE_CUSTOMER = 'inviteCustomer'
+
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -532,5 +534,16 @@ export const actions = {
       success: false,
       message: res.errors || res.error,
     }
+  },
+
+  // eslint-disable-next-line
+  async [INVITE_CUSTOMER]({ commit }, payload) {
+    const res = await api.invitesCustomer(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false }
   },
 }

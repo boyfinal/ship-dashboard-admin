@@ -18,7 +18,13 @@
             v-model="email"
             placeholder="Nhập email khách hàng"
           ></p-input>
-          <p-button type="info" class="btn btn-special">Gửi</p-button>
+          <p-button
+            type="info"
+            :loading="isSubmitting"
+            class="btn btn-special"
+            @click="hanldeInvite"
+            >Gửi</p-button
+          >
         </div>
       </div>
       <div class="row mb-16">
@@ -44,6 +50,8 @@
 </template>
 <script>
 import mixinRoute from '@core/mixins/route'
+import { mapActions } from 'vuex'
+import { INVITE_CUSTOMER } from '../store'
 export default {
   name: 'ModalInviteCustomer',
   mixins: [mixinRoute],
@@ -56,12 +64,33 @@ export default {
   data() {
     return {
       email: '',
+      isSubmitting: false,
     }
   },
   methods: {
+    ...mapActions('setting', [INVITE_CUSTOMER]),
     handleClose() {
       this.$emit('update:visible', false)
       this.$emit('close')
+    },
+    async hanldeInvite() {
+      this.isSubmitting = true
+      const payload = {
+        email: this.email,
+      }
+      const r = await this[INVITE_CUSTOMER](payload)
+      this.isSubmitting = false
+      if (r.error) {
+        this.$toast.error(r.message)
+        return
+      }
+      this.$toast.success('Gửi email mời khách hàng thành công')
+      this.$emit('update:visible', false)
+    },
+  },
+  watch: {
+    visible: function () {
+      this.email = ''
     },
   },
 }
