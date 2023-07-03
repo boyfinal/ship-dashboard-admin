@@ -540,13 +540,10 @@ export const actions = {
   async [INVITE_CUSTOMER]({ commit }, payload) {
     const res = await api.invitesCustomer(payload)
 
-    if (res && res.success) {
-      return { success: true }
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
     }
 
-    return {
-      success: false,
-      message: res.errors || res.error,
-    }
+    return { error: false }
   },
 }

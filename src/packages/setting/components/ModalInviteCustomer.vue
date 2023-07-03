@@ -80,7 +80,7 @@ export default {
       }
       const r = await this[INVITE_CUSTOMER](payload)
       this.isSubmitting = false
-      if (!r.success) {
+      if (r.error) {
         this.$toast.error(r.message)
         return
       }
