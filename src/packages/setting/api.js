@@ -118,4 +118,7 @@ export default {
   fetchCountSales(payload) {
     return http.get(`/users/sales/count?${buildQueryString(payload)}`)
   },
+  invitesCustomer(payload) {
+    return http.post(`/users/invite`, payload)
+  },
 }
