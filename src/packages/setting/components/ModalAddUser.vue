@@ -104,7 +104,7 @@
           </div>
         </div>
 
-        <div class="row mb-16" v-if="isRoleSupport">
+        <div class="row mb-16" v-if="isRoleSupport && !user.support_id">
           <div class="col-12 mb-10">
             <select-customer
               class="search-type"
@@ -121,18 +121,27 @@
             >
           </div>
         </div>
-
         <div class="row mb-16" v-if="isRoleSupport">
           <div class="col-12 mb-10">
             <label class="color-newtral-10 font-weight-600 mb-5"
               >Chuyển support:</label
             >
             <UserResource
-              v-model="user.support_id"
+              :value="user.support_id"
               label="Chọn support mới"
               class="user-resource is-fullwidth"
               :emit-id="true"
               :filter="{ role: 'support', not_in: user.id ? `${user.id}` : '' }"
+              @input="changeSupportHandle"
+            />
+
+            <DualListbox
+              class="mt-3"
+              v-if="user.support_id"
+              :options="customers"
+              v-model="user.customer_swap"
+              :custom-label="({ name }) => name"
+              track-by="id"
             />
             <i
               style="
@@ -185,6 +194,7 @@ import {
 import { cloneDeep } from '@core/utils'
 import { ROLE, HUB_TYPE, WAREHOUSE_TYPE } from '../constants'
 import api from '@/packages/shared/api'
+import DualListbox from '../../../components/shared/DualListbox.vue'
 import UserResource from '../../../components/shared/resource/UsersActive.vue'
 
 export default {
@@ -192,6 +202,7 @@ export default {
   components: {
     SelectRole,
     SelectCustomer,
+    DualListbox,
     UserResource,
   },
   props: {
@@ -245,6 +256,11 @@ export default {
         ? `Chỉnh sửa thông tin “${this.data.full_name}”`
         : 'Thêm quản lý'
     },
+    customers() {
+      return this.listUsers
+        .map(({ id, full_name }) => ({ id, name: full_name }))
+        .filter(({ id }) => this.user.customer_id.includes(id))
+    },
   },
 
   data() {
@@ -258,6 +274,7 @@ export default {
         customer_id: [],
         slack_id: '',
         support_id: 0,
+        customer_swap: [],
       },
       tempCustomerIDs: [],
       listUsers: [],
@@ -303,6 +320,7 @@ export default {
       }
 
       this.listUsers = result.users.map((x) => ({
+        id: x.id,
         key: x.id,
         name: x.full_name + ' - ' + (x.email ? x.email : x.phone_number),
         full_name: x.full_name,
@@ -350,6 +368,7 @@ export default {
         slack_id: this.user.slack_id,
         customer_id: this.user.customer_id,
         support_id: this.user.support_id,
+        customer_swap: this.user.customer_swap,
       }
 
       if (this.user.email.includes('@')) {
@@ -447,6 +466,11 @@ export default {
       this.valider.errors = null
       this.$emit('update:visible', false)
       this.$emit('close', true)
+    },
+
+    changeSupportHandle(val) {
+      this.user.support_id = val
+      this.user.customer_swap = [...this.user.customer_id]
     },
   },
   watch: {
