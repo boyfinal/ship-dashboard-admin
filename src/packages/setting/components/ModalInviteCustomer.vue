@@ -40,8 +40,9 @@
       <div class="row mb-16">
         <div class="col-12">
           <div class="link-coppy">
-            https://www.lionbay.express/referral/yourname
-            <span role="btn"> Copy link </span>
+            {{ link }}
+            <span role="btn" @click.prevent="copy"> Copy link </span>
+            <span id="myTooltip" class="tooltip-text"></span>
           </div>
         </div>
       </div>
@@ -65,6 +66,7 @@ export default {
     return {
       email: '',
       isSubmitting: false,
+      link: 'https://www.lionbay.express/referral/yourname',
     }
   },
   methods: {
@@ -86,6 +88,19 @@ export default {
       }
       this.$toast.success('Gửi email mời khách hàng thành công')
       this.$emit('update:visible', false)
+    },
+    copy() {
+      let copyText = this.link
+      let textArea = document.createElement('textarea')
+      textArea.value = copyText
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('Copy')
+      textArea.remove()
+
+      let tooltip = document.getElementById('myTooltip')
+      tooltip.innerHTML = 'Đã sao chép'
+      setTimeout(() => (tooltip.innerHTML = ''), 1000)
     },
   },
   watch: {
@@ -173,5 +188,17 @@ span[role='btn'] {
   color: #007672;
   right: 30px;
   cursor: pointer;
+}
+.tooltip-text {
+  position: absolute;
+  width: 100px;
+  background-color: #37393e;
+  z-index: 11;
+  text-align: center;
+  border-radius: 4px;
+  color: #fff;
+  top: 0px;
+  right: 14px;
+  font-size: 12px;
 }
 </style>
