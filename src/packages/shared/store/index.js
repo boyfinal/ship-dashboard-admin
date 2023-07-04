@@ -24,6 +24,7 @@ import { NotificationRead } from '../constants'
 
 export const state = {
   user: {},
+  referral_link: '',
   addresses: [],
   isLoading: false,
   service_detail: {},
@@ -55,7 +56,8 @@ export const getters = {
 
 export const mutations = {
   [GET_USER]: (state, payload) => {
-    state.user = payload
+    state.user = payload.user
+    state.referral_link = payload.referral_link
   },
   [GET_CONFIGS]: (state, payload) => {
     state.configs = payload
@@ -136,7 +138,7 @@ export const actions = {
       response.user = {}
     }
 
-    commit(GET_USER, response.user)
+    commit(GET_USER, response)
     return result
   },
 

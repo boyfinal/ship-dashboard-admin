@@ -40,7 +40,16 @@
       <div class="row mb-16">
         <div class="col-12">
           <div class="link-coppy">
-            {{ link }}
+            <span
+              style="
+                display: inline-block;
+                max-width: 441px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              >{{ link }}</span
+            >
             <span role="btn" @click.prevent="copy"> Copy link </span>
             <span id="myTooltip" class="tooltip-text"></span>
           </div>
@@ -51,7 +60,7 @@
 </template>
 <script>
 import mixinRoute from '@core/mixins/route'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { INVITE_CUSTOMER } from '../store'
 export default {
   name: 'ModalInviteCustomer',
@@ -62,11 +71,15 @@ export default {
       default: false,
     },
   },
+  computed: {
+    ...mapState('shared', {
+      link: (state) => state.referral_link,
+    }),
+  },
   data() {
     return {
       email: '',
       isSubmitting: false,
-      link: 'https://www.lionbay.express/referral/yourname',
     }
   },
   methods: {
