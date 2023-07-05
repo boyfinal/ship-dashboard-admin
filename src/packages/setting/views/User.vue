@@ -22,7 +22,7 @@
             line-height: 20px;
             margin-left: 8px;
           "
-          class="btn btn-special"
+          class="btn btn-special hidden"
           @click="showModalInvitesCustomer"
           v-if="!$isSale()"
         >
