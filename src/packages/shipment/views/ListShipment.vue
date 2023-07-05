@@ -100,7 +100,7 @@
                         :loading="isLoading[item.id]"
                         type="info"
                         :class="`mr-3`"
-                        v-if="showIntransitButton(item)"
+                        v-if="showIntransitButton(item) && !$isShipPartner()"
                       >
                         Chuyển UPS
                       </p-button>
