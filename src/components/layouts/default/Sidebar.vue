@@ -269,8 +269,7 @@ export default {
             this.$isSale() ||
             this.$isHub() ||
             this.$isMarketing() ||
-            this.$isBusinessManager() ||
-            this.$isShipPartner(),
+            this.$isBusinessManager(),
           sub: [
             {
               route: '/warehouse',
@@ -281,13 +280,17 @@ export default {
                 this.$isSupport() ||
                 this.$isSale() ||
                 this.$isHub() ||
-                this.$isBusinessManager(),
+                this.$isBusinessManager() ||
+                this.$isShipPartner(),
             },
             {
               route: '/warehouse/scan-in',
               title: 'Quét nhận hàng',
               alias: ['/warehouse/scan-in'],
-              disable: this.$isSupportLeader() || this.$isBusinessManager(),
+              disable:
+                this.$isSupportLeader() ||
+                this.$isBusinessManager() ||
+                this.$isShipPartner(),
             },
             {
               route: '/warehouse/check-package',
@@ -299,7 +302,8 @@ export default {
                 this.$isSale() ||
                 this.$isHub() ||
                 this.$isSupportLeader() ||
-                this.$isBusinessManager(),
+                this.$isBusinessManager() ||
+                this.$isShipPartner(),
             },
             {
               route: '/containers',

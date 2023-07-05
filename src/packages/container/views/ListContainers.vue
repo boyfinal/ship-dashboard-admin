@@ -38,11 +38,15 @@
               type="info"
               @click="addEventHandle"
               class="mr-8"
-              v-if="$isAdmin()"
+              v-if="$isAdmin() || $isShipPartner()"
             >
               Thêm hành trình
             </p-button>
-            <p-button type="info" @click="CreateContainerHandle">
+            <p-button
+              type="info"
+              @click="CreateContainerHandle"
+              v-if="!$isShipPartner()"
+            >
               <svgicon name="plus" class="text-white add_container" />
               Tạo kiện hàng
             </p-button>

@@ -30,7 +30,7 @@
             @input="checkClearSearch"
           >
           </p-input>
-          <p-button @click="visibleModal" type="info">
+          <p-button @click="visibleModal" type="info" v-if="!$isShipPartner()">
             <svgicon name="plus" class="text-white" />
             Tạo lô hàng
           </p-button>

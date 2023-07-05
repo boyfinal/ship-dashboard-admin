@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="page-header__subtitle row">
+        <div class="page-header__subtitle row" v-if="!$isShipPartner()">
           <div class="page-header__info col-6">
             <p-input
               placeholder="Tìm theo mã kiện hàng"
@@ -306,7 +306,8 @@
                           v-if="
                             !isClosedShipment &&
                             !isDeliveredShipment &&
-                            !isIntransitShipment
+                            !isIntransitShipment &&
+                            !$isShipPartner()
                           "
                           type="danger"
                           :class="`btn-cancel-container mr-3`"

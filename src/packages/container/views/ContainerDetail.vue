@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <div class="page-header__subtitle row">
+        <div class="page-header__subtitle row" v-if="!$isShipPartner()">
           <div class="page-header__input col-6">
             <p-input
               placeholder="Tìm theo LionBay tracking"
