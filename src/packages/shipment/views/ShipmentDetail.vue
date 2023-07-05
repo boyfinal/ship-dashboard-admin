@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="page-header__subtitle row" v-if="!$isShipPartner()">
+        <div class="page-header__subtitle row">
           <div class="page-header__info col-6">
             <p-input
               placeholder="Tìm theo mã kiện hàng"
@@ -80,6 +80,7 @@
               type="search"
               v-model="code"
               @keyup.enter="handleSearch"
+              v-if="!$isShipPartner()"
             >
             </p-input>
             <p-button
@@ -90,7 +91,8 @@
                 !isClosedShipment &&
                 !isCanceledShipment &&
                 !isDeliveredShipment &&
-                !isIntransitShipment
+                !isIntransitShipment &&
+                !$isShipPartner()
               "
             >
               <p-svg name="plus_blue"></p-svg>
@@ -102,7 +104,8 @@
                 !isClosedShipment &&
                 !isCanceledShipment &&
                 !isDeliveredShipment &&
-                !isIntransitShipment
+                !isIntransitShipment &&
+                !$isShipPartner()
               "
               :class="'btn-add-container ml-3'"
               @click="handleShowModalListContainer"
@@ -116,7 +119,8 @@
               !isClosedShipment &&
               !isCanceledShipment &&
               !isDeliveredShipment &&
-              !isIntransitShipment
+              !isIntransitShipment &&
+              !$isShipPartner()
             "
           >
             <p-button
@@ -157,7 +161,7 @@
           >
             <p-button
               type="info"
-              v-if="showDownloadZipLabel"
+              v-if="showDownloadZipLabel && !$isShipPartner()"
               @click="downloadZipLabel"
               :loading="loadingLabel"
               :class="`mr-3`"
@@ -166,7 +170,7 @@
             </p-button>
             <p-button
               type="info"
-              v-if="showIntransitButton"
+              v-if="showIntransitButton && !$isShipPartner()"
               @click="showConfirmChangeIntransit"
               :loading="loading"
               :class="`mr-3`"
