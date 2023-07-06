@@ -320,7 +320,6 @@ export default {
   watch: {
     value: {
       handler: function () {
-        alert(1)
         this.init()
       },
       deep: true,
