@@ -131,7 +131,10 @@
               label="Chọn support mới"
               class="user-resource is-fullwidth"
               :emit-id="true"
-              :filter="{ role: 'support', not_in: user.id ? `${user.id}` : '' }"
+              :filter="{
+                roles: 'support,sale',
+                not_in: user.id ? `${user.id}` : '',
+              }"
               @input="changeSupportHandle"
             />
 
