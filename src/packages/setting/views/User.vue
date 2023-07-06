@@ -463,8 +463,6 @@ export default {
         appraiser_id = value.id
       }
 
-      console.log(user_id)
-
       payload.id = user_id
       payload.appraiser_id = appraiser_id
 

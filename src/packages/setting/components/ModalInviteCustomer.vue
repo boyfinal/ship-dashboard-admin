@@ -15,7 +15,7 @@
           <p-input
             type="text"
             class="mb-8"
-            v-model="email"
+            v-model="emails"
             placeholder="Nhập email khách hàng"
           ></p-input>
           <p-button
@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      email: '',
+      emails: '',
       isSubmitting: false,
     }
   },
@@ -91,7 +91,7 @@ export default {
     async hanldeInvite() {
       this.isSubmitting = true
       const payload = {
-        email: this.email,
+        emails: this.emails.split(','),
       }
       const r = await this[INVITE_CUSTOMER](payload)
       this.isSubmitting = false
@@ -118,7 +118,7 @@ export default {
   },
   watch: {
     visible: function () {
-      this.email = ''
+      this.emails = ''
     },
   },
 }
