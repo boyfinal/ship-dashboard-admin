@@ -164,8 +164,6 @@ export default {
       const included = (x) =>
         this.trackBy ? values.includes(x[this.trackBy]) : values.includes(x)
 
-      console.log(values)
-
       this.leftItems = this.options
         .filter((x) => !included(x))
         .map((v) => ({
@@ -322,7 +320,6 @@ export default {
   watch: {
     value: {
       handler: function () {
-        alert(1)
         this.init()
       },
       deep: true,

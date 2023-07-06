@@ -131,7 +131,10 @@
               label="Chọn support mới"
               class="user-resource is-fullwidth"
               :emit-id="true"
-              :filter="{ role: 'support', not_in: user.id ? `${user.id}` : '' }"
+              :filter="{
+                roles: 'support,sale',
+                not_in: user.id ? `${user.id}` : '',
+              }"
               @input="changeSupportHandle"
             />
 
@@ -477,7 +480,7 @@ export default {
     visible: {
       handler: function () {
         if (this.visible) {
-          this.user = Object.assign({}, this.data)
+          this.user = cloneDeep(this.data)
           this.user.support_id = 0
         }
       },
