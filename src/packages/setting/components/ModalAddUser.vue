@@ -480,7 +480,7 @@ export default {
     visible: {
       handler: function () {
         if (this.visible) {
-          this.user = Object.assign({}, this.data)
+          this.user = cloneDeep(this.data)
           this.user.support_id = 0
         }
       },

@@ -164,8 +164,6 @@ export default {
       const included = (x) =>
         this.trackBy ? values.includes(x[this.trackBy]) : values.includes(x)
 
-      console.log(values)
-
       this.leftItems = this.options
         .filter((x) => !included(x))
         .map((v) => ({
