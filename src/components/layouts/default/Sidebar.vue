@@ -280,8 +280,7 @@ export default {
                 this.$isSupport() ||
                 this.$isSale() ||
                 this.$isHub() ||
-                this.$isBusinessManager() ||
-                this.$isShipPartner(),
+                this.$isBusinessManager(),
             },
             {
               route: '/warehouse/scan-in',
