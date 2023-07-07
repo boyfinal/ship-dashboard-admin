@@ -42,11 +42,10 @@
                 <thead>
                   <tr>
                     <th>Mã khách hàng</th>
-                    <th>Tên</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th width="250" class="text-center">Quy mô</th>
+                    <th>Thông tin khách hàng</th>
+                    <th width="250">Quy mô</th>
                     <th>Ngày tạo</th>
+                    <th>Người tạo</th>
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
@@ -73,34 +72,33 @@
                       <p v-else> U{{ item.id }} </p>
                     </td>
                     <td class="user-fullname">
-                      <p-tooltip
-                        :label="item.full_name"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.full_name.length > 25"
-                      >
-                        {{ truncate(item.full_name, 25) }}
-                      </p-tooltip>
+                      <p class="name">
+                        <p-tooltip
+                          :label="item.full_name"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.full_name.length > 25"
+                        >
+                          {{ truncate(item.full_name, 25) }}
+                        </p-tooltip>
+                      </p>
+                      <p>
+                        <p-tooltip
+                          :label="item.email"
+                          size="large"
+                          position="top"
+                          type="dark"
+                          :active="item.email.length > 25"
+                        >
+                          {{ truncate(item.email, 25) }}
+                        </p-tooltip>
+                      </p>
+                      <p>{{ item.phone_number || 'N/A' }}</p>
                     </td>
-                    <td>
-                      <p-tooltip
-                        :label="item.email"
-                        size="large"
-                        position="top"
-                        type="dark"
-                        :active="item.email.length > 25"
-                      >
-                        {{ truncate(item.email, 25) }}
-                      </p-tooltip>
-                    </td>
-                    <td>
-                      <div> {{ item.phone_number || 'N/A' }}</div>
-                    </td>
-                    <td class="text-center">{{
-                      getPackage(item.package) || 'N/A'
-                    }}</td>
+                    <td>{{ getPackage(item.package) || 'N/A' }}</td>
                     <td>{{ item.created_at | date('dd/MM/yyyy') }}</td>
+                    <td>{{ item.referring_name || 'N/A' }}</td>
                     <td v-if="filter.status == statusInActive">
                       <multiselect
                         class="multiselect-custom"
@@ -502,5 +500,29 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.table-hover {
+  tr th {
+    white-space: nowrap;
+    padding: 0 8px;
+  }
 
-<style lang="scss" scoped></style>
+  tr td {
+    padding: 12px 8px;
+  }
+
+  .user-fullname {
+    p {
+      font-weight: 400;
+      line-height: 20px;
+      font-size: 14px;
+      margin-bottom: 0;
+      color: #313232;
+
+      &.name {
+        font-weight: 600;
+      }
+    }
+  }
+}
+</style>
