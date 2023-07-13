@@ -121,4 +121,7 @@ export default {
   invitesCustomer(payload) {
     return http.post(`/users/invite`, payload)
   },
+  createCoupon(payload) {
+    return http.post(`/packages/coupons`, payload)
+  },
 }

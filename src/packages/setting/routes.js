@@ -79,4 +79,14 @@ export const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ './views/ListSales.vue'),
   },
+
+  {
+    path: '/coupon',
+    name: 'list-coupon',
+    meta: {
+      title: 'Quản lý coupon',
+    },
+    component: () =>
+      import(/* webpackChunkName: "settings" */ './views/ListCoupon.vue'),
+  },
 ]

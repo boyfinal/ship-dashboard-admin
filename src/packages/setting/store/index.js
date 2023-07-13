@@ -37,6 +37,8 @@ export const FETCH_COUNT_SALES = 'fetchCountSales'
 
 export const INVITE_CUSTOMER = 'inviteCustomer'
 
+export const CREATE_COUPON = 'createCoupon'
+
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -539,6 +541,17 @@ export const actions = {
   // eslint-disable-next-line
   async [INVITE_CUSTOMER]({ commit }, payload) {
     const res = await api.invitesCustomer(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [CREATE_COUPON]({ commit }, payload) {
+    const res = await api.createCoupon(payload)
 
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
