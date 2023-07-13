@@ -282,4 +282,13 @@ export default {
 label {
   margin-bottom: 4px;
 }
+.modal-coupon.p-radio {
+  margin-bottom: 0;
+}
+.modal-coupon .p-radio label {
+  padding-left: 17px !important;
+}
+.modal-coupon .p-radio label input {
+  bottom: 4px !important;
+}
 </style>

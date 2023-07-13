@@ -108,6 +108,8 @@ export default {
         return
       }
       this.$toast.success('Tạo coupon thành công')
+      this.visibleModalCreateCoupon = false
+      this.init()
     },
     showModalCreateCoupon() {
       this.visibleModalCreateCoupon = true
