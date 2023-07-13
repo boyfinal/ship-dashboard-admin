@@ -162,8 +162,6 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
-import { INVITE_CUSTOMER } from '../store'
 import {
   COUPON_TYPE_MONEY,
   COUPON_TYPE_DISCOUNT,
@@ -189,9 +187,6 @@ export default {
     },
   },
   computed: {
-    ...mapState('shared', {
-      link: (state) => state.referral_link,
-    }),
     couponMoney() {
       return COUPON_TYPE_MONEY
     },
@@ -219,7 +214,6 @@ export default {
     this.initValidator()
   },
   methods: {
-    ...mapActions('setting', [INVITE_CUSTOMER]),
     handleClose() {
       this.$emit('update:visible', false)
     },
