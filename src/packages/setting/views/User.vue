@@ -45,7 +45,7 @@
                     <th>Thông tin khách hàng</th>
                     <th width="250">Quy mô</th>
                     <th>Ngày tạo</th>
-                    <th>Người tạo</th>
+                    <th>Người mời</th>
                     <th width="300" v-if="filter.status == statusInActive"
                       >Người thẩm định</th
                     >
