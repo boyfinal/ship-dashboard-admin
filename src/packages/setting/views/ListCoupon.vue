@@ -65,7 +65,9 @@
                     <td>{{ item.quantity }}</td>
                     <td>{{ getTypeCoupon(item.type) }}</td>
                     <td>{{ item.min_apply }}</td>
-                    <td>{{ item.max_apply }}</td>
+                    <td>{{ item.min_apply }}</td>
+                    <td>{{ item.value }}</td>
+                    <td>{{ item.used ? 'Đã sử dụng' : 'Chưa sử dụng' }}</td>
                   </tr>
                 </tbody>
               </table>
