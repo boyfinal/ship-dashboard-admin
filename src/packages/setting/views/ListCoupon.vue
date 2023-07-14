@@ -41,8 +41,8 @@
                   <tr class="list__product-title">
                     <th>Mã coupon</th>
                     <th>Tên khách</th>
-                    <th>bắt đầu</th>
-                    <th>hết hạn</th>
+                    <th class="text-center">bắt đầu</th>
+                    <th class="text-center">hết hạn</th>
                     <th class="text-center">Điểm mua</th>
                     <th class="text-center">Số lượng</th>
                     <th class="text-center">Đã dùng</th>
