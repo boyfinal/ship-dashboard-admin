@@ -335,4 +335,9 @@ label {
 .modal-coupon .p-radio label input {
   bottom: 4px !important;
 }
+.multiselect__single {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

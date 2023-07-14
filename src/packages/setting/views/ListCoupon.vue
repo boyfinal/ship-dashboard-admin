@@ -185,12 +185,10 @@ export default {
       this.init()
     },
     async showDetailCoupon(id) {
-      this.isFetching = true
       const p = {
         id: id,
       }
       const result = await this[GET_DETAIL_COUPON](p)
-      this.isFetching = false
       if (result.error) {
         this.$toast.error(result.message)
         return
