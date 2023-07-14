@@ -268,6 +268,7 @@ export default {
     },
     handleSave() {
       const payload = {
+        id: this.coupon ? this.coupon.id : null,
         code: this.code,
         customer_id: this.customer.id,
         start_date: this.start_date,
@@ -296,7 +297,20 @@ export default {
         this.min_apply = this.coupon.min_apply
         this.max_apply = this.coupon.max_apply
         this.customer = this.coupon.customer
-        console.log(this.customer)
+      }
+    },
+    visible: function (v) {
+      if (!v) {
+        this.valider.reset()
+        this.code = ''
+        this.start_date = ''
+        this.end_date = ''
+        this.point = ''
+        this.quantity = ''
+        this.type = ''
+        this.min_apply = ''
+        this.max_apply = ''
+        this.customer = null
       }
     },
   },
