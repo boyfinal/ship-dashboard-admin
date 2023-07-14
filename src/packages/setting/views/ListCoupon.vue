@@ -58,16 +58,22 @@
                   <tr v-for="(item, i) in coupons" :key="i">
                     <td>{{ item.code }}</td>
                     <td>{{ item.code }}</td>
-                    <td>{{ item.start_date | date('dd/MM/yyyy') }}</td>
-                    <td>{{ item.end_date | date('dd/MM/yyyy') }}</td>
-                    <td>{{ item.point }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ getTypeCoupon(item.type) }}</td>
-                    <td>{{ item.min_apply }}</td>
-                    <td>{{ item.min_apply }}</td>
-                    <td>{{ item.value }}</td>
-                    <td>{{ item.used ? 'Đã sử dụng' : 'Chưa sử dụng' }}</td>
+                    <td class="text-center">{{
+                      item.start_date | date('dd/MM/yyyy')
+                    }}</td>
+                    <td class="text-center">{{
+                      item.end_date | date('dd/MM/yyyy')
+                    }}</td>
+                    <td class="text-center">{{ item.point }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-center">{{ getTypeCoupon(item.type) }}</td>
+                    <td class="text-center">{{ item.min_apply }}</td>
+                    <td class="text-center">{{ item.min_apply }}</td>
+                    <td class="text-center">{{ item.value }}</td>
+                    <td class="text-center">{{
+                      item.used ? 'Đã sử dụng' : 'Chưa sử dụng'
+                    }}</td>
                   </tr>
                 </tbody>
               </table>
