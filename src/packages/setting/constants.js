@@ -33,6 +33,11 @@ export const CUSTOMER_STATUS_TAB = {
 export const COUPON_TYPE_MONEY = 1
 export const COUPON_TYPE_DISCOUNT = 2
 
+export const TYPE_COUPON = {
+  [COUPON_TYPE_MONEY]: 'Tặng tiền',
+  [COUPON_TYPE_DISCOUNT]: 'Giảm giá',
+}
+
 export const ROLE = [
   {
     key: ROLE_ADMIN,

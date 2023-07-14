@@ -81,7 +81,7 @@ export const routes = [
   },
 
   {
-    path: '/coupon',
+    path: '/coupons',
     name: 'list-coupon',
     meta: {
       title: 'Quản lý coupon',

@@ -10,8 +10,19 @@
         @keyup.enter="handleSearch"
       >
       </p-input>
+      <div>
+        <select
+          v-model="filter.search_by"
+          class="form-control"
+          style="width: auto"
+        >
+          <option :value="key" v-for="(value, key) in searchBy" :key="key">
+            {{ value }}
+          </option>
+        </select>
+      </div>
       <p-button
-        style="width: 154px"
+        style="min-width: 154px"
         class="ml-3"
         type="info"
         @click="showModalCreateCoupon"
@@ -23,21 +34,40 @@
       <div class="card">
         <div class="card-body">
           <vcl-table class="md-20" v-if="isFetching"></vcl-table>
-          <template v-else-if="false">
+          <template v-else-if="coupons.length">
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
                   <tr class="list__product-title">
-                    <th>TÊN SẢN PHẨM</th>
-                    <th>SKU</th>
-                    <th>LOẠI SẢN PHẨM</th>
-                    <th>CHẤT LIỆU SẢN PHẨM</th>
-                    <th class="text-center">TRỌNG LƯỢNG (GRAM)</th>
-                    <th class="text-center">KÍCH THƯỚC (CM)</th>
+                    <th>Mã coupon</th>
+                    <th>Tên khách</th>
+                    <th>bắt đầu</th>
+                    <th>hết hạn</th>
+                    <th class="text-center">Điểm mua</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-center">Đã dùng</th>
+                    <th class="text-center">Loại</th>
+                    <th class="text-center">tối thiểu</th>
+                    <th class="text-center">tối đa</th>
+                    <th class="text-center">Giá trị giảm</th>
+                    <th class="text-center">Trạng thái</th>
                   </tr>
                 </thead>
 
-                <tbody> </tbody>
+                <tbody>
+                  <tr v-for="(item, i) in coupons" :key="i">
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.start_date | date('dd/MM/yyyy') }}</td>
+                    <td>{{ item.end_date | date('dd/MM/yyyy') }}</td>
+                    <td>{{ item.point }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ getTypeCoupon(item.type) }}</td>
+                    <td>{{ item.min_apply }}</td>
+                    <td>{{ item.max_apply }}</td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </template>
@@ -69,7 +99,8 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { mapActions, mapState } from 'vuex'
 import ModalCreateCoupon from '../components/ModalCreateCoupon'
-import { CREATE_COUPON } from '../store/index'
+import { TYPE_COUPON } from '../constants'
+import { CREATE_COUPON, GET_LIST_COUPON } from '../store/index'
 
 export default {
   name: 'ListCoupon',
@@ -83,22 +114,38 @@ export default {
       filter: {
         limit: 30,
         page: 1,
+        search_by: 'code',
       },
       isFetching: false,
       isSubmitting: false,
       visibleModalCreateCoupon: false,
-      product: {},
+      searchBy: {
+        code: 'Tìm theo mã coupon',
+        customer_name: 'Tìm theo khách hàng',
+      },
     }
   },
   created() {
     this.init()
   },
   computed: {
-    ...mapState('setting', {}),
+    ...mapState('setting', {
+      count: (state) => state.countCoupons,
+      coupons: (state) => state.coupons,
+    }),
   },
   methods: {
-    ...mapActions('setting', [CREATE_COUPON]),
-    async init() {},
+    ...mapActions('setting', [CREATE_COUPON, GET_LIST_COUPON]),
+    async init() {
+      this.isFetching = true
+      this.handleUpdateRouteQuery()
+      let result = await this[GET_LIST_COUPON](this.filter)
+      if (result.error) {
+        this.$toast.open({ type: 'danger', message: result.message })
+        return
+      }
+      this.isFetching = false
+    },
     async hanldeSaveCoupon(payload) {
       this.isSubmitting = true
       let r = await this[CREATE_COUPON](payload)
@@ -113,6 +160,9 @@ export default {
     },
     showModalCreateCoupon() {
       this.visibleModalCreateCoupon = true
+    },
+    getTypeCoupon(type) {
+      return TYPE_COUPON[type]
     },
   },
   watch: {

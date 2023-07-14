@@ -124,4 +124,10 @@ export default {
   createCoupon(payload) {
     return http.post(`/packages/coupons`, payload)
   },
+  getListCoupon(payload) {
+    return http.get(`/packages/coupons?${buildQueryString(payload)}`)
+  },
+  countListCoupon(payload) {
+    return http.get(`/packages/coupons/count?${buildQueryString(payload)}`)
+  },
 }
