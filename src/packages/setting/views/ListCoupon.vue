@@ -10,7 +10,7 @@
         @keyup.enter="handleSearch"
       >
       </p-input>
-      <div>
+      <div class="ml-3">
         <select
           v-model="filter.search_by"
           class="form-control"
@@ -57,7 +57,7 @@
                 <tbody>
                   <tr v-for="(item, i) in coupons" :key="i">
                     <td>{{ item.code }}</td>
-                    <td>{{ item.code }}</td>
+                    <td>{{ item.customer.full_name }}</td>
                     <td class="text-center">{{
                       item.start_date | date('dd/MM/yyyy')
                     }}</td>
@@ -68,8 +68,12 @@
                     <td class="text-center">{{ item.quantity }}</td>
                     <td class="text-center">{{ item.quantity }}</td>
                     <td class="text-center">{{ getTypeCoupon(item.type) }}</td>
-                    <td class="text-center">{{ item.min_apply }}</td>
-                    <td class="text-center">{{ item.min_apply }}</td>
+                    <td class="text-center">{{
+                      item.min_apply | formatPrice
+                    }}</td>
+                    <td class="text-center">{{
+                      item.max_apply | formatPrice
+                    }}</td>
                     <td class="text-center">{{ item.value }}</td>
                     <td class="text-center">{{
                       item.used ? 'Đã sử dụng' : 'Chưa sử dụng'

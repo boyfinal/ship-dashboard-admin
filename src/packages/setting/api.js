@@ -130,4 +130,7 @@ export default {
   countListCoupon(payload) {
     return http.get(`/packages/coupons/count?${buildQueryString(payload)}`)
   },
+  fetchDetailCoupon(payload) {
+    return http.get(`/packages/coupons/${payload.id}`)
+  },
 }

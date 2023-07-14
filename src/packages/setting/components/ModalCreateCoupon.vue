@@ -90,6 +90,9 @@
         </div>
       </div>
       <div class="row mb-16">
+        <div class="col-12">
+          <label><b>Loại coupon:</b> <span style="color: red">*</span></label>
+        </div>
         <p-radio
           type="info"
           class="col-3 radio-inline"
@@ -202,7 +205,7 @@ export default {
       end_date: '',
       point: '',
       quantity: '',
-      type: '',
+      type: COUPON_TYPE_MONEY,
       min_apply: '',
       max_apply: '',
       tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,

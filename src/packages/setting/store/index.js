@@ -40,6 +40,7 @@ export const INVITE_CUSTOMER = 'inviteCustomer'
 export const CREATE_COUPON = 'createCoupon'
 export const GET_LIST_COUPON = 'getListCoupon'
 export const COUNT_LIST_COUPON = 'countListCoupon'
+export const GET_DETAIL_COUPON = 'getDetailCoupon'
 
 import {
   USER_CLASS_PUBLIC,
@@ -588,5 +589,13 @@ export const actions = {
     commit(GET_LIST_COUPON, list.coupons)
     commit(COUNT_LIST_COUPON, count.count)
     return { success, message }
+  },
+  // eslint-disable-next-line
+  async [FETCH_DETAIL_SALER]({ commit }, payload) {
+    const res = await api.fetchDetailCoupon(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+    return { error: false }
   },
 }
