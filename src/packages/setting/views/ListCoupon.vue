@@ -59,6 +59,7 @@
                     v-for="(item, i) in coupons"
                     :key="i"
                     @click="showDetailCoupon(item.id)"
+                    :class="{ expire: checkExpireCoupon(item) }"
                   >
                     <td>{{ item.code }}</td>
                     <td>{{ item.customer.full_name }}</td>
@@ -79,9 +80,16 @@
                       item.max_apply | formatPrice
                     }}</td>
                     <td class="text-center">{{ item.value }}</td>
-                    <td class="text-center">{{
-                      item.used ? 'Đã sử dụng' : 'Chưa sử dụng'
-                    }}</td>
+                    <td class="text-center">
+                      <span
+                        v-if="!checkExpireCoupon(item)"
+                        class="badge badge-round badge-success"
+                        >Còn hiệu lực</span
+                      >
+                      <span v-else class="badge badge-round badge-expired"
+                        >Hết hiệu lực</span
+                      >
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -184,6 +192,12 @@ export default {
       this.visibleModalCreateCoupon = false
       this.init()
     },
+    checkExpireCoupon(item) {
+      if (item.used < item.quantity) {
+        return false
+      }
+      return true
+    },
     async showDetailCoupon(id) {
       const p = {
         id: id,
@@ -213,3 +227,8 @@ export default {
   },
 }
 </script>
+<style>
+tr.expire {
+  opacity: 0.7;
+}
+</style>
