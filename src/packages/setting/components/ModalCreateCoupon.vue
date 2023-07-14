@@ -1,6 +1,6 @@
 <template>
   <div class="modal-coupon">
-    <p-modal :active="visible" @close="handleClose" :title="`Tạo mã Coupon`">
+    <p-modal :active="visible" @close="handleClose" :title="txtBtn">
       <div class="row mb-16">
         <div class="col-6">
           <label><b>Mã coupon:</b> <span style="color: red">*</span></label>
@@ -25,6 +25,7 @@
             :emitID="false"
             @input="handleSearch"
             :isTester="tester"
+            :search="customer ? customer.email : ''"
             :arr-status="this.search_status_filter"
           />
         </div>
@@ -36,7 +37,7 @@
             class="date"
             :format="'dd/mm/yyyy'"
             :label="`Chọn ngày bắt đầu`"
-            :value="{ startDate: start_date }"
+            :value="{ startDate: start_date, endDate: start_date }"
             :auto-apply="true"
             @update="selectStartDate"
             :single-date-picker="true"
@@ -53,7 +54,7 @@
             class="date"
             :format="'dd/mm/yyyy'"
             :label="`Chọn ngày hết hạn`"
-            :value="{ endDate: end_date }"
+            :value="{ startDate: end_date, endDate: end_date }"
             :auto-apply="true"
             @update="selectEndDate"
             :single-date-picker="true"
@@ -156,7 +157,7 @@
               @click="handleSave"
               :loading="loading"
             >
-              Tạo mã Coupon
+              {{ txtBtn }}
             </p-button>
           </div>
         </div>
@@ -188,6 +189,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    coupon: {
+      type: Object,
+      default: () => {},
+    },
   },
   computed: {
     couponMoney() {
@@ -195,6 +200,12 @@ export default {
     },
     couponDiscount() {
       return COUPON_TYPE_DISCOUNT
+    },
+    txtBtn() {
+      if (this.coupon) {
+        return 'Cập nhật Coupon'
+      }
+      return 'Tạo mã Coupon'
     },
   },
   data() {
@@ -271,6 +282,22 @@ export default {
         return
       }
       this.$emit('save', payload)
+    },
+  },
+  watch: {
+    coupon: function () {
+      if (this.coupon) {
+        this.code = this.coupon.code
+        this.start_date = date(this.coupon.start_date, 'yyyy-MM-dd')
+        this.end_date = date(this.coupon.end_date, 'yyyy-MM-dd')
+        this.point = this.coupon.point
+        this.quantity = this.coupon.quantity
+        this.type = this.coupon.type
+        this.min_apply = this.coupon.min_apply
+        this.max_apply = this.coupon.max_apply
+        this.customer = this.coupon.customer
+        console.log(this.customer)
+      }
     },
   },
 }

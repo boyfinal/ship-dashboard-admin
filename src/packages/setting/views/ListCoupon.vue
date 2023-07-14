@@ -55,7 +55,11 @@
                 </thead>
 
                 <tbody>
-                  <tr v-for="(item, i) in coupons" :key="i">
+                  <tr
+                    v-for="(item, i) in coupons"
+                    :key="i"
+                    @click="showDetailCoupon(item.id)"
+                  >
                     <td>{{ item.code }}</td>
                     <td>{{ item.customer.full_name }}</td>
                     <td class="text-center">{{
@@ -101,6 +105,7 @@
     <modal-create-coupon
       :visible.sync="visibleModalCreateCoupon"
       :loading="isSubmitting"
+      :coupon="coupon"
       @save="hanldeSaveCoupon"
     ></modal-create-coupon>
   </div>
@@ -112,7 +117,11 @@ import mixinTable from '@core/mixins/table'
 import { mapActions, mapState } from 'vuex'
 import ModalCreateCoupon from '../components/ModalCreateCoupon'
 import { TYPE_COUPON } from '../constants'
-import { CREATE_COUPON, GET_LIST_COUPON } from '../store/index'
+import {
+  CREATE_COUPON,
+  GET_LIST_COUPON,
+  GET_DETAIL_COUPON,
+} from '../store/index'
 
 export default {
   name: 'ListCoupon',
@@ -128,6 +137,7 @@ export default {
         page: 1,
         search_by: 'code',
       },
+      coupon: null,
       isFetching: false,
       isSubmitting: false,
       visibleModalCreateCoupon: false,
@@ -147,7 +157,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions('setting', [CREATE_COUPON, GET_LIST_COUPON]),
+    ...mapActions('setting', [
+      CREATE_COUPON,
+      GET_LIST_COUPON,
+      GET_DETAIL_COUPON,
+    ]),
     async init() {
       this.isFetching = true
       this.handleUpdateRouteQuery()
@@ -169,6 +183,20 @@ export default {
       this.$toast.success('Tạo coupon thành công')
       this.visibleModalCreateCoupon = false
       this.init()
+    },
+    async showDetailCoupon(id) {
+      this.isFetching = true
+      const p = {
+        id: id,
+      }
+      const result = await this[GET_DETAIL_COUPON](p)
+      this.isFetching = false
+      if (result.error) {
+        this.$toast.error(result.message)
+        return
+      }
+      this.coupon = result.coupon
+      this.visibleModalCreateCoupon = true
     },
     showModalCreateCoupon() {
       this.visibleModalCreateCoupon = true

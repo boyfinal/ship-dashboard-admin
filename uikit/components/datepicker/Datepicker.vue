@@ -237,8 +237,11 @@ export default {
     },
   },
   watch: {
-    value: function (value) {
-      this.dateRange = value
+    value: {
+      handler(v) {
+        this.dateRange = v
+      },
+      immediate: true,
     },
   },
 }

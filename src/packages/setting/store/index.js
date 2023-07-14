@@ -591,11 +591,11 @@ export const actions = {
     return { success, message }
   },
   // eslint-disable-next-line
-  async [FETCH_DETAIL_SALER]({ commit }, payload) {
+  async [GET_DETAIL_COUPON]({ commit }, payload) {
     const res = await api.fetchDetailCoupon(payload)
     if (!res || res.error) {
       return { error: true, message: res.errorMessage || '' }
     }
-    return { error: false }
+    return { error: false, ...res }
   },
 }
