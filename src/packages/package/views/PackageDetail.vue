@@ -62,7 +62,7 @@
             </div>
             <div v-if="package_detail.package.estimate_delivery > 0">
               <div>Thời gian dự kiên</div>
-              <div>{{ package_detail.package.estimate_delivery | toDate }}</div>
+              <div>{{ package_detail.package.estimate_delivery | toDay }}</div>
             </div>
           </div>
           <div class="page-header__action">
@@ -1130,7 +1130,7 @@ export default {
     this.init()
   },
   filters: {
-    toDate(val) {
+    toDay(val) {
       if (!val) return 'N/A'
 
       const day = Math.round(val / 86400)
