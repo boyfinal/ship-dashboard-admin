@@ -45,7 +45,7 @@
               </div>
             </div>
             <div>
-              <div>Ngày tạo </div>
+              <div>Ngày tạo</div>
               <div>{{
                 package_detail.package.created_at
                   | datetime('dd/MM/yyyy HH:mm:ss')
@@ -59,6 +59,10 @@
                     | datetime('dd/MM/yyyy HH:mm:ss')
                 }}
               </div>
+            </div>
+            <div v-if="package_detail.package.estimate_delivery > 0">
+              <div>Thời gian dự kiên</div>
+              <div>{{ package_detail.package.estimate_delivery | toDate }}</div>
             </div>
           </div>
           <div class="page-header__action">
@@ -1124,6 +1128,14 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  filters: {
+    toDate(val) {
+      if (!val) return 'N/A'
+
+      const day = Math.round(val / 86400)
+      return `${day} ngày`
+    },
   },
   methods: {
     ...mapActions('package', [
