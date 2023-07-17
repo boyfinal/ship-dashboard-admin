@@ -37,6 +37,11 @@ export const FETCH_COUNT_SALES = 'fetchCountSales'
 
 export const INVITE_CUSTOMER = 'inviteCustomer'
 
+export const CREATE_COUPON = 'createCoupon'
+export const GET_LIST_COUPON = 'getListCoupon'
+export const COUNT_LIST_COUPON = 'countListCoupon'
+export const GET_DETAIL_COUPON = 'getDetailCoupon'
+
 import {
   USER_CLASS_PUBLIC,
   USER_CLASS_PRIORITY,
@@ -86,6 +91,8 @@ export const state = {
   topCustomers: [],
   sales: [],
   count_sales: 0,
+  coupons: [],
+  countCoupons: 0,
 }
 
 /**
@@ -194,6 +201,12 @@ export const mutations = {
   },
   [FETCH_COUNT_SALES]: (state, payload) => {
     state.count_sales = payload
+  },
+  [GET_LIST_COUPON]: (state, payload) => {
+    state.coupons = payload
+  },
+  [COUNT_LIST_COUPON]: (state, payload) => {
+    state.countCoupons = payload
   },
 }
 
@@ -545,5 +558,44 @@ export const actions = {
     }
 
     return { error: false }
+  },
+
+  // eslint-disable-next-line
+  async [CREATE_COUPON]({ commit }, payload) {
+    const res = await api.createCoupon(payload)
+
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+
+    return { error: false }
+  },
+
+  async [GET_LIST_COUPON]({ commit }, payload) {
+    let success = true
+    let message = ''
+
+    let [list, count] = await Promise.all([
+      api.getListCoupon(payload),
+      api.countListCoupon(payload),
+    ])
+    if (!list || list.error || !count) {
+      success = false
+      message = list.errorMessage || ''
+      list = []
+      count = 0
+    }
+
+    commit(GET_LIST_COUPON, list.coupons)
+    commit(COUNT_LIST_COUPON, count.count)
+    return { success, message }
+  },
+  // eslint-disable-next-line
+  async [GET_DETAIL_COUPON]({ commit }, payload) {
+    const res = await api.fetchDetailCoupon(payload)
+    if (!res || res.error) {
+      return { error: true, message: res.errorMessage || '' }
+    }
+    return { error: false, ...res }
   },
 }

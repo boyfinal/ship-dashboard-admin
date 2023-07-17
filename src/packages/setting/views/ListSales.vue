@@ -49,7 +49,7 @@
                     <td>{{ item.email }}</td>
                     <td>{{ item.count_customer | formatNumberV2 }}</td>
                     <td>{{ item.count_ticket | formatNumberV2 }}</td>
-                    <td>{{ item.revenue | formatPrice }}</td>
+                    <td>{{ item.revenue`| formatPrice ` }}</td>
                   </tr>
                 </tbody>
               </table>

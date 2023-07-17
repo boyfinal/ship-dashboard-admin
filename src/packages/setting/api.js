@@ -121,4 +121,16 @@ export default {
   invitesCustomer(payload) {
     return http.post(`/users/invite`, payload)
   },
+  createCoupon(payload) {
+    return http.post(`/packages/coupons`, payload)
+  },
+  getListCoupon(payload) {
+    return http.get(`/packages/coupons?${buildQueryString(payload)}`)
+  },
+  countListCoupon(payload) {
+    return http.get(`/packages/coupons/count?${buildQueryString(payload)}`)
+  },
+  fetchDetailCoupon(payload) {
+    return http.get(`/packages/coupons/${payload.id}`)
+  },
 }

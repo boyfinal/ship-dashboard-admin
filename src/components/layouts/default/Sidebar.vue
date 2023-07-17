@@ -162,6 +162,16 @@ export default {
                 this.$isHub() ||
                 this.$isShipPartner(),
             },
+            {
+              route: '/coupons',
+              title: 'Coupons',
+              alias: ['/coupons'],
+              disable:
+                this.$isAccountant() ||
+                this.$isWarehouse() ||
+                this.$isHub() ||
+                this.$isShipPartner(),
+            },
           ],
         },
         {
