@@ -73,12 +73,18 @@
                     <td class="text-center">{{ item.quantity }}</td>
                     <td class="text-center">{{ item.quantity }}</td>
                     <td class="text-center">{{ getTypeCoupon(item.type) }}</td>
-                    <td class="text-center">{{
-                      item.min_apply | formatPrice
-                    }}</td>
-                    <td class="text-center">{{
-                      item.max_apply | formatPrice
-                    }}</td>
+                    <td class="text-center">
+                      <span v-if="item.min_apply">
+                        {{ item.min_apply | formatPrice }}
+                      </span>
+                      <span v-else>-</span>
+                    </td>
+                    <td class="text-center">
+                      <span v-if="item.max_apply">
+                        {{ item.max_apply | formatPrice }}</span
+                      >
+                      <span v-else>-</span>
+                    </td>
                     <td class="text-center">{{ getValueCoupon(item) }}</td>
                     <td class="text-center">
                       <span
