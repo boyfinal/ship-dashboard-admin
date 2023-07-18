@@ -28,6 +28,9 @@
             :search="customer ? customer.email : ''"
             :arr-status="this.search_status_filter"
           />
+          <span class="invalid-error" v-if="valider.error('customer_id')">
+            {{ valider.error('customer_id') }}
+          </span>
         </div>
       </div>
       <div class="row mb-16">
@@ -42,6 +45,7 @@
             @update="selectStartDate"
             :single-date-picker="true"
             :opens="'center'"
+            @clear="clearStartDate"
           >
           </p-datepicker>
           <span class="invalid-error" v-if="valider.error('start_date')">
@@ -59,6 +63,7 @@
             @update="selectEndDate"
             :single-date-picker="true"
             :opens="'center'"
+            @clear="clearEndDate"
           >
           </p-datepicker>
           <span class="invalid-error" v-if="valider.error('end_date')">
@@ -237,10 +242,15 @@ export default {
     selectEndDate(v) {
       this.end_date = date(v.endDate, 'yyyy-MM-dd')
     },
-    handleSearch() {},
+    handleSearch(v) {
+      if (!v) {
+        this.customer = null
+      }
+    },
     initValidator() {
       this.valider = valider.schema((y) => ({
         code: y.string().required('Mã coupon không để trống'),
+        customer_id: y.number().typeError('Khách hàng chưa được chọn'),
         start_date: y.string().required('Ngày bắt đầu không để trống'),
         end_date: y.string().required('Ngày kết thúc không để trống'),
         type: y.number().typeError('Chưa chọn loại coupon'),
@@ -266,11 +276,17 @@ export default {
           .min(0.1, 'Giá trị tối đa không hợp lệ'),
       }))
     },
+    clearStartDate() {
+      this.start_date = ''
+    },
+    clearEndDate() {
+      this.end_date = ''
+    },
     handleSave() {
       const payload = {
         id: this.coupon ? this.coupon.id : null,
         code: this.code,
-        customer_id: this.customer.id,
+        customer_id: this.customer ? this.customer.id : null,
         start_date: this.start_date,
         end_date: this.end_date,
         point: this.point ? parseInt(this.point) : 0,
