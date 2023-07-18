@@ -114,8 +114,15 @@
               type="info"
               class="col-6 adio-inline"
               v-model="type"
-              :native-value="couponDiscount"
-              >Giảm giá</p-radio
+              :native-value="couponDiscountMoney"
+              >Giảm giá $</p-radio
+            >
+            <p-radio
+              type="info"
+              class="col-6 adio-inline"
+              v-model="type"
+              :native-value="couponDiscountPercent"
+              >Giảm giá %</p-radio
             >
           </div>
           <span class="invalid-error" v-if="valider.error('type')">
@@ -125,7 +132,8 @@
         <div class="col-6">
           <label><b>Giá trị giảm:</b> <span style="color: red">*</span></label>
           <p-input
-            type="text"
+            type="number"
+            min="0"
             class="mb-8"
             v-model="value"
             placeholder="Nhập giá trị giảm"
@@ -134,7 +142,7 @@
         </div>
       </div>
       <div class="row mb-16">
-        <div class="col-6">
+        <div class="col-6" v-if="isDiscountPercent || isDiscountMoney">
           <label
             ><b>Giá trị áp dụng tối thiểu:</b>
             <span style="color: red">*</span></label
@@ -148,9 +156,9 @@
             :error="valider.error('min_apply')"
           ></p-input>
         </div>
-        <div class="col-6">
+        <div class="col-6" v-if="isDiscountPercent">
           <label
-            ><b>Giá trị áp dụng tối đa:</b>
+            ><b>Giá trị giảm tối đa:</b>
             <span style="color: red">*</span></label
           >
           <p-input
@@ -187,7 +195,8 @@
 <script>
 import {
   COUPON_TYPE_MONEY,
-  COUPON_TYPE_DISCOUNT,
+  COUPON_TYPE_DISCOUNT_MONEY,
+  COUPON_TYPE_DISCOUNT_PERCENT,
   USER_STATUS_ACTIVE,
   USER_STATUS_DEACTIVE,
 } from '../constants'
@@ -216,8 +225,17 @@ export default {
     couponMoney() {
       return COUPON_TYPE_MONEY
     },
-    couponDiscount() {
-      return COUPON_TYPE_DISCOUNT
+    couponDiscountMoney() {
+      return COUPON_TYPE_DISCOUNT_MONEY
+    },
+    couponDiscountPercent() {
+      return COUPON_TYPE_DISCOUNT_PERCENT
+    },
+    isDiscountMoney() {
+      return this.type === COUPON_TYPE_DISCOUNT_MONEY
+    },
+    isDiscountPercent() {
+      return this.type === COUPON_TYPE_DISCOUNT_PERCENT
     },
     txtBtn() {
       if (this.coupon) {
@@ -306,18 +324,67 @@ export default {
       this.end_date = ''
     },
     validateData(data) {
+      if (this.isDiscountMoney) {
+        this.valider = this.valider.schema((y) => ({
+          code: y.string().required('Mã coupon không để trống'),
+          customer_id: y.number().typeError('Khách hàng chưa được chọn'),
+          start_date: y.string().required('Ngày bắt đầu không để trống'),
+          end_date: y.string().required('Ngày kết thúc không để trống'),
+          type: y.number().typeError('Chưa chọn loại coupon'),
+          point: y
+            .number()
+            .required('Điểm mua không để trống')
+            .typeError('Điểm mua chỉ nhập số')
+            .min(1, 'Điểm mua không hợp lệ'),
+          quantity: y
+            .number()
+            .required('Số lượng không để trống')
+            .typeError('Số lượng chỉ nhập số')
+            .min(1, 'Số lượng không hợp lệ'),
+          value: y
+            .number()
+            .typeError('Giá trị giảm không hợp lệ')
+            .min(0.1, 'Giá trị giảm không hợp lệ'),
+          min_apply: y
+            .number()
+            .required('Giá trị tối thiểu để trống')
+            .typeError('Giá trị tối thiểu không hợp lệ')
+            .min(0.1, 'Giá trị tối thiểu nợ không hợp lệ'),
+        }))
+      } else if (this.isDiscountPercent) {
+        this.valider = this.valider.schema((y) => ({
+          code: y.string().required('Mã coupon không để trống'),
+          customer_id: y.number().typeError('Khách hàng chưa được chọn'),
+          start_date: y.string().required('Ngày bắt đầu không để trống'),
+          end_date: y.string().required('Ngày kết thúc không để trống'),
+          type: y.number().typeError('Chưa chọn loại coupon'),
+          point: y
+            .number()
+            .required('Điểm mua không để trống')
+            .typeError('Điểm mua chỉ nhập số')
+            .min(1, 'Điểm mua không hợp lệ'),
+          quantity: y
+            .number()
+            .required('Số lượng không để trống')
+            .typeError('Số lượng chỉ nhập số')
+            .min(1, 'Số lượng không hợp lệ'),
+          value: y
+            .number()
+            .typeError('Giá trị giảm không hợp lệ')
+            .min(0.1, 'Giá trị giảm không hợp lệ'),
+          min_apply: y
+            .number()
+            .required('Giá trị tối thiểu để trống')
+            .typeError('Giá trị tối thiểu không hợp lệ')
+            .min(0.1, 'Giá trị tối thiểu nợ không hợp lệ'),
+          max_apply: y
+            .number()
+            .required('Giá trị tối đa để trống')
+            .typeError('Giá trị tối đa không hợp lệ')
+            .min(0.1, 'Giá trị tối đa không hợp lệ'),
+        }))
+      }
       if (!this.valider.check(data)) {
-        return false
-      }
-      const reg = /^((100)|(\d{1,2}(\.\d*)?))%$/
-      if (!reg.test(this.value)) {
-        this.$toast.error('Giá trị giảm không hợp lệ')
-        return false
-      }
-      if (data.min_apply > data.max_apply) {
-        this.$toast.error('Giá trị tối đa không thể nhỏ hơn giá trị tối thiểu')
-        this.min_apply = ''
-        this.max_apply = ''
         return false
       }
       return true
