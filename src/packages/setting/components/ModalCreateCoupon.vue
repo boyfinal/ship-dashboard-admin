@@ -290,6 +290,18 @@ export default {
     clearEndDate() {
       this.end_date = ''
     },
+    validateData(data) {
+      if (!this.valider.check(data)) {
+        return false
+      }
+      if (data.min_apply > data.max_apply) {
+        this.$toast.error('Giá trị tối đa không thể nhỏ hơn giá trị tối thiểu')
+        this.min_apply = ''
+        this.max_apply = ''
+        return false
+      }
+      return true
+    },
     handleSave() {
       const payload = {
         id: this.coupon ? this.coupon.id : null,
@@ -303,7 +315,7 @@ export default {
         min_apply: parseFloat(this.min_apply),
         max_apply: parseFloat(this.max_apply),
       }
-      if (!this.valider.check(payload)) {
+      if (!this.validateData(payload)) {
         return
       }
       this.$emit('save', payload)
