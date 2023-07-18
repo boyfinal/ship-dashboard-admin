@@ -96,27 +96,37 @@
         </div>
       </div>
       <div class="row mb-16">
-        <div class="col-12">
+        <div class="col-6">
           <label><b>Loại coupon:</b> <span style="color: red">*</span></label>
-        </div>
-        <p-radio
-          type="info"
-          class="col-3 radio-inline"
-          v-model="type"
-          :native-value="couponMoney"
-          >Tặng tiền</p-radio
-        >
-        <p-radio
-          type="info"
-          class="col-3 adio-inline"
-          v-model="type"
-          :native-value="couponDiscount"
-          >Giảm giá</p-radio
-        >
-        <div class="col-12" v-if="valider.error('type')">
-          <span class="invalid-error">
+          <div class="row">
+            <p-radio
+              type="info"
+              class="col-6 radio-inline"
+              v-model="type"
+              :native-value="couponMoney"
+              >Tặng tiền</p-radio
+            >
+            <p-radio
+              type="info"
+              class="col-6 adio-inline"
+              v-model="type"
+              :native-value="couponDiscount"
+              >Giảm giá</p-radio
+            >
+          </div>
+          <span class="invalid-error" v-if="valider.error('type')">
             {{ valider.error('type') }}
           </span>
+        </div>
+        <div class="col-6">
+          <label><b>Giá trị giảm:</b> <span style="color: red">*</span></label>
+          <p-input
+            type="text"
+            class="mb-8"
+            v-model="value"
+            placeholder="Nhập giá trị giảm"
+            :error="valider.error('value')"
+          ></p-input>
         </div>
       </div>
       <div class="row mb-16">
@@ -224,6 +234,7 @@ export default {
       type: COUPON_TYPE_MONEY,
       min_apply: '',
       max_apply: '',
+      value: '',
       tester: this.$route.query.tester ? parseInt(this.$route.query.tester) : 0,
       search_status_filter: `${USER_STATUS_ACTIVE},${USER_STATUS_DEACTIVE}`,
       valider: null,
@@ -282,6 +293,7 @@ export default {
           .required('Giá trị tối đa để trống')
           .typeError('Giá trị tối đa không hợp lệ')
           .min(0.1, 'Giá trị tối đa không hợp lệ'),
+        value: y.string().required('Giá trị giảm bắt buộc nhập'),
       }))
     },
     clearStartDate() {
@@ -312,6 +324,7 @@ export default {
         point: this.point ? parseInt(this.point) : 0,
         quantity: this.quantity ? parseInt(this.quantity) : 0,
         type: this.type ? parseInt(this.type) : '',
+        value: this.value,
         min_apply: parseFloat(this.min_apply),
         max_apply: parseFloat(this.max_apply),
       }
@@ -332,6 +345,7 @@ export default {
         this.type = this.coupon.type
         this.min_apply = this.coupon.min_apply
         this.max_apply = this.coupon.max_apply
+        this.value = this.coupon.value
         this.customer = this.coupon.customer
       }
     },
@@ -375,5 +389,8 @@ label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.p-radio {
+  margin-bottom: 0;
 }
 </style>
