@@ -383,6 +383,28 @@ export default {
             .typeError('Giá trị tối đa không hợp lệ')
             .min(0.1, 'Giá trị tối đa không hợp lệ'),
         }))
+      } else {
+        this.valider = this.valider.schema((y) => ({
+          code: y.string().required('Mã coupon không để trống'),
+          customer_id: y.number().typeError('Khách hàng chưa được chọn'),
+          start_date: y.string().required('Ngày bắt đầu không để trống'),
+          end_date: y.string().required('Ngày kết thúc không để trống'),
+          type: y.number().typeError('Chưa chọn loại coupon'),
+          point: y
+            .number()
+            .required('Điểm mua không để trống')
+            .typeError('Điểm mua chỉ nhập số')
+            .min(1, 'Điểm mua không hợp lệ'),
+          quantity: y
+            .number()
+            .required('Số lượng không để trống')
+            .typeError('Số lượng chỉ nhập số')
+            .min(1, 'Số lượng không hợp lệ'),
+          value: y
+            .number()
+            .typeError('Giá trị giảm không hợp lệ')
+            .min(0.1, 'Giá trị giảm không hợp lệ'),
+        }))
       }
       if (!this.valider.check(data)) {
         return false
@@ -399,9 +421,12 @@ export default {
         point: this.point ? parseInt(this.point) : 0,
         quantity: this.quantity ? parseInt(this.quantity) : 0,
         type: this.type ? parseInt(this.type) : '',
-        value: this.value,
-        min_apply: parseFloat(this.min_apply),
-        max_apply: parseFloat(this.max_apply),
+        value: parseFloat(this.value),
+        min_apply:
+          this.isDiscountPercent || this.isDiscountMoney
+            ? parseFloat(this.min_apply)
+            : 0,
+        max_apply: this.isDiscountPercent ? parseFloat(this.max_apply) : 0,
       }
       if (!this.validateData(payload)) {
         return
