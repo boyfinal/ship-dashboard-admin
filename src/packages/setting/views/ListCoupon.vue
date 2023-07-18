@@ -197,6 +197,9 @@ export default {
       this.init()
     },
     checkExpireCoupon(item) {
+      if (new Date(item.end_date) < new Date()) {
+        return true
+      }
       if (item.used < item.quantity) {
         return false
       }
