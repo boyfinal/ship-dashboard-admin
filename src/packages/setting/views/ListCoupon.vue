@@ -231,6 +231,7 @@ export default {
       this.visibleModalCreateCoupon = true
     },
     showModalCreateCoupon() {
+      this.coupon = null
       this.visibleModalCreateCoupon = true
     },
     getTypeCoupon(type) {
