@@ -64,10 +64,10 @@
                     <td>{{ item.code }}</td>
                     <td>{{ item.customer.full_name }}</td>
                     <td class="text-center">{{
-                      item.start_date | date('dd/MM/yyyy')
+                      item.start_date | date('dd/MM/yyyy HH:mm:ss')
                     }}</td>
                     <td class="text-center">{{
-                      item.end_date | date('dd/MM/yyyy')
+                      item.end_date | date('dd/MM/yyyy HH:mm:ss')
                     }}</td>
                     <td class="text-center">{{ item.point }}</td>
                     <td class="text-center">{{ item.quantity }}</td>

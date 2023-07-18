@@ -37,14 +37,16 @@
         <div class="col-6">
           <label><b>Ngày bắt đầu:</b> <span style="color: red">*</span></label>
           <p-datepicker
-            class="date"
-            :format="'dd/mm/yyyy'"
             :label="`Chọn ngày bắt đầu`"
-            :value="{ startDate: start_date, endDate: start_date }"
-            :auto-apply="true"
-            @update="selectStartDate"
             :single-date-picker="true"
+            class="p-input-group input-group"
+            :locale-data="{ format: 'dd-mm-yyyy HH:mm:ss' }"
+            :time-picker="true"
+            :show-dropdowns="true"
+            :time-picker-increment="1"
+            :value="{ startDate: start_date, endDate: start_date }"
             :opens="'center'"
+            @update="selectStartDate"
             @clear="clearStartDate"
           >
           </p-datepicker>
@@ -55,14 +57,16 @@
         <div class="col-6">
           <label><b>Ngày hết hạn:</b> <span style="color: red">*</span></label>
           <p-datepicker
-            class="date"
-            :format="'dd/mm/yyyy'"
             :label="`Chọn ngày hết hạn`"
-            :value="{ startDate: end_date, endDate: end_date }"
-            :auto-apply="true"
-            @update="selectEndDate"
             :single-date-picker="true"
+            class="p-input-group input-group"
+            :locale-data="{ format: 'dd-mm-yyyy HH:mm:ss' }"
+            :time-picker="true"
+            :show-dropdowns="true"
+            :time-picker-increment="1"
+            :value="{ startDate: end_date, endDate: end_date }"
             :opens="'center'"
+            @update="selectEndDate"
             @clear="clearEndDate"
           >
           </p-datepicker>
@@ -252,14 +256,14 @@ export default {
         this.$toast.error('Ngày kết thick phải sau ngày bắt đầu')
         return
       }
-      this.start_date = date(v.startDate, 'yyyy-MM-dd')
+      this.start_date = date(v.startDate, 'yyyy-MM-dd HH:mm:ss')
     },
     selectEndDate(v) {
       if (this.start_date !== '' && new Date(this.start_date) > v.startDate) {
         this.$toast.error('Ngày kết thúc phải sau ngày bắt đầu')
         return
       }
-      this.end_date = date(v.endDate, 'yyyy-MM-dd')
+      this.end_date = date(v.endDate, 'yyyy-MM-dd HH:mm:ss')
     },
     handleSearch(v) {
       if (!v) {
@@ -338,8 +342,8 @@ export default {
     coupon: function () {
       if (this.coupon) {
         this.code = this.coupon.code
-        this.start_date = date(this.coupon.start_date, 'yyyy-MM-dd')
-        this.end_date = date(this.coupon.end_date, 'yyyy-MM-dd')
+        this.start_date = date(this.coupon.start_date, 'yyyy-MM-dd HH:mm:ss')
+        this.end_date = date(this.coupon.end_date, 'yyyy-MM-dd HH:mm:ss')
         this.point = this.coupon.point
         this.quantity = this.coupon.quantity
         this.type = this.coupon.type
@@ -392,5 +396,25 @@ label {
 }
 .p-radio {
   margin-bottom: 0;
+}
+.daterangepicker .calendars .calendar-table {
+  height: auto !important;
+}
+.form-control.hourselect,
+.form-control.minuteselect {
+  text-align: center;
+  height: auto !important;
+  position: unset;
+  left: unset;
+  top: unset;
+  background: unset;
+  border: unset;
+  box-sizing: unset;
+  border-radius: unset !important;
+  font-size: unset;
+  box-shadow: none;
+  transition: unset;
+  padding: unset;
+  color: unset;
 }
 </style>
