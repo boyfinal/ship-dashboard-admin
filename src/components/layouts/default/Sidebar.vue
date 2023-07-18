@@ -170,7 +170,12 @@ export default {
                 this.$isAccountant() ||
                 this.$isWarehouse() ||
                 this.$isHub() ||
-                this.$isShipPartner(),
+                this.$isShipPartner() ||
+                this.$isMarketing() ||
+                this.$isSupportLeader() ||
+                this.$isMarketing() ||
+                this.$isSupport() ||
+                this.$isSale(),
             },
           ],
         },
