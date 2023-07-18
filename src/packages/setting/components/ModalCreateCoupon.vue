@@ -237,9 +237,17 @@ export default {
       this.$emit('update:visible', false)
     },
     selectStartDate(v) {
+      if (this.end_date !== '' && new Date(this.end_date) < v.startDate) {
+        this.$toast.error('Ngày kết thick phải sau ngày bắt đầu')
+        return
+      }
       this.start_date = date(v.startDate, 'yyyy-MM-dd')
     },
     selectEndDate(v) {
+      if (this.start_date !== '' && new Date(this.start_date) > v.startDate) {
+        this.$toast.error('Ngày kết thúc phải sau ngày bắt đầu')
+        return
+      }
       this.end_date = date(v.endDate, 'yyyy-MM-dd')
     },
     handleSearch(v) {
