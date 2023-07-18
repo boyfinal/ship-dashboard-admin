@@ -256,14 +256,14 @@ export default {
         this.$toast.error('Ngày kết thick phải sau ngày bắt đầu')
         return
       }
-      this.start_date = date(v.startDate, 'yyyy-MM-dd HH:mm:ss')
+      this.start_date = v.startDate.toISOString()
     },
     selectEndDate(v) {
       if (this.start_date !== '' && new Date(this.start_date) > v.startDate) {
         this.$toast.error('Ngày kết thúc phải sau ngày bắt đầu')
         return
       }
-      this.end_date = date(v.endDate, 'yyyy-MM-dd HH:mm:ss')
+      this.end_date = v.endDate.toISOString()
     },
     handleSearch(v) {
       if (!v) {
