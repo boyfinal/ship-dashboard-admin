@@ -71,7 +71,7 @@
                     }}</td>
                     <td class="text-center">{{ item.point }}</td>
                     <td class="text-center">{{ item.quantity }}</td>
-                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-center">{{ item.used }}</td>
                     <td class="text-center">{{ getTypeCoupon(item.type) }}</td>
                     <td class="text-center">
                       <span v-if="item.min_apply">
