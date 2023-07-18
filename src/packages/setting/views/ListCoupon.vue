@@ -188,7 +188,11 @@ export default {
         this.$toast.error(r.message)
         return
       }
-      this.$toast.success('Tạo coupon thành công')
+      let msg = 'Tạo coupon thành công'
+      if (payload.id) {
+        msg = 'Cập nhật coupon thành công'
+      }
+      this.$toast.success(msg)
       this.visibleModalCreateCoupon = false
       this.init()
     },
