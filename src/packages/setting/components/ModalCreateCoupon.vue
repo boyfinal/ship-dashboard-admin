@@ -115,14 +115,14 @@
               class="col-6 adio-inline"
               v-model="type"
               :native-value="couponDiscountMoney"
-              >Giảm giá $</p-radio
+              >Giảm giá ($)</p-radio
             >
             <p-radio
               type="info"
               class="col-6 adio-inline"
               v-model="type"
               :native-value="couponDiscountPercent"
-              >Giảm giá %</p-radio
+              >Giảm giá (%)</p-radio
             >
           </div>
           <span class="invalid-error" v-if="valider.error('type')">

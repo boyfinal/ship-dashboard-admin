@@ -79,7 +79,7 @@
                     <td class="text-center">{{
                       item.max_apply | formatPrice
                     }}</td>
-                    <td class="text-center">{{ item.value }}</td>
+                    <td class="text-center">{{ getValueCoupon(item) }}</td>
                     <td class="text-center">
                       <span
                         v-if="!checkExpireCoupon(item)"
@@ -124,7 +124,8 @@ import mixinRoute from '@core/mixins/route'
 import mixinTable from '@core/mixins/table'
 import { mapActions, mapState } from 'vuex'
 import ModalCreateCoupon from '../components/ModalCreateCoupon'
-import { TYPE_COUPON } from '../constants'
+import { TYPE_COUPON, COUPON_TYPE_DISCOUNT_PERCENT } from '../constants'
+import { formatPrice } from '@core/utils/formatter'
 import {
   CREATE_COUPON,
   GET_LIST_COUPON,
@@ -179,6 +180,12 @@ export default {
         return
       }
       this.isFetching = false
+    },
+    getValueCoupon(item) {
+      if (item.type === COUPON_TYPE_DISCOUNT_PERCENT) {
+        return `${item.value}%`
+      }
+      return formatPrice(item.value)
     },
     async hanldeSaveCoupon(payload) {
       this.isSubmitting = true

@@ -36,8 +36,8 @@ export const COUPON_TYPE_DISCOUNT_PERCENT = 3
 
 export const TYPE_COUPON = {
   [COUPON_TYPE_MONEY]: 'Tặng tiền',
-  [COUPON_TYPE_DISCOUNT_MONEY]: 'Giảm giá ($)',
-  [COUPON_TYPE_DISCOUNT_PERCENT]: 'Giảm giá (%)',
+  [COUPON_TYPE_DISCOUNT_MONEY]: 'Giảm giá',
+  [COUPON_TYPE_DISCOUNT_PERCENT]: 'Giảm giá',
 }
 
 export const ROLE = [
