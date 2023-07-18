@@ -361,7 +361,7 @@ export default {
         this.end_date = ''
         this.point = ''
         this.quantity = ''
-        this.type = ''
+        this.type = COUPON_TYPE_MONEY
         this.min_apply = ''
         this.max_apply = ''
         this.customer = null
