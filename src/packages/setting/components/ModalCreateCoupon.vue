@@ -193,7 +193,6 @@ import {
 } from '../constants'
 import valider from '@core/valider'
 import UserResource from '@/components/shared/resource/UsersActive'
-import { date } from '@core/utils/datetime'
 export default {
   name: 'ModalCreateCoupon',
   components: {
@@ -310,6 +309,11 @@ export default {
       if (!this.valider.check(data)) {
         return false
       }
+      const reg = /^((100)|(\d{1,2}(\.\d*)?))%$/
+      if (!reg.test(this.value)) {
+        this.$toast.error('Giá trị giảm không hợp lệ')
+        return false
+      }
       if (data.min_apply > data.max_apply) {
         this.$toast.error('Giá trị tối đa không thể nhỏ hơn giá trị tối thiểu')
         this.min_apply = ''
@@ -342,8 +346,8 @@ export default {
     coupon: function () {
       if (this.coupon) {
         this.code = this.coupon.code
-        this.start_date = date(this.coupon.start_date, 'yyyy-MM-dd HH:mm:ss')
-        this.end_date = date(this.coupon.end_date, 'yyyy-MM-dd HH:mm:ss')
+        this.start_date = this.coupon.start_date
+        this.end_date = this.coupon.end_date
         this.point = this.coupon.point
         this.quantity = this.coupon.quantity
         this.type = this.coupon.type

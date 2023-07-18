@@ -164,7 +164,7 @@ export default {
             },
             {
               route: '/coupons',
-              title: 'Coupons',
+              title: 'Coupon',
               alias: ['/coupons'],
               disable:
                 this.$isAccountant() ||
