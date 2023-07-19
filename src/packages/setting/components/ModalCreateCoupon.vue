@@ -91,7 +91,7 @@
           <label><b>Số lượng:</b> <span style="color: red">*</span></label>
           <p-input
             type="number"
-            min="0"
+            min="1"
             class="mb-8"
             v-model="quantity"
             placeholder="Nhập số lượng"
@@ -303,6 +303,8 @@ export default {
           .number()
           .required('Số lượng không để trống')
           .typeError('Số lượng chỉ nhập số')
+          .integer('Số lượng không hợp lệ')
+          .positive('Số lượng không hợp lệ')
           .min(1, 'Số lượng không hợp lệ'),
         min_apply: y
           .number()
@@ -340,6 +342,8 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
+            .integer('Số lượng không hợp lệ')
+            .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
             .number()
@@ -367,6 +371,8 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
+            .integer('Số lượng không hợp lệ')
+            .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
             .number()
@@ -399,6 +405,8 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
+            .integer('Số lượng không hợp lệ')
+            .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
             .number()
@@ -418,9 +426,9 @@ export default {
         customer_id: this.customer ? this.customer.id : null,
         start_date: this.start_date,
         end_date: this.end_date,
-        point: this.point ? parseInt(this.point) : 0,
-        quantity: this.quantity ? parseInt(this.quantity) : 0,
-        type: this.type ? parseInt(this.type) : '',
+        point: this.point ? parseFloat(this.point) : 0,
+        quantity: this.quantity ? parseFloat(this.quantity) : 0,
+        type: this.type ? parseFloat(this.type) : '',
         value: parseFloat(this.value),
         min_apply:
           this.isDiscountPercent || this.isDiscountMoney
@@ -428,6 +436,7 @@ export default {
             : 0,
         max_apply: this.isDiscountPercent ? parseFloat(this.max_apply) : 0,
       }
+      console.log(payload)
       if (!this.validateData(payload)) {
         return
       }
