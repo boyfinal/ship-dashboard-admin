@@ -460,6 +460,7 @@ export default {
         this.type = COUPON_TYPE_MONEY
         this.min_apply = ''
         this.max_apply = ''
+        this.value = ''
         this.customer = null
       }
     },
