@@ -444,7 +444,6 @@ export default {
             : 0,
         max_apply: this.isDiscountPercent ? parseFloat(this.max_apply) : 0,
       }
-      console.log(payload)
       if (!this.validateData(payload)) {
         return
       }
