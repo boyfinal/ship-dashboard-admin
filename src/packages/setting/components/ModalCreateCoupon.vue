@@ -303,7 +303,7 @@ export default {
           .number()
           .required('Số lượng không để trống')
           .typeError('Số lượng chỉ nhập số')
-          .integer('Số lượng không hợp lệ')
+          .integer('Số lượng chỉ nhập số nguyên')
           .positive('Số lượng không hợp lệ')
           .min(1, 'Số lượng không hợp lệ'),
         min_apply: y
@@ -342,7 +342,7 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
-            .integer('Số lượng không hợp lệ')
+            .integer('Số lượng chỉ nhập số nguyên')
             .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
@@ -371,7 +371,7 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
-            .integer('Số lượng không hợp lệ')
+            .integer('Số lượng chỉ nhập số nguyên')
             .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
@@ -405,7 +405,7 @@ export default {
             .number()
             .required('Số lượng không để trống')
             .typeError('Số lượng chỉ nhập số')
-            .integer('Số lượng không hợp lệ')
+            .integer('Số lượng chỉ nhập số nguyên')
             .positive('Số lượng không hợp lệ')
             .min(1, 'Số lượng không hợp lệ'),
           value: y
