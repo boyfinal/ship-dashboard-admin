@@ -298,6 +298,8 @@ export default {
           .number()
           .required('Điểm mua không để trống')
           .typeError('Điểm mua chỉ nhập số')
+          .integer('Điểm mua chỉ nhập số nguyên')
+          .positive('Điểm mua không hợp lệ')
           .min(1, 'Điểm mua không hợp lệ'),
         quantity: y
           .number()
@@ -337,6 +339,8 @@ export default {
             .number()
             .required('Điểm mua không để trống')
             .typeError('Điểm mua chỉ nhập số')
+            .integer('Điểm mua chỉ nhập số nguyên')
+            .positive('Điểm mua không hợp lệ')
             .min(1, 'Điểm mua không hợp lệ'),
           quantity: y
             .number()
@@ -366,6 +370,8 @@ export default {
             .number()
             .required('Điểm mua không để trống')
             .typeError('Điểm mua chỉ nhập số')
+            .integer('Điểm mua chỉ nhập số nguyên')
+            .positive('Điểm mua không hợp lệ')
             .min(1, 'Điểm mua không hợp lệ'),
           quantity: y
             .number()
@@ -400,6 +406,8 @@ export default {
             .number()
             .required('Điểm mua không để trống')
             .typeError('Điểm mua chỉ nhập số')
+            .integer('Điểm mua chỉ nhập số nguyên')
+            .positive('Điểm mua không hợp lệ')
             .min(1, 'Điểm mua không hợp lệ'),
           quantity: y
             .number()
