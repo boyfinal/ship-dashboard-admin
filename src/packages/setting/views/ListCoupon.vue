@@ -92,6 +92,9 @@
                         class="badge badge-round badge-success"
                         >Còn hiệu lực</span
                       >
+                      <span v-else-if="item.used === item.quantity">
+                        Đã sử dụng
+                      </span>
                       <span v-else class="badge badge-round badge-expired"
                         >Hết hiệu lực</span
                       >
