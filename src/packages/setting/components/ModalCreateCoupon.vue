@@ -430,7 +430,7 @@ export default {
     handleSave() {
       const payload = {
         id: this.coupon ? this.coupon.id : null,
-        code: this.code,
+        code: this.code.trim(),
         customer_id: this.customer ? this.customer.id : null,
         start_date: this.start_date,
         end_date: this.end_date,
