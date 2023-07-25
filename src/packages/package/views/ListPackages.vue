@@ -45,7 +45,7 @@
             class="ml-8"
             style="width: auto"
             :placeholder="`Tìm theo kho`"
-            v-model="filter.warehouse"
+            v-model="filter.warehouse_id"
           >
             <option
               :value="item.id"
@@ -371,7 +371,7 @@ export default {
         start_date: '',
         end_date: '',
         code: '',
-        warehouse: null,
+        warehouse_id: null,
       },
       labelDate: `Tìm theo ngày`,
       isUploading: false,
@@ -384,6 +384,7 @@ export default {
       visibleConfirmCancel: false,
       isVisibleExport: false,
       selected: [],
+      warehoseLoaded: false,
       PackageStatusDeactivate: PACKAGE_STATUS_DEACTIVATE,
       PackageStatusExpiredText: PACKAGE_STATUS_EXPIRED_TEXT,
     }
@@ -449,14 +450,10 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      let req = { status: 1 }
-      const [r1, r2] = await Promise.all([
-        this[FETCH_LIST_PACKAGES](this.filter),
-        this[FETCH_WAREHOUSE](req),
-      ])
+      const r1 = await this[FETCH_LIST_PACKAGES](this.filter)
       this.isFetching = false
-      if (!r1.success || !r2.success) {
-        this.$toast.open({ message: r1.message || r2.message, type: 'error' })
+      if (!r1.success) {
+        this.$toast.open({ message: r1.message, type: 'error' })
         return
       }
       this.isFetchingCount = true
@@ -464,6 +461,15 @@ export default {
       this.isFetchingCount = false
       if (!r3.success) {
         this.$toast.open({ message: r3.message, type: 'error' })
+      }
+      if (!this.warehoseLoaded) {
+        let req = { status: 1 }
+        const r2 = await this[FETCH_WAREHOUSE](req)
+        if (!r2.success) {
+          this.$toast.open({ message: r2.message, type: 'error' })
+          return
+        }
+        this.warehoseLoaded = true
       }
     },
     showPackageCode(item) {
