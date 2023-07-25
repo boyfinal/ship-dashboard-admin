@@ -40,6 +40,22 @@
             @clear="clearSearchDate"
           ></p-datepicker>
         </div>
+        <div class="ml-8">
+          <p-select
+            class="ml-8"
+            style="width: auto"
+            :placeholder="`Tìm theo kho`"
+            v-model="filter.warehouse"
+          >
+            <option
+              :value="item.id"
+              v-for="(item, key) in wareHouses"
+              :key="key"
+            >
+              {{ item.name }}
+            </option>
+          </p-select>
+        </div>
       </div>
       <div class="card">
         <div class="card-body">
@@ -282,7 +298,7 @@ import { truncate } from '@core/utils/string'
 import mixinDownload from '@/packages/shared/mixins/download'
 import ModalExport from '../components/ModalExport'
 import { date } from '@core/utils/datetime'
-
+import { FETCH_WAREHOUSE } from '../../shared/store'
 import {
   PACKAGE_STATUS_CREATED_TEXT,
   PACKAGE_STATUS_TAB,
@@ -335,6 +351,15 @@ export default {
         }
       },
     },
+    listWarehouse: {
+      type: Object,
+      default() {
+        return {
+          hn: 'Hà nội',
+          hcm: 'TP Hồ Chí Minh',
+        }
+      },
+    },
   },
   data() {
     return {
@@ -346,6 +371,7 @@ export default {
         start_date: '',
         end_date: '',
         code: '',
+        warehouse: null,
       },
       labelDate: `Tìm theo ngày`,
       isUploading: false,
@@ -372,6 +398,9 @@ export default {
       packages: (state) => state.packages,
       count: (state) => state.countPackages,
       count_status: (state) => state.count_status,
+    }),
+    ...mapState('shared', {
+      wareHouses: (state) => state.wareHouses,
     }),
     hiddenClass() {
       return this.action.selected.length > 0 || this.isAllChecked
@@ -404,6 +433,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('shared', [FETCH_WAREHOUSE]),
     ...mapActions('package', [
       FETCH_LIST_PACKAGES,
       IMPORT_PACKAGE,
@@ -419,17 +449,21 @@ export default {
       if (this.user_id > 0) {
         this.filter.user_id = this.user_id
       }
-      const r1 = await this[FETCH_LIST_PACKAGES](this.filter)
+      let req = { status: 1 }
+      const [r1, r2] = await Promise.all([
+        this[FETCH_LIST_PACKAGES](this.filter),
+        this[FETCH_WAREHOUSE](req),
+      ])
       this.isFetching = false
-      if (!r1.success) {
-        this.$toast.open({ message: r1.message, type: 'error' })
+      if (!r1.success || !r2.success) {
+        this.$toast.open({ message: r1.message || r2.message, type: 'error' })
         return
       }
       this.isFetchingCount = true
-      const r2 = await this[COUNT_LIST_PACKAGES](this.filter)
+      const r3 = await this[COUNT_LIST_PACKAGES](this.filter)
       this.isFetchingCount = false
-      if (!r2.success) {
-        this.$toast.open({ message: r2.message, type: 'error' })
+      if (!r3.success) {
+        this.$toast.open({ message: r3.message, type: 'error' })
       }
     },
     showPackageCode(item) {
